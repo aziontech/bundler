@@ -1,0 +1,27 @@
+{
+  "name": "vulcan",
+  "version": "1.0.0",
+  "description": "Tool to launch and build JavaScript/Frameworks for the Azion platform.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aziontech/vulcan.git"
+  },
+  "keywords": ["build", "js", "jamstack", "azion"],
+  "author": "aziontech",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aziontech/vulcan/issues"
+  },
+  "homepage": "https://github.com/aziontech/vulcan#readme",
+  "dependencies": {
+    "webpack": "^5.84.0",
+    "webpack-cli": "^5.1.1"
+  }
+}
