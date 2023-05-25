@@ -13,7 +13,12 @@
     "type": "git",
     "url": "git+https://github.com/aziontech/vulcan.git"
   },
-  "keywords": ["build", "js", "jamstack", "azion"],
+  "keywords": [
+    "build",
+    "js",
+    "jamstack",
+    "azion"
+  ],
   "author": "aziontech",
   "license": "MIT",
   "bugs": {
@@ -21,6 +26,7 @@
   },
   "homepage": "https://github.com/aziontech/vulcan#readme",
   "dependencies": {
+    "node-polyfill-webpack-plugin": "^2.0.1",
     "webpack": "^5.84.0",
     "webpack-cli": "^5.1.1"
   }
