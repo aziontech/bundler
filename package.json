@@ -1,5 +1,6 @@
 {
   "name": "vulcan",
+  "type": "module",
   "version": "1.0.0",
   "description": "![image](https://github.com/aziontech/vulcan/assets/12740219/7ffeae06-3535-47d7-91f5-3b9996952ce9)",
   "main": "main.js",
@@ -9,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^5.2.0",
     "commander": "^10.0.1"
   }
 }
