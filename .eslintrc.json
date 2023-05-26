@@ -28,7 +28,7 @@
             "./lib/"
           ],
           [
-            "#error",
+            "#errors",
             "./lib/errors/base.error.js"
           ]
         ],
