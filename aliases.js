@@ -6,4 +6,5 @@ export default [
   ['#polyfills', './lib/polyfills/'],
   ['#targets', './lib/targets/'],
   ['#types', './lib/types/'],
+  ['#presets', './lib/presets/'],
 ];

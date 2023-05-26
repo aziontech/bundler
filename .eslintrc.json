@@ -46,6 +46,10 @@
           [
             "#types",
             "./lib/types/"
+          ],
+          [
+            "#presets",
+            "./lib/presets/"
           ]
         ],
         "extensions": [
