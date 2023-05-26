@@ -5,6 +5,8 @@
   "description": "![image](https://github.com/aziontech/vulcan/assets/12740219/7ffeae06-3535-47d7-91f5-3b9996952ce9)",
   "main": "main.js",
   "scripts": {
+    "start": "node lib/main.js",
+    "task:aliases": "node tasks/sync-aliases.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -16,6 +18,13 @@
   "devDependencies": {
     "eslint": "^7.32.0 || ^8.2.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.2"
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-jsdoc": "^44.2.5"
+  },
+  "imports": {
+    "#root": "./",
+    "#lib": "./lib/",
+    "#error": "./lib/errors/base.error.js"
   }
 }

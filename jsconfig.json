@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "#root": [
+        "./"
+      ],
+      "#lib": [
+        "./lib/"
+      ],
+      "#error": [
+        "./lib/errors/base.error.js"
+      ]
+    }
+  }
+}
