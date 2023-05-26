@@ -21,7 +21,7 @@
         "./lib/targets/"
       ],
       "#types": [
-        "./lib/types/"
+        "./lib/types/index.js"
       ],
       "#presets": [
         "./lib/presets/"

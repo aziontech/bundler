@@ -45,7 +45,7 @@
           ],
           [
             "#types",
-            "./lib/types/"
+            "./lib/types/index.js"
           ],
           [
             "#presets",

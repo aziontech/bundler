@@ -5,6 +5,6 @@ export default [
   ['#utils', './lib/utils/index.js'],
   ['#polyfills', './lib/polyfills/'],
   ['#targets', './lib/targets/'],
-  ['#types', './lib/types/'],
+  ['#types', './lib/types/index.js'],
   ['#presets', './lib/presets/'],
 ];
