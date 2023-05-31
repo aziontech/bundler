@@ -7,4 +7,5 @@ export default [
   ['#targets', './lib/targets/'],
   ['#types', './lib/types/index.js'],
   ['#presets', './lib/presets/'],
+  ['#env', './lib/env/index.js'],
 ];

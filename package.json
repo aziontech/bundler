@@ -13,7 +13,9 @@
   "license": "ISC",
   "dependencies": {
     "chalk": "^5.2.0",
-    "commander": "^10.0.1"
+    "chokidar": "^3.5.3",
+    "commander": "^10.0.1",
+    "vm2": "^3.9.19"
   },
   "devDependencies": {
     "eslint": "^7.32.0 || ^8.2.0",
@@ -30,6 +32,7 @@
     "#polyfills": "./lib/polyfills/",
     "#targets": "./lib/targets/",
     "#types": "./lib/types/index.js",
-    "#presets": "./lib/presets/"
+    "#presets": "./lib/presets/",
+    "#env": "./lib/env/index.js"
   }
 }
