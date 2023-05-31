@@ -25,6 +25,9 @@
       ],
       "#presets": [
         "./lib/presets/"
+      ],
+      "#env": [
+        "./lib/env/index.js"
       ]
     }
   }
