@@ -8,4 +8,5 @@ export default [
   ['#types', './lib/types/index.js'],
   ['#presets', './lib/presets/'],
   ['#env', './lib/env/index.js'],
+  ['#platform', './lib/plataform/index.js'],
 ];
