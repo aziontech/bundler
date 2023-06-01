@@ -3,7 +3,10 @@
   "type": "module",
   "version": "1.0.0",
   "description": "![image](https://github.com/aziontech/vulcan/assets/12740219/7ffeae06-3535-47d7-91f5-3b9996952ce9)",
-  "main": "main.js",
+  "main": "lib/main.js",
+  "bin": {
+    "vulcan": "lib/main.js"
+  },
   "scripts": {
     "start": "node lib/main.js",
     "task:aliases": "node tasks/sync-aliases.js",
