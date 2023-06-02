@@ -3,8 +3,9 @@ export default [
   ['#lib', './lib/'],
   ['#errors', './lib/errors/base.error.js'],
   ['#utils', './lib/utils/index.js'],
-  ['#polyfills', './lib/polyfills/'],
-  ['#targets', './lib/targets/'],
+  ['#polyfills', './lib/build/polyfills/index.js'],
   ['#types', './lib/types/index.js'],
-  ['#presets', './lib/presets/'],
+  ['#buildTools', './lib/build/tools/index.js'],
+  ['#jsTarget', './lib/presets/frameworks/js/index.js'],
+  ['#buildDispatcher', './lib/build/dispatcher/index.js'],
 ];
