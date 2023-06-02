@@ -1,0 +1,2 @@
+lib/presets/frameworks/*/handler.js
+lib/presets/providers/*/worker.js
