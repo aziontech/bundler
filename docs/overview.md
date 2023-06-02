@@ -4,7 +4,7 @@
 ```mermaid
 flowchart LR
 
-A[Trigger] -->|args| B(Selector)
+A[Trigger] -->|args| B(Dispatcher)
 B --> C(Prebuild)
 C -->|args| D(Common Build)
 D --> E[Artifacts]
@@ -13,10 +13,10 @@ D --> E[Artifacts]
 ### Trigger
 An external call to run a build.
 
-### Selector
-* Validates options(args);
+### Dispatcher
+* Receive build options(args);
 * Select which build process to run;
-* Load necessary files and set configs;
+* Load necessary template files and import correct modules (prebuild and configs);
 
 ### Prebuild
 Custom prebuild module that runs actions to generate entrypoint and necessary files.
