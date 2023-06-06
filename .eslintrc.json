@@ -20,12 +20,12 @@
       "alias": {
         "map": [
           [
-            "#root",
+            "#root/*",
             "./"
           ],
           [
-            "#lib",
-            "./lib/"
+            "#lib/*",
+            "./lib"
           ],
           [
             "#errors",
@@ -36,20 +36,20 @@
             "./lib/utils/index.js"
           ],
           [
-            "#polyfills",
-            "./lib/polyfills/"
+            "#polyfills/*",
+            "./lib/polyfills"
           ],
           [
-            "#targets",
-            "./lib/targets/"
+            "#targets/*",
+            "./lib/targets"
           ],
           [
             "#types",
             "./lib/types/index.js"
           ],
           [
-            "#presets",
-            "./lib/presets/"
+            "#preset/*",
+            "./lib/presets"
           ],
           [
             "#env",
@@ -57,7 +57,11 @@
           ],
           [
             "#platform",
-            "./lib/plataform/index.js"
+            "./lib/platform/index.js"
+          ],
+          [
+            "#constants",
+            "./lib/constants/index.js"
           ]
         ],
         "extensions": [
