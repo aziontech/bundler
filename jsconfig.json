@@ -2,11 +2,11 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "#root": [
+      "#root/*": [
         "./"
       ],
-      "#lib": [
-        "./lib/"
+      "#lib/*": [
+        "./lib"
       ],
       "#errors": [
         "./lib/errors/base.error.js"
@@ -14,20 +14,26 @@
       "#utils": [
         "./lib/utils/index.js"
       ],
-      "#polyfills": [
-        "./lib/polyfills/"
+      "#polyfills/*": [
+        "./lib/polyfills"
       ],
-      "#targets": [
-        "./lib/targets/"
+      "#targets/*": [
+        "./lib/targets"
       ],
       "#types": [
         "./lib/types/index.js"
       ],
-      "#presets": [
-        "./lib/presets/"
+      "#preset/*": [
+        "./lib/presets"
       ],
       "#env": [
         "./lib/env/index.js"
+      ],
+      "#platform": [
+        "./lib/platform/index.js"
+      ],
+      "#constants": [
+        "./lib/constants/index.js"
       ]
     }
   }

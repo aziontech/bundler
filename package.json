@@ -3,7 +3,10 @@
   "type": "module",
   "version": "1.0.0",
   "description": "![image](https://github.com/aziontech/vulcan/assets/12740219/7ffeae06-3535-47d7-91f5-3b9996952ce9)",
-  "main": "main.js",
+  "main": "lib/main.js",
+  "bin": {
+    "vulcan": "lib/main.js"
+  },
   "scripts": {
     "start": "node lib/main.js",
     "task:aliases": "node tasks/sync-aliases.js",
@@ -25,14 +28,16 @@
     "eslint-plugin-jsdoc": "^44.2.5"
   },
   "imports": {
-    "#root": "./",
-    "#lib": "./lib/",
+    "#root/*": "./",
+    "#lib/*": "./lib",
     "#errors": "./lib/errors/base.error.js",
     "#utils": "./lib/utils/index.js",
-    "#polyfills": "./lib/polyfills/",
-    "#targets": "./lib/targets/",
+    "#polyfills/*": "./lib/polyfills",
+    "#targets/*": "./lib/targets",
     "#types": "./lib/types/index.js",
-    "#presets": "./lib/presets/",
-    "#env": "./lib/env/index.js"
+    "#preset/*": "./lib/presets",
+    "#env": "./lib/env/index.js",
+    "#platform": "./lib/platform/index.js",
+    "#constants": "./lib/constants/index.js"
   }
 }
