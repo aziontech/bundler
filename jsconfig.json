@@ -9,7 +9,7 @@
         "./lib"
       ],
       "#errors": [
-        "./lib/errors/base.error.js"
+        "./lib/errors/index.js"
       ],
       "#utils": [
         "./lib/utils/index.js"

@@ -18,6 +18,8 @@
     "chalk": "^5.2.0",
     "chokidar": "^3.5.3",
     "commander": "^10.0.1",
+    "inquirer": "^9.2.7",
+    "lodash": "^4.17.21",
     "vm2": "^3.9.19"
   },
   "devDependencies": {
@@ -30,7 +32,7 @@
   "imports": {
     "#root/*": "./",
     "#lib/*": "./lib",
-    "#errors": "./lib/errors/base.error.js",
+    "#errors": "./lib/errors/index.js",
     "#utils": "./lib/utils/index.js",
     "#polyfills/*": "./lib/polyfills",
     "#targets/*": "./lib/targets",
