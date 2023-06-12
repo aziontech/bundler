@@ -5,6 +5,8 @@ export default [
   ['#utils', './lib/utils/index.js'],
   ['#polyfills', './lib/build/polyfills/index.js'],
   ['#types', './lib/types/index.js'],
+  ['#build', './lib/build/dispatcher/index.js'],
+  ['#bundlers', './lib/build/bundlers/index.js'],
   ['#polyfills/*', './lib/polyfills'],
   ['#targets/*', './lib/targets'],
   ['#types', './lib/types/index.js'],
@@ -12,7 +14,5 @@ export default [
   ['#env', './lib/env/index.js'],
   ['#platform', './lib/platform/index.js'],
   ['#constants', './lib/constants/index.js'],
-  ['#buildTools', './lib/build/tools/index.js'],
   ['#jsTarget', './lib/presets/frameworks/js/index.js'],
-  ['#buildDispatcher', './lib/build/dispatcher/index.js'],
 ];

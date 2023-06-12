@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import messages from './messages.js';
 
 const message = messages[Math.floor(Math.random() * messages.length)];
