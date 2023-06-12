@@ -43,9 +43,6 @@
       ],
       "#constants": [
         "./lib/constants/index.js"
-      ],
-      "#jsTarget": [
-        "./lib/presets/frameworks/js/index.js"
       ]
     }
   }

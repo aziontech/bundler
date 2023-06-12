@@ -14,5 +14,4 @@ export default [
   ['#env', './lib/env/index.js'],
   ['#platform', './lib/platform/index.js'],
   ['#constants', './lib/constants/index.js'],
-  ['#jsTarget', './lib/presets/frameworks/js/index.js'],
 ];
