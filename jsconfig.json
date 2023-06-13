@@ -29,9 +29,6 @@
       "#polyfills/*": [
         "./lib/polyfills"
       ],
-      "#targets/*": [
-        "./lib/targets"
-      ],
       "#preset/*": [
         "./lib/presets"
       ],

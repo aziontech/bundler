@@ -56,10 +56,6 @@
             "./lib/polyfills"
           ],
           [
-            "#targets/*",
-            "./lib/targets"
-          ],
-          [
             "#types",
             "./lib/types/index.js"
           ],
