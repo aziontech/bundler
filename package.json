@@ -23,6 +23,7 @@
     "lodash": "^4.17.21",
     "mime-types": "^2.1.35",
     "node-polyfill-webpack-plugin": "^2.0.1",
+    "pkg-dir": "^7.0.0",
     "vm2": "^3.9.19",
     "webpack": "^5.84.0"
   },
@@ -42,11 +43,11 @@
     "#types": "./lib/types/index.js",
     "#build": "./lib/build/dispatcher/index.js",
     "#bundlers": "./lib/build/bundlers/index.js",
-    "#polyfills/*": "./lib/polyfills",
     "#preset/*": "./lib/presets",
     "#env": "./lib/env/index.js",
     "#platform": "./lib/platform/index.js",
-    "#constants": "./lib/constants/index.js"
+    "#constants": "./lib/constants/index.js",
+    "#edge": "./lib/platform/edgehooks/index.js"
   },
   "repository": {
     "type": "git",

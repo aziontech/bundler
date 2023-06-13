@@ -26,9 +26,6 @@
       "#bundlers": [
         "./lib/build/bundlers/index.js"
       ],
-      "#polyfills/*": [
-        "./lib/polyfills"
-      ],
       "#preset/*": [
         "./lib/presets"
       ],
@@ -40,6 +37,9 @@
       ],
       "#constants": [
         "./lib/constants/index.js"
+      ],
+      "#edge": [
+        "./lib/platform/edgehooks/index.js"
       ]
     }
   }

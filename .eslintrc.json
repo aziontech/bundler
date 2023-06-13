@@ -52,10 +52,6 @@
             "./lib/build/bundlers/index.js"
           ],
           [
-            "#polyfills/*",
-            "./lib/polyfills"
-          ],
-          [
             "#types",
             "./lib/types/index.js"
           ],
@@ -74,6 +70,10 @@
           [
             "#constants",
             "./lib/constants/index.js"
+          ],
+          [
+            "#edge",
+            "./lib/platform/edgehooks/index.js"
           ]
         ],
         "extensions": [
