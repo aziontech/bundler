@@ -13,14 +13,19 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "chalk": "^5.2.0",
     "chokidar": "^3.5.3",
     "commander": "^10.0.1",
+    "form-data": "^4.0.0",
     "inquirer": "^9.2.7",
     "lodash": "^4.17.21",
-    "vm2": "^3.9.19"
+    "mime-types": "^2.1.35",
+    "node-polyfill-webpack-plugin": "^2.0.1",
+    "pkg-dir": "^7.0.0",
+    "vm2": "^3.9.19",
+    "webpack": "^5.84.0"
   },
   "devDependencies": {
     "eslint": "^7.32.0 || ^8.2.0",
@@ -34,12 +39,22 @@
     "#lib/*": "./lib",
     "#errors": "./lib/errors/index.js",
     "#utils": "./lib/utils/index.js",
-    "#polyfills/*": "./lib/polyfills",
-    "#targets/*": "./lib/targets",
+    "#polyfills": "./lib/build/polyfills/index.js",
     "#types": "./lib/types/index.js",
+    "#build": "./lib/build/dispatcher/index.js",
+    "#bundlers": "./lib/build/bundlers/index.js",
     "#preset/*": "./lib/presets",
     "#env": "./lib/env/index.js",
     "#platform": "./lib/platform/index.js",
-    "#constants": "./lib/constants/index.js"
-  }
+    "#constants": "./lib/constants/index.js",
+    "#edge": "./lib/platform/edgehooks/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aziontech/vulcan.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aziontech/vulcan/issues"
+  },
+  "homepage": "https://github.com/aziontech/vulcan#readme"
 }

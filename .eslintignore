@@ -1,0 +1,3 @@
+lib/presets/frameworks/*/handler.js
+lib/presets/providers/*/worker.js
+examples/simple-js-esm/index.js

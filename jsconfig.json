@@ -14,14 +14,17 @@
       "#utils": [
         "./lib/utils/index.js"
       ],
-      "#polyfills/*": [
-        "./lib/polyfills"
-      ],
-      "#targets/*": [
-        "./lib/targets"
+      "#polyfills": [
+        "./lib/build/polyfills/index.js"
       ],
       "#types": [
         "./lib/types/index.js"
+      ],
+      "#build": [
+        "./lib/build/dispatcher/index.js"
+      ],
+      "#bundlers": [
+        "./lib/build/bundlers/index.js"
       ],
       "#preset/*": [
         "./lib/presets"
@@ -34,6 +37,9 @@
       ],
       "#constants": [
         "./lib/constants/index.js"
+      ],
+      "#edge": [
+        "./lib/platform/edgehooks/index.js"
       ]
     }
   }

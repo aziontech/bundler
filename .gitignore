@@ -1,5 +1,6 @@
 node_modules
 dist
+worker
 coverage
 .DS_Store
 out
