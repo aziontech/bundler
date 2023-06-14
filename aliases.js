@@ -7,12 +7,10 @@ export default [
   ['#types', './lib/types/index.js'],
   ['#build', './lib/build/dispatcher/index.js'],
   ['#bundlers', './lib/build/bundlers/index.js'],
-  ['#polyfills/*', './lib/polyfills'],
-  ['#targets/*', './lib/targets'],
   ['#types', './lib/types/index.js'],
   ['#preset/*', './lib/presets'],
   ['#env', './lib/env/index.js'],
   ['#platform', './lib/platform/index.js'],
   ['#constants', './lib/constants/index.js'],
-  ['#jsTarget', './lib/presets/frameworks/js/index.js'],
+  ['#edge', './lib/platform/edgehooks/index.js'],
 ];
