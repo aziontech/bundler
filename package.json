@@ -25,7 +25,8 @@
     "node-polyfill-webpack-plugin": "^2.0.1",
     "pkg-dir": "^7.0.0",
     "vm2": "^3.9.19",
-    "webpack": "^5.84.0"
+    "webpack": "^5.84.0",
+    "webpack-merge": "^5.9.0"
   },
   "devDependencies": {
     "eslint": "^7.32.0 || ^8.2.0",
