@@ -4,3 +4,4 @@ worker
 coverage
 .DS_Store
 out
+.temp
