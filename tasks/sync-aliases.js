@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-// eslint-disable-next-line import/extensions
+import { feedback } from '#utils';
 import myAliases from '../aliases.js';
 
 const convertAliasFormat = (aliases) => {
@@ -22,7 +22,7 @@ const jsconfigPath = path.resolve('./', 'jsconfig.json');
 const updatePackageJson = () => {
   fs.readFile(packageJsonPath, 'utf-8', (errRead, data) => {
     if (errRead) {
-      console.error('Error reading package.json file:', errRead);
+      feedback.error('Error reading package.json file:', errRead);
       return;
     }
 
@@ -34,14 +34,14 @@ const updatePackageJson = () => {
 
       fs.writeFile(packageJsonPath, updatedPackageJson, 'utf-8', (errWrite) => {
         if (errWrite) {
-          console.error('Error updating package.json file:', errWrite);
+          feedback.error('Error updating package.json file:', errWrite);
           return;
         }
 
-        console.log('Aliases successfully updated in package.json file.');
+        feedback.success('Aliases successfully updated in package.json file.');
       });
     } catch (err) {
-      console.error('Error parsing package.json file:', err);
+      feedback.error('Error parsing package.json file:', err);
     }
   });
 };
@@ -50,7 +50,7 @@ const updatePackageJson = () => {
 const updateEslintJson = () => {
   fs.readFile(eslintJsonPath, 'utf-8', (errRead, data) => {
     if (errRead) {
-      console.error('Error reading eslint.json file:', errRead);
+      feedback.error('Error reading eslint.json file:', errRead);
       return;
     }
 
@@ -66,14 +66,14 @@ const updateEslintJson = () => {
 
       fs.writeFile(eslintJsonPath, updatedEslintJson, 'utf-8', (errWrite) => {
         if (errWrite) {
-          console.error('Error updating eslint.json file:', errWrite);
+          feedback.error('Error updating eslint.json file:', errWrite);
           return;
         }
 
-        console.log('Aliases successfully updated in eslint.json file.');
+        feedback.success('Aliases successfully updated in eslint.json file.');
       });
     } catch (err) {
-      console.error('Error parsing eslint.json file:', err);
+      feedback.error('Error parsing eslint.json file:', err);
     }
   });
 };
@@ -81,7 +81,7 @@ const updateEslintJson = () => {
 const updateJsconfigJson = () => {
   fs.readFile(jsconfigPath, 'utf-8', (errRead, data) => {
     if (errRead) {
-      console.error('Error reading jsconfig.json file:', errRead);
+      feedback.error('Error reading jsconfig.json file:', errRead);
       return;
     }
 
@@ -99,14 +99,14 @@ const updateJsconfigJson = () => {
 
       fs.writeFile(jsconfigPath, updatedJsconfigJson, 'utf-8', (errWrite) => {
         if (errWrite) {
-          console.error('Error updating jsconfig.json file:', errWrite);
+          feedback.error('Error updating jsconfig.json file:', errWrite);
           return;
         }
 
-        console.log('Aliases successfully updated in jsconfig.json file.');
+        feedback.success('Aliases successfully updated in jsconfig.json file.');
       });
     } catch (err) {
-      console.error('Error parsing jsconfig.json file:', err);
+      feedback.error('Error parsing jsconfig.json file:', err);
     }
   });
 };
