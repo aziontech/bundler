@@ -21,6 +21,7 @@
     "form-data": "^4.0.0",
     "inquirer": "^9.2.7",
     "lodash": "^4.17.21",
+    "log-update": "^5.0.1",
     "mime-types": "^2.1.35",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "pkg-dir": "^7.0.0",
