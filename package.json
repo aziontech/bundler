@@ -25,6 +25,7 @@
     "mime-types": "^2.1.35",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "pkg-dir": "^7.0.0",
+    "semver": "^7.5.2",
     "vm2": "^3.9.19",
     "webpack": "^5.84.0",
     "webpack-merge": "^5.9.0"
