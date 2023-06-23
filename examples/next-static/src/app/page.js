@@ -66,30 +66,30 @@ export default function Home() {
         </a>
 
         <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+          href="/blog/post-2/"
           className={styles.card}
           target="_blank"
           rel="noopener noreferrer"
         >
           <h2>
-            Templates <span>-&gt;</span>
+            Go to blog post 2<span>-&gt;</span>
           </h2>
-          <p>Explore the Next.js 13 playground.</p>
+          <p>Dynamic route example</p>
         </a>
 
         <a
-          href="/misty-mountains/moria" 
+          href="/misty-mountains/moria"
           className={styles.card}
           target="_blank"
           rel="noopener noreferrer"
         >
           <h2>
-          Mines of Moria <span>-&gt;</span>
+            Mines of Moria <span>-&gt;</span>
           </h2>
           <p>
             The dark and treacherous labyrinth of the Misty Mountains.
           </p>
-          </a>
+        </a>
       </div>
     </main>
   )
