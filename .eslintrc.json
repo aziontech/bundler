@@ -13,7 +13,7 @@
   "overrides": [],
   "parserOptions": {
     "ecmaVersion": "latest",
-    "sourceType": "module"
+      "sourceType": "module"
   },
   "settings": {
     "import/resolver": {
@@ -28,20 +28,12 @@
             "./lib"
           ],
           [
-            "#errors",
-            "./lib/errors/index.js"
-          ],
-          [
             "#utils",
             "./lib/utils/index.js"
           ],
           [
             "#polyfills",
             "./lib/build/polyfills/index.js"
-          ],
-          [
-            "#types",
-            "./lib/types/index.js"
           ],
           [
             "#build",
@@ -84,7 +76,6 @@
     }
   },
   "rules": {
-    "no-console": "off",
     "import/extensions": [
       "error",
       "always"
