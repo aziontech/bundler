@@ -10,6 +10,7 @@
   "scripts": {
     "start": "node lib/main.js",
     "task:aliases": "node tasks/sync-aliases.js",
+    "task:docs": "jsdoc --configure jsdoc.json --verbose",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -31,6 +32,7 @@
     "webpack-merge": "^5.9.0"
   },
   "devDependencies": {
+    "clean-jsdoc-theme": "^4.2.9",
     "eslint": "^7.32.0 || ^8.2.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-import-resolver-alias": "^1.1.2",
@@ -40,12 +42,11 @@
   "imports": {
     "#root/*": "./",
     "#lib/*": "./lib",
-    "#errors": "./lib/errors/index.js",
     "#utils": "./lib/utils/index.js",
     "#polyfills": "./lib/build/polyfills/index.js",
-    "#types": "./lib/types/index.js",
     "#build": "./lib/build/dispatcher/index.js",
     "#bundlers": "./lib/build/bundlers/index.js",
+    "#types": "./lib/types/index.js",
     "#preset/*": "./lib/presets",
     "#env": "./lib/env/index.js",
     "#platform": "./lib/platform/index.js",
