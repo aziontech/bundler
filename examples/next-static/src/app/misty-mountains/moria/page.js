@@ -9,7 +9,7 @@ export default function Gandalf() {
       </div>
       <div className={styles.card}>
         <Link href="/">go back</Link>
-        </div>
+      </div>
     </main>
   );
 }
