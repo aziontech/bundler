@@ -15,5 +15,6 @@
   "[typescriptreact]": {
     "editor.formatOnSave": true
   },
-  "prettier.eslintIntegration": true
+  "prettier.eslintIntegration": true,
+  "docwriter.style": "JSDoc"
 }
