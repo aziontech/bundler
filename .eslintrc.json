@@ -13,7 +13,7 @@
   "overrides": [],
   "parserOptions": {
     "ecmaVersion": "latest",
-      "sourceType": "module"
+    "sourceType": "module"
   },
   "settings": {
     "import/resolver": {
@@ -44,12 +44,8 @@
             "./lib/build/bundlers/index.js"
           ],
           [
-            "#types",
-            "./lib/types/index.js"
-          ],
-          [
-            "#preset/*",
-            "./lib/presets"
+            "#notations/*",
+            "./lib/notations"
           ],
           [
             "#env",
