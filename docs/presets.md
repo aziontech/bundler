@@ -89,14 +89,11 @@ Here's a step-by-step guide on how to add a new preset in Vulcan:
 
 
 
-https://github.com/aziontech/vulcan/assets/12740219/c3d2c2e5-1f92-400e-81f5-234f1a398a1b
-
-
-
-
-
 3.  ## **Test your preset:**
    After setting up your preset, you can test it using Vulcan's build command. Depending on the mode of your preset, run one of the following commands in your terminal:
+
+https://github.com/aziontech/vulcan/assets/12740219/c3d2c2e5-1f92-400e-81f5-234f1a398a1b
+
 
 For `compute` mode:
 
