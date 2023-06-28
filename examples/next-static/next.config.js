@@ -3,6 +3,7 @@
  */
 const nextConfig = {
   output: 'export',
-}
+  distDir: 'other',
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
