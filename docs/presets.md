@@ -82,7 +82,8 @@ Here's a step-by-step guide on how to add a new preset in Vulcan:
 	   ## prebuild.js
 	   In this file, you should adapt the native build process of your framework or library. Usually, in the case of *deliver* presets, this file will be used to ensure that the generated static artifacts are placed in the *.edge/statics/* directory.
       #### React (deliver) Example:
-![prebuild](https://github.com/aziontech/vulcan/assets/12740219/537861a7-ab3c-41f0-a55c-aa512c96fb94)
+![prebuild-exampkle](https://github.com/aziontech/vulcan/assets/12740219/e7ac20e6-f3c9-4216-a110-db11004d93f2)
+
 
 
    **Note**: The use of `compute` type presets is still under development and does not have many examples available. We currently support build/import resolution for pure JavaScript code (or with polyfills), as shown in the `./examples/simple-js-esm` example.
