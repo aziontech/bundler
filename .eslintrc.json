@@ -1,84 +1,42 @@
 {
   "env": {
     "browser": true,
-    "es2021": true
+    "es2021": true,
+    "jest/globals": true
   },
-  "plugins": [
-    "jsdoc"
-  ],
+  "plugins": ["jsdoc", "jest"],
   "extends": [
     "airbnb-base",
-    "plugin:jsdoc/recommended"
+    "plugin:jsdoc/recommended",
+    "plugin:jest/recommended"
   ],
   "overrides": [],
   "parserOptions": {
     "ecmaVersion": "latest",
-      "sourceType": "module"
+    "sourceType": "module"
   },
   "settings": {
     "import/resolver": {
       "alias": {
         "map": [
-          [
-            "#root/*",
-            "./"
-          ],
-          [
-            "#lib/*",
-            "./lib"
-          ],
-          [
-            "#utils",
-            "./lib/utils/index.js"
-          ],
-          [
-            "#polyfills",
-            "./lib/build/polyfills/index.js"
-          ],
-          [
-            "#build",
-            "./lib/build/dispatcher/index.js"
-          ],
-          [
-            "#bundlers",
-            "./lib/build/bundlers/index.js"
-          ],
-          [
-            "#types",
-            "./lib/types/index.js"
-          ],
-          [
-            "#preset/*",
-            "./lib/presets"
-          ],
-          [
-            "#env",
-            "./lib/env/index.js"
-          ],
-          [
-            "#platform",
-            "./lib/platform/index.js"
-          ],
-          [
-            "#constants",
-            "./lib/constants/index.js"
-          ],
-          [
-            "#edge",
-            "./lib/platform/edgehooks/index.js"
-          ]
+          ["#root/*", "./"],
+          ["#lib/*", "./lib"],
+          ["#utils", "./lib/utils/index.js"],
+          ["#polyfills", "./lib/build/polyfills/index.js"],
+          ["#build", "./lib/build/dispatcher/index.js"],
+          ["#bundlers", "./lib/build/bundlers/index.js"],
+          ["#types", "./lib/types/index.js"],
+          ["#preset/*", "./lib/presets"],
+          ["#env", "./lib/env/index.js"],
+          ["#platform", "./lib/platform/index.js"],
+          ["#constants", "./lib/constants/index.js"],
+          ["#edge", "./lib/platform/edgehooks/index.js"]
         ],
-        "extensions": [
-          ".js",
-          ".json"
-        ]
+        "extensions": [".js", ".json"]
       }
     }
   },
   "rules": {
-    "import/extensions": [
-      "error",
-      "always"
-    ]
+    "import/extensions": ["error", "always"]
   }
 }
