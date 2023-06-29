@@ -1,6 +1,6 @@
 
 
-# Documentation: Adding a New Preset to Vulcan
+# Documentation: Presets
 Vulcan is an extensible platform that allows you to easily create new presets for frameworks and libraries to run on the Edge. This documentation will describe the fundamental structure and how to add your own preset.
 
 
