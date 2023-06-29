@@ -25,8 +25,7 @@
           ["#polyfills", "./lib/build/polyfills/index.js"],
           ["#build", "./lib/build/dispatcher/index.js"],
           ["#bundlers", "./lib/build/bundlers/index.js"],
-          ["#types", "./lib/types/index.js"],
-          ["#preset/*", "./lib/presets"],
+          ["#notations/*", "./lib/notations"],
           ["#env", "./lib/env/index.js"],
           ["#platform", "./lib/platform/index.js"],
           ["#constants", "./lib/constants/index.js"],
@@ -37,6 +36,7 @@
     }
   },
   "rules": {
-    "import/extensions": ["error", "always"]
+    "import/extensions": ["error", "always"],
+    "no-console": "off"
   }
 }
