@@ -1,11 +1,13 @@
 {
-  "name": "vulcan",
+  "name": "edge-functions",
   "type": "module",
-  "version": "1.0.0",
-  "description": "![image](https://github.com/aziontech/vulcan/assets/12740219/7ffeae06-3535-47d7-91f5-3b9996952ce9)",
+  "version": "0.0.1",
+  "description": "Tool to launch and build JavaScript/Frameworks. This tool automates polyfills for Edge Computing and assists in creating Workers, notably for the Azion platform.",
   "main": "lib/main.js",
   "bin": {
-    "vulcan": "lib/main.js"
+    "vulcan": "lib/main.js",
+    "edge-functions": "lib/main.js",
+    "ef": "lib/main.js"
   },
   "scripts": {
     "start": "node lib/main.js",
@@ -14,7 +16,16 @@
     "test": "jest",
     "test:watch": "jest --watch"
   },
-  "author": "",
+  "author": "aziontech",
+  "contributors": [
+    {
+      "name": "Magnun A V F"
+    },
+    {
+      "name": "João Narciso",
+      "url": "https://jotanarciso.com"
+    }
+  ],
   "license": "MIT",
   "dependencies": {
     "chokidar": "^3.5.3",
