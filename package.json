@@ -16,6 +16,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "bottleneck": "^2.19.5",
     "chokidar": "^3.5.3",
     "commander": "^10.0.1",
     "form-data": "^4.0.0",

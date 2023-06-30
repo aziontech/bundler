@@ -23,7 +23,7 @@
     "tutorials": "./docs/",
     "displayModuleHeader": true,
     "theme_opts": {
-      "sections": ["Namespaces", "Tutorials"],
+      "sections": ["Namespaces"],
       "prefixModuleToSidebarItems_experimental": true,
       "title": "Vulcan - Documentation",
       "homepageTitle": "Vulcan - Documentation",
