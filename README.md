@@ -4,9 +4,6 @@ Vulcan is a powerful tool designed to streamline the development and deployment 
 
 One of the key highlights of Vulcan is its ability to establish an intuitive and efficient protocol for facilitating the creation of presets. This makes customization and adaptation to specific project needs even more accessible, providing developers with the necessary flexibility to optimize their applications effectively and efficiently. 
 
-![image](https://github.com/aziontech/vulcan/assets/12740219/7ffeae06-3535-47d7-91f5-3b9996952ce9)
-
-
 
 ## Getting Started
 
