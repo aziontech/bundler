@@ -8,7 +8,11 @@ Vulcan is an extensible platform that allows you to easily create new presets fo
 
 To add a new preset, you need to create appropriate folders in two directories: `presets/default` or `presets/custom`. The folder representing your framework or library will automatically be included in the preset listings. Each preset has two modes, represented by folders of the same name: `compute` and `deliver`.
 
-https://github.com/aziontech/vulcan/assets/12740219/c4530564-bc4a-4f1d-b14a-7dc7b47946b6
+
+
+https://github.com/aziontech/vulcan/assets/12740219/06edb9a0-26cd-4055-bd2e-d400b6a06f3c
+
+
 
 
 - Compute: This holds configurations for frameworks that use computation on the Edge (Front-End SSR or Back-End).
@@ -18,7 +22,8 @@ https://github.com/aziontech/vulcan/assets/12740219/c4530564-bc4a-4f1d-b14a-7dc7
 
 Each preset is made up of three primary files: `config.js`, `prebuild.js`, and `handler.js`.
 
-![file-1](https://github.com/aziontech/vulcan/assets/12740219/a62ceec5-9ce8-46d0-a450-ff2b85153d03)
+![file-1](https://github.com/aziontech/vulcan/assets/12740219/4ba25280-0463-4ecf-9ad6-f9066444f483)
+
 
 
 1.  `config.js`: This file is responsible for extending the Vulcan build (Edge build) and allows the inclusion of polyfills, plugins, and other necessities. By default, you don't need to make alterations.
@@ -50,19 +55,17 @@ Each preset is made up of three primary files: `config.js`, `prebuild.js`, and `
 Here's a step-by-step guide on how to add a new preset in Vulcan:
 
 1.  ## **Create a folder inside `./lib/presets/custom`:**
+   https://github.com/aziontech/vulcan/assets/12740219/abb1b2cc-5f74-473d-b731-c0b7157cb95e
 
-     https://github.com/aziontech/vulcan/assets/12740219/9b367ab8-c775-4a6a-8c9d-1a7dbb8ead94
+  -   The name of this folder should represent the name of your framework or library.
+      
+-   Inside this folder, you should create another folder named `compute` or `deliver`, depending on the operation mode you want. If the folder is created directly at the root, it will be interpreted as being of the `deliver` type by default.
+        
+ -   **Compute**: This mode should be used when there is effectively a computation being performed at the Edge.
 
-   
-    -   The name of this folder should represent the name of your framework or library.
+-   **Deliver**: This mode should be used when you intend to use the worker only for routing requests and delivering static files that will be computed on the client side.
         
-    -   Inside this folder, you should create another folder named `compute` or `deliver`, depending on the operation mode you want. If the folder is created directly at the root, it will be interpreted as being of the `deliver` type by default.
-        
-	    -   **Compute**: This mode should be used when there is effectively a computation being performed at the Edge.
-        
-	    -   **Deliver**: This mode should be used when you intend to use the worker only for routing requests and delivering static files that will be computed on the client side.
-        
-2.  ## **Create the following files in your preset's folder:**
+3.  ## **Create the following files in your preset's folder:**
     
     ##  handler.js
     This file contains the code that is executed within the worker in the edge function. Essentially, it is the code that runs directly on the edge. In the context of the `deliver` mode, this may simply act as a router. However, in cases where computation is needed, it can be designed to perform more complex tasks. Remember, the capabilities of your handler.js are dependent on your use case and the mode of operation you've chosen for your preset.
@@ -82,7 +85,8 @@ Here's a step-by-step guide on how to add a new preset in Vulcan:
 	   ## prebuild.js
 	   In this file, you should adapt the native build process of your framework or library. Usually, in the case of *deliver* presets, this file will be used to ensure that the generated static artifacts are placed in the *.edge/statics/* directory.
       #### React (deliver) Example:
-![prebuild-exampkle](https://github.com/aziontech/vulcan/assets/12740219/e7ac20e6-f3c9-4216-a110-db11004d93f2)
+
+![prebuild](https://github.com/aziontech/vulcan/assets/12740219/85adc374-220b-4003-8c3e-6ec5b06a483f)
 
 
 
@@ -93,7 +97,11 @@ Here's a step-by-step guide on how to add a new preset in Vulcan:
 3.  ## **Test your preset:**
    After setting up your preset, you can test it using Vulcan's build command. Depending on the mode of your preset, run one of the following commands in your terminal:
 
-https://github.com/aziontech/vulcan/assets/12740219/c3d2c2e5-1f92-400e-81f5-234f1a398a1b
+
+
+https://github.com/aziontech/vulcan/assets/12740219/7033d37a-30ee-4098-8fe5-bbfca536591d
+
+
 
 
 For `compute` mode:
