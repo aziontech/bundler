@@ -36,6 +36,7 @@ Follow these steps to start using Vulcan:
 
 ## Docs
 * [Overview](docs/overview.md)
+* [Presets](docs/presets.md)
 
 ## Contributing
 Check the [Contributing doc](CONTRIBUTING.md).

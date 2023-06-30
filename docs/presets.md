@@ -1,12 +1,12 @@
 
 
-# Documentation: Adding a New Preset to Vulcan
+# Documentation: Presets
 Vulcan is an extensible platform that allows you to easily create new presets for frameworks and libraries to run on the Edge. This documentation will describe the fundamental structure and how to add your own preset.
 
 
 ## Presets Structure
 
-To add a new preset, you need to create appropriate folders in two directories: `presets/default` and `presets/custom`. The folder representing your framework or library will automatically be included in the preset listings. Each preset has two modes, represented by folders of the same name: `compute` and `deliver`.
+To add a new preset, you need to create appropriate folders in two directories: `presets/default` or `presets/custom`. The folder representing your framework or library will automatically be included in the preset listings. Each preset has two modes, represented by folders of the same name: `compute` and `deliver`.
 
 https://github.com/aziontech/vulcan/assets/12740219/c4530564-bc4a-4f1d-b14a-7dc7b47946b6
 

@@ -1,19 +1,31 @@
 {
-  "name": "vulcan",
+  "name": "edge-functions",
   "type": "module",
-  "version": "1.0.0",
-  "description": "![image](https://github.com/aziontech/vulcan/assets/12740219/7ffeae06-3535-47d7-91f5-3b9996952ce9)",
+  "version": "0.0.1",
+  "description": "Tool to launch and build JavaScript/Frameworks. This tool automates polyfills for Edge Computing and assists in creating Workers, notably for the Azion platform.",
   "main": "lib/main.js",
   "bin": {
-    "vulcan": "lib/main.js"
+    "vulcan": "lib/main.js",
+    "edge-functions": "lib/main.js",
+    "ef": "lib/main.js"
   },
   "scripts": {
     "start": "node lib/main.js",
     "task:aliases": "node tasks/sync-aliases.js",
     "task:docs": "jsdoc --configure jsdoc.json --verbose",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
-  "author": "",
+  "author": "aziontech",
+  "contributors": [
+    {
+      "name": "Magnun A V F"
+    },
+    {
+      "name": "João Narciso",
+      "url": "https://jotanarciso.com"
+    }
+  ],
   "license": "MIT",
   "dependencies": {
     "bottleneck": "^2.19.5",
@@ -34,12 +46,19 @@
     "webpack-merge": "^5.9.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.22.5",
+    "@babel/preset-env": "^7.22.5",
+    "@jest/globals": "^29.5.0",
+    "babel-jest": "^29.5.0",
+    "babel-plugin-transform-import-meta": "^2.2.0",
     "clean-jsdoc-theme": "^4.2.9",
     "eslint": "^7.32.0 || ^8.2.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.25.2",
-    "eslint-plugin-jsdoc": "^44.2.5"
+    "eslint-plugin-jest": "^27.2.2",
+    "eslint-plugin-jsdoc": "^44.2.5",
+    "jest": "^29.5.0"
   },
   "imports": {
     "#root/*": "./",
