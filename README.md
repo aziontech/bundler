@@ -1,11 +1,25 @@
-#  Vulcan - Forging The Edge
 
-Vulcan is a powerful tool designed to streamline the development and deployment of JavaScript applications and frameworks. This powerful utility automates polyfills for Edge Computing, significantly simplifying the process of creating Workers, particularly for the Azion platform. 
+# Vulcan - Forging The Edge
 
-One of the key highlights of Vulcan is its ability to establish an intuitive and efficient protocol for facilitating the creation of presets. This makes customization and adaptation to specific project needs even more accessible, providing developers with the necessary flexibility to optimize their applications effectively and efficiently. 
+Vulcan is a powerful tool designed to streamline the development and deployment of JavaScript applications and frameworks. This powerful utility automates polyfills for Edge Computing, significantly simplifying the process of creating Workers, particularly for the Azion platform.
 
+One of the key highlights of Vulcan is its ability to establish an intuitive and efficient protocol for facilitating the creation of presets. This makes customization and adaptation to specific project needs even more accessible, providing developers with the necessary flexibility to optimize their applications effectively and efficiently.
 
-## Getting Started
+## Quick Installation
+
+For those who just want to use Vulcan in their project without contributing to the development, you can install it directly from npm.
+
+```shell
+npm install edge-functions
+```
+
+or if you prefer yarn:
+
+```shell
+yarn add edge-functions
+```
+
+## Getting Started for Development
 
 Follow these steps to start using Vulcan:
 
@@ -22,6 +36,7 @@ Follow these steps to start using Vulcan:
    npm install
    ```
 3. Install the Vulcan CLI globally, which allows you to use it as a command-line tool from anywhere in your system.
+
    ```shell
    npm install -g
    ```
