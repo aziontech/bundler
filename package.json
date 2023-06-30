@@ -25,6 +25,7 @@
     "log-update": "^5.0.1",
     "mime-types": "^2.1.35",
     "node-polyfill-webpack-plugin": "^2.0.1",
+    "open": "^9.1.0",
     "pkg-dir": "^7.0.0",
     "semver": "^7.5.2",
     "signale": "^1.4.0",
