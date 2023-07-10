@@ -1,0 +1,35 @@
+name: CI/CD (Major)
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  build-test-publish:
+    strategy:
+      matrix:
+        node-version: [14.x]
+        os: [ubuntu-latest]
+
+    name: Test - ${{ matrix.os }} - Node v${{ matrix.node-version }}
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Installing dependencies
+        run: yarn install --frozen-lockfile
+      - name: Running lint
+        run: yarn run lint
+      - name: Running unit tests
+        run: yarn test
+      - name: Run Semantic Release (Major)
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release -e ./release.config.js
