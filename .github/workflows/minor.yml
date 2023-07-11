@@ -1,10 +1,10 @@
 name: Release (Minor/Patch)
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - dev
-
 jobs:
   publish-release:
     strategy:
