@@ -31,6 +31,7 @@
     "bottleneck": "^2.19.5",
     "chokidar": "^3.5.3",
     "commander": "^10.0.1",
+    "esbuild": "^0.18.11",
     "form-data": "^4.0.0",
     "inquirer": "^9.2.7",
     "lodash": "^4.17.21",
