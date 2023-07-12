@@ -9,6 +9,12 @@
     "edge-functions": "lib/main.js",
     "ef": "lib/main.js"
   },
+  "release": {
+    "branches": [
+      "main",
+      "dev"
+    ]
+  },
   "scripts": {
     "start": "node lib/main.js",
     "task:aliases": "node tasks/sync-aliases.js",
