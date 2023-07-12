@@ -25,5 +25,5 @@ jobs:
         run: yarn install
       - name: Create Release
         env:
-          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release -e ./releaserc.json
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release -e ./releaserc.jsong

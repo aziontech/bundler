@@ -1,5 +1,4 @@
 {
-  "branches": ["main", "dev"],
   "analyzeCommits": {
     "preset": "conventionalcommits",
     "parserOpts": {
