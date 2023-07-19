@@ -1,13 +1,19 @@
 {
   "name": "edge-functions",
   "type": "module",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Tool to launch and build JavaScript/Frameworks. This tool automates polyfills for Edge Computing and assists in creating Workers, notably for the Azion platform.",
   "main": "lib/main.js",
   "bin": {
     "vulcan": "lib/main.js",
     "edge-functions": "lib/main.js",
     "ef": "lib/main.js"
+  },
+  "release": {
+    "branches": [
+      "main",
+      "dev"
+    ]
   },
   "scripts": {
     "start": "node lib/main.js",
@@ -28,19 +34,28 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^10.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^10.0.4",
+    "@semantic-release/release-notes-generator": "^11.0.4",
     "bottleneck": "^2.19.5",
     "chokidar": "^3.5.3",
     "commander": "^10.0.1",
+    "conventional-changelog-conventionalcommits": "^6.1.0",
     "deepmerge": "^4.3.1",
     "esbuild": "^0.18.11",
     "form-data": "^4.0.0",
     "inquirer": "^9.2.7",
+    "install": "^0.13.0",
     "lodash": "^4.17.21",
     "log-update": "^5.0.1",
     "mime-types": "^2.1.35",
     "node-polyfill-webpack-plugin": "^2.0.1",
+    "npm": "^9.8.0",
     "open": "^9.1.0",
     "pkg-dir": "^7.0.0",
+    "semantic-release": "^21.0.7",
     "semver": "^7.5.2",
     "signale": "^1.4.0",
     "vm2": "^3.9.19",
