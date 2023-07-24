@@ -43,6 +43,8 @@
     "chokidar": "^3.5.3",
     "commander": "^10.0.1",
     "conventional-changelog-conventionalcommits": "^6.1.0",
+    "deepmerge": "^4.3.1",
+    "esbuild": "^0.18.11",
     "form-data": "^4.0.0",
     "inquirer": "^9.2.7",
     "install": "^0.13.0",

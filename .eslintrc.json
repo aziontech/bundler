@@ -38,5 +38,8 @@
   "rules": {
     "import/extensions": ["error", "always"],
     "no-console": "off"
+  },
+  "globals": {
+    "AZION_VERSION_ID": "readonly"
   }
 }
