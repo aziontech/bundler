@@ -48,6 +48,7 @@
     "deepmerge": "^4.3.1",
     "edge-runtime": "^2.4.5",
     "esbuild": "^0.18.11",
+    "escape-string-regexp": "^5.0.0",
     "form-data": "^4.0.0",
     "inquirer": "^9.2.7",
     "install": "^0.13.0",
