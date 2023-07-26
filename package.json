@@ -57,6 +57,7 @@
     "node-polyfill-webpack-plugin": "^2.0.1",
     "npm": "^9.8.0",
     "pkg-dir": "^7.0.0",
+    "rollup-plugin-node-polyfills": "^0.2.1",
     "semantic-release": "^21.0.7",
     "semver": "^7.5.2",
     "signale": "^1.4.0",
