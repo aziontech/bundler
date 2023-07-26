@@ -35,7 +35,7 @@ Each preset is made up of three primary files: `config.js`, `prebuild.js`, and `
 
 	- `getPackageManager`: This method returns the package manager relative to the user's project (can be yarn, npm, or pnpm).
 
-	- `copyDirectory`: This function is used to copy the resulting static files from the framework build to the local Edge environment (.edge/statics).
+	- `copyDirectory`: This function is used to copy the resulting static files from the framework build to the local Edge environment (.edge/storage).
 
 	- `feedback`: This interface is used to display messages during the process, if necessary, or in case of error.
 
@@ -83,7 +83,7 @@ Here's a step-by-step guide on how to add a new preset in Vulcan:
 	   This file serves as an extension to the edge build. It enables the inclusion of polyfills, plugins, or any other procedures that relate to the build process executed on the edge. Although it is editable, we strongly advise against making changes to this file unless absolutely necessary. It's designed to ensure optimal operation, and modifications should be undertaken with careful consideration.
 	   
 	   ## prebuild.js
-	   In this file, you should adapt the native build process of your framework or library. Usually, in the case of *deliver* presets, this file will be used to ensure that the generated static artifacts are placed in the *.edge/statics/* directory.
+	   In this file, you should adapt the native build process of your framework or library. Usually, in the case of *deliver* presets, this file will be used to ensure that the generated static artifacts are placed in the *.edge/storage/* directory.
       #### React (deliver) Example:
 
 ![prebuild](https://github.com/aziontech/vulcan/assets/12740219/85adc374-220b-4003-8c3e-6ec5b06a483f)

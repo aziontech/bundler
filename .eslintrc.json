@@ -4,7 +4,10 @@
     "es2021": true,
     "jest/globals": true
   },
-  "plugins": ["jsdoc", "jest"],
+  "plugins": [
+    "jsdoc",
+    "jest"
+  ],
   "extends": [
     "airbnb-base",
     "plugin:jsdoc/recommended",
@@ -19,24 +22,63 @@
     "import/resolver": {
       "alias": {
         "map": [
-          ["#root/*", "./"],
-          ["#lib/*", "./lib"],
-          ["#utils", "./lib/utils/index.js"],
-          ["#polyfills", "./lib/build/polyfills/index.js"],
-          ["#build", "./lib/build/dispatcher/index.js"],
-          ["#bundlers", "./lib/build/bundlers/index.js"],
-          ["#notations/*", "./lib/notations"],
-          ["#env", "./lib/env/index.js"],
-          ["#platform", "./lib/platform/index.js"],
-          ["#constants", "./lib/constants/index.js"],
-          ["#edge", "./lib/platform/edgehooks/index.js"]
+          [
+            "#root/*",
+            "./"
+          ],
+          [
+            "#lib/*",
+            "./lib"
+          ],
+          [
+            "#utils",
+            "./lib/utils/index.js"
+          ],
+          [
+            "#polyfills",
+            "./lib/polyfills/index.js"
+          ],
+          [
+            "#build",
+            "./lib/build/dispatcher/index.js"
+          ],
+          [
+            "#bundlers",
+            "./lib/build/bundlers/index.js"
+          ],
+          [
+            "#notations/*",
+            "./lib/notations"
+          ],
+          [
+            "#env",
+            "./lib/env/index.js"
+          ],
+          [
+            "#platform",
+            "./lib/platform/index.js"
+          ],
+          [
+            "#constants",
+            "./lib/constants/index.js"
+          ],
+          [
+            "#edge",
+            "./lib/platform/edgehooks/index.js"
+          ]
         ],
-        "extensions": [".js", ".json"]
+        "extensions": [
+          ".js",
+          ".json"
+        ]
       }
     }
   },
   "rules": {
-    "import/extensions": ["error", "always"],
+    "import/extensions": [
+      "error",
+      "always"
+    ],
     "no-console": "off"
   },
   "globals": {
