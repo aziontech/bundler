@@ -1,8 +1,7 @@
 name: Release (Minor/Patch)
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - dev
 jobs:
