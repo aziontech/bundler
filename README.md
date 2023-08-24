@@ -1,5 +1,7 @@
 
 # Vulcan - Forging The Edge
+![vulcan](https://github.com/aziontech/vulcan/assets/12740219/a5043e6f-11cb-4498-a300-5bdb617a9989)
+
 
 Vulcan is a powerful tool designed to streamline the development and deployment of JavaScript applications and frameworks. This powerful utility automates polyfills for Edge Computing, significantly simplifying the process of creating Workers, particularly for the Azion platform.
 
@@ -44,6 +46,40 @@ Follow these steps to start using Vulcan:
    This command sets up the necessary project structure and configuration files for Vulcan.
 
 5. Start developing: Once the project is set up, you can start developing your JavaScript applications or frameworks using the power of Vulcan. Leverage the automated polyfills, Worker creation assistance, and other features provided by Vulcan to enhance your development workflow.
+
+## Using Vulcan
+
+See some examples below:
+
+* Build a JavaScript/Node project (back-end)
+
+   ```shell
+   vulcan build
+   ```
+   
+* Build a TypeScript/Node (back-end)
+
+   ```shell
+   vulcan build --preset typescript
+   ```
+   
+* Build a Static Next.js project
+
+   ```shell
+   vulcan build --preset next --mode deliver
+   ```
+   
+ * Build a Static Astro.js project
+
+   ```shell
+   vulcan build --preset astro --mode deliver
+   ```
+   
+* Test your project locally (after build)
+
+   ```shell
+   vulcan dev
+   ```
 
 
 ## Docs
