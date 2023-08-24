@@ -31,6 +31,7 @@ Polyfills can be used to generate the worker(s) file(s).
 Some configs can be passed to the builder but if user tries to override `azion worker configs` this passed configs will be ignored.
 
 ### Artifacts
-Files generated to run in azion structure:
-* js worker(s);
-* Storage assets files;
+The **'.edge'** folder will be generated representing the edge locally. Files generated to run on the infrastructure:
+* JS worker(s) => '.edge/workers.js';
+* Assets => '.edge/storage/*';
+* Environment variables => '.edge/.env'.
