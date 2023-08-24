@@ -12,7 +12,7 @@
         "./lib/utils/index.js"
       ],
       "#polyfills": [
-        "./lib/polyfills/index.js"
+        "./lib/env/polyfills/index.js"
       ],
       "#build": [
         "./lib/build/dispatcher/index.js"
