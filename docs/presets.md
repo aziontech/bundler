@@ -9,8 +9,9 @@ Vulcan is an extensible platform that allows you to easily create new presets fo
 To add a new preset, you need to create appropriate folders in two directories: `presets/default` or `presets/custom`. The folder representing your framework or library will automatically be included in the preset listings. Each preset has two modes, represented by folders of the same name: `compute` and `deliver`.
 
 
+https://github.com/aziontech/vulcan/assets/12740219/84c7d7a1-4167-4e7e-993f-41a6eb653758
 
-https://github.com/aziontech/vulcan/assets/12740219/06edb9a0-26cd-4055-bd2e-d400b6a06f3c
+
 
 
 
@@ -54,7 +55,18 @@ Each preset is made up of three primary files: `config.js`, `prebuild.js`, and `
 
 Here's a step-by-step guide on how to add a new preset in Vulcan:
 
-1.  ## **Create a folder inside `./lib/presets/custom`:**
+## **Use the command to automatic creation:**
+
+    vulcan presets create
+
+https://github.com/aziontech/vulcan/assets/12740219/9ca7371e-713a-4b29-a99b-c1a18d28bc67
+
+
+
+### Or do it manually:
+
+
+## 1. **Create a folder inside `./lib/presets/custom`:**
    https://github.com/aziontech/vulcan/assets/12740219/abb1b2cc-5f74-473d-b731-c0b7157cb95e
 
   -   The name of this folder should represent the name of your framework or library.
@@ -65,7 +77,7 @@ Here's a step-by-step guide on how to add a new preset in Vulcan:
 
 -   **Deliver**: This mode should be used when you intend to use the worker only for routing requests and delivering static files that will be computed on the client side.
         
-3.  ## **Create the following files in your preset's folder:**
+2.  ## **Create the following files in your preset's folder:**
     
     ##  handler.js
     This file contains the code that is executed within the worker in the edge function. Essentially, it is the code that runs directly on the edge. In the context of the `deliver` mode, this may simply act as a router. However, in cases where computation is needed, it can be designed to perform more complex tasks. Remember, the capabilities of your handler.js are dependent on your use case and the mode of operation you've chosen for your preset.
