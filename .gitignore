@@ -7,4 +7,4 @@ out
 .temp
 .edge
 jsdoc
-.vulcan.env
+vulcan.env
