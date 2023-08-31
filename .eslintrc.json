@@ -65,6 +65,10 @@
           [
             "#edge",
             "./lib/platform/edgehooks/index.js"
+          ],
+          [
+            "#commands",
+            "./lib/commands/index.js"
           ]
         ],
         "extensions": [
