@@ -46,7 +46,7 @@
     "bottleneck": "^2.19.5",
     "chokidar": "^3.5.3",
     "commander": "^10.0.1",
-    "conventional-changelog-conventionalcommits": "^6.1.0",
+    "conventional-changelog-conventionalcommits": "^4.6.0",
     "create-astro": "^3.2.2",
     "create-next-app": "^13.4.19",
     "create-react-app": "^5.0.1",
