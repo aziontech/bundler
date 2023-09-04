@@ -37,6 +37,7 @@
     "@angular/cli": "^16.2.0",
     "@edge-runtime/node-utils": "^2.1.1",
     "@edge-runtime/primitives": "^3.0.4",
+    "@fastly/http-compute-js": "^1.0.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^10.0.1",
     "@semantic-release/git": "^10.0.1",

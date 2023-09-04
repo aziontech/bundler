@@ -1586,6 +1586,16 @@
   resolved "https://registry.npmjs.org/@eslint/js/-/js-8.44.0.tgz"
   integrity sha512-Ag+9YM4ocKQx9AarydN0KY2j0ErMHNIocPDrVo8zAE44xLTjEtz81OdR68/cydGtk6m6jDb5Za3r2useMzYmSw==
 
+"@fastly/http-compute-js@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@fastly/http-compute-js/-/http-compute-js-1.0.0.tgz#033e8f3ad036716f90545ab5ecc2f45f0b6143e0"
+  integrity sha512-uUjsYZrzCgQ5MszMttLdoT0rVfmOrs+I/JnStU9Y8eJH+WDU+FHgxpIch8myBX2GJBs0fR9BFGOKBbFphrT2+Q==
+  dependencies:
+    buffer "^6.0.3"
+    node-inspect-extracted "^1.1.0"
+    process "^0.11.10"
+    stream-browserify "^3.0.0"
+
 "@graphql-tools/merge@8.3.1":
   version "8.3.1"
   resolved "https://registry.npmjs.org/@graphql-tools/merge/-/merge-8.3.1.tgz"
@@ -9208,6 +9218,11 @@ node-gyp@^9.0.0, node-gyp@^9.4.0:
     tar "^6.1.2"
     which "^2.0.2"
 
+node-inspect-extracted@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/node-inspect-extracted/-/node-inspect-extracted-1.1.0.tgz#7dad148e656edd2518ce66d31f9c6edaba968494"
+  integrity sha512-GtmPYJiHqmkt4sd7oYqUIzFepBDY6aotmD7nuF9QV9lolH+Sru5FZCholI5QuuyM+NvgAq/BaQB6OgXv+ZT8lA==
+
 node-int64@^0.4.0:
   version "0.4.0"
   resolved "https://registry.npmjs.org/node-int64/-/node-int64-0.4.0.tgz"
@@ -10390,19 +10405,9 @@ raw-body@2.5.1:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
-raw-body@2.5.2:
+raw-body@2.5.2, raw-body@^2.5.2:
   version "2.5.2"
   resolved "https://registry.npmjs.org/raw-body/-/raw-body-2.5.2.tgz"
-  integrity sha512-8zGqypfENjCIqGhgXToC8aB2r7YrBX+AQAfIPs/Mlk+BtPTztOvTS01NRW/3Eh60J+a48lt8qsCzirQ6loCVfA==
-  dependencies:
-    bytes "3.1.2"
-    http-errors "2.0.0"
-    iconv-lite "0.4.24"
-    unpipe "1.0.0"
-
-raw-body@^2.5.2:
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/raw-body/-/raw-body-2.5.2.tgz#99febd83b90e08975087e8f1f9419a149366b68a"
   integrity sha512-8zGqypfENjCIqGhgXToC8aB2r7YrBX+AQAfIPs/Mlk+BtPTztOvTS01NRW/3Eh60J+a48lt8qsCzirQ6loCVfA==
   dependencies:
     bytes "3.1.2"
