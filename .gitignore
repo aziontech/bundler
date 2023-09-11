@@ -8,3 +8,5 @@ out
 .edge
 jsdoc
 vulcan.env
+.vulcan
+wrangler.toml

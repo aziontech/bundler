@@ -1,0 +1,31 @@
+{
+  "branches": [
+    "main",
+    {
+      "name": "dev",
+      "prerelease": true,
+      "channel": "stage"
+    }
+  ],
+  "analyzeCommits": {
+    "preset": "conventionalcommits",
+    "parserOpts": {
+      "headerPattern": "^(\\[ISSUE-.*])?\\s?(\\w+):\\s(.*)$",
+      "headerCorrespondence": ["scope", "type", "subject"]
+    }
+  },
+  "generateNotes": {
+    "preset": "conventionalcommits",
+    "parserOpts": {
+      "headerPattern": "^(\\[ISSUE-.*])?\\s?(\\w+):\\s(.*)$",
+      "headerCorrespondence": ["scope", "type", "subject"]
+    },
+    "options": {
+      "preset": {
+        "name": "conventionalchangelog",
+        "issuePrefixes": ["ISSUE-"],
+        "issueUrlFormat": "https://github.com/aziontech/vulcan/issues/{id}"
+      }
+    }
+  }
+}

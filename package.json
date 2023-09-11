@@ -1,7 +1,7 @@
 {
   "name": "edge-functions",
   "type": "module",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Tool to launch and build JavaScript/Frameworks. This tool automates polyfills for Edge Computing and assists in creating Workers, notably for the Azion platform.",
   "main": "lib/main.js",
   "bin": {
@@ -50,7 +50,6 @@
     "buffer": "^6.0.3",
     "chokidar": "^3.5.3",
     "commander": "^10.0.1",
-    "conventional-changelog-conventionalcommits": "^6.1.0",
     "create-astro": "^3.2.2",
     "create-next-app": "^13.4.19",
     "create-react-app": "^5.0.1",
@@ -84,11 +83,16 @@
     "stream-http": "^3.2.0",
     "url": "^0.11.1",
     "util": "^0.12.5",
-    "vm2": "^3.9.19",
     "webpack": "^5.84.0",
     "webpack-merge": "^5.9.0"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^10.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^10.0.4",
+    "@semantic-release/release-notes-generator": "^11.0.4",
+    "conventional-changelog-conventionalcommits": "^4.6.0",
     "@babel/core": "^7.22.5",
     "@babel/preset-env": "^7.22.5",
     "@jest/globals": "^29.5.0",

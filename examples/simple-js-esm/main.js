@@ -2,9 +2,9 @@
 
 import messages from './messages.js';
 
-const message = messages[Math.floor(Math.random() * messages.length)];
-
 function main(event) {
+  const message = messages[Math.floor(Math.random() * messages.length)];
+  
   console.log('selected message:', message);
   console.log('VERSION_ID =', AZION_VERSION_ID);
 
