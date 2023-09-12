@@ -18,6 +18,9 @@
   "scripts": {
     "start": "node lib/main.js",
     "task:aliases": "node tasks/sync-aliases.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --write .",
     "task:docs": "jsdoc --configure jsdoc.json --verbose",
     "test": "jest",
     "test:watch": "jest --watch"
@@ -99,13 +102,16 @@
     "babel-jest": "^29.5.0",
     "babel-plugin-transform-import-meta": "^2.2.0",
     "clean-jsdoc-theme": "^4.2.9",
-    "eslint": "^7.32.0 || ^8.2.0",
+    "eslint": "^8.49.0",
     "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-jest": "^27.2.2",
     "eslint-plugin-jsdoc": "^44.2.5",
-    "jest": "^29.5.0"
+    "eslint-plugin-prettier": "^5.0.0",
+    "jest": "^29.5.0",
+    "prettier": "^3.0.3"
   },
   "imports": {
     "#root/*": "./",
