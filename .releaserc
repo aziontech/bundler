@@ -7,29 +7,51 @@
       "channel": "stage"
     }
   ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "package.json",
+          "CHANGELOG.md"
+        ],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ],
+    "@semantic-release/github"
+  ],
   "analyzeCommits": {
     "preset": "conventionalcommits",
     "parserOpts": {
       "headerPattern": "^(\\[ISSUE-.*])?\\s?(\\w+):\\s(.*)$",
-      "headerCorrespondence": ["scope", "type", "subject"]
+      "headerCorrespondence": [
+        "scope",
+        "type",
+        "subject"
+      ]
     }
   },
   "generateNotes": {
     "preset": "conventionalcommits",
     "parserOpts": {
       "headerPattern": "^(\\[ISSUE-.*])?\\s?(\\w+):\\s(.*)$",
-      "headerCorrespondence": ["scope", "type", "subject"]
+      "headerCorrespondence": [
+        "scope",
+        "type",
+        "subject"
+      ]
     },
     "options": {
       "preset": {
         "name": "conventionalchangelog",
-        "issuePrefixes": ["ISSUE-"],
+        "issuePrefixes": [
+          "ISSUE-"
+        ],
         "issueUrlFormat": "https://github.com/aziontech/vulcan/issues/{id}"
       }
     }
-  },
-  "@semantic-release/git": {
-    "assets": ["package.json"],
-    "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
   }
 }
