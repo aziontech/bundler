@@ -8,8 +8,43 @@
     }
   ],
   "plugins": [
-    "@semantic-release/commit-analyzer",
-    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "parserOpts": {
+          "headerPattern": "^(\\[ISSUE-.*])?\\s?(\\w+):\\s(.*)$",
+          "headerCorrespondence": [
+            "scope",
+            "type",
+            "subject"
+          ]
+        }
+      }
+    ],
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "preset": "conventionalcommits",
+        "parserOpts": {
+          "headerPattern": "^(\\[ISSUE-.*])?\\s?(\\w+):\\s(.*)$",
+          "headerCorrespondence": [
+            "scope",
+            "type",
+            "subject"
+          ]
+        },
+        "options": {
+          "preset": {
+            "name": "conventionalchangelog",
+            "issuePrefixes": [
+              "ISSUE-"
+            ],
+            "issueUrlFormat": "https://github.com/aziontech/vulcan/issues/{id}"
+          }
+        }
+      }
+    ],
     "@semantic-release/npm",
     "@semantic-release/changelog",
     [
@@ -23,36 +58,5 @@
       }
     ],
     "@semantic-release/github"
-  ],
-  "analyzeCommits": {
-    "preset": "conventionalcommits",
-    "parserOpts": {
-      "headerPattern": "^(\\[ISSUE-.*])?\\s?(\\w+):\\s(.*)$",
-      "headerCorrespondence": [
-        "scope",
-        "type",
-        "subject"
-      ]
-    }
-  },
-  "generateNotes": {
-    "preset": "conventionalcommits",
-    "parserOpts": {
-      "headerPattern": "^(\\[ISSUE-.*])?\\s?(\\w+):\\s(.*)$",
-      "headerCorrespondence": [
-        "scope",
-        "type",
-        "subject"
-      ]
-    },
-    "options": {
-      "preset": {
-        "name": "conventionalchangelog",
-        "issuePrefixes": [
-          "ISSUE-"
-        ],
-        "issueUrlFormat": "https://github.com/aziontech/vulcan/issues/{id}"
-      }
-    }
-  }
+  ]
 }
