@@ -7,29 +7,56 @@
       "channel": "stage"
     }
   ],
-  "analyzeCommits": {
-    "preset": "conventionalcommits",
-    "parserOpts": {
-      "headerPattern": "^(\\[ISSUE-.*])?\\s?(\\w+):\\s(.*)$",
-      "headerCorrespondence": ["scope", "type", "subject"]
-    }
-  },
-  "generateNotes": {
-    "preset": "conventionalcommits",
-    "parserOpts": {
-      "headerPattern": "^(\\[ISSUE-.*])?\\s?(\\w+):\\s(.*)$",
-      "headerCorrespondence": ["scope", "type", "subject"]
-    },
-    "options": {
-      "preset": {
-        "name": "conventionalchangelog",
-        "issuePrefixes": ["ISSUE-"],
-        "issueUrlFormat": "https://github.com/aziontech/vulcan/issues/{id}"
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "parserOpts": {
+          "headerPattern": "^(\\[ISSUE-.*])?\\s?(\\w+):\\s(.*)$",
+          "headerCorrespondence": [
+            "scope",
+            "type",
+            "subject"
+          ]
+        }
       }
-    }
-  },
-  "@semantic-release/git": {
-    "assets": ["package.json"],
-    "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-  }
+    ],
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "preset": "conventionalcommits",
+        "parserOpts": {
+          "headerPattern": "^(\\[ISSUE-.*])?\\s?(\\w+):\\s(.*)$",
+          "headerCorrespondence": [
+            "scope",
+            "type",
+            "subject"
+          ]
+        },
+        "options": {
+          "preset": {
+            "name": "conventionalchangelog",
+            "issuePrefixes": [
+              "ISSUE-"
+            ],
+            "issueUrlFormat": "https://github.com/aziontech/vulcan/issues/{id}"
+          }
+        }
+      }
+    ],
+    "@semantic-release/npm",
+    "@semantic-release/changelog",
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "package.json",
+          "CHANGELOG.md"
+        ],
+        "message": "chore(release): ${nextRelease.version} \n\n${nextRelease.notes}"
+      }
+    ],
+    "@semantic-release/github"
+  ]
 }
