@@ -1,3 +1,9 @@
 .github
 .vscode
 examples
+.babelrc
+.eslintignore
+.eslintrc.json
+.prettierrc.json
+.releaserc
+jest.config.js
