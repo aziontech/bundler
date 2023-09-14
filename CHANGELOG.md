@@ -1,3 +1,11 @@
+## [1.7.0-stage.2](https://github.com/aziontech/vulcan/compare/v1.7.0-stage.1...v1.7.0-stage.2) (2023-09-14)
+
+
+### Bug Fixes
+
+* Add unused files in npm ignore ([ea3acf8](https://github.com/aziontech/vulcan/commit/ea3acf8a536fbe26f0e3e5b359385607930e79ec))
+* Create .npmignore ([#131](https://github.com/aziontech/vulcan/issues/131)) ([90383b0](https://github.com/aziontech/vulcan/commit/90383b01cd0dea848840d3348bf30cdcfdd79388))
+
 ## [1.7.0-stage.1](https://github.com/aziontech/vulcan/compare/v1.6.4-stage.2...v1.7.0-stage.1) (2023-09-14)
 
 
