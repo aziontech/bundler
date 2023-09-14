@@ -5,8 +5,7 @@ on:
       - main
       - stage
 
-permissions:
-  contents: read #
+permissions: write-all
 
 jobs:
   release:
