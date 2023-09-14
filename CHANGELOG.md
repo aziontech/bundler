@@ -1,3 +1,28 @@
+## [1.7.0-stage.1](https://github.com/aziontech/vulcan/compare/v1.6.4-stage.2...v1.7.0-stage.1) (2023-09-14)
+
+
+### Features
+
+* add custom server with js files ([#97](https://github.com/aziontech/vulcan/issues/97)) ([f73a31e](https://github.com/aziontech/vulcan/commit/f73a31e19e23c773e379f3cd193262468cf1ba52))
+* Add list preset modes ([4d1b924](https://github.com/aziontech/vulcan/commit/4d1b924f1c3d403683dcd1d0a2245cf9d68cd3a3))
+* Add next webpack polyfills ([#98](https://github.com/aziontech/vulcan/issues/98)) ([5451fa5](https://github.com/aziontech/vulcan/commit/5451fa59c69f4bc148649e2f0b67e7b15012f678))
+* Add Next.js support ([#125](https://github.com/aziontech/vulcan/issues/125)) ([a53c807](https://github.com/aziontech/vulcan/commit/a53c80727673ff209842372eb467d01595f3d15d))
+* added handler and code compile ([#100](https://github.com/aziontech/vulcan/issues/100)) ([2e245fd](https://github.com/aziontech/vulcan/commit/2e245fdf67f5fdb746072950b6e64b14d9273d19))
+* check if dependencies are installed and log vercel cli ([144bc7a](https://github.com/aziontech/vulcan/commit/144bc7ac02b626fa9c1693ebd9a2f39a17244473))
+* Improve vercel build logs ([67ad3bd](https://github.com/aziontech/vulcan/commit/67ad3bd8f918c23d09514ce7acac77a5ac519db5))
+* list presets modes ([df1d71e](https://github.com/aziontech/vulcan/commit/df1d71e43041224a47653e0c9853e18205f92c51))
+* pre build configuration and custom static file server Next ([#96](https://github.com/aziontech/vulcan/issues/96)) ([1d2ab58](https://github.com/aziontech/vulcan/commit/1d2ab58370432b81cfa625a0d9a1c32eaa27cb93))
+
+
+### Bug Fixes
+
+* change exit code from 0 to 1 in catch ([835bc89](https://github.com/aziontech/vulcan/commit/835bc8920e9228835e87020e8d98b3ba9c366208))
+* custom server code and config file ([#103](https://github.com/aziontech/vulcan/issues/103)) ([340dd11](https://github.com/aziontech/vulcan/commit/340dd11acf0fb5e89e84d83404e0659ffd3f5b42))
+* Next build fix and improvements ([#101](https://github.com/aziontech/vulcan/issues/101)) ([f9100c5](https://github.com/aziontech/vulcan/commit/f9100c5177abae307985257afe471f3538762161))
+* remove local run command message ([2d527b3](https://github.com/aziontech/vulcan/commit/2d527b3bb1b4abe383ce4ca969d70a9f5513c1c9))
+* remove unnecessary Error ([3fdf2d9](https://github.com/aziontech/vulcan/commit/3fdf2d9fa3c4e477296019160d0681e5d7e5408a))
+* response cache and improvements ([#102](https://github.com/aziontech/vulcan/issues/102)) ([ee2da8a](https://github.com/aziontech/vulcan/commit/ee2da8a9ec5ade1b509dfbaf87a01ae8946d6342))
+
 ### [1.6.4-stage.2](https://github.com/aziontech/vulcan/compare/v1.6.4-stage.1...v1.6.4-stage.2) (2023-09-14)
 
 
