@@ -60,7 +60,6 @@
     "lodash": "^4.17.21",
     "log-update": "^5.0.1",
     "mime-types": "^2.1.35",
-    "node-polyfill-webpack-plugin": "^2.0.1",
     "npm": "^9.8.0",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
