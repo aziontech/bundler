@@ -1,7 +1,7 @@
 {
   "name": "edge-functions",
   "type": "module",
-  "version": "1.7.0-stage.2",
+  "version": "1.7.0",
   "description": "Tool to launch and build JavaScript/Frameworks. This tool automates polyfills for Edge Computing and assists in creating Workers, notably for the Azion platform.",
   "main": "lib/main.js",
   "bin": {
@@ -99,7 +99,8 @@
     "eslint-plugin-jest": "^27.2.2",
     "eslint-plugin-jsdoc": "^44.2.5",
     "eslint-plugin-prettier": "^5.0.0",
-    "jest": "^29.5.0",
+    "jest": "^29.7.0",
+    "mock-fs": "^5.2.0",
     "prettier": "^3.0.3"
   },
   "resolutions": {
