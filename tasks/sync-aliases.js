@@ -58,8 +58,10 @@ const updateEslintJson = () => {
       const eslintJson = JSON.parse(data);
 
       eslintJson.settings = eslintJson.settings || {};
-      eslintJson.settings['import/resolver'] = eslintJson.settings['import/resolver'] || {};
-      eslintJson.settings['import/resolver'].alias = eslintJson.settings['import/resolver'].alias || {};
+      eslintJson.settings['import/resolver'] =
+        eslintJson.settings['import/resolver'] || {};
+      eslintJson.settings['import/resolver'].alias =
+        eslintJson.settings['import/resolver'].alias || {};
       eslintJson.settings['import/resolver'].alias.map = myAliases;
 
       const updatedEslintJson = JSON.stringify(eslintJson, null, 2);
