@@ -1,3 +1,4 @@
 examples/*
+jsdoc/*
 yarn.lock
 CHANGELOG.md
