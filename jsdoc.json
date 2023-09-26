@@ -36,12 +36,12 @@
           "id": "some-id"
         },
         {
-            "title": "Azion",
-            "link": "https:/azion.com",
-            "target": "_blank",
-            "class": "some-class",
-            "id": "some-id"
-          }
+          "title": "Azion",
+          "link": "https:/azion.com",
+          "target": "_blank",
+          "class": "some-class",
+          "id": "some-id"
+        }
       ]
     }
   },

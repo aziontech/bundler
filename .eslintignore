@@ -1,5 +1,1 @@
-lib/presets/custom/*/handler.js
-lib/presets/custom/*/worker.js
-lib/build/polyfills/node
-examples/
-lib/presets/custom/next/compute/node/custom-server/12.3.1/server/next-compute-js-server.js
+examples/*
