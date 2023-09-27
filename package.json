@@ -32,6 +32,10 @@
   "license": "MIT",
   "dependencies": {
     "@angular/cli": "^16.2.0",
+    "@babel/generator": "^7.23.0",
+    "@babel/parser": "^7.23.0",
+    "@babel/types": "^7.23.0",
+    "@babel/traverse": "^7.23.0",
     "@edge-runtime/node-utils": "^2.1.1",
     "@edge-runtime/primitives": "^3.0.4",
     "@fastly/http-compute-js": "^1.0.0",
@@ -81,7 +85,6 @@
   "devDependencies": {
     "@babel/core": "^7.22.5",
     "@babel/preset-env": "^7.22.5",
-    "@babel/types": "7.22.17",
     "@jest/globals": "^29.5.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^10.0.1",
