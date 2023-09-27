@@ -6,6 +6,7 @@ export default [
   ['#build', './lib/build/dispatcher/index.js'],
   ['#bundlers', './lib/build/bundlers/index.js'],
   ['#notations/*', './lib/notations'],
+  ['#namespaces', './lib/notations/namespaces.js'],
   ['#env', './lib/env/index.js'],
   ['#platform', './lib/platform/index.js'],
   ['#constants', './lib/constants/index.js'],
