@@ -7,6 +7,7 @@ export default [
   ['#bundlers', './lib/build/bundlers/index.js'],
   ['#notations/*', './lib/notations'],
   ['#namespaces', './lib/notations/namespaces.js'],
+  ['#typedef', './lib/notations/typedef.js'],
   ['#env', './lib/env/index.js'],
   ['#platform', './lib/platform/index.js'],
   ['#constants', './lib/constants/index.js'],
