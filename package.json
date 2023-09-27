@@ -101,6 +101,7 @@
     "eslint-plugin-jsdoc": "^44.2.5",
     "eslint-plugin-prettier": "^5.0.0",
     "jest": "^29.7.0",
+    "jsdoc": "^4.0.2",
     "mock-fs": "^5.2.0",
     "prettier": "^3.0.3"
   },
@@ -115,6 +116,8 @@
     "#build": "./lib/build/dispatcher/index.js",
     "#bundlers": "./lib/build/bundlers/index.js",
     "#notations/*": "./lib/notations",
+    "#namespaces": "./lib/notations/namespaces.js",
+    "#typedef": "./lib/notations/typedef.js",
     "#env": "./lib/env/index.js",
     "#platform": "./lib/platform/index.js",
     "#constants": "./lib/constants/index.js",
