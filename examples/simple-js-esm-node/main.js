@@ -31,15 +31,17 @@ function buffeExamples() {
   // Output: {"type":"Buffer","data":[72,101,108,108,111,44,32,119,111,114,108,100,33]}
   console.log(json);
 
-  const parsedJson = JSON.parse(json, (key, value) => (value && value.type === 'Buffer' ? Buffer.from(value.data) : value));
+  const parsedJson = JSON.parse(json, (key, value) =>
+    value && value.type === 'Buffer' ? Buffer.from(value.data) : value,
+  );
   console.log(parsedJson.toString()); // Output: "Hello, world!"
 }
 
 // eslint-disable-next-line
-function main(event) {
+export default (event) => {
   buffeExamples();
 
   return new Response('Hello!', {
     status: 200,
   });
-}
+};
