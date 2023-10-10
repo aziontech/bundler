@@ -1,3 +1,12 @@
+## [1.7.0-stage.3](https://github.com/aziontech/vulcan/compare/v1.7.0-stage.2...v1.7.0-stage.3) (2023-10-10)
+
+
+### Bug Fixes
+
+* adding the stage url ([18463ec](https://github.com/aziontech/vulcan/commit/18463ec530e7555e4e979d79ba1fdf70290cc81f))
+* removing utf8 when reading file ([579c975](https://github.com/aziontech/vulcan/commit/579c975a8dc2e6e8b0596c9c228a346a98fed37d))
+* removing utf8 when reading file ([#142](https://github.com/aziontech/vulcan/issues/142)) ([c9d522c](https://github.com/aziontech/vulcan/commit/c9d522c892ef62122c2a34403abe83d2318452a2))
+
 ## [1.7.0-stage.2](https://github.com/aziontech/vulcan/compare/v1.7.0-stage.1...v1.7.0-stage.2) (2023-09-14)
 
 
