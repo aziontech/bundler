@@ -17,7 +17,7 @@ https://github.com/aziontech/vulcan/assets/12740219/84c7d7a1-4167-4e7e-993f-41a6
 
 
 - Compute: This holds configurations for frameworks that use computation on the Edge (Front-End SSR or Back-End).
-- Deliver: This holds configurations for frameworks that merely handle requests on the Edge to deliver static files (routing, but not execute.
+- Deliver: This holds configurations for frameworks that merely handle requests on the Edge to deliver static files (routing, but not execute).
 
 
 
