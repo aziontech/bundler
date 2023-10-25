@@ -81,6 +81,98 @@ See some examples below:
   vulcan dev
   ```
 
+## Vulcan.config.js
+
+The `vulcan.config.js` file offers a robust configuration system for Vulcan. This file is not mandatory but acts as an override mechanism. If you define properties in this file, they will supersede the preset configurations. Properties not defined will rely on the preset.
+
+Here's a detailed breakdown of the configuration properties available in `vulcan.config.js`:
+
+### Entry
+
+**Type:** String
+
+**Description:**  
+This represents the primary entry point for your application, where the building process begins.
+
+**Note:** `Entry` will be ignored for jamstack solutions.
+
+### Builder
+
+**Type:** String ('esbuild' or 'webpack')
+
+**Description:**  
+Defines which build tool to use. The available options are `esbuild` and `webpack`.
+
+### UseNodePolyfills
+
+**Type:** Boolean
+
+**Description:**  
+Determines if Node.js polyfills should be applied. This is useful for projects that leverage Node.js specific functionalities but are targeting environments without such built-in capabilities.
+
+### UseOwnWorker
+
+**Type:** Boolean
+
+**Description:**  
+This flag indicates that the constructed code inserts its own worker expression, such as `addEventListener("fetch")` or similar, without the need to inject a provider.
+
+### Preset
+
+**Type:** Object
+
+**Description:**  
+Provides preset-specific configurations.
+
+- **Name (Type: String):** Refers to the preset name, e.g., "vue" or "next".
+- **Mode (Type: String):** Specifies the mode for the preset, e.g., "compute" or "deliver".
+
+### MemoryFS
+
+**Type:** Object
+
+**Description:**  
+Configurations related to the in-memory filesystem.
+
+- **InjectionDirs (Type: Array of Strings):** Directories to be injected into memory for runtime access via the fs API.
+
+- **RemovePathPrefix (Type: String):** A prefix path to be removed from files before injecting into memory.
+
+### Custom
+
+**Type:** Object
+
+**Description:**  
+Allows you to extend the capabilities of the chosen bundler (either `webpack` or `esbuild`) with custom plugins or configurations.
+
+- **Plugins (Type: Object):** Add your custom plugins for your chosen bundler here.
+
+### Example Configuration
+
+For a Vue-based project:
+
+```javascript
+module.exports = {
+  entry: 'src/index.js',
+  builder: 'webpack',
+  useNodePolyfills: true,
+  useOwnWorker: false,
+  preset: {
+    name: 'vue',
+    mode: 'compute',
+  },
+  memoryFS: {
+    injectionDirs: ['.faststore/@generated/graphql'],
+    removePathPrefix: '.faststore/',
+  },
+  custom: {
+    plugins: {},
+  },
+};
+```
+
+**Note:** Adapting `vulcan.config.js` to your setup allows a personalized development experience, catering to the specific needs of your JavaScript applications and frameworks.
+
 ## Docs
 
 - [Overview](docs/overview.md)
@@ -92,7 +184,7 @@ Check the [Contributing doc](CONTRIBUTING.md).
 
 ## Code of Conduct
 
-Check the [Code of Conduct ](CODE_OF_CONDUCT.md).
+Check the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
