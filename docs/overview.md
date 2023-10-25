@@ -25,7 +25,7 @@ An external call to run a build.
 
 Custom prebuild module that runs actions to generate entrypoint and necessary files.
 
-The user is free to run any action in this step. All actions must be called in a exported `main` function.
+The user is free to run any action in this step. All actions must be called in a `exported default` function.
 
 ### Common Build
 
