@@ -1,3 +1,11 @@
+## [2.0.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.0.0-stage.1...v2.0.0-stage.2) (2023-10-26)
+
+
+### Bug Fixes
+
+* local env hot reload ([#161](https://github.com/aziontech/vulcan/issues/161)) ([e2edb9c](https://github.com/aziontech/vulcan/commit/e2edb9cad2222395850a09f9476eb206b64568f3))
+* localenv hot reload ([85f606c](https://github.com/aziontech/vulcan/commit/85f606c7025d1d8474e37bbeecaf46ee9bd7ef3b))
+
 ## [2.0.0-stage.1](https://github.com/aziontech/vulcan/compare/v1.7.1...v2.0.0-stage.1) (2023-10-25)
 
 
