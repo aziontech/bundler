@@ -1,3 +1,11 @@
+## [2.0.0-stage.3](https://github.com/aziontech/vulcan/compare/v2.0.0-stage.2...v2.0.0-stage.3) (2023-10-26)
+
+
+### Bug Fixes
+
+* Add string_decoder in webpack fallback config ([71d376f](https://github.com/aziontech/vulcan/commit/71d376fdb4f2f86d87f5ad389645954ea3b2e88b))
+* Add string_decoder in webpack fallback config ([#163](https://github.com/aziontech/vulcan/issues/163)) ([429ab88](https://github.com/aziontech/vulcan/commit/429ab88eab7c007c84f92c0f20c5ae66cc55ac27))
+
 ## [2.0.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.0.0-stage.1...v2.0.0-stage.2) (2023-10-26)
 
 
