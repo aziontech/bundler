@@ -9,7 +9,7 @@ function getRandomMessage(messages: string[]): string {
   return messages[randomIndex];
 }
 
-function main(event: any) {
+const main = (event: any) => {
   const messages = getMessages();
   const message = getRandomMessage(messages);
 
@@ -21,4 +21,5 @@ function main(event: any) {
     status: 200,
   });
 }
-/* eslint-enable */
+
+export default main;

@@ -1,5 +1,0 @@
-{
-  "/page": "app/page.js",
-  "/misty-mountains/moria/page": "app/misty-mountains/moria/page.js",
-  "/blog/[slug]/page": "app/blog/[slug]/page.js"
-}

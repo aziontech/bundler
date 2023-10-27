@@ -30,18 +30,18 @@
       "menu": [
         {
           "title": "Github",
-          "link": "https://github.com/@aziontech/vulcan/",
+          "link": "https://github.com/aziontech/vulcan/",
           "target": "_blank",
           "class": "some-class",
           "id": "some-id"
         },
         {
-            "title": "Azion",
-            "link": "https:/azion.com",
-            "target": "_blank",
-            "class": "some-class",
-            "id": "some-id"
-          }
+          "title": "Azion",
+          "link": "https://azion.com",
+          "target": "_blank",
+          "class": "some-class",
+          "id": "some-id"
+        }
       ]
     }
   },
