@@ -1,10 +1,6 @@
+/* eslint-disable */
 import messages from './messages.js';
 
-/* eslint-disable */
-/**
- *
- * @param {FetchEvent} event
- */
 function main(event) {
   const message = messages[Math.floor(Math.random() * messages.length)];
 

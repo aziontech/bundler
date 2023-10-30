@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Buffer } from 'buffer';
 
 /**
@@ -37,7 +38,6 @@ function buffeExamples() {
   console.log(parsedJson.toString()); // Output: "Hello, world!"
 }
 
-// eslint-disable-next-line
 export default (event) => {
   buffeExamples();
 
