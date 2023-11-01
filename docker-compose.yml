@@ -24,5 +24,4 @@ services:
     volumes:
       - ./:/vulcan/
     working_dir: /
-    command: sh /vulcan/tests/scripts/setup-e2e-env.sh
     tty: true

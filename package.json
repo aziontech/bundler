@@ -16,8 +16,12 @@
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
     "task:docs": "jsdoc --configure jsdoc.json --verbose",
+    "e2e:start": "tests/scripts/start-e2e-env.sh",
+    "e2e:stop": "tests/scripts/stop-e2e-env.sh",
+    "e2e:destroy": "tests/scripts/destroy-e2e-env.sh",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:e2e": "yarn e2e:start && jest tests/e2e/ && yarn e2e:stop"
   },
   "author": "aziontech",
   "contributors": [

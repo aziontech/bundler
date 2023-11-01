@@ -20,8 +20,6 @@ log_with_color "* STARTING ..." $GREEN
 
 SENTINEL_FILE="/vulcan/.initialized.keep"
 
-echo "MY_SENTINEL FILE: ${SENTINEL_FILE}"
-
 # TODO: improve this init check
 if test -f $SENTINEL_FILE; then
     log_with_color "Container already initialized!" $CYAN
@@ -52,6 +50,3 @@ else
 
     log_with_color "* DONE!" $GREEN
 fi
-
-# keep the container running
-tail -f /dev/null
