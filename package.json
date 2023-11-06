@@ -21,7 +21,7 @@
     "e2e:destroy": "tests/scripts/destroy-e2e-env.sh",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:e2e": "yarn e2e:start && sudo jest tests/e2e/ && yarn e2e:stop"
+    "test:e2e": "yarn e2e:start && jest tests/e2e/ && yarn e2e:stop"
   },
   "author": "aziontech",
   "contributors": [
