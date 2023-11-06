@@ -23,6 +23,8 @@ SENTINEL_FILE="/vulcan/.initialized.keep"
 # TODO: improve this init check
 if test -f $SENTINEL_FILE; then
     log_with_color "Container already initialized!" $CYAN
+    log_with_color "* Vulcan version:" $GREEN
+    npx --yes --registry=http://verdaccio:4873 edge-functions@latest --version
 else
     log_with_color "Container NOT initialized! Initializing container ..." $YELLOW
 
@@ -42,7 +44,8 @@ else
     log_with_color "* Publish vulcan in verdaccio" $GREEN
     npm publish --registry http://verdaccio:4873
     npm info edge-functions --json --registry http://verdaccio:4873
-    npx --yes edge-functions@latest --help http://verdaccio:4873
+    log_with_color "* Vulcan version:" $GREEN
+    npx --yes --registry=http://verdaccio:4873 edge-functions@latest --version
 
     cd /
 
