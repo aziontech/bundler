@@ -1,11 +1,21 @@
-import { exec } from '#utils';
+import { feedback } from '#utils';
+import {
+  waitForVulcanServer,
+  execCommandInContainer,
+} from './docker-env-actions.js';
 
 /**
  * Stop vulcan server in test container
+ * @param {number} serverPort - used port in vulcan server
+ * @param {string} example - current example name
  */
-async function projectStop() {
-  // stop server
-  await exec(`docker exec test pkill -9 -f dev`);
+async function projectStop(serverPort, example) {
+  feedback.info(`[${example}] Stopping vulcan local server ...`);
+  await execCommandInContainer(`pkill -9 -f "dev -p ${serverPort}"`);
+
+  await waitForVulcanServer(false);
+
+  feedback.info(`[${example}] vulcan local server stopped!`);
 }
 
 export default projectStop;

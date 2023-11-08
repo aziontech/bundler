@@ -1,42 +1,49 @@
-import { exec } from '#utils';
-
-/**
- * Sleep n seconds
- * @param {number} seconds - time to sleep
- * @returns {any} - Resolved promise after timeout
- */
-function sleep(seconds) {
-  // eslint-disable-next-line no-promise-executor-return
-  return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
-}
+import { feedback } from '#utils';
+import {
+  waitForVulcanServer,
+  execCommandInContainer,
+} from './docker-env-actions.js';
 
 /**
  * Run actions to build and run project in docker container
  * @param {string} examplePath - project path in container
  * @param {string} preset - vulcan preset to build
  * @param {string} mode - vulcan preset mode to build
+ * @param {number} serverPort - port to use in vulcan server
+ * @param {boolean} installPkgs - dependencies need to be installed?
  */
-async function projectInitializer(examplePath, preset, mode) {
-  const dockerCmd = `docker exec -w ${examplePath} test`;
-  const dockerBkgCmd = dockerCmd.replace('-w', '-d -w');
+async function projectInitializer(
+  examplePath,
+  preset,
+  mode,
+  serverPort,
+  installPkgs = true,
+) {
+  const example = examplePath.replace('/examples/', '');
   const vulcanCmd =
     'npx --yes --registry=http://verdaccio:4873 edge-functions@latest';
 
-  // install project dependencies
-  await exec(`${dockerCmd} yarn`, 'E2E test');
+  if (installPkgs) {
+    feedback.info(`[${example}] Installing project dependencies ...`);
+    await execCommandInContainer('yarn', examplePath);
+  }
 
-  // run vulcan build
-  await exec(
-    `${dockerCmd} ${vulcanCmd} build --preset ${preset} --mode ${mode}`,
-    'E2E test',
+  feedback.info(`[${example}] Building the project ...`);
+  await execCommandInContainer(
+    `${vulcanCmd} build --preset ${preset} --mode ${mode}`,
+    examplePath,
   );
 
-  // run vulcan in background
-  await exec(`${dockerBkgCmd} ${vulcanCmd} dev`, 'E2E test');
+  feedback.info(`[${example}] Starting vulcan local server ...`);
+  await execCommandInContainer(
+    `${vulcanCmd} dev -p ${serverPort}`,
+    examplePath,
+    true,
+  );
 
-  // wait vulcan server to start
-  // TODO: improve this server init waiting
-  await sleep(2);
+  await waitForVulcanServer(true);
+
+  feedback.info(`[${example}] vulcan local server started!`);
 }
 
 export default projectInitializer;
