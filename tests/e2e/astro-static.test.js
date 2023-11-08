@@ -1,45 +1,55 @@
 /* eslint-disable jest/expect-expect */
 import supertest from 'supertest';
-
+import puppeteer from 'puppeteer';
 import projectInitializer from '../utils/project-initializer.js';
 import projectStop from '../utils/project-stop.js';
 
-// 1 min timeout
-const TIMEOUT = 1 * 60 * 1000;
+// timeout in minutes
+const TIMEOUT = 10 * 60 * 1000;
+
+const SERVER_PORT = 3001;
+const LOCALHOST_BASE_URL = `http://localhost:${SERVER_PORT}`;
+const EXAMPLE_PATH = '/examples/astro-static';
 
 describe('E2E - astro-static project', () => {
-  const examplePath = '/examples/astro-static/';
   let request;
+  let browser;
+  let page;
 
   beforeAll(async () => {
-    request = supertest('http://localhost:3000');
+    request = supertest(LOCALHOST_BASE_URL);
 
-    await projectInitializer(examplePath, 'astro', 'deliver');
+    await projectInitializer(EXAMPLE_PATH, 'astro', 'deliver', SERVER_PORT);
+
+    browser = await puppeteer.launch({ headless: 'new' });
+    page = await browser.newPage();
   }, TIMEOUT);
 
   afterAll(async () => {
-    await projectStop();
+    await projectStop(SERVER_PORT, EXAMPLE_PATH.replace('/examples/', ''));
+
+    await browser.close();
   }, TIMEOUT);
 
   test('Should render home page in "/" route', async () => {
-    const resp = await request
-      .get('/')
-      .expect(200)
-      .expect('Content-Type', /html/);
+    await page.goto(`${LOCALHOST_BASE_URL}/`);
 
-    expect(resp.text).toMatch('To get started, open the directory');
-    expect(resp.text).toMatch(
+    const pageContent = await page.content();
+    const pageTitle = await page.title();
+
+    expect(pageContent).toContain('To get started, open the directory');
+    expect(pageContent).toContain(
       'Learn how Astro works and explore the official API docs.',
     );
+    expect(pageTitle).toBe('Welcome to Astro.');
   });
 
   test('Should render edge page in "/edge" route', async () => {
-    const resp = await request
-      .get('/edge')
-      .expect(200)
-      .expect('Content-Type', /html/);
+    await page.goto(`${LOCALHOST_BASE_URL}/edge`);
 
-    expect(resp.text).toMatch('Running in Edge.');
+    const pageContent = await page.content();
+
+    expect(pageContent).toContain('Running in Edge.');
   });
 
   test('Should return correct asset', async () => {
