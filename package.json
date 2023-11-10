@@ -16,8 +16,12 @@
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
     "task:docs": "jsdoc --configure jsdoc.json --verbose",
+    "e2e:start": "tests/scripts/start-e2e-env.sh",
+    "e2e:stop": "tests/scripts/stop-e2e-env.sh",
+    "e2e:destroy": "tests/scripts/destroy-e2e-env.sh",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:e2e": "yarn e2e:start && jest tests/e2e/ && yarn e2e:stop"
   },
   "author": "aziontech",
   "contributors": [
@@ -105,9 +109,12 @@
     "eslint-plugin-jsdoc": "^44.2.5",
     "eslint-plugin-prettier": "^5.0.0",
     "jest": "^29.7.0",
+    "jest-puppeteer": "^9.0.1",
     "jsdoc": "^4.0.2",
     "mock-fs": "^5.2.0",
-    "prettier": "^3.0.3"
+    "prettier": "^3.0.3",
+    "puppeteer": "^21.5.0",
+    "supertest": "^6.3.3"
   },
   "resolutions": {
     "@babel/types": "7.22.17"
