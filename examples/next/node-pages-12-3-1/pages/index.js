@@ -26,7 +26,7 @@ export default function Home() {
             <li
               onClick={() => handleClick('/api/hello')}
               onKeyDown={() => handleClick('/api/hello')}>
-              Edge API Route
+              API Route
             </li>
             <li
               onClick={() => handleClick('/ssr')}
