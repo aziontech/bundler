@@ -10,3 +10,4 @@ jsdoc
 vulcan.env
 .vulcan
 wrangler.toml
+.initialized.keep
