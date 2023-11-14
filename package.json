@@ -15,9 +15,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
-    "task:docs": "jsdoc --configure jsdoc.json --verbose",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "jest --clearCache && jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --clearCache && jest --coverage"
   },
   "author": "aziontech",
   "contributors": [
@@ -92,6 +92,8 @@
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/npm": "^10.0.4",
     "@semantic-release/release-notes-generator": "^11.0.4",
+    "@swc/core": "^1.3.96",
+    "@swc/jest": "^0.2.29",
     "babel-jest": "^29.5.0",
     "babel-plugin-transform-import-meta": "^2.2.0",
     "clean-jsdoc-theme": "^4.2.9",
