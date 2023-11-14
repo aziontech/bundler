@@ -17,13 +17,12 @@
     "format": "prettier --write .",
     "test": "jest --clearCache && jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --clearCache && jest --coverage"
+    "test:coverage": "jest --clearCache && jest --coverage",
     "format:check": "prettier . --check",
     "task:docs": "jsdoc --configure jsdoc.json --verbose",
     "e2e:start": "tests/scripts/start-e2e-env.sh",
     "e2e:stop": "tests/scripts/stop-e2e-env.sh",
     "e2e:destroy": "tests/scripts/destroy-e2e-env.sh",
-    "test:watch": "jest --watch",
     "test:e2e": "yarn e2e:start && jest tests/e2e/ && yarn e2e:stop",
     "prepare": "husky install"
   },
