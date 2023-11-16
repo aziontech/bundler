@@ -7,3 +7,5 @@ examples
 .prettierrc.json
 .releaserc
 jest.config.js
+tests
+docker-compose.yml
