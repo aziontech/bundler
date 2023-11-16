@@ -12,17 +12,6 @@ const SERVER_PORT = 3007;
 const LOCALHOST_BASE_URL = `http://localhost:${SERVER_PORT}`;
 const EXAMPLE_PATH = '/examples/next/node-pages-12-3-1';
 
-/**
- * Check if a date is in a date range
- * @param {Date} date - date to test
- * @param {Date} startDate - start date
- * @param {Date} endDate - end date
- * @returns {boolean} - with the answer
- */
-function isDateInRange(date, startDate, endDate) {
-  return date >= startDate && date <= endDate;
-}
-
 describe('E2E - next node-pages-12-3-1 project', () => {
   let request;
   let browser;
@@ -58,24 +47,18 @@ describe('E2E - next node-pages-12-3-1 project', () => {
   });
 
   test('Should render a page with dynamic content (date) in "/ssr" SSR route', async () => {
+    const now = new Date();
+    const options = { month: 'short', day: 'numeric', year: 'numeric' };
+    const currentDate = now
+      .toLocaleDateString('en-US', options)
+      .replaceAll(',', '');
+
     await page.goto(`${LOCALHOST_BASE_URL}/ssr`);
-
     const pageContent = await page.content();
-
-    const regex = /<span>(.*?)<\/span>/;
-    const match = pageContent.match(regex);
-    const dateStr = match ? match[1].trim() : '';
-    const date = new Date(dateStr);
-
-    const currentDate = new Date();
-    const tenSecondsBefore = new Date(currentDate);
-    tenSecondsBefore.setMinutes(currentDate.getSeconds() - 10);
-    const tenSecondsAfter = new Date(currentDate);
-    tenSecondsAfter.setMinutes(currentDate.getSeconds() + 10);
 
     expect(pageContent).toContain('Edge SSR Example');
     expect(pageContent).toContain('Server message =');
-    expect(isDateInRange(date, tenSecondsBefore, tenSecondsAfter)).toBe(true);
+    expect(pageContent).toContain(currentDate);
   });
 
   test('Should render correct page content in "/teste/x" dynamic route', async () => {
