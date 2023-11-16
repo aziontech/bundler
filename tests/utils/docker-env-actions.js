@@ -51,6 +51,16 @@ async function waitForVulcanServer(checkStart) {
 }
 
 /**
+ * Get a port from an available ports list
+ * @returns {number} - the port
+ */
+function getContainerPort() {
+  const port = globalThis.dockerAvailablePorts.pop();
+
+  return port;
+}
+
+/**
  * Run a command in a docker container
  * @param {string} command - command to exec
  * @param {string} path - run the command in this path
@@ -74,4 +84,4 @@ async function execCommandInContainer(
   );
 }
 
-export { waitForVulcanServer, execCommandInContainer };
+export { waitForVulcanServer, execCommandInContainer, getContainerPort };

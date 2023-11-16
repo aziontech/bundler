@@ -3,12 +3,13 @@ import supertest from 'supertest';
 import puppeteer from 'puppeteer';
 import projectInitializer from '../utils/project-initializer.js';
 import projectStop from '../utils/project-stop.js';
+import { getContainerPort } from '../utils/docker-env-actions.js';
 
 // timeout in minutes
 const TIMEOUT = 10 * 60 * 1000;
 
-const SERVER_PORT = 3009;
-const LOCALHOST_BASE_URL = `http://localhost:${SERVER_PORT}`;
+let serverPort;
+let localhostBaseUrl;
 const EXAMPLE_PATH = '/examples/hexo-static';
 
 const now = new Date();
@@ -24,22 +25,25 @@ describe('E2E - hexo-static project', () => {
   let page;
 
   beforeAll(async () => {
-    request = supertest(LOCALHOST_BASE_URL);
+    serverPort = getContainerPort();
+    localhostBaseUrl = `http://localhost:${serverPort}`;
 
-    await projectInitializer(EXAMPLE_PATH, 'hexo', 'deliver', SERVER_PORT);
+    request = supertest(localhostBaseUrl);
+
+    await projectInitializer(EXAMPLE_PATH, 'hexo', 'deliver', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();
   }, TIMEOUT);
 
   afterAll(async () => {
-    await projectStop(SERVER_PORT, EXAMPLE_PATH.replace('/examples/', ''));
+    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''));
 
     await browser.close();
   }, TIMEOUT);
 
   test('Should render home page in "/" route', async () => {
-    await page.goto(`${LOCALHOST_BASE_URL}/`);
+    await page.goto(`${localhostBaseUrl}/`);
 
     const pageContent = await page.content();
     const pageTitle = await page.title();
@@ -51,7 +55,7 @@ describe('E2E - hexo-static project', () => {
   });
 
   test('Should render archives page in "/archives" route', async () => {
-    await page.goto(`${LOCALHOST_BASE_URL}/archives`);
+    await page.goto(`${localhostBaseUrl}/archives`);
 
     const pageContent = await page.content();
     const pageTitle = await page.title();
@@ -66,7 +70,7 @@ describe('E2E - hexo-static project', () => {
   });
 
   test(`Should render "Hello World" post page in "/${dateWithSlashes}/hello-world/" route`, async () => {
-    await page.goto(`${LOCALHOST_BASE_URL}/${dateWithSlashes}/hello-world/`);
+    await page.goto(`${localhostBaseUrl}/${dateWithSlashes}/hello-world/`);
 
     const pageContent = await page.content();
     const pageTitle = await page.title();
@@ -78,7 +82,7 @@ describe('E2E - hexo-static project', () => {
   });
 
   test(`Should render "Other page" post page in "/${dateWithSlashes}/hello-world/" route`, async () => {
-    await page.goto(`${LOCALHOST_BASE_URL}/${dateWithSlashes}/other-page/`);
+    await page.goto(`${localhostBaseUrl}/${dateWithSlashes}/other-page/`);
 
     const pageContent = await page.content();
     const pageTitle = await page.title();

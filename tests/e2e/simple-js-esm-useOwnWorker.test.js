@@ -1,31 +1,35 @@
 import supertest from 'supertest';
 import projectInitializer from '../utils/project-initializer.js';
 import projectStop from '../utils/project-stop.js';
+import { getContainerPort } from '../utils/docker-env-actions.js';
 
 // timeout in minutes
 const TIMEOUT = 1 * 60 * 1000;
 
-const SERVER_PORT = 3011;
-const LOCALHOST_BASE_URL = `http://localhost:${SERVER_PORT}`;
+let serverPort;
+let localhostBaseUrl;
 const EXAMPLE_PATH = '/examples/simple-js-esm-useOwnWorker';
 
 describe('E2E - simple-js-esm-useOwnWorker project', () => {
   let request;
 
   beforeAll(async () => {
-    request = supertest(LOCALHOST_BASE_URL);
+    serverPort = getContainerPort();
+    localhostBaseUrl = `http://localhost:${serverPort}`;
+
+    request = supertest(localhostBaseUrl);
 
     await projectInitializer(
       EXAMPLE_PATH,
       'javascript',
       'compute',
-      SERVER_PORT,
+      serverPort,
       false,
     );
   }, TIMEOUT);
 
   afterAll(async () => {
-    await projectStop(SERVER_PORT, EXAMPLE_PATH.replace('/examples/', ''));
+    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''));
   }, TIMEOUT);
 
   test('Should return a message in "/" route', async () => {

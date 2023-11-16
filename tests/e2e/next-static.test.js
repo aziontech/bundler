@@ -3,12 +3,13 @@ import supertest from 'supertest';
 import puppeteer from 'puppeteer';
 import projectInitializer from '../utils/project-initializer.js';
 import projectStop from '../utils/project-stop.js';
+import { getContainerPort } from '../utils/docker-env-actions.js';
 
 // timeout in minutes
 const TIMEOUT = 10 * 60 * 1000;
 
-const SERVER_PORT = 3005;
-const LOCALHOST_BASE_URL = `http://localhost:${SERVER_PORT}`;
+let serverPort;
+let localhostBaseUrl;
 const EXAMPLE_PATH = '/examples/next/next-static';
 
 describe('E2E - next-static project', () => {
@@ -17,22 +18,25 @@ describe('E2E - next-static project', () => {
   let page;
 
   beforeAll(async () => {
-    request = supertest(LOCALHOST_BASE_URL);
+    serverPort = getContainerPort();
+    localhostBaseUrl = `http://localhost:${serverPort}`;
 
-    await projectInitializer(EXAMPLE_PATH, 'next', 'deliver', SERVER_PORT);
+    request = supertest(localhostBaseUrl);
+
+    await projectInitializer(EXAMPLE_PATH, 'next', 'deliver', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();
   }, TIMEOUT);
 
   afterAll(async () => {
-    await projectStop(SERVER_PORT, EXAMPLE_PATH.replace('/examples/', ''));
+    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''));
 
     await browser.close();
   }, TIMEOUT);
 
   test('Should render home page in "/" route', async () => {
-    await page.goto(`${LOCALHOST_BASE_URL}/`);
+    await page.goto(`${localhostBaseUrl}/`);
 
     const pageContent = await page.content();
     const pageTitle = await page.title();
@@ -45,7 +49,7 @@ describe('E2E - next-static project', () => {
   });
 
   test('Should render a post page in "/blog/post-2/" route', async () => {
-    await page.goto(`${LOCALHOST_BASE_URL}/blog/post-2/`);
+    await page.goto(`${localhostBaseUrl}/blog/post-2/`);
 
     const pageContent = await page.content();
     const pageTitle = await page.title();
@@ -56,7 +60,7 @@ describe('E2E - next-static project', () => {
   });
 
   test('Should render misty mountains moria page in "/misty-mountains/moria" route', async () => {
-    await page.goto(`${LOCALHOST_BASE_URL}/misty-mountains/moria`);
+    await page.goto(`${localhostBaseUrl}/misty-mountains/moria`);
 
     const pageContent = await page.content();
     const pageTitle = await page.title();
