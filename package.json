@@ -23,7 +23,7 @@
     "e2e:start": "tests/scripts/start-e2e-env.sh",
     "e2e:stop": "tests/scripts/stop-e2e-env.sh",
     "e2e:destroy": "tests/scripts/destroy-e2e-env.sh",
-    "test:e2e": "yarn e2e:start && jest tests/e2e/ && yarn e2e:stop",
+    "test:e2e": "yarn e2e:start && jest --maxWorkers 1 tests/e2e/ && yarn e2e:stop",
     "prepare": "husky install"
   },
   "author": "aziontech",

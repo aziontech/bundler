@@ -1,6 +1,7 @@
 /* eslint-disable jest/expect-expect */
 import supertest from 'supertest';
 import puppeteer from 'puppeteer';
+import { expect } from '@jest/globals';
 import projectInitializer from '../utils/project-initializer.js';
 import projectStop from '../utils/project-stop.js';
 import { getContainerPort } from '../utils/docker-env-actions.js';
@@ -10,9 +11,9 @@ const TIMEOUT = 10 * 60 * 1000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/astro-static';
+const EXAMPLE_PATH = '/examples/next/node-pages-12-3-1-fs';
 
-describe('E2E - astro-static project', () => {
+describe('E2E - next node-pages-12-3-1-fs project', () => {
   let request;
   let browser;
   let page;
@@ -23,7 +24,7 @@ describe('E2E - astro-static project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'astro', 'deliver', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'next', 'compute', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();
@@ -35,31 +36,37 @@ describe('E2E - astro-static project', () => {
     await browser.close();
   }, TIMEOUT);
 
-  test('Should render home page in "/" route', async () => {
+  test('Should render home page in "/" static route', async () => {
     await page.goto(`${localhostBaseUrl}/`);
 
     const pageContent = await page.content();
     const pageTitle = await page.title();
 
-    expect(pageContent).toContain('To get started, open the directory');
+    expect(pageContent).toContain('Welcome to');
+    expect(pageContent).toContain('Next.js!');
     expect(pageContent).toContain(
-      'Learn how Astro works and explore the official API docs.',
+      'Learn about Next.js in an interactive course with quizzes!',
     );
-    expect(pageTitle).toBe('Welcome to Astro.');
-  });
-
-  test('Should render edge page in "/edge" route', async () => {
-    await page.goto(`${localhostBaseUrl}/edge`);
-
-    const pageContent = await page.content();
-
-    expect(pageContent).toContain('Running in Edge.');
+    expect(pageTitle).toBe('Create Next App');
   });
 
   test('Should return correct asset', async () => {
     await request
-      .get('/favicon.svg')
+      .get('/favicon.ico')
       .expect(200)
-      .expect('Content-Type', /image\/svg/);
+      .expect('Content-Type', /image/);
+  });
+
+  test('Should return correct data in "/api/hello" API Route', async () => {
+    const response = await request
+      .get('/api/hello')
+      .expect(200)
+      .expect('Content-Type', /json/);
+
+    const expected = {
+      data: { example: 'fs', status: 'ok' },
+      message: 'My message!',
+    };
+    expect(response.body).toStrictEqual(expected);
   });
 });

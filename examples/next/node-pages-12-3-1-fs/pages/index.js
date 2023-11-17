@@ -28,21 +28,6 @@ export default function Home() {
               onKeyDown={() => handleClick('/api/hello')}>
               API Route
             </li>
-            <li
-              onClick={() => handleClick('/ssr')}
-              onKeyDown={() => handleClick('/ssr')}>
-              SSR
-            </li>
-            <li
-              onClick={() => handleClick('/teste/x')}
-              onKeyDown={() => handleClick('/teste/x')}>
-              /[prodSlug]/x page with slug=teste
-            </li>
-            <li
-              onClick={() => handleClick('/xptz')}
-              onKeyDown={() => handleClick('/xptz')}>
-              [...catSlug] page with slug=xptz
-            </li>
           </ul>
         </div>
 

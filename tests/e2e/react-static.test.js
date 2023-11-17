@@ -10,9 +10,9 @@ const TIMEOUT = 10 * 60 * 1000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/astro-static';
+const EXAMPLE_PATH = '/examples/react-static';
 
-describe('E2E - astro-static project', () => {
+describe('E2E - react-static project', () => {
   let request;
   let browser;
   let page;
@@ -23,7 +23,7 @@ describe('E2E - astro-static project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'astro', 'deliver', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'react', 'deliver', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();
@@ -41,25 +41,17 @@ describe('E2E - astro-static project', () => {
     const pageContent = await page.content();
     const pageTitle = await page.title();
 
-    expect(pageContent).toContain('To get started, open the directory');
+    expect(pageContent).toContain('Learn React');
     expect(pageContent).toContain(
-      'Learn how Astro works and explore the official API docs.',
+      '<p>Edit <code>src/App.js</code> and save to reload.</p>',
     );
-    expect(pageTitle).toBe('Welcome to Astro.');
-  });
-
-  test('Should render edge page in "/edge" route', async () => {
-    await page.goto(`${localhostBaseUrl}/edge`);
-
-    const pageContent = await page.content();
-
-    expect(pageContent).toContain('Running in Edge.');
+    expect(pageTitle).toBe('React App');
   });
 
   test('Should return correct asset', async () => {
     await request
-      .get('/favicon.svg')
+      .get('/favicon.ico')
       .expect(200)
-      .expect('Content-Type', /image\/svg/);
+      .expect('Content-Type', /image/);
   });
 });

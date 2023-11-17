@@ -8,9 +8,9 @@ const TIMEOUT = 1 * 60 * 1000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/simple-js-esm';
+const EXAMPLE_PATH = '/examples/simple-ts-esm';
 
-describe('E2E - simple-js-esm project', () => {
+describe('E2E - simple-ts-esm project', () => {
   let request;
 
   beforeAll(async () => {
@@ -21,10 +21,10 @@ describe('E2E - simple-js-esm project', () => {
 
     await projectInitializer(
       EXAMPLE_PATH,
-      'javascript',
+      'typescript',
       'compute',
       serverPort,
-      false,
+      true,
     );
   }, TIMEOUT);
 

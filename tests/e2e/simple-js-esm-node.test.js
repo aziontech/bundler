@@ -8,9 +8,9 @@ const TIMEOUT = 1 * 60 * 1000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/simple-js-esm';
+const EXAMPLE_PATH = '/examples/simple-js-esm-node';
 
-describe('E2E - simple-js-esm project', () => {
+describe('E2E - simple-js-esm-node project', () => {
   let request;
 
   beforeAll(async () => {
@@ -32,13 +32,13 @@ describe('E2E - simple-js-esm project', () => {
     await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''));
   }, TIMEOUT);
 
-  test('Should generate a message in "/" route', async () => {
+  test('Should return messages in "/" route', async () => {
     const response = await request
       .get('/')
       .expect(200)
-      .expect('x-custom-feat', 'my random message')
-      .expect('Content-Type', /text\/plain/);
+      .expect('Content-Type', /json/);
 
-    expect(response.text).toContain('Generated message:');
+    expect(response.body.message).toBe('Hello!\u0000\u0000\u0000\u0000');
+    expect(response.body.fullMessage).toBe('Hello, world!');
   });
 });
