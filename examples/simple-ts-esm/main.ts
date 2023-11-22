@@ -10,13 +10,14 @@ function getRandomMessage(messages: string[]): string {
 }
 
 const main = (event: any) => {
-  const messages = getMessages();
-  const message = getRandomMessage(messages);
+  const messages: string[] = getMessages();
+  const message: string = getRandomMessage(messages);
+  const data: string = `Generated message: ${message}`;
 
   console.log("selected message:", message);
   console.log("VERSION_ID =", AZION_VERSION_ID);
 
-  return new Response(message, {
+  return new Response(data, {
     headers: new Headers([["X-Custom-Feat", "my random message"]]),
     status: 200,
   });

@@ -35,13 +35,19 @@ function buffeExamples() {
     value && value.type === 'Buffer' ? Buffer.from(value.data) : value,
   );
   console.log(parsedJson.toString()); // Output: "Hello, world!"
+
+  return {
+    fullMessage: parsedJson.toString(),
+    message: buffer1.toString(),
+  }
 }
 
 // eslint-disable-next-line
 export default (event) => {
-  buffeExamples();
+  const respData = buffeExamples();
 
-  return new Response('Hello!', {
+  return new Response(JSON.stringify(respData), {
+    headers: new Headers([['Content-Type', 'application/json']]),
     status: 200,
   });
 };
