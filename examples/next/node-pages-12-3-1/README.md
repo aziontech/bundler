@@ -1,10 +1,10 @@
-# edge-pages-13-2-4
-Nextjs v13.2.4 project example using edge runtime and pages format.
+# node-pages-12-3-1
+Nextjs v12.3.1 project example using node runtime and pages format.
 
 This example contains:
-* Index page;
-* Edge API Route;
+* Index page (static);
+* API Route;
 * SSR page;
-* Middleware with redirect;
 * Dynamic Route;
+* Dynamic Catch-all Route;
 * Nested route;

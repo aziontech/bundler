@@ -4,7 +4,7 @@ const EdgeSsrExample = ({ message }) => {
       <h1>Edge SSR Example</h1>
 
       <div>
-        <h3>Server message = {message}</h3>
+        <h3>Server message = <span>{message}</span></h3>
       </div>
     </>
   )
