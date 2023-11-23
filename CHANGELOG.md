@@ -1,3 +1,34 @@
+## [2.1.0](https://github.com/aziontech/vulcan/compare/v2.0.0...v2.1.0) (2023-11-23)
+
+
+### Features
+
+* add buildId in the constructor ([5caeed9](https://github.com/aziontech/vulcan/commit/5caeed9dc4509762d2fdd7ddb5e28ce054949ffc))
+* add js and ts init template ([bc382e3](https://github.com/aziontech/vulcan/commit/bc382e307e1c0162fcda5adcedb89d209edcc687))
+* add tty and https polyfills ([29ede11](https://github.com/aziontech/vulcan/commit/29ede1159353c3ef2f161efdd520cbe478d56c31))
+* add unit test to function relocateImportsAndRequires ([f64a2c3](https://github.com/aziontech/vulcan/commit/f64a2c349d21d7d32b9d1ad4da40b04e743ceee1))
+* add unit tests ([a0fa0aa](https://github.com/aziontech/vulcan/commit/a0fa0aab558e3afdca1302fce6f470ee33d9e94c))
+* Add unit tests ([#174](https://github.com/aziontech/vulcan/issues/174)) ([6b5c9a7](https://github.com/aziontech/vulcan/commit/6b5c9a72293f53f9f64d88137046658e6b441763))
+* config swc jest ([9404142](https://github.com/aziontech/vulcan/commit/9404142433a7739e2340fd8e2420a2d873817b97))
+* create escapeStringRegexp and remove import ([c9886a6](https://github.com/aziontech/vulcan/commit/c9886a6fd1f8d5deb4d1606f1123b6644ab5b348))
+* create test for hepers ([4039625](https://github.com/aziontech/vulcan/commit/403962534756432ca00eee2b596807de942da982))
+* Create tests for helper ([8813e4c](https://github.com/aziontech/vulcan/commit/8813e4c31a29de8bd5afbe05424443a924a04eee))
+* custom version framework  (init command) ([#169](https://github.com/aziontech/vulcan/issues/169)) ([d4a9979](https://github.com/aziontech/vulcan/commit/d4a9979d2cf77b05e004cc86342c0725a5181300))
+* custom version framework init command ([9b82a66](https://github.com/aziontech/vulcan/commit/9b82a663629a96e93eef1fcff7283a5990e0ffad))
+* generate manifest ([8e86f8a](https://github.com/aziontech/vulcan/commit/8e86f8a22b7d6cb7a71c17d880fae8cf999a4c0f))
+* generate manifest (initial structure) ([#177](https://github.com/aziontech/vulcan/issues/177)) ([18889ee](https://github.com/aziontech/vulcan/commit/18889ee336c26c0da129252a11f9c66a776f4d25))
+* remove file protocol from import on function loadVulcanConfigFile ([ed60d69](https://github.com/aziontech/vulcan/commit/ed60d697c1caf4036829ae0d878c949e37263fc6))
+* skip test of get Exported Function because there is some trouble with Babel when try to execute it ([4cb2e17](https://github.com/aziontech/vulcan/commit/4cb2e17cd8f723a6c63f78f025e6cac0cdeac539))
+
+
+### Bug Fixes
+
+* fix dispatcher test after merge ([3ef16b1](https://github.com/aziontech/vulcan/commit/3ef16b126ef04005f8f912a59e57580d27167d2c))
+* handle public dir in nextjs with relative paths ([7609347](https://github.com/aziontech/vulcan/commit/76093470b26dfd397e4b5fcbfe75d0b93770ff30))
+* remove duplicate key ([6160f0f](https://github.com/aziontech/vulcan/commit/6160f0fdcd445e56845f1687e63455913006230f))
+* remove unnecessary async ([4ede8e4](https://github.com/aziontech/vulcan/commit/4ede8e4cabd0ccdd532ec863e226fb244f939aef))
+* Run each test in a different vulcan server ([0d8cfd6](https://github.com/aziontech/vulcan/commit/0d8cfd66519c2dfd8a550d20d319df41dcc53b84))
+
 ## [2.1.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.0.0...v2.1.0-stage.1) (2023-11-22)
 
 
