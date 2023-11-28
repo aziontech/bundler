@@ -50,5 +50,5 @@ jobs:
         run: |
           git fetch origin
           git checkout stage
-          git merge main --no-edit
+          git merge main --allow-unrelated-histories --no-edit
           git push origin stage
