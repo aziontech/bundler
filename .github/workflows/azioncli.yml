@@ -18,5 +18,8 @@ jobs:
       id-token: write
     steps:
       - name: Run test script
+        env:
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
         run: |
           bash ./tests/azion_cli/test.sh

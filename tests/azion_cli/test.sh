@@ -46,8 +46,6 @@ sudo ln -s /opt/apps/azion /usr/local/bin/azion
 azion version
 verify_output
 
-export USERNAME=$USERNAME
-export PASSWORD=$PASSWORD
 azion login --username $USERNAME --password $PASSWORD
 verify_output
 
