@@ -19,8 +19,8 @@ jobs:
     steps:
       - name: Run test script
         env:
-          USERNAME: ${{ secrets.USERNAME }}
-          PASSWORD: ${{ secrets.PASSWORD }}
+          AZION_USERNAME: ${{ secrets.AZION_USERNAME }}
+          AZION_PASSWORD: ${{ secrets.AZION_PASSWORD }}
           WEBHOOK_SLACK_URL: ${{ secrets.WEBHOOK_SLACK_URL }}
         run: |
           bash ./tests/azion_cli/test.sh

@@ -54,7 +54,7 @@ sudo ln -s /opt/apps/azion /usr/local/bin/azion
 azion version
 verify_output
 
-azion login --username $USERNAME --password $PASSWORD
+azion login --username $AZION_USERNAME --password $AZION_PASSWORD
 verify_output
 
 rm -rf vulcan
