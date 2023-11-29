@@ -1,0 +1,20 @@
+#!/usr/bin/expect
+
+set timeout -1
+
+spawn azion link --name "testproject" --mode "Compute" --preset "next"
+
+expect "Do you want to link"
+send "y\r"
+
+# expect "This project was already configured. Do you want to override the previous configuration?"
+# send "y\r"
+
+expect "Do you want to start a local development server?"
+send "N\r"
+
+expect "Do you want to deploy your project?"
+send "N\r"
+
+expect eof
+
