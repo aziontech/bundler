@@ -7,9 +7,17 @@ function verify_output() {
     echo "------- Check status code ------------"
     echo "--------------------------------------"
     local exit_code=$?
+    local last_output=$(!!) 
+
+    message='{
+      "text": "Hey guys, Erro no Vulcan 😟!\nVulcan actions: https://github.com/aziontech/vulcan/actions\nOutput: '"$last_output"'\nError code: '"$exit_code"'\n"
+    }'
+
+    curl -X POST -H 'Content-type: application/json' --data "$message" $WEBHOOK_SLACK_URL 
+
     if [ "$exit_code" -ne 0 ]; then
         echo "The command failed or the command output does not match the expected output"
-        echo "Output code: $exit_code"
+        echo $text
         exit 1
     fi
 }
@@ -64,3 +72,4 @@ yarn install
 
 azion build
 verify_output
+
