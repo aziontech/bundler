@@ -19,7 +19,7 @@ const currentDay = String(now.getDate()).padStart(2, '0');
 const currentDate = `${currentYear}-${currentMonth}-${currentDay}`;
 const dateWithSlashes = currentDate.replaceAll('-', '/');
 
-describe.skip('E2E - hexo-static project', () => {
+describe('E2E - hexo-static project', () => {
   let request;
   let browser;
   let page;
