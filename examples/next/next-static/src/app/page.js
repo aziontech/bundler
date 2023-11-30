@@ -159,6 +159,52 @@ export default function Home() {
           </h2>
           <p>Dynamic route example using pages format</p>
         </Link>
+
+        <a
+          href="/gandalf"
+          className={styles.card}
+          rel="noopener noreferrer"
+        >
+          <h2>
+            Gandalf<span>-&gt;</span>
+
+          </h2>
+          <p>Example using app format.</p>
+        </a>
+
+        <Link
+          href="/gandalf"
+          className={styles.card}
+          rel="noopener noreferrer"
+        >
+          <h2>
+            Gandalf (Using Link)<span>-&gt;</span>
+          </h2>
+          <p>Example using app format.</p>
+        </Link>
+
+        <a
+          href="/misty-mountains"
+          className={styles.card}
+          rel="noopener noreferrer"
+        >
+          <h2>
+            Mountain!<span>-&gt;</span>
+
+          </h2>
+          <p>Example using app format.</p>
+        </a>
+
+        <Link
+          href="/misty-mountains"
+          className={styles.card}
+          rel="noopener noreferrer"
+        >
+          <h2>
+            Mountain! (Using Link)<span>-&gt;</span>
+          </h2>
+          <p>Example using app format.</p>
+        </Link>
       </div>
     </main>
   )
