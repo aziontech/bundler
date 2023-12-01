@@ -1,5 +1,6 @@
 ---
 title: Other page
+date: 2013-07-14 17:01:34
 ---
 Other page to test.
 
