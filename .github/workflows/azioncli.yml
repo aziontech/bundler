@@ -1,0 +1,26 @@
+name: AzionCli
+
+on:
+  push:
+    branches:
+      - main
+
+permissions: write-all
+
+jobs:
+  release:
+    name: AzionCli
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - name: Run test script
+        env:
+          AZION_USERNAME: ${{ secrets.AZION_USERNAME }}
+          AZION_PASSWORD: ${{ secrets.AZION_PASSWORD }}
+          WEBHOOK_SLACK_URL: ${{ secrets.WEBHOOK_SLACK_URL }}
+        run: |
+          bash ./tests/azion_cli/test.sh
