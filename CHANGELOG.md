@@ -1,3 +1,21 @@
+## [2.2.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.1.0...v2.2.0-stage.1) (2023-12-05)
+
+
+### Features
+
+* add routes priority validation in manifest ([662338c](https://github.com/aziontech/vulcan/commit/662338c2f567b6fbd3ae9aa7434170b2dbe86ce8))
+* generate manifest for presets (deliver or compute) ([83ab369](https://github.com/aziontech/vulcan/commit/83ab36941e1f0d38a932f97ef0b6507abc813090))
+* generateManifest for next.js (compute) ([ea97252](https://github.com/aziontech/vulcan/commit/ea97252caf2ee3ceff51635c5136aa3df02cbb0e))
+* generateManifest for next.js (compute) ([38f69a5](https://github.com/aziontech/vulcan/commit/38f69a58b746d8e11b838fda82c661ad12f04253))
+* preset for emscripten ([8ada412](https://github.com/aziontech/vulcan/commit/8ada4128b2637bcb694c5bc120dc8bc92757b701))
+
+
+### Bug Fixes
+
+* generate manifest in wasm presets ([38e996f](https://github.com/aziontech/vulcan/commit/38e996fa07cb9769482e318741671acf4500c5bf))
+* handle error when not using app dir format in next static build ([edae5c1](https://github.com/aziontech/vulcan/commit/edae5c1a13f25efaf61922d602ccfc8b71531b50))
+* set correct prebuild to app dir cases in next static ([d43c2d5](https://github.com/aziontech/vulcan/commit/d43c2d561fee9d6b68818fd6cbf66ceb685ab2bc))
+
 ## [2.1.0](https://github.com/aziontech/vulcan/compare/v2.0.0...v2.1.0) (2023-11-23)
 
 
