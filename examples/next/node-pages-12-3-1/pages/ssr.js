@@ -13,7 +13,7 @@ const EdgeSsrExample = ({ message }) => {
 export const getServerSideProps = async ({ req, res }) => {
   console.log("Running server side EdgeSsrExample!");
 
-  const message = `Current Time : ${new Date()}`;
+  const message = 7*6;
 
   return { props: { message } }
 }
