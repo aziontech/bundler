@@ -1,3 +1,18 @@
+## [2.2.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.2.0-stage.1...v2.2.0-stage.2) (2023-12-06)
+
+
+### Features
+
+* esbuild bundler improvements and changes ([5e668c4](https://github.com/aziontech/vulcan/commit/5e668c4c8c725de37102b776708a5641980842f4))
+* improvements bundlers ([d546697](https://github.com/aziontech/vulcan/commit/d546697154b61124b947fff347b494dc474b7c36))
+* initial code for organizing polyfill plugins ([2212272](https://github.com/aziontech/vulcan/commit/22122729bbdf0155357142c7fcbebd612d0509e3))
+
+
+### Bug Fixes
+
+* esbuild plugin initial options ([8c84baa](https://github.com/aziontech/vulcan/commit/8c84baa117ed84a67202284d34abb05857083ec2))
+* prevent reference sharing in config ([98b8caa](https://github.com/aziontech/vulcan/commit/98b8caa526e554401aeec2afed2dd126b29994f0))
+
 ## [2.2.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.1.0...v2.2.0-stage.1) (2023-12-05)
 
 
