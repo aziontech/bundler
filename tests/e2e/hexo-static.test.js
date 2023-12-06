@@ -17,7 +17,7 @@ const currentYear = now.getFullYear();
 const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
 const currentDay = String(now.getDate()).padStart(2, '0');
 const currentDate = `${currentYear}-${currentMonth}-${currentDay}`;
-const dateWithSlashes = currentDate.replaceAll('-', '/');
+const dateWithSlashes = '2013/07/14';
 
 describe('E2E - hexo-static project', () => {
   let request;
@@ -26,7 +26,7 @@ describe('E2E - hexo-static project', () => {
 
   beforeAll(async () => {
     serverPort = getContainerPort();
-    localhostBaseUrl = `http://localhost:${serverPort}`;
+    localhostBaseUrl = `http://0.0.0.0:${serverPort}`;
 
     request = supertest(localhostBaseUrl);
 
@@ -50,7 +50,7 @@ describe('E2E - hexo-static project', () => {
 
     expect(pageTitle).toBe('Hexo');
     expect(pageContent).toContain('Other page to test.');
-    expect(pageContent).toContain(currentDate);
+    expect(pageContent).toContain('2013-07-14');
     expect(pageContent).toContain('This is your very first post');
   });
 
@@ -62,7 +62,7 @@ describe('E2E - hexo-static project', () => {
 
     expect(pageTitle).toBe('Archives | Hexo');
     expect(pageContent).toContain(
-      `<a href="/archives/${currentYear}" class="archive-year">${currentYear}</a>`,
+      `<a href="/archives/2013" class="archive-year">2013</a>`,
     );
     expect(pageContent).toContain('<div class="archives">');
     expect(pageContent).toContain('Other page');

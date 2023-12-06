@@ -19,7 +19,7 @@ describe('E2E - astro-static project', () => {
 
   beforeAll(async () => {
     serverPort = getContainerPort();
-    localhostBaseUrl = `http://localhost:${serverPort}`;
+    localhostBaseUrl = `http://0.0.0.0:${serverPort}`;
 
     request = supertest(localhostBaseUrl);
 
