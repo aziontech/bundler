@@ -31,13 +31,19 @@ jobs:
         run: npm run task:docs
 
       - name: Change directory
-        run: cd jsdoc/edge-functions/$(jq -r ".version" package.json)
+        run: mkdir -p .edge/statics && cp -r ./jsdoc/edge-functions/$(jq -r ".version" package.json)/* .edge/statics
 
       - name: Download Azion CLI
         run: curl https://downloads.azion.com/linux/x86_64/azioncli -o azioncli && chmod +x azioncli
 
+      - name: Create azioncli config file
+        run: mkdir -p /github/home/.config && touch /github/home/.config/azioncli.yaml
+
       - name: Configure Azion CLI
         run: ./azioncli configure -t ${{ secrets.RTM_TOKEN }}
+
+      - name: Create azion directory
+        run: mkdir -p azion
 
       - name: Define application settings
         run: >
