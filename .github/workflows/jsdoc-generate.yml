@@ -4,11 +4,6 @@ on:
   push:
     branches:
       - main
-      - stage
-  pull_request:
-    branches:
-      - main
-      - stage
 env:
   HUSKY: 0
 
@@ -36,35 +31,13 @@ jobs:
       - name: List files
         run: ls
 
-      - name: Copy azion directory
+      - name: Change directory and build
         run: |
-          cp -r ./azion jsdoc/edge-functions/$(jq -r ".version" package.json)
+          cd jsdoc/edge-functions/$(jq -r ".version" package.json)
+          vulcan build --preset html --mode deliver
 
-      - name: Change directory
-        run: cd jsdoc/edge-functions/$(jq -r ".version" package.json)
-
-      - name: Create args file
+      - name: Authenticate and deploy
         run: |
-          cat > ./args.json << EOF
-            { "my_arg_by_action": true }
-          EOF
-
-      - name: Change directory for edge-computing-deploy
-        run: cd jsdoc/edge-functions/$(jq -r ".version" package.json)
-
-      - name: List files
-        run: ls
-
-      - name: edge-computing-deploy
-        id: azion_edge
-        uses: aziontech/edge-computing-actions@v0
-        with:
-          azionPersonalToken: ${{ secrets.RTM_TOKEN }}
-          functionArgsFilePath: './args.json'
-          buildPreset: 'html'
-          buildMode: 'deliver'
-
-      - name: Get the output Azion Edge Deploy
-        run: |
-          echo "Application ID-= ${{ steps.azion_edge.outputs.applicationId }}"
-          echo "Domain-= ${{ steps.azion_edge.outputs.domainUrl }}"
+          cd jsdoc/edge-functions/$(jq -r ".version" package.json)
+          DEBUG=true vulcan auth --token ${{ secrets.RTM_TOKEN }}
+          DEBUG=true vulcan deploy --functionID ${{ secrets.VULCAN_DOCS_EDGE_FUNCTION_ID }}
