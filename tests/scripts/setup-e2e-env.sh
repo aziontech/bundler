@@ -20,6 +20,17 @@ log_with_color "* STARTING ..." $GREEN
 
 SENTINEL_FILE="/vulcan/.initialized.keep"
 
+# create vulcan temp to install in verdaccio
+create_vulcan_temp() {
+    local target="$1"
+    local folder="$2"
+    rm -rf $folder
+    mkdir -p $folder
+    cd /$target
+    tar cf - --exclude='.git' --exclude='node_modules' . | (cd ../$folder && tar xvf -) > /dev/null 2>&1
+    cd /
+}
+
 # TODO: improve this init check
 if test -f $SENTINEL_FILE; then
     log_with_color "Container already initialized!" $CYAN
@@ -31,9 +42,13 @@ else
     # log_with_color "* Isolate examples" $GREEN
     cp -r /vulcan/examples/ /examples/
 
-    # install vulcan locally
+    # create vulcan temp to install
+    VULCAN_TEMP=vulcan-temp
+    create_vulcan_temp /vulcan $VULCAN_TEMP
+
+    # install vulcan temp locally
     log_with_color "* Install vulcan" $GREEN
-    cd vulcan
+    cd /$VULCAN_TEMP
     yarn
 
     # login in verdaccio registry
