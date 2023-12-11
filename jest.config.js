@@ -1,7 +1,8 @@
 export default {
   transform: {
-    '^.+\\.(t|j)s?$': '@swc/jest',
+    '^.+\\.(js|jsx)?$': '@swc/jest',
   },
   testPathIgnorePatterns: ['/node_modules/', '/examples/'],
   testEnvironment: 'node',
+  globalSetup: '<rootDir>/jest.global.setup.js',
 };
