@@ -1,53 +1,54 @@
+import { exec as execCallback } from 'child_process';
+import { promisify } from 'util';
 import { exec } from '#utils';
 
-/**
- * Sleep for n ms
- * @param {number} ms - time to sleep
- * @returns {any} - Resolved promise after timeout
- */
-function sleep(ms) {
-  // eslint-disable-next-line no-promise-executor-return
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+const execOut = promisify(execCallback);
 
 /**
  * Check if a process is running
- * @param {string} processName - process to check
+ * @param {string} url - url vulcan started
  * @param {string} containerName - container to check
  * @returns {Promise<boolean>} - a promise of a boolean indicating if the process is running
  */
-async function isProcessRunning(processName, containerName = 'test') {
+async function isProcessRunning(url, containerName = 'test') {
   try {
-    await exec(
-      `docker exec ${containerName} ps aux | grep -v grep | grep "${processName}"`,
+    const { stdout } = await execOut(
+      `docker exec ${containerName} wget -S \
+        --header="Accept-Encoding: gzip, deflate, br" \
+        --header="Accept-Language: en-US,en;q=0.9" \
+        --header="Connection: keep-alive" \
+        --spider ${url} 2>&1 | awk '/HTTP/{print $2}'`,
     );
-    return true;
+    const httpCode = parseInt(stdout.trim(), 10);
+    return !Number.isNaN(httpCode) && httpCode > 199 && httpCode < 600;
   } catch (err) {
     return false;
   }
 }
 
 /**
- * Wait for vulcan to start or stop server
- * @param {boolean} checkStart - is a server start? otherwise will wait for stop
+ * Wait for vulcan to start
+ * @param {string} url - is a url test container
+ * @returns {Promise<string>} return promise resolve
  */
-async function waitForVulcanServer(checkStart) {
-  let isRunning = false;
-
-  if (checkStart) {
-    while (!isRunning) {
-      // eslint-disable-next-line no-await-in-loop
-      isRunning = await isProcessRunning('dev');
-    }
-  } else {
-    isRunning = true;
-    while (isRunning) {
-      // eslint-disable-next-line no-await-in-loop
-      isRunning = await isProcessRunning('dev');
-    }
-  }
-
-  await sleep(2500);
+async function waitForVulcanServer(url) {
+  const checkInterval = 1000;
+  const endTime = Date.now() + 30000; // 30s timeout
+  return new Promise((resolve) => {
+    // eslint-disable-next-line consistent-return
+    const checkProcess = async () => {
+      const isRunning = await isProcessRunning(url);
+      if (isRunning) {
+        return resolve('Running');
+      }
+      if (Date.now() > endTime) {
+        return resolve('Timeout reached');
+      }
+      // eslint-disable-next-line no-else-return
+      setTimeout(checkProcess, checkInterval);
+    };
+    checkProcess();
+  });
 }
 
 /**
