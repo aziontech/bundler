@@ -149,7 +149,7 @@ Allows you to extend the capabilities of the chosen bundler (either `webpack` or
 
 ### Example Configuration
 
-For a Vue-based project:
+For a Next/Faststore-based project:
 
 ```javascript
 module.exports = {
@@ -158,7 +158,7 @@ module.exports = {
   useNodePolyfills: true,
   useOwnWorker: false,
   preset: {
-    name: 'vue',
+    name: 'next',
     mode: 'compute',
   },
   memoryFS: {
