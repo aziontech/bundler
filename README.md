@@ -173,17 +173,19 @@ module.exports = {
 
 **Note:** Adapting `vulcan.config.js` to your setup allows a personalized development experience, catering to the specific needs of your JavaScript applications and frameworks.
 
-## Wasm Notes
-
-To use wasm presets you need to install the necessary tools to build your code:
-
-- emscripten: [download](https://emscripten.org/docs/getting_started/downloads.html);
-- rustwasm: [wasm-bindgen-cli](https://crates.io/crates/wasm-bindgen-cli)
-
 ## Docs
 
 - [Overview](docs/overview.md)
 - [Presets](docs/presets.md)
+- [Rust/Wasm example](examples/rust-wasm-yew-ssr/)
+- [Emscripten/Wasm example](examples/emscripten-wasm/)
+
+## Wasm Notes
+
+To use wasm presets you need to install the necessary tools to build your code:
+
+- Emscripten: [emsdk](https://emscripten.org/docs/getting_started/downloads.html);
+- Rust/Wasm: [wasm-bindgen-cli](https://crates.io/crates/wasm-bindgen-cli)
 
 ## Contributing
 

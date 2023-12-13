@@ -59,46 +59,47 @@ https://github.com/aziontech/vulcan/assets/12740219/abb1b2cc-5f74-473d-b731-c0b7
 
 - **Deliver**: This mode should be used when you intend to use the worker only for routing requests and delivering static files that will be computed on the client side.
 
-2.  ## **Create the following files in your preset's folder:**
+## 2. **Create the following files in your preset's folder:**
 
-        ## handler.js
+## handler.js
 
-        This file contains the code that is executed within the worker in the edge function. Essentially, it is the code that runs directly on the edge. In the context of the `deliver` mode, this may simply act as a router. However, in cases where computation is needed, it can be designed to perform more complex tasks. Remember, the capabilities of your handler.js are dependent on your use case and the mode of operation you've chosen for your preset.
+This file contains the code that is executed within the worker in the edge function. Essentially, it is the code that runs directly on the edge. In the context of the `deliver` mode, this may simply act as a router. However, in cases where computation is needed, it can be designed to perform more complex tasks. Remember, the capabilities of your handler.js are dependent on your use case and the mode of operation you've chosen for your preset.
 
-        #### For the cases involving static (deliver) frameworks, here's what you can do:
+#### For the cases involving static (deliver) frameworks, here's what you can do:
 
-        - For Single Page Application (SPA) types:
-          Consider copying the preset handler similar to Vue. This utilizes the `mountSPA` hook which sets up the routing for your SPA effectively.
-        - For Static Site Generator (SSG) projects:
-          If you have a project that generates multiple HTML files, take a look at how the Next.js project handles this. They use the `mountSSG` hook, which sets up static routing for all the generated HTML pages.
+- For Single Page Application (SPA) types:
+  Consider copying the preset handler similar to Vue. This utilizes the `mountSPA` hook which sets up the routing for your SPA effectively.
+- For Static Site Generator (SSG) projects:
+  If you have a project that generates multiple HTML files, take a look at how the Next.js project handles this. They use the `mountSSG` hook, which sets up static routing for all the generated HTML pages.
 
-        **Note**: Remember, these are just examples and can serve as a starting point for your own custom preset. Adjust and extend them as necessary to fit your project's specific needs.
+  **Note**: Remember, these are just examples and can serve as a starting point for your own custom preset. Adjust and extend them as necessary to fit your project's specific needs.
 
-        ## config.js
+## config.js
 
-        This file serves as an extension to the edge build. It enables the inclusion of polyfills, plugins, or any other procedures that relate to the build process executed on the edge. Although it is editable, we strongly advise against making changes to this file unless absolutely necessary. It's designed to ensure optimal operation, and modifications should be undertaken with careful consideration.
+This file serves as an extension to the edge build. It enables the inclusion of polyfills, plugins, or any other procedures that relate to the build process executed on the edge. Although it is editable, we strongly advise against making changes to this file unless absolutely necessary. It's designed to ensure optimal operation, and modifications should be undertaken with careful consideration.
 
-        ## prebuild.js
+## prebuild.js
 
-        In this file, you should adapt the native build process of your framework or library. Usually, in the case of _deliver_ presets, this file will be used to ensure that the generated static artifacts are placed in the _.edge/storage/_ directory.
+In this file, you should adapt the native build process of your framework or library. Usually, in the case of _deliver_ presets, this file will be used to ensure that the generated static artifacts are placed in the _.edge/storage/_ directory.
 
-         -  `Manifest class` (singleton): you should use it to ensure that the preset is compatible with the Azion deployment system and other platforms:
+- `Manifest class` (singleton): you should use it to ensure that the preset is compatible with the Azion deployment system and other platforms:
 
-    First you must set all the application's routes, if it is all static you just need to follow the other examples; point ‘/’ to the storage folder (where we store the statics).
+  First you must set all the application's routes, if it is all static you just need to follow the other examples; point ‘/’ to the storage folder (where we store the statics). At the end you call the **Manifest.generate()** method and it should create the manifest.json file inside the build folder (.edge).
 
-             Each routing can have 1 type:
-             - *‘Deliver’* means that you must deliver that static file (or entire folder) to that route.
-             - *‘Compute’* means that it should become an Edge Function and be computed. In other words, when the request receives that path it must execute the            determined function.
+  Each routing can have 1 type:
 
-             At the end you call the **Manifest.generate()** method and it should create the manifest.json file inside the build folder (.edge).
-            #### React (deliver) Example:
+  - _‘Deliver’_ means that you must deliver that static file (or entire folder) to that route.
+  - _‘Compute’_ means that it should become an Edge Function and be computed. In other words, when the request receives that path it must execute the determined function.
 
-            ![carbon](https://github.com/aziontech/vulcan/assets/12740219/58787d77-8a6d-41f4-83f9-398718203012)
+  #### React (deliver) Example:
+
+![carbon](https://github.com/aziontech/vulcan/assets/12740219/58787d77-8a6d-41f4-83f9-398718203012)
 
 **Note**: The use of `compute` type presets is still under development and does not have many examples available. We currently support build/import resolution for pure JavaScript code (or with polyfills), as shown in the `./examples/simple-js-esm` example.
 
-3.  ## **Test your preset:**
-    After setting up your preset, you can test it using Vulcan's build command. Depending on the mode of your preset, run one of the following commands in your terminal:
+## 3. **Test your preset:**
+
+After setting up your preset, you can test it using Vulcan's build command. Depending on the mode of your preset, run one of the following commands in your terminal:
 
 https://github.com/aziontech/vulcan/assets/12740219/7033d37a-30ee-4098-8fe5-bbfca536591d
 
