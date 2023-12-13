@@ -1,3 +1,11 @@
+## [2.2.0-stage.3](https://github.com/aziontech/vulcan/compare/v2.2.0-stage.2...v2.2.0-stage.3) (2023-12-13)
+
+
+### Bug Fixes
+
+* loop in fs polyfill when readdirSync and path / ([4c1e2d0](https://github.com/aziontech/vulcan/commit/4c1e2d0195eaf04bf86ce4995ac41c9e2de5c596))
+* loop in fs polyfill when readdirSync and path / ([#197](https://github.com/aziontech/vulcan/issues/197)) ([bd56c75](https://github.com/aziontech/vulcan/commit/bd56c75d8e48dd8af7792710aa51f68d7f737521))
+
 ## [2.2.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.2.0-stage.1...v2.2.0-stage.2) (2023-12-06)
 
 
