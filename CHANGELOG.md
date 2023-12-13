@@ -1,3 +1,10 @@
+## [2.2.0-stage.4](https://github.com/aziontech/vulcan/compare/v2.2.0-stage.3...v2.2.0-stage.4) (2023-12-13)
+
+
+### Bug Fixes
+
+* app routes filter in next static build ([bb9cbd3](https://github.com/aziontech/vulcan/commit/bb9cbd3f0789ad6b0ba0fccb549223f4e5647a7b))
+
 ## [2.2.0-stage.3](https://github.com/aziontech/vulcan/compare/v2.2.0-stage.2...v2.2.0-stage.3) (2023-12-13)
 
 
