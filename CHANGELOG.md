@@ -1,3 +1,29 @@
+## [2.2.0](https://github.com/aziontech/vulcan/compare/v2.1.0...v2.2.0) (2023-12-14)
+
+
+### Features
+
+* add routes priority validation in manifest ([662338c](https://github.com/aziontech/vulcan/commit/662338c2f567b6fbd3ae9aa7434170b2dbe86ce8))
+* esbuild bundler improvements and changes ([5e668c4](https://github.com/aziontech/vulcan/commit/5e668c4c8c725de37102b776708a5641980842f4))
+* generate manifest for presets (deliver or compute) ([83ab369](https://github.com/aziontech/vulcan/commit/83ab36941e1f0d38a932f97ef0b6507abc813090))
+* generateManifest for next.js (compute) ([ea97252](https://github.com/aziontech/vulcan/commit/ea97252caf2ee3ceff51635c5136aa3df02cbb0e))
+* generateManifest for next.js (compute) ([38f69a5](https://github.com/aziontech/vulcan/commit/38f69a58b746d8e11b838fda82c661ad12f04253))
+* improvements bundlers ([d546697](https://github.com/aziontech/vulcan/commit/d546697154b61124b947fff347b494dc474b7c36))
+* initial code for organizing polyfill plugins ([2212272](https://github.com/aziontech/vulcan/commit/22122729bbdf0155357142c7fcbebd612d0509e3))
+* preset for emscripten ([8ada412](https://github.com/aziontech/vulcan/commit/8ada4128b2637bcb694c5bc120dc8bc92757b701))
+
+
+### Bug Fixes
+
+* app routes filter in next static build ([bb9cbd3](https://github.com/aziontech/vulcan/commit/bb9cbd3f0789ad6b0ba0fccb549223f4e5647a7b))
+* esbuild plugin initial options ([8c84baa](https://github.com/aziontech/vulcan/commit/8c84baa117ed84a67202284d34abb05857083ec2))
+* generate manifest in wasm presets ([38e996f](https://github.com/aziontech/vulcan/commit/38e996fa07cb9769482e318741671acf4500c5bf))
+* handle error when not using app dir format in next static build ([edae5c1](https://github.com/aziontech/vulcan/commit/edae5c1a13f25efaf61922d602ccfc8b71531b50))
+* loop in fs polyfill when readdirSync and path / ([4c1e2d0](https://github.com/aziontech/vulcan/commit/4c1e2d0195eaf04bf86ce4995ac41c9e2de5c596))
+* loop in fs polyfill when readdirSync and path / ([#197](https://github.com/aziontech/vulcan/issues/197)) ([bd56c75](https://github.com/aziontech/vulcan/commit/bd56c75d8e48dd8af7792710aa51f68d7f737521))
+* prevent reference sharing in config ([98b8caa](https://github.com/aziontech/vulcan/commit/98b8caa526e554401aeec2afed2dd126b29994f0))
+* set correct prebuild to app dir cases in next static ([d43c2d5](https://github.com/aziontech/vulcan/commit/d43c2d561fee9d6b68818fd6cbf66ceb685ab2bc))
+
 ## [2.2.0-stage.4](https://github.com/aziontech/vulcan/compare/v2.2.0-stage.3...v2.2.0-stage.4) (2023-12-13)
 
 
