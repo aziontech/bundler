@@ -20,7 +20,7 @@ describe('E2E - next node-pages-12-3-1-fs project', () => {
 
   beforeAll(async () => {
     serverPort = getContainerPort();
-    localhostBaseUrl = `http://localhost:${serverPort}`;
+    localhostBaseUrl = `http://0.0.0.0:${serverPort}`;
 
     request = supertest(localhostBaseUrl);
 

@@ -15,7 +15,7 @@ describe('E2E - simple-js-esm-useOwnWorker project', () => {
 
   beforeAll(async () => {
     serverPort = getContainerPort();
-    localhostBaseUrl = `http://localhost:${serverPort}`;
+    localhostBaseUrl = `http://0.0.0.0:${serverPort}`;
 
     request = supertest(localhostBaseUrl);
 

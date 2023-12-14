@@ -108,7 +108,7 @@ Defines which build tool to use. The available options are `esbuild` and `webpac
 **Type:** Boolean
 
 **Description:**  
-Determines if Node.js polyfills should be applied. This is useful for projects that leverage Node.js specific functionalities but are targeting environments without such built-in capabilities.
+Determines whether Node.js polyfills should be applied. This is useful for projects that leverage specific Node.js functionality but target environments without these built-in features. The use of useNodePolyfills is ignored when used in mode `deliver` presets, as Node.js features must be resolved at build time by the framework process itself.
 
 ### UseOwnWorker
 
@@ -149,7 +149,7 @@ Allows you to extend the capabilities of the chosen bundler (either `webpack` or
 
 ### Example Configuration
 
-For a Vue-based project:
+For a Next/Faststore-based project:
 
 ```javascript
 module.exports = {
@@ -158,7 +158,7 @@ module.exports = {
   useNodePolyfills: true,
   useOwnWorker: false,
   preset: {
-    name: 'vue',
+    name: 'next',
     mode: 'compute',
   },
   memoryFS: {
@@ -177,6 +177,15 @@ module.exports = {
 
 - [Overview](docs/overview.md)
 - [Presets](docs/presets.md)
+- [Rust/Wasm example](examples/rust-wasm-yew-ssr/)
+- [Emscripten/Wasm example](examples/emscripten-wasm/)
+
+## Wasm Notes
+
+To use wasm presets you need to install the necessary tools to build your code:
+
+- Emscripten: [emsdk](https://emscripten.org/docs/getting_started/downloads.html);
+- Rust/Wasm: [wasm-bindgen-cli](https://crates.io/crates/wasm-bindgen-cli)
 
 ## Contributing
 

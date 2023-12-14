@@ -11,6 +11,7 @@ import {
  * @param {string} mode - vulcan preset mode to build
  * @param {number} serverPort - port to use in vulcan server
  * @param {boolean} installPkgs - dependencies need to be installed?
+ * @param {string} url - url test container
  */
 async function projectInitializer(
   examplePath,
@@ -18,6 +19,7 @@ async function projectInitializer(
   mode,
   serverPort,
   installPkgs = true,
+  url = 'http://localhost',
 ) {
   const example = examplePath.replace('/examples/', '');
   const vulcanCmd =
@@ -41,7 +43,7 @@ async function projectInitializer(
     true,
   );
 
-  await waitForVulcanServer(true);
+  await waitForVulcanServer(`${url}:${serverPort}`);
 
   feedback.info(`[${example}] vulcan local server started!`);
 }
