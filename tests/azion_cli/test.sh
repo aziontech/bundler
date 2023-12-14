@@ -2,7 +2,7 @@
 
 sudo apt-get install expect -y
 
-function verify_output() {
+verify_output() {
     echo "--------------------------------------"
     echo "------- Check status code ------------"
     echo "--------------------------------------"

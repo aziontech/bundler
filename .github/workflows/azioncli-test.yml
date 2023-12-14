@@ -17,6 +17,9 @@ jobs:
       pull-requests: write
       id-token: write
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Run test script
         env:
           AZION_USERNAME: ${{ secrets.AZION_USERNAME }}
