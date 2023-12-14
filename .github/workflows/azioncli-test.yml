@@ -23,4 +23,5 @@ jobs:
           AZION_PASSWORD: ${{ secrets.AZION_PASSWORD }}
           WEBHOOK_SLACK_URL: ${{ secrets.WEBHOOK_SLACK_URL }}
         run: |
-          bash ./tests/azion_cli/test.sh
+          chmod +x tests/azion_cli/test.sh
+          sh tests/azion_cli/test.sh
