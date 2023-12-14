@@ -17,10 +17,14 @@ jobs:
       pull-requests: write
       id-token: write
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Run test script
         env:
           AZION_USERNAME: ${{ secrets.AZION_USERNAME }}
           AZION_PASSWORD: ${{ secrets.AZION_PASSWORD }}
           WEBHOOK_SLACK_URL: ${{ secrets.WEBHOOK_SLACK_URL }}
         run: |
-          bash ./tests/azion_cli/test.sh
+          chmod +x tests/azion_cli/test.sh
+          sh tests/azion_cli/test.sh
