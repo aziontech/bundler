@@ -11,6 +11,7 @@ function main(event) {
 
   console.log('selected message:', message);
   console.log('VERSION_ID =', AZION_VERSION_ID);
+  console.log('VULCAN_PATH =', VULCAN_PATH);
 
   return new Response(data, {
     headers: new Headers([['X-Custom-Feat', 'my random message']]),
