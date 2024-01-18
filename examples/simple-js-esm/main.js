@@ -10,8 +10,6 @@ function main(event) {
   const data = `Generated message: ${message}`
 
   console.log('selected message:', message);
-  console.log('VERSION_ID =', AZION_VERSION_ID);
-
   return new Response(data, {
     headers: new Headers([['X-Custom-Feat', 'my random message']]),
     status: 200,
