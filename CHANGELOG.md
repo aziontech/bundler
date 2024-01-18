@@ -1,3 +1,12 @@
+## [2.3.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.2.0...v2.3.0-stage.1) (2024-01-17)
+
+
+### Features
+
+* added building with external api to local runtime ([52bcd13](https://github.com/aziontech/vulcan/commit/52bcd13451e3c3db7e73854dfe52845a8aeb691e))
+* adding partial implementation of async_hooks to local dev ([3665359](https://github.com/aziontech/vulcan/commit/36653598f4c270c73c9375190c9da67a035965b8))
+* resolve external APIs in the local build ([#211](https://github.com/aziontech/vulcan/issues/211)) ([b265ed6](https://github.com/aziontech/vulcan/commit/b265ed613ec9f2702df6f469e0bb6a63799e93de))
+
 ## [2.2.0](https://github.com/aziontech/vulcan/compare/v2.1.0...v2.2.0) (2023-12-14)
 
 
