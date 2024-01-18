@@ -1,3 +1,11 @@
+## [2.3.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.3.0-stage.1...v2.3.0-stage.2) (2024-01-18)
+
+
+### Bug Fixes
+
+* remove versionid ([482fb35](https://github.com/aziontech/vulcan/commit/482fb3509a05967b6ad6879f209341d6dcce26ad))
+* remove versionid ([#210](https://github.com/aziontech/vulcan/issues/210)) ([e78ea1e](https://github.com/aziontech/vulcan/commit/e78ea1e8e1f913e67b9e4b577b01e90437d68884))
+
 ## [2.3.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.2.0...v2.3.0-stage.1) (2024-01-17)
 
 
