@@ -1,7 +1,7 @@
 {
   "name": "edge-functions",
   "type": "module",
-  "version": "2.2.0",
+  "version": "2.3.0-stage.3",
   "description": "Tool to launch and build JavaScript/Frameworks. This tool automates polyfills for Edge Computing and assists in creating Workers, notably for the Azion platform.",
   "main": "lib/main.js",
   "bin": {
@@ -62,6 +62,7 @@
     "events": "^3.3.0",
     "fast-glob": "^3.3.1",
     "form-data": "^4.0.0",
+    "fs-extra": "^11.2.0",
     "https-browserify": "^1.0.0",
     "inquirer": "^9.2.7",
     "install": "^0.13.0",
