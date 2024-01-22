@@ -1,3 +1,20 @@
+## [2.3.0](https://github.com/aziontech/vulcan/compare/v2.2.0...v2.3.0) (2024-01-22)
+
+
+### Features
+
+* added building with external api to local runtime ([52bcd13](https://github.com/aziontech/vulcan/commit/52bcd13451e3c3db7e73854dfe52845a8aeb691e))
+* adding partial implementation of async_hooks to local dev ([3665359](https://github.com/aziontech/vulcan/commit/36653598f4c270c73c9375190c9da67a035965b8))
+* resolve external APIs in the local build ([#211](https://github.com/aziontech/vulcan/issues/211)) ([b265ed6](https://github.com/aziontech/vulcan/commit/b265ed613ec9f2702df6f469e0bb6a63799e93de))
+
+
+### Bug Fixes
+
+* angular deliver preset ([#215](https://github.com/aziontech/vulcan/issues/215)) ([5bb2d77](https://github.com/aziontech/vulcan/commit/5bb2d77c5ca40ef688f50826a55bf384759b5a61))
+* angular preset (deliver) ([f8c12b6](https://github.com/aziontech/vulcan/commit/f8c12b6c0e475a4ee77b127d9be3c2d3ac6b9e49))
+* remove versionid ([482fb35](https://github.com/aziontech/vulcan/commit/482fb3509a05967b6ad6879f209341d6dcce26ad))
+* remove versionid ([#210](https://github.com/aziontech/vulcan/issues/210)) ([e78ea1e](https://github.com/aziontech/vulcan/commit/e78ea1e8e1f913e67b9e4b577b01e90437d68884))
+
 ## [2.3.0-stage.3](https://github.com/aziontech/vulcan/compare/v2.3.0-stage.2...v2.3.0-stage.3) (2024-01-22)
 
 
