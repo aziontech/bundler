@@ -1,3 +1,11 @@
+## [2.3.0-stage.3](https://github.com/aziontech/vulcan/compare/v2.3.0-stage.2...v2.3.0-stage.3) (2024-01-22)
+
+
+### Bug Fixes
+
+* angular deliver preset ([#215](https://github.com/aziontech/vulcan/issues/215)) ([5bb2d77](https://github.com/aziontech/vulcan/commit/5bb2d77c5ca40ef688f50826a55bf384759b5a61))
+* angular preset (deliver) ([f8c12b6](https://github.com/aziontech/vulcan/commit/f8c12b6c0e475a4ee77b127d9be3c2d3ac6b9e49))
+
 ## [2.3.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.3.0-stage.1...v2.3.0-stage.2) (2024-01-18)
 
 
