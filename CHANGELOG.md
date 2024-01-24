@@ -1,3 +1,16 @@
+## [2.4.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.3.0...v2.4.0-stage.1) (2024-01-24)
+
+
+### Features
+
+* adding polyfill for Storage API for local server ([444ea38](https://github.com/aziontech/vulcan/commit/444ea388801bf6acd2b201426f8296a8ba18cc3e))
+* storage api local server ([#214](https://github.com/aziontech/vulcan/issues/214)) ([d793c90](https://github.com/aziontech/vulcan/commit/d793c904ccfb6a5f7bb971f85b8a832c5a5f8e0a))
+
+
+### Bug Fixes
+
+* removing the requirement to useNodePolyfill when api external azion ([4b6cc2d](https://github.com/aziontech/vulcan/commit/4b6cc2d8e57297fa577fdb961831d14d4946fdf2))
+
 ## [2.3.0](https://github.com/aziontech/vulcan/compare/v2.2.0...v2.3.0) (2024-01-22)
 
 
