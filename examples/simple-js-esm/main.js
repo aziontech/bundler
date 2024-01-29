@@ -10,6 +10,8 @@ function main(event) {
   const data = `Generated message: ${message}`
 
   console.log('selected message:', message);
+  console.log('VULCAN_PATH =', VULCAN_PATH);
+
   return new Response(data, {
     headers: new Headers([['X-Custom-Feat', 'my random message']]),
     status: 200,
