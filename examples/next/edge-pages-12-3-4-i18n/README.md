@@ -1,5 +1,5 @@
-# edge-pages-13-4-8-i18n
-Nextjs v13.4.8 project example using edge runtime and pages format.
+# edge-pages-12-3-4-i18n
+Nextjs v12.3.4 project example using edge runtime and pages format.
 
 This example contains:
 * I18n feat;

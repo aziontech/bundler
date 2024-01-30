@@ -1,5 +1,5 @@
-# edge-pages-12-3-4-config
-Nextjs v12.3.4 project example using edge runtime and pages format.
+# edge-pages-13-5-6-middleware
+Nextjs v13.5.6 project example using edge runtime and pages format.
 
 This example contains:
 * Edge API Route;

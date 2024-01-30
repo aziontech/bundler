@@ -1,6 +1,9 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
+
+const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
   return (
@@ -11,7 +14,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={`${styles.main}`}>
+      <main className={`${styles.main} ${inter.className}`}>
         <div className={styles.description}>
           <p>
             Get started by editing&nbsp;
@@ -47,115 +50,83 @@ export default function Home() {
         </div>
 
         <div className={styles.grid}>
-        <a
-            href="/common"
+          <a
+            href="/run-rewrite-before?overrideMe=true"
             className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
             rel="noopener noreferrer"
           >
             <h2 className={`mb-3 text-2xl font-semibold`}>
-              Common page{' '}
+              Rewrite Before{' '}
               <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
                 -&gt;
               </span>
             </h2>
             <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              Common page without middleware action.
+              Rewrite Before example.
             </p>
           </a>
 
           <a
-            href="/api/?rewrite=true"
+            href="/run-rewrite-after"
             className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
             rel="noopener noreferrer"
           >
             <h2 className={`mb-3 text-2xl font-semibold`}>
-              Middleware - Rewrite{' '}
+              Rewrite After{' '}
               <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
                 -&gt;
               </span>
             </h2>
             <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              Middleware rewrite example.
+              Rewrite After example.
             </p>
           </a>
 
           <a
-            href="/api/?redirect"
+            href="/xptz"
             className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
             rel="noopener noreferrer"
           >
             <h2 className={`mb-3 text-2xl font-semibold`}>
-              Middleware - Redirect{' '}
+              Fallback{' '}
               <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
                 -&gt;
               </span>
             </h2>
             <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              Middleware redirect example.
+              Fallback example (redirect to /api/hello).
             </p>
           </a>
 
           <a
-            href="/api/hello?next=true"
+            href="/run-simple-redirect"
             className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
             rel="noopener noreferrer"
           >
             <h2 className={`mb-3 text-2xl font-semibold`}>
-              Middleware - go to response{' '}
+              Redirect{' '}
               <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
                 -&gt;
               </span>
             </h2>
             <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              Middleware go to response example.
+              Simple redirect example.
             </p>
           </a>
 
           <a
-            href="/api/hello?setHeader"
+            href="/run-redirect-permanent"
             className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
             rel="noopener noreferrer"
           >
             <h2 className={`mb-3 text-2xl font-semibold`}>
-              Middleware - set header{' '}
+              Redirect Permanent{' '}
               <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
                 -&gt;
               </span>
             </h2>
             <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              Middleware set header example (header: 'x-hello-from-middleware1').
-            </p>
-          </a>
-
-          <a
-            href="/api/hello?throw"
-            className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-            rel="noopener noreferrer"
-          >
-            <h2 className={`mb-3 text-2xl font-semibold`}>
-              Middleware - throw{' '}
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
-              </span>
-            </h2>
-            <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              Middleware throw error example.
-            </p>
-          </a>
-
-          <a
-            href="/api/hello"
-            className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-            rel="noopener noreferrer"
-          >
-            <h2 className={`mb-3 text-2xl font-semibold`}>
-              Middleware - add cookie and header{' '}
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
-              </span>
-            </h2>
-            <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-              Middleware that add a cookie and a header to the response example.
+              Redirect permanent example.
             </p>
           </a>
         </div>
