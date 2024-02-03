@@ -5,7 +5,7 @@ First, an Hugo theme is necessary.
 git clone https://github.com/theNewDynamic/gohugo-theme-ananke.git themes/ananke
 ```
 
-Remember to install for Development locally.  
+Remember to install Vulcan for Development locally.  
 
 Than you can install and forge the exemple.
 ```
