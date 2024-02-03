@@ -7,7 +7,7 @@ git clone https://github.com/theNewDynamic/gohugo-theme-ananke.git themes/ananke
 
 Remember to install Vulcan for Development locally.  
 
-Than you can install and forge the exemple.
+Then you can install and forge the exemple.
 ```
 npm install
 
