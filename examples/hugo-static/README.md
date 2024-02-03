@@ -2,16 +2,21 @@
 
 First, an Hugo theme is necessary.
 ```
-git init
-git submodule add -f https://github.com/theNewDynamic/gohugo-theme-ananke.git themes/ananke
+git clone https://github.com/theNewDynamic/gohugo-theme-ananke.git themes/ananke
 ```
 
-Than you can forge it.
+Remember to install for Development locally.  
+
+Than you can install and forge the exemple.
 ```
+npm install
+
 vulcan build --preset hugo --mode deliver
 ```
 
-And run it locally
+Run it locally.
 ```
 vulcan dev
 ```
+
+Check it out on http://localhost:3000/.
