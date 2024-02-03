@@ -1,0 +1,5 @@
+themes/ananke
+.edge/
+.hugo_build.lock
+.gitmodules
+.vulcan
