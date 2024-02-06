@@ -1,3 +1,10 @@
+## [2.4.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.4.0-stage.1...v2.4.0-stage.2) (2024-02-06)
+
+
+### Features
+
+* add hugo preset ([#192](https://github.com/aziontech/vulcan/issues/192)) ([a59b21a](https://github.com/aziontech/vulcan/commit/a59b21a487004c7215631a9e8b6cf74bfd261fc9))
+
 ## [2.4.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.3.0...v2.4.0-stage.1) (2024-01-24)
 
 
