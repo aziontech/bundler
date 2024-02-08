@@ -1,3 +1,10 @@
+## [2.4.0-stage.3](https://github.com/aziontech/vulcan/compare/v2.4.0-stage.2...v2.4.0-stage.3) (2024-02-08)
+
+
+### Features
+
+* Nextjs routing and edge runtime ([#226](https://github.com/aziontech/vulcan/issues/226)) ([96b1788](https://github.com/aziontech/vulcan/commit/96b17886af0fec67c239da5a5a593c6310edd41f))
+
 ## [2.4.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.4.0-stage.1...v2.4.0-stage.2) (2024-02-06)
 
 
