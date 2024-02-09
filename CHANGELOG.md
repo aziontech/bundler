@@ -1,3 +1,12 @@
+## [2.4.0-stage.4](https://github.com/aziontech/vulcan/compare/v2.4.0-stage.3...v2.4.0-stage.4) (2024-02-09)
+
+
+### Bug Fixes
+
+* bannerPlugin webpack injection bug fixed using bundler define ([8acdd5f](https://github.com/aziontech/vulcan/commit/8acdd5f989848390892243d98326a69324744b82))
+* bundlers compilation error ([#229](https://github.com/aziontech/vulcan/issues/229)) ([66f091a](https://github.com/aziontech/vulcan/commit/66f091a3c8591f6edeafd803d940667abe27d4cd))
+* changing external dependencies in webpack as externalsType Module ([0339874](https://github.com/aziontech/vulcan/commit/033987430f44026a6285edad2733e53f636ebab2))
+
 ## [2.4.0-stage.3](https://github.com/aziontech/vulcan/compare/v2.4.0-stage.2...v2.4.0-stage.3) (2024-02-08)
 
 
