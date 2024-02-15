@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install current library globally
+        run: npm install -g
+
       - name: Run task:docsx
         run: npm run task:docs
 
@@ -47,11 +50,15 @@ jobs:
           cd jsdoc/edge-functions/$(jq -r ".version" package.json)
           mkdir ~/.config/ && touch ~/.config/azioncli.yaml
 
-      - name: Configure Azion CLI
-        run: ./azioncli configure -t ${{ secrets.RTM_TOKEN }}
+      - name: Configure Azion CLI and define application settings
+        run: |
+          cd jsdoc/edge-functions/$(jq -r ".version" package.json) 
+          ./azioncli configure -t ${{ secrets.RTM_TOKEN }}
 
       - name: Define application settings
-        run: >
+        run: |
+          cd jsdoc/edge-functions/$(jq -r ".version" package.json) 
+          ./azioncli configure -t ${{ secrets.RTM_TOKEN }}
           echo $(jq 
           --arg funcid ${{ secrets.VULCAN_DOCS_EDGE_FUNCTION_ID }} 
           --arg appid ${{ secrets.VULCAN_DOCS_EDGE_APPLICATION_ID}} 
