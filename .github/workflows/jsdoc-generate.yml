@@ -26,50 +26,45 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install current library globally
-        run: npm install -g
-
       - name: Run task:docsx
         run: npm run task:docs
 
       - name: List files
         run: ls
 
-      - name: Build JSDOCS
-        run: |
-          cd jsdoc/edge-functions/$(jq -r ".version" package.json)
-          vulcan build --preset html --mode deliver
-
       - name: Download Azion CLI
         run: |
-          cd jsdoc/edge-functions/$(jq -r ".version" package.json) 
+          cd jsdoc/edge-functions
           curl https://downloads.azion.com/linux/x86_64/azioncli -o azioncli && chmod +x azioncli
 
       - name: Create YML file to Azion CLI
         run: |
-          cd jsdoc/edge-functions/$(jq -r ".version" package.json)
+          cd jsdoc/edge-functions
           mkdir ~/.config/ && touch ~/.config/azioncli.yaml
 
       - name: Configure Azion CLI and define application settings
         run: |
-          cd jsdoc/edge-functions/$(jq -r ".version" package.json) 
+          mv azion jsdoc/edge-functions 
+          cd jsdoc/edge-functions
           ./azioncli configure -t ${{ secrets.RTM_TOKEN }}
-
       - name: Define application settings
         run: |
-          cd jsdoc/edge-functions/$(jq -r ".version" package.json) 
+          cd jsdoc/edge-functions
           ./azioncli configure -t ${{ secrets.RTM_TOKEN }}
           echo $(jq 
           --arg funcid ${{ secrets.VULCAN_DOCS_EDGE_FUNCTION_ID }} 
           --arg appid ${{ secrets.VULCAN_DOCS_EDGE_APPLICATION_ID}} 
           --arg domainid ${{secrets.VULCAN_DOCS_DOMAIN_ID}} 
-          '.name = "Console PK - Production"
+          '.name = "vulcan-docs"
           | .function.id = ($funcid|tonumber)
           | .application.id = ($appid|tonumber)
           | .domain.id = ($domainid|tonumber)'
           azion/azion.json) > azion/azion.json
 
-      - name: Deploy
+      - name: Build and Deploy
         run: |
-          cd jsdoc/edge-functions/$(jq -r ".version" package.json)
-          ./azioncli edge_applications publish
+          VERSION=$(jq -r ".version" package.json)
+          mkdir -p jsdoc/edge-functions/.edge/statics
+          cp -r jsdoc/edge-functions/$VERSION/* jsdoc/edge-functions/.edge/statics/
+          cd jsdoc/edge-functions && ls
+          ./azioncli edge_applications publish --debug
