@@ -10,9 +10,9 @@ const TIMEOUT = 10 * 60 * 1000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/gastby-static';
+const EXAMPLE_PATH = '/examples/gatsby-static';
 
-describe('E2E - gastby-static project', () => {
+describe('E2E - gatsby-static project', () => {
   let request;
   let browser;
   let page;
@@ -23,7 +23,7 @@ describe('E2E - gastby-static project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'gastby', 'deliver', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'gatsby', 'deliver', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();
