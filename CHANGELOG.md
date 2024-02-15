@@ -1,3 +1,10 @@
+## [2.4.0-stage.5](https://github.com/aziontech/vulcan/compare/v2.4.0-stage.4...v2.4.0-stage.5) (2024-02-15)
+
+
+### Features
+
+* add new gatsby preset ([#231](https://github.com/aziontech/vulcan/issues/231)) ([55e2bf5](https://github.com/aziontech/vulcan/commit/55e2bf59198c823c976a2c641a5d84b40efe7aef))
+
 ## [2.4.0-stage.4](https://github.com/aziontech/vulcan/compare/v2.4.0-stage.3...v2.4.0-stage.4) (2024-02-09)
 
 
