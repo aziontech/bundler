@@ -12,7 +12,7 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "next": "12.3.1",
+    "next": "13.5.1",
     "react": "^18",
     "react-dom": "^18"
   },
