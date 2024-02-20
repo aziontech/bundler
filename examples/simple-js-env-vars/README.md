@@ -12,7 +12,7 @@ vulcan build
 
 ```
 
-Add the `MY_VAR` variable to the `.edge/.env` file.
+Add the `MY_VAR` variable to the `.env` file.
 
 ```bash
 
