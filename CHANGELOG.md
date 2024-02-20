@@ -1,3 +1,10 @@
+## [2.5.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.4.0...v2.5.0-stage.1) (2024-02-20)
+
+
+### Features
+
+* add gastby to <init> command ([#245](https://github.com/aziontech/vulcan/issues/245)) ([7b1f870](https://github.com/aziontech/vulcan/commit/7b1f870885809d18abc651952e0a92564ebae137))
+
 ## [2.4.0](https://github.com/aziontech/vulcan/compare/v2.3.0...v2.4.0) (2024-02-16)
 
 
