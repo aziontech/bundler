@@ -1,4 +1,4 @@
 module.exports = {
-  builder: 'webpack',
+  builder: 'esbuild',
   useNodePolyfills: true,
 };

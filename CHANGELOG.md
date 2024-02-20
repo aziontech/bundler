@@ -1,3 +1,65 @@
+## [2.4.0](https://github.com/aziontech/vulcan/compare/v2.3.0...v2.4.0) (2024-02-16)
+
+
+### Features
+
+* add hugo preset ([#192](https://github.com/aziontech/vulcan/issues/192)) ([a59b21a](https://github.com/aziontech/vulcan/commit/a59b21a487004c7215631a9e8b6cf74bfd261fc9))
+* add new gatsby preset ([#231](https://github.com/aziontech/vulcan/issues/231)) ([55e2bf5](https://github.com/aziontech/vulcan/commit/55e2bf59198c823c976a2c641a5d84b40efe7aef))
+* adding polyfill for Storage API for local server ([444ea38](https://github.com/aziontech/vulcan/commit/444ea388801bf6acd2b201426f8296a8ba18cc3e))
+* Nextjs routing and edge runtime ([#226](https://github.com/aziontech/vulcan/issues/226)) ([96b1788](https://github.com/aziontech/vulcan/commit/96b17886af0fec67c239da5a5a593c6310edd41f))
+* storage api local server ([#214](https://github.com/aziontech/vulcan/issues/214)) ([d793c90](https://github.com/aziontech/vulcan/commit/d793c904ccfb6a5f7bb971f85b8a832c5a5f8e0a))
+
+
+### Bug Fixes
+
+* bannerPlugin webpack injection bug fixed using bundler define ([8acdd5f](https://github.com/aziontech/vulcan/commit/8acdd5f989848390892243d98326a69324744b82))
+* bundlers compilation error ([#229](https://github.com/aziontech/vulcan/issues/229)) ([66f091a](https://github.com/aziontech/vulcan/commit/66f091a3c8591f6edeafd803d940667abe27d4cd))
+* changing external dependencies in webpack as externalsType Module ([0339874](https://github.com/aziontech/vulcan/commit/033987430f44026a6285edad2733e53f636ebab2))
+* removing the requirement to useNodePolyfill when api external azion ([4b6cc2d](https://github.com/aziontech/vulcan/commit/4b6cc2d8e57297fa577fdb961831d14d4946fdf2))
+
+## [2.4.0-stage.5](https://github.com/aziontech/vulcan/compare/v2.4.0-stage.4...v2.4.0-stage.5) (2024-02-15)
+
+
+### Features
+
+* add new gatsby preset ([#231](https://github.com/aziontech/vulcan/issues/231)) ([55e2bf5](https://github.com/aziontech/vulcan/commit/55e2bf59198c823c976a2c641a5d84b40efe7aef))
+
+## [2.4.0-stage.4](https://github.com/aziontech/vulcan/compare/v2.4.0-stage.3...v2.4.0-stage.4) (2024-02-09)
+
+
+### Bug Fixes
+
+* bannerPlugin webpack injection bug fixed using bundler define ([8acdd5f](https://github.com/aziontech/vulcan/commit/8acdd5f989848390892243d98326a69324744b82))
+* bundlers compilation error ([#229](https://github.com/aziontech/vulcan/issues/229)) ([66f091a](https://github.com/aziontech/vulcan/commit/66f091a3c8591f6edeafd803d940667abe27d4cd))
+* changing external dependencies in webpack as externalsType Module ([0339874](https://github.com/aziontech/vulcan/commit/033987430f44026a6285edad2733e53f636ebab2))
+
+## [2.4.0-stage.3](https://github.com/aziontech/vulcan/compare/v2.4.0-stage.2...v2.4.0-stage.3) (2024-02-08)
+
+
+### Features
+
+* Nextjs routing and edge runtime ([#226](https://github.com/aziontech/vulcan/issues/226)) ([96b1788](https://github.com/aziontech/vulcan/commit/96b17886af0fec67c239da5a5a593c6310edd41f))
+
+## [2.4.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.4.0-stage.1...v2.4.0-stage.2) (2024-02-06)
+
+
+### Features
+
+* add hugo preset ([#192](https://github.com/aziontech/vulcan/issues/192)) ([a59b21a](https://github.com/aziontech/vulcan/commit/a59b21a487004c7215631a9e8b6cf74bfd261fc9))
+
+## [2.4.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.3.0...v2.4.0-stage.1) (2024-01-24)
+
+
+### Features
+
+* adding polyfill for Storage API for local server ([444ea38](https://github.com/aziontech/vulcan/commit/444ea388801bf6acd2b201426f8296a8ba18cc3e))
+* storage api local server ([#214](https://github.com/aziontech/vulcan/issues/214)) ([d793c90](https://github.com/aziontech/vulcan/commit/d793c904ccfb6a5f7bb971f85b8a832c5a5f8e0a))
+
+
+### Bug Fixes
+
+* removing the requirement to useNodePolyfill when api external azion ([4b6cc2d](https://github.com/aziontech/vulcan/commit/4b6cc2d8e57297fa577fdb961831d14d4946fdf2))
+
 ## [2.3.0](https://github.com/aziontech/vulcan/compare/v2.2.0...v2.3.0) (2024-01-22)
 
 
