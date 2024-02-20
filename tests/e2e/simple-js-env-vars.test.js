@@ -1,3 +1,4 @@
+import { expect } from '@jest/globals';
 import supertest from 'supertest';
 import projectInitializer from '../utils/project-initializer.js';
 import projectStop from '../utils/project-stop.js';
@@ -22,7 +23,18 @@ describe('E2E - simple-js-env-vars project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await execCommandInContainer(`sh -c 'rm -rf .edge'`, `/${EXAMPLE_PATH}`);
+    await execCommandInContainer(
+      `sh -c 'rm -rf .edge && rm -rf .env'`,
+      `/${EXAMPLE_PATH}`,
+    );
+
+    // eslint-disable-next-line jest/no-standalone-expect
+    if (expect.getState().currentTestName.includes('200')) {
+      await execCommandInContainer(
+        `sh -c 'echo "MY_VAR=EdgeComputing" > .env'`,
+        `/${EXAMPLE_PATH}/`,
+      );
+    }
 
     await projectInitializer(
       EXAMPLE_PATH,
@@ -47,13 +59,6 @@ describe('E2E - simple-js-env-vars project', () => {
   });
 
   test('should receive a 200 status code and env var defined in .env file', async () => {
-    // Add MY_VAR to .env file
-    await execCommandInContainer(
-      `sh -c 'echo "MY_VAR=EdgeComputing" > .env'`,
-      `/${EXAMPLE_PATH}/.edge`,
-      true,
-    );
-
     const response = await request
       .get('/')
       .expect(200)
