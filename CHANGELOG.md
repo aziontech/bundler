@@ -1,3 +1,10 @@
+## [2.5.0-stage.3](https://github.com/aziontech/vulcan/compare/v2.5.0-stage.2...v2.5.0-stage.3) (2024-02-21)
+
+
+### Features
+
+* support env vars in local environment ([#244](https://github.com/aziontech/vulcan/issues/244)) ([5ce278e](https://github.com/aziontech/vulcan/commit/5ce278ed5b89428722d38a1e84c71a5e5269bc68))
+
 ## [2.5.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.5.0-stage.1...v2.5.0-stage.2) (2024-02-21)
 
 
