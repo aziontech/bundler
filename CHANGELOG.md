@@ -1,3 +1,10 @@
+## [2.5.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.5.0-stage.1...v2.5.0-stage.2) (2024-02-21)
+
+
+### Bug Fixes
+
+* ignore dir git no copy ([#230](https://github.com/aziontech/vulcan/issues/230)) ([72b3d0b](https://github.com/aziontech/vulcan/commit/72b3d0b84d975b28efd01592577e98730f2912b4))
+
 ## [2.5.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.4.0...v2.5.0-stage.1) (2024-02-20)
 
 
