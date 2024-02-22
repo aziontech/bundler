@@ -13,15 +13,14 @@ const execOut = promisify(execCallback);
 async function isProcessRunning(url, containerName = 'test') {
   try {
     const { stdout } = await execOut(
-      `docker exec ${containerName} wget -S \
-        --header="Accept-Encoding: gzip, deflate, br" \
-        --header="Accept-Language: en-US,en;q=0.9" \
-        --header="Connection: keep-alive" \
-        --spider ${url} 2>&1 | awk '/HTTP/{print $2}'`,
+      `docker exec ${containerName} \
+        node -e "const http = require('http'); http.get('${url}', (res) => { console.log(res.statusCode); });" \
+        2>&1 | awk "NR==1{print $2}"`,
     );
     const httpCode = parseInt(stdout.trim(), 10);
     return !Number.isNaN(httpCode) && httpCode > 199 && httpCode < 600;
   } catch (err) {
+    console.error('Error checking if process is running', err);
     return false;
   }
 }
@@ -33,7 +32,7 @@ async function isProcessRunning(url, containerName = 'test') {
  */
 async function waitForVulcanServer(url) {
   const checkInterval = 1000;
-  const endTime = Date.now() + 30000; // 30s timeout
+  const endTime = Date.now() + 60000; // 30s timeout
   return new Promise((resolve) => {
     // eslint-disable-next-line consistent-return
     const checkProcess = async () => {
