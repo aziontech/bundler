@@ -50,7 +50,7 @@ describe('E2E - gatsby-static project', () => {
     expect(pageTitle).toBe('All posts | Gatsby Starter Blog');
   });
 
-  test('Should render edge page in "/edge" route', async () => {
+  test('Should render edge page in "/hello-world" route', async () => {
     await page.goto(`${localhostBaseUrl}/hello-world`);
 
     const pageContent = await page.content();
