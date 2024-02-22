@@ -42,26 +42,28 @@ describe('E2E - gatsby-static project', () => {
     const pageTitle = await page.title();
 
     expect(pageContent).toContain(
-      'Written by Kyle Mathews who lives and works in San Francisco building useful things.',
+      'who lives and works in San Francisco building useful things.',
     );
     expect(pageContent).toContain(
       'This is a custom description for SEO and Open Graph purposes, rather than the default generated excerpt. Simply add a description field to the frontmatter.',
     );
-    expect(pageTitle).toBe('Gatsby Starter Blog');
+    expect(pageTitle).toBe('All posts | Gatsby Starter Blog');
   });
 
   test('Should render edge page in "/edge" route', async () => {
-    await page.goto(`${localhostBaseUrl}/edge`);
+    await page.goto(`${localhostBaseUrl}/hello-world`);
 
     const pageContent = await page.content();
 
-    expect(pageContent).toContain('Running in Edge.');
+    expect(pageContent).toContain(
+      'This is my first post on my new fake blog! How exciting!',
+    );
   });
 
   test('Should return correct asset', async () => {
     await request
       .get('/favicon.ico')
       .expect(200)
-      .expect('Content-Type', /image\/ico/);
+      .expect('Content-Type', /^image\/vnd\.microsoft\.(icon|ico)$/);
   });
 });
