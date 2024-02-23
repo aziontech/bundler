@@ -12,7 +12,7 @@ let serverPort;
 let localhostBaseUrl;
 const EXAMPLE_PATH = '/examples/next/edge-pages-12-3-4-configs';
 
-describe('E2E - next next-12-3-4-configs project', () => {
+describe('E2E - next-12-3-4-configs project', () => {
   let browser;
   let page;
 
@@ -32,7 +32,7 @@ describe('E2E - next next-12-3-4-configs project', () => {
     await browser.close();
   }, TIMEOUT);
 
-  test('Should render  Rewrite Before Page', async () => {
+  test('Should render Rewrite Before Page', async () => {
     await page.goto(`${localhostBaseUrl}/run-rewrite-before?overrideMe=true`);
 
     const pageContent = await page.content();

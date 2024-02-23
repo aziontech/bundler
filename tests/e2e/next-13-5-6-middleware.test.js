@@ -12,7 +12,7 @@ let serverPort;
 let localhostBaseUrl;
 const EXAMPLE_PATH = '/examples/next/edge-pages-13-5-6-middleware';
 
-describe('E2E - next next-13-5-6-middleware project', () => {
+describe('E2E - next-13-5-6-middleware project', () => {
   let browser;
   let page;
 

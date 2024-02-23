@@ -13,7 +13,7 @@ let serverPort;
 let localhostBaseUrl;
 const EXAMPLE_PATH = '/examples/next/node-pages-12-3-1-fs';
 
-describe('E2E - next node-pages-12-3-1-fs project', () => {
+describe('E2E - next-node-pages-12-3-1-fs project', () => {
   let request;
   let browser;
   let page;
