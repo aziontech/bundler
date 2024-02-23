@@ -77,17 +77,21 @@ describe('E2E - next next-13-5-6-configs project', () => {
     expect(pageTitle).toBe('Redirect Page');
   });
 
-  test('Should redirect after click on permanet Redirect route', async () => {
-    await page.goto(`${localhostBaseUrl}`);
-    await Promise.all([
-      page.waitForNavigation(),
-      page.click('a[href="/run-redirect-permanent"]'),
-    ]);
+  test(
+    'Should redirect after click on permanet Redirect route',
+    async () => {
+      await page.goto(`${localhostBaseUrl}`);
+      await Promise.all([
+        page.waitForNavigation(),
+        page.click('a[href="/run-redirect-permanent"]'),
+      ]);
 
-    const pageContent = await page.content();
-    const pageTitle = await page.title();
+      const pageContent = await page.content();
+      const pageTitle = await page.title();
 
-    expect(pageContent).toMatch('Redirect Permanent Page');
-    expect(pageTitle).toBe('Redirect Permanent Page');
-  });
+      expect(pageContent).toMatch('Redirect Permanent Page');
+      expect(pageTitle).toBe('Redirect Permanent Page');
+    },
+    TIMEOUT,
+  );
 });
