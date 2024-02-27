@@ -1,11 +1,11 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Head from 'next/head';
+import Image from 'next/image';
+import styles from '../styles/Home.module.css';
 
 export default function Home() {
   const handleClick = (path) => {
-    window.location.href = `${window.location.origin}${path}`
-  }
+    window.location.href = `${window.location.origin}${path}`;
+  };
 
   return (
     <div className={styles.container}>
@@ -25,23 +25,39 @@ export default function Home() {
           <ul>
             <li
               onClick={() => handleClick('/api/hello')}
-              onKeyDown={() => handleClick('/api/hello')}>
+              onKeyDown={() => handleClick('/api/hello')}
+            >
               API Route
             </li>
             <li
               onClick={() => handleClick('/ssr')}
-              onKeyDown={() => handleClick('/ssr')}>
+              onKeyDown={() => handleClick('/ssr')}
+            >
               SSR
             </li>
             <li
               onClick={() => handleClick('/teste/x')}
-              onKeyDown={() => handleClick('/teste/x')}>
+              onKeyDown={() => handleClick('/teste/x')}
+            >
               /[prodSlug]/x page with slug=teste
             </li>
             <li
               onClick={() => handleClick('/xptz')}
-              onKeyDown={() => handleClick('/xptz')}>
+              onKeyDown={() => handleClick('/xptz')}
+            >
               [...catSlug] page with slug=xptz
+            </li>
+            <li
+              onClick={() => handleClick('/404')}
+              onKeyDown={() => handleClick('/404')}
+            >
+              Custom 404 Error Page.
+            </li>
+            <li
+              onClick={() => handleClick('/500')}
+              onKeyDown={() => handleClick('/500')}
+            >
+              Custom 500 Error Page.
             </li>
           </ul>
         </div>
@@ -90,5 +106,5 @@ export default function Home() {
         </a>
       </footer>
     </div>
-  )
+  );
 }
