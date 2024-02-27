@@ -3,5 +3,7 @@ Nextjs v13.5.6 project example using edge runtime and app format.
 
 This example contains:
 * Index page;
-* Edge API Route;
+* Layout;
 * Custom Route Handlers;
+* Dynamic Routes;
+* I18n feat;
