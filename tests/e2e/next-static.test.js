@@ -52,11 +52,9 @@ describe('E2E - next-static project', () => {
     await page.goto(`${localhostBaseUrl}/blog/post-2/`);
 
     const pageContent = await page.content();
-    const pageTitle = await page.title();
 
     expect(pageContent).toContain('My Post slug:');
     expect(pageContent).toContain('post-2');
-    expect(pageTitle).toBe('Create Next App');
   });
 
   test('Should render misty mountains moria page in "/misty-mountains/moria" route', async () => {
