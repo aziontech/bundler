@@ -1,3 +1,38 @@
+## [2.5.0-stage.5](https://github.com/aziontech/vulcan/compare/v2.5.0-stage.4...v2.5.0-stage.5) (2024-02-28)
+
+
+### Features
+
+* firewall event api support - Experimental ([#255](https://github.com/aziontech/vulcan/issues/255)) ([539a0f6](https://github.com/aziontech/vulcan/commit/539a0f67603323c59c64a56b606fc9e71daf8afc))
+
+## [2.5.0-stage.4](https://github.com/aziontech/vulcan/compare/v2.5.0-stage.3...v2.5.0-stage.4) (2024-02-28)
+
+
+### Bug Fixes
+
+* change the command to check if the application is responding ([bca4413](https://github.com/aziontech/vulcan/commit/bca441369170972128f774fd505c17a1b2b98643))
+
+## [2.5.0-stage.3](https://github.com/aziontech/vulcan/compare/v2.5.0-stage.2...v2.5.0-stage.3) (2024-02-21)
+
+
+### Features
+
+* support env vars in local environment ([#244](https://github.com/aziontech/vulcan/issues/244)) ([5ce278e](https://github.com/aziontech/vulcan/commit/5ce278ed5b89428722d38a1e84c71a5e5269bc68))
+
+## [2.5.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.5.0-stage.1...v2.5.0-stage.2) (2024-02-21)
+
+
+### Bug Fixes
+
+* ignore dir git no copy ([#230](https://github.com/aziontech/vulcan/issues/230)) ([72b3d0b](https://github.com/aziontech/vulcan/commit/72b3d0b84d975b28efd01592577e98730f2912b4))
+
+## [2.5.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.4.0...v2.5.0-stage.1) (2024-02-20)
+
+
+### Features
+
+* add gastby to <init> command ([#245](https://github.com/aziontech/vulcan/issues/245)) ([7b1f870](https://github.com/aziontech/vulcan/commit/7b1f870885809d18abc651952e0a92564ebae137))
+
 ## [2.4.0](https://github.com/aziontech/vulcan/compare/v2.3.0...v2.4.0) (2024-02-16)
 
 
