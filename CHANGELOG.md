@@ -1,3 +1,10 @@
+## [2.5.0-stage.5](https://github.com/aziontech/vulcan/compare/v2.5.0-stage.4...v2.5.0-stage.5) (2024-02-28)
+
+
+### Features
+
+* firewall event api support - Experimental ([#255](https://github.com/aziontech/vulcan/issues/255)) ([539a0f6](https://github.com/aziontech/vulcan/commit/539a0f67603323c59c64a56b606fc9e71daf8afc))
+
 ## [2.5.0-stage.4](https://github.com/aziontech/vulcan/compare/v2.5.0-stage.3...v2.5.0-stage.4) (2024-02-28)
 
 
