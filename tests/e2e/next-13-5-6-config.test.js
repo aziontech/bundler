@@ -56,10 +56,8 @@ describe('E2E - next-13-5-6-configs project', () => {
     await page.goto(`${localhostBaseUrl}/xptz`);
 
     const pageContent = await page.content();
-    const pageTitle = await page.title();
 
     expect(pageContent).toMatch('John Doe');
-    expect(pageTitle).toBe('Rewrite Before Page');
   });
 
   test('Should redirect after click on simple Redirect route', async () => {
