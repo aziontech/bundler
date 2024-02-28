@@ -34,7 +34,9 @@ describe('E2E - next-13-5-6-middleware project', () => {
   }, TIMEOUT);
 
   test('Should render Internal Server Error page', async () => {
-    await page.goto(`${localhostBaseUrl}/api/hello?throw`);
+    await page.goto(`${localhostBaseUrl}/api/hello?throw`, {
+      waitUntil: 'networkidle0',
+    });
 
     const pageContent = await page.content();
     const pageTitle = await page.title();
@@ -44,14 +46,18 @@ describe('E2E - next-13-5-6-middleware project', () => {
   });
 
   test('Should render a page without middleware aciont', async () => {
-    await page.goto(`${localhostBaseUrl}/common`);
+    await page.goto(`${localhostBaseUrl}/common`, {
+      waitUntil: 'networkidle0',
+    });
     const pageContent = await page.content();
 
     expect(pageContent).toContain('Common Page');
   });
 
   test('Should render correct page content in Middleware Rewrite', async () => {
-    await page.goto(`${localhostBaseUrl}/api?rewrite=true`);
+    await page.goto(`${localhostBaseUrl}/api?rewrite=true`, {
+      waitUntil: 'networkidle0',
+    });
 
     const pageContent = await page.content();
 
@@ -61,8 +67,10 @@ describe('E2E - next-13-5-6-middleware project', () => {
   test(
     'Should render correct page content in "/redirect-page"',
     async () => {
-      await page.goto(`${localhostBaseUrl}/redirect-page`);
-
+      await page.goto(`${localhostBaseUrl}/redirect-page`, {
+        waitUntil: 'networkidle0',
+      });
+      await page.reload();
       const pageContent = await page.content();
 
       expect(pageContent).toMatch('Redirect Page');
@@ -71,7 +79,9 @@ describe('E2E - next-13-5-6-middleware project', () => {
   );
 
   test('Should render correct page content in middleware - go to response', async () => {
-    await page.goto(`${localhostBaseUrl}/api/hello?next=true`);
+    await page.goto(`${localhostBaseUrl}/api/hello?next=true`, {
+      waitUntil: 'networkidle0',
+    });
 
     const pageContent = await page.content();
 
@@ -79,7 +89,9 @@ describe('E2E - next-13-5-6-middleware project', () => {
   });
 
   test('Should render correct page content in middleware - Returns', async () => {
-    await page.goto(`${localhostBaseUrl}/api/hello?returns`);
+    await page.goto(`${localhostBaseUrl}/api/hello?returns`, {
+      waitUntil: 'networkidle0',
+    });
 
     const pageContent = await page.content();
 
@@ -87,7 +99,9 @@ describe('E2E - next-13-5-6-middleware project', () => {
   });
 
   test('Should render correct page content in middleware - cookie and hearde', async () => {
-    const response = await page.goto(`${localhostBaseUrl}/api/hello`);
+    const response = await page.goto(`${localhostBaseUrl}/api/hello`, {
+      waitUntil: 'networkidle0',
+    });
 
     const headers = response.headers();
     expect(headers['set-cookie']).toMatch(
