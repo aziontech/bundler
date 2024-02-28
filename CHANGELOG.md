@@ -1,3 +1,10 @@
+## [2.5.0-stage.4](https://github.com/aziontech/vulcan/compare/v2.5.0-stage.3...v2.5.0-stage.4) (2024-02-28)
+
+
+### Bug Fixes
+
+* change the command to check if the application is responding ([bca4413](https://github.com/aziontech/vulcan/commit/bca441369170972128f774fd505c17a1b2b98643))
+
 ## [2.5.0-stage.3](https://github.com/aziontech/vulcan/compare/v2.5.0-stage.2...v2.5.0-stage.3) (2024-02-21)
 
 
