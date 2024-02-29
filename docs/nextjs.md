@@ -10,7 +10,7 @@ Check static examples in [Nextjs examples dir](/examples//next/) for more detail
 ### References
 
 - [Pages Router - Static Export](https://nextjs.org/docs/pages/building-your-application/deploying/static-exports)
-- [Pages Router - Static Export](https://nextjs.org/docs/app/building-your-application/deploying/static-exports)
+- [App Router - Static Export](https://nextjs.org/docs/app/building-your-application/deploying/static-exports)
 
 ## Compute
 
