@@ -1,5 +1,0 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-message="🔥 Please check your commit e.g: 'ci: added commitlint and husky'\n"
-npx --no -- commitlint --edit "" || (echo "$message" && exit 1);
