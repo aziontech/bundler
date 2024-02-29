@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  verdaccio:
+    image: verdaccio/verdaccio
+    hostname: "verdaccio"
+    container_name: "verdaccio"
+    environment:
+      - VERDACCIO_PORT=4873
+    ports:
+      - "4873:4873"
+    volumes:
+      - "./verdaccio/config:/verdaccio/conf"
+      - "./verdaccio/plugins:/verdaccio/plugins"
+
+  test:
+    image: node:18-alpine3.17
+    hostname: "test"
+    container_name: "test"
+    depends_on:
+      - verdaccio
+    ports:
+      - "3000-3020:3000-3020"
+    volumes:
+      - ./:/vulcan/
+    working_dir: /
+    tty: true

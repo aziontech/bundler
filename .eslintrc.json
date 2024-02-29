@@ -1,0 +1,51 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jest/globals": true
+  },
+  "plugins": ["jsdoc", "jest", "prettier"],
+  "extends": [
+    "airbnb-base",
+    "plugin:jsdoc/recommended",
+    "plugin:jest/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "overrides": [],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "settings": {
+    "import/resolver": {
+      "alias": {
+        "map": [
+          ["#root/*", "./"],
+          ["#lib/*", "./lib"],
+          ["#utils", "./lib/utils/index.js"],
+          ["#polyfills", "./lib/env/polyfills/index.js"],
+          ["#build", "./lib/build/dispatcher/index.js"],
+          ["#bundlers", "./lib/build/bundlers/index.js"],
+          ["#notations/*", "./lib/notations"],
+          ["#namespaces", "./lib/notations/namespaces.js"],
+          ["#typedef", "./lib/notations/typedef.js"],
+          ["#env", "./lib/env/index.js"],
+          ["#platform", "./lib/platform/index.js"],
+          ["#constants", "./lib/constants/index.js"],
+          ["#edge", "./lib/platform/edgehooks/index.js"],
+          ["#commands", "./lib/commands/index.js"]
+        ],
+        "extensions": [".js", ".json"]
+      }
+    }
+  },
+  "rules": {
+    "import/extensions": ["error", "always"],
+    "no-console": "off",
+    "no-plusplus": "off",
+    "prettier/prettier": "error"
+  },
+  "globals": {
+    "AZION_VERSION_ID": "readonly"
+  }
+}

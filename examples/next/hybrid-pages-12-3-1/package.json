@@ -1,0 +1,24 @@
+{
+  "name": "hybrid-pages-12-3-1",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "clean": "rm -r .next && rm -r .vercel && rm -r out",
+    "cloudflare:build": "node node_modules/@cloudflare/next-on-pages/bin/index.js --experimental-minify",
+    "postinstall": "patch-package"
+  },
+  "dependencies": {
+    "next": "12.3.1",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "eslint": "8.26.0",
+    "eslint-config-next": "13.0.0",
+    "patch-package": "^6.5.0"
+  }
+}

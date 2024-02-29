@@ -1,0 +1,6 @@
+examples/*
+jsdoc/*
+yarn.lock
+CHANGELOG.md
+docker-compose.yml
+CODEOWNERS

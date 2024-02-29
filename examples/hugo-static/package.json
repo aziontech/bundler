@@ -1,0 +1,14 @@
+{
+  "name": "example-hugo-static",
+  "version": "0.1.0",
+  "description": "Vulcan Hugo Example",
+  "author": "krebstiago@gmail.com",
+  "license": "MIT",
+  "scripts": {
+    "build": "hugo",
+    "serve": "hugo server"
+  },
+  "dependencies": {
+    "hugo-bin": "^0.119.0"
+  }
+}
