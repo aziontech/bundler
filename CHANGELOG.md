@@ -1,3 +1,10 @@
+## [2.6.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.5.0...v2.6.0-stage.1) (2024-03-05)
+
+
+### Features
+
+* add support to network list api ([#260](https://github.com/aziontech/vulcan/issues/260)) ([79c20be](https://github.com/aziontech/vulcan/commit/79c20be283c32829a9eb2a1db2b0996bb3246d83))
+
 ## [2.5.0](https://github.com/aziontech/vulcan/compare/v2.4.0...v2.5.0) (2024-02-28)
 
 
