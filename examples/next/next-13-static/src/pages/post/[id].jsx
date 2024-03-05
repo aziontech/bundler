@@ -1,13 +1,12 @@
 import Link from 'next/link';
 import Head from 'next/head';
-import React, { useState } from 'react';
+import React from 'react';
 import styles from '../../components/post.module.css'
+import { getPosts, getPostById } from "../../../lib/posts"
 
 export async function getStaticPaths() {
-  const response = await fetch(
-    'https://jsonplaceholder.typicode.com/posts?_page=1'
-  );
-  const postList = await response.json();
+  const postList = await getPosts();
+
   return {
     paths: postList.map((post) => {
       return {
@@ -22,10 +21,8 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   // fetch single post detail
-  const response = await fetch(
-    `https://jsonplaceholder.typicode.com/posts/${params.id}`
-  );
-  const post = await response.json();
+  const post = await getPostById(params.id);
+
   return {
     props: post,
   };
