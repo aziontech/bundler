@@ -1,3 +1,10 @@
+## [2.6.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.1...v2.6.0-stage.2) (2024-03-06)
+
+
+### Bug Fixes
+
+* nextjs config file read ([#261](https://github.com/aziontech/vulcan/issues/261)) ([39dbe3e](https://github.com/aziontech/vulcan/commit/39dbe3e840aba42802c442b240ad35551261d2db))
+
 ## [2.6.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.5.0...v2.6.0-stage.1) (2024-03-05)
 
 
