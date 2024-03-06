@@ -26,7 +26,7 @@ export default {
           set: (captured) => `/new/${captured[1]}`, // /original/image.jpg -> /new/image.jpg
         },
         setCookie: '',
-        setHeaders: {},
+        setHeaders: '',
         forwardCookies: false,
       },
       {
