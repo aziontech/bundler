@@ -1,18 +1,17 @@
 import Head from 'next/head'
 
 import Post from '../components/post'
+import { getPosts } from '../lib/posts'
 
 export async function getStaticProps() {
   // fetch list of posts
-  const response = await fetch(
-    'https://jsonplaceholder.typicode.com/posts?_page=1'
-  )
-  const postList = await response.json()
+  const postList = await getPosts();
+
   return {
     props: {
       postList,
     },
-  }
+  };
 }
 
 export default function IndexPage({ postList }) {
@@ -30,5 +29,5 @@ export default function IndexPage({ postList }) {
         ))}
       </section>
     </main>
-  )
+  );
 }
