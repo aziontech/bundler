@@ -1,3 +1,23 @@
+## [2.6.0-stage.3](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.2...v2.6.0-stage.3) (2024-03-07)
+
+
+### Features
+
+* add 'deliver' behavior ([53829d4](https://github.com/aziontech/vulcan/commit/53829d4a6fd8da9b3c5472cae36e6c3d70d1e2e2))
+* add runFunction rule ([c2991ed](https://github.com/aziontech/vulcan/commit/c2991ed08b8cd44299a5779a2536b49641f22c60))
+* add setCookie and setHader behavior ([ac26ef0](https://github.com/aziontech/vulcan/commit/ac26ef083639c412e123e421d20b9a72042336dc))
+* azion cdn config file ([#259](https://github.com/aziontech/vulcan/issues/259)) ([97e30d9](https://github.com/aziontech/vulcan/commit/97e30d9e1efd23596bb817b1a986f388e8efac7d))
+* generateManifest in the build phase ([3ebfe67](https://github.com/aziontech/vulcan/commit/3ebfe67a5ed1205bf8166e1d0942e12151bb636d))
+* new generateManifest (utils) ([66a8890](https://github.com/aziontech/vulcan/commit/66a8890ed1ba819c86ed9bda78f61ae8d61fa45d))
+* postbuild feedback scope ([f54eade](https://github.com/aziontech/vulcan/commit/f54eade889f48929416c6ed51e1480e83cdbab0c))
+* update presets manifest ([272071b](https://github.com/aziontech/vulcan/commit/272071b3d8ea7b40a0fce4d3fdb516ef61c3e362))
+
+
+### Bug Fixes
+
+* runFunction rule (manifest) ([0d36ba4](https://github.com/aziontech/vulcan/commit/0d36ba4b3d3d1fc6bd77c2215b1152d17eba7b2b))
+* set deliver rule next.js manifest ([3af923b](https://github.com/aziontech/vulcan/commit/3af923bff29e701576efb9727232eb11c2ed45ac))
+
 ## [2.6.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.1...v2.6.0-stage.2) (2024-03-06)
 
 
