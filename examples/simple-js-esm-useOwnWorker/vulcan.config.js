@@ -1,3 +1,0 @@
-module.exports = {
-  useOwnWorker: true,
-};
