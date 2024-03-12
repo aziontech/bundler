@@ -1,3 +1,10 @@
+## [2.6.0-stage.4](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.3...v2.6.0-stage.4) (2024-03-12)
+
+
+### Bug Fixes
+
+* priority in build command options ([#263](https://github.com/aziontech/vulcan/issues/263)) ([fc08670](https://github.com/aziontech/vulcan/commit/fc086706b5a65682e22a0a1eabb826ea247e3b73))
+
 ## [2.6.0-stage.3](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.2...v2.6.0-stage.3) (2024-03-07)
 
 
