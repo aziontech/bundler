@@ -1,3 +1,10 @@
+## [2.6.0-stage.7](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.6...v2.6.0-stage.7) (2024-03-18)
+
+
+### Bug Fixes
+
+* set correct manifest attribute in emscripten prebuild ([#274](https://github.com/aziontech/vulcan/issues/274)) ([6983205](https://github.com/aziontech/vulcan/commit/698320539dc975642823629f15b76cbc45f6c5b1))
+
 ## [2.6.0-stage.6](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.5...v2.6.0-stage.6) (2024-03-18)
 
 
