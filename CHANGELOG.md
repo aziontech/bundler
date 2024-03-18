@@ -1,3 +1,10 @@
+## [2.6.0-stage.6](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.5...v2.6.0-stage.6) (2024-03-18)
+
+
+### Bug Fixes
+
+* webpack config when ts loader ([#272](https://github.com/aziontech/vulcan/issues/272)) ([3627903](https://github.com/aziontech/vulcan/commit/362790383e39e40b35ad0d098d2eac81df6f4a79))
+
 ## [2.6.0-stage.5](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.4...v2.6.0-stage.5) (2024-03-14)
 
 
