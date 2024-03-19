@@ -9,7 +9,7 @@ const TIMEOUT = 1 * 60 * 1000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/simple-js-firewall-event';
+const EXAMPLE_PATH = '/examples/javascript/simple-js-firewall-event';
 
 describe('E2E - simple-js-firewall-event project', () => {
   let request;

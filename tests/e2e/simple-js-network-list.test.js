@@ -9,7 +9,7 @@ const TIMEOUT = 1 * 60 * 1000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/simple-js-network-list';
+const EXAMPLE_PATH = '/examples/javascript/simple-js-network-list';
 
 describe('E2E - simple-js-network-list project', () => {
   let request;

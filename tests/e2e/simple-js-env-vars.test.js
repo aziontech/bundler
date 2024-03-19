@@ -12,7 +12,7 @@ const TIMEOUT = 1 * 60 * 1000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/simple-js-env-vars';
+const EXAMPLE_PATH = '/examples/javascript/simple-js-env-vars';
 
 describe('E2E - simple-js-env-vars project', () => {
   let request;
