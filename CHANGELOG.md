@@ -1,3 +1,24 @@
+## [2.6.0-stage.7](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.6...v2.6.0-stage.7) (2024-03-18)
+
+
+### Bug Fixes
+
+* set correct manifest attribute in emscripten prebuild ([#274](https://github.com/aziontech/vulcan/issues/274)) ([6983205](https://github.com/aziontech/vulcan/commit/698320539dc975642823629f15b76cbc45f6c5b1))
+
+## [2.6.0-stage.6](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.5...v2.6.0-stage.6) (2024-03-18)
+
+
+### Bug Fixes
+
+* webpack config when ts loader ([#272](https://github.com/aziontech/vulcan/issues/272)) ([3627903](https://github.com/aziontech/vulcan/commit/362790383e39e40b35ad0d098d2eac81df6f4a79))
+
+## [2.6.0-stage.5](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.4...v2.6.0-stage.5) (2024-03-14)
+
+
+### Bug Fixes
+
+* presets manifest ([#268](https://github.com/aziontech/vulcan/issues/268)) ([17a20d8](https://github.com/aziontech/vulcan/commit/17a20d8f6f2b4bccb1de686a9736448dce009538))
+
 ## [2.6.0-stage.4](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.3...v2.6.0-stage.4) (2024-03-12)
 
 
