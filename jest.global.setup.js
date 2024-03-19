@@ -16,5 +16,5 @@ function generateNumericArray(start, end) {
 export default async function (globalConfig, projectConfig) {
   // check docker-compose available ports
   // TODO: unify this range of numbers (get from docker-compose file)
-  globalThis.dockerAvailablePorts = generateNumericArray(3000, 3020);
+  globalThis.dockerAvailablePorts = generateNumericArray(3000, 3025);
 }
