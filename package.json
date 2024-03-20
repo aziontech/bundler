@@ -20,11 +20,12 @@
     "test:coverage": "jest --clearCache && jest lib/ --coverage",
     "format:check": "prettier . --check",
     "task:docs": "jsdoc --configure jsdoc.json --verbose",
-    "e2e:start": "tests/scripts/start-e2e-env.sh",
+    "e2e:start": "yarn submodule:update && tests/scripts/start-e2e-env.sh",
     "e2e:stop": "tests/scripts/stop-e2e-env.sh",
     "e2e:destroy": "tests/scripts/destroy-e2e-env.sh",
     "test:e2e": "yarn e2e:start && jest --maxWorkers 1 tests/e2e/ && yarn e2e:stop",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "submodule:update": "git submodule update --init --recursive && git submodule foreach git pull origin main"
   },
   "author": "aziontech",
   "contributors": [
