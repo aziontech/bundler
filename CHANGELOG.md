@@ -1,3 +1,10 @@
+## [2.6.0-stage.9](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.8...v2.6.0-stage.9) (2024-03-20)
+
+
+### Bug Fixes
+
+* i18n and dynamic routes ([#275](https://github.com/aziontech/vulcan/issues/275)) ([246d069](https://github.com/aziontech/vulcan/commit/246d069e59c10330623ed5d6c89b1a01afe1197e))
+
 ## [2.6.0-stage.8](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.7...v2.6.0-stage.8) (2024-03-20)
 
 
