@@ -1,3 +1,10 @@
+## [2.6.0-stage.8](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.7...v2.6.0-stage.8) (2024-03-20)
+
+
+### Features
+
+* handle _next/image paths in Nextjs preset ([#276](https://github.com/aziontech/vulcan/issues/276)) ([45d578e](https://github.com/aziontech/vulcan/commit/45d578eb8a2cf02533b6bcee1c295629c2a440cf))
+
 ## [2.6.0-stage.7](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.6...v2.6.0-stage.7) (2024-03-18)
 
 
