@@ -1,3 +1,10 @@
+## [2.6.0-stage.10](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.9...v2.6.0-stage.10) (2024-04-01)
+
+
+### Bug Fixes
+
+* manifest output structure  ([#283](https://github.com/aziontech/vulcan/issues/283)) ([6939940](https://github.com/aziontech/vulcan/commit/6939940d6a95987ecf2adf5b79301e0841beeee9))
+
 ## [2.6.0-stage.9](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.8...v2.6.0-stage.9) (2024-03-20)
 
 
