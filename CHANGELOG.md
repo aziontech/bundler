@@ -1,3 +1,10 @@
+## [2.6.0-stage.11](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.10...v2.6.0-stage.11) (2024-04-02)
+
+
+### Features
+
+* eleventy framework preset ([#284](https://github.com/aziontech/vulcan/issues/284)) ([de176d6](https://github.com/aziontech/vulcan/commit/de176d66134c93703e22a4bac2631eafbfda5933))
+
 ## [2.6.0-stage.10](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.9...v2.6.0-stage.10) (2024-04-01)
 
 
