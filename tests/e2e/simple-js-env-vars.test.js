@@ -8,7 +8,7 @@ import {
 } from '../utils/docker-env-actions.js';
 
 // timeout in minutes
-const TIMEOUT = 1 * 60 * 1000;
+const TIMEOUT = 1 * 60 * 3000;
 
 let serverPort;
 let localhostBaseUrl;

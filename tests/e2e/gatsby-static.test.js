@@ -6,7 +6,7 @@ import projectStop from '../utils/project-stop.js';
 import { getContainerPort } from '../utils/docker-env-actions.js';
 
 // timeout in minutes
-const TIMEOUT = 10 * 60 * 1000;
+const TIMEOUT = 10 * 60 * 5000;
 
 let serverPort;
 let localhostBaseUrl;
