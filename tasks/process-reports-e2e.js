@@ -62,8 +62,10 @@ function processE2EReports() {
     // Write the Markdown table to the README.md file
     const readme = fs.readFileSync('README.md', 'utf8');
     const newReadme = readme.replace(
-      /## Supported((.|\n)*)## Quick Installation/,
-      `## Supported\n\n${markdownTable(table)}\n\n## Quick Installation`,
+      /## Quick Installation/,
+      `## Supported\n\n${markdownTable(
+        table,
+      )}\n\n Date of the last time the test was run: ${new Date().toLocaleDateString()}\n\n## Quick Installation`,
     );
     fs.writeFileSync('README.md', newReadme);
 

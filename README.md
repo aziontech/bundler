@@ -6,6 +6,8 @@ Vulcan is a powerful tool designed to streamline the development and deployment 
 
 One of the key highlights of Vulcan is its ability to establish an intuitive and efficient protocol for facilitating the creation of presets. This makes customization and adaptation to specific project needs even more accessible, providing developers with the necessary flexibility to optimize their applications effectively and efficiently.
 
+## Supported
+
 ## Quick Installation
 
 For those who just want to use Vulcan in their project without contributing to the development, you can install it directly from npm.
