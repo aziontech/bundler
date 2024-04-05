@@ -23,18 +23,24 @@ function processE2EReports() {
         .replace('.test.js', '')
         .replace(/-/g, ' ');
 
-      // ignore simple examples
-      if (test.name.startsWith('simple')) {
-        return null;
-      }
       // Transform the test name into a more readable format
       const readableTestName = testName
         .split(' ')
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
+
+      // ignore simple examples
+      if (test.name.startsWith('Simple')) {
+        return null;
+      }
+      // Check if all tests in the suite passed
+      const suitePassed = test.assertionResults.every(
+        (result) => result.status === 'passed',
+      );
+
       return {
         name: readableTestName,
-        passed: test.numFailingTests <= 0,
+        passed: suitePassed,
       };
     });
 
