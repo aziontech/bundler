@@ -34,7 +34,7 @@ function processE2EReports() {
         .join(' ');
       return {
         name: readableTestName,
-        passed: test.numFailingTests === 0,
+        passed: test.numFailingTests <= 0,
       };
     });
 

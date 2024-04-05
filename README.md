@@ -6,6 +6,38 @@ Vulcan is a powerful tool designed to streamline the development and deployment 
 
 One of the key highlights of Vulcan is its ability to establish an intuitive and efficient protocol for facilitating the creation of presets. This makes customization and adaptation to specific project needs even more accessible, providing developers with the necessary flexibility to optimize their applications effectively and efficiently.
 
+## Supported
+
+| Test                                 | Status |
+| ------------------------------------ | ------ |
+| Next 13 5 6 I18n                     | ⚠️     |
+| Next 12 3 4 I18n                     | ⚠️     |
+| Hexo Static                          | ⚠️     |
+| Next 13 5 6 Middleware               | ⚠️     |
+| Next 12 3 4 Middleware               | ⚠️     |
+| Next Node Pages 12 3 1               | ⚠️     |
+| Next 13 5 6 Config                   | ⚠️     |
+| Next 12 3 4 Config                   | ⚠️     |
+| Next Static                          | ⚠️     |
+| Gatsby Static                        | ⚠️     |
+| Next Node Pages 12 3 1 Fs            | ⚠️     |
+| Vue Vite Static                      | ⚠️     |
+| Next 12 Static                       | ⚠️     |
+| Simple Js Env Vars                   | ⚠️     |
+| Astro Static                         | ⚠️     |
+| Eleventy Static                      | ⚠️     |
+| React Static                         | ⚠️     |
+| Angular Static                       | ⚠️     |
+| Simple Js Network List               | ⚠️     |
+| Simple Js Firewall Event             | ⚠️     |
+| Simple Js Network List With Firewall | ⚠️     |
+| Simple Js Esm UseOwnWorker           | ⚠️     |
+| Simple Js Esm Node                   | ⚠️     |
+| Simple Js Esm                        | ⚠️     |
+| Simple Ts Esm                        | ⚠️     |
+
+ Date of the last time the test was run: 4/5/2024
+
 ## Quick Installation
 
 For those who just want to use Vulcan in their project without contributing to the development, you can install it directly from npm.
