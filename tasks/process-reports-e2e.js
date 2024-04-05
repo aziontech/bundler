@@ -53,7 +53,7 @@ function processE2EReports() {
     // Create the Markdown table
     const table = [
       ['Test', 'Status'],
-      ...results.testResults.map((test) => [
+      ...newResults.testResults.map((test) => [
         test.name,
         test.passed ? '✅' : '⚠️',
       ]),
@@ -62,7 +62,7 @@ function processE2EReports() {
     // Write the Markdown table to the README.md file
     const readme = fs.readFileSync('README.md', 'utf8');
     const newReadme = readme.replace(
-      /## Quick Installation/,
+      /## Supported((.|\n)*)## Quick Installation/,
       `## Supported\n\n${markdownTable(
         table,
       )}\n\n Date of the last time the test was run: ${new Date().toLocaleDateString()}\n\n## Quick Installation`,
