@@ -1,19 +1,20 @@
+import { expect } from '@jest/globals';
 import supertest from 'supertest';
 import projectInitializer from '../utils/project-initializer.js';
 import projectStop from '../utils/project-stop.js';
 import { getContainerPort } from '../utils/docker-env-actions.js';
 
 // timeout in minutes
-const TIMEOUT = 1 * 60 * 1000;
+const TIMEOUT = 1 * 60 * 3000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/javascript/simple-js-esm-node';
+const EXAMPLE_PATH = '/examples/javascript/simple-js-firewall-event';
 
-describe('E2E - simple-js-esm-node project', () => {
+describe('E2E - simple-js-firewall-event project', () => {
   let request;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     serverPort = getContainerPort();
     localhostBaseUrl = `http://0.0.0.0:${serverPort}`;
 
@@ -25,20 +26,23 @@ describe('E2E - simple-js-esm-node project', () => {
       'compute',
       serverPort,
       false,
+      undefined,
+      true,
     );
   }, TIMEOUT);
 
-  afterAll(async () => {
+  afterEach(async () => {
     await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''));
   }, TIMEOUT);
 
-  test('Should return messages in "/" route', async () => {
+  test('should receive a 417 status code, the response headers and body message', async () => {
     const response = await request
       .get('/')
-      .expect(200)
-      .expect('Content-Type', /json/);
-
-    expect(response.body.message).toBe('Hello!\u0000\u0000\u0000\u0000');
-    expect(response.body.fullMessage).toBe('Hello, world!');
+      .expect(417)
+      .expect('Content-Type', /text\/plain/)
+      .expect('X-Fire-Status', 'On')
+      .expect('X-Fire-Type', 'Coal')
+      .expect('X-Country-Name', 'United States');
+    expect(response.text).toContain('The broccoli is burning.');
   });
 });

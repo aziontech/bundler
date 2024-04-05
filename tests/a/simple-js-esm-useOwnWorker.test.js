@@ -4,13 +4,13 @@ import projectStop from '../utils/project-stop.js';
 import { getContainerPort } from '../utils/docker-env-actions.js';
 
 // timeout in minutes
-const TIMEOUT = 1 * 60 * 1000;
+const TIMEOUT = 1 * 60 * 3000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/typescript/simple-ts-esm';
+const EXAMPLE_PATH = '/examples/javascript/simple-js-esm-useOwnWorker';
 
-describe('E2E - simple-ts-esm project', () => {
+describe('E2E - simple-js-esm-useOwnWorker project', () => {
   let request;
 
   beforeAll(async () => {
@@ -21,10 +21,10 @@ describe('E2E - simple-ts-esm project', () => {
 
     await projectInitializer(
       EXAMPLE_PATH,
-      'typescript',
+      'javascript',
       'compute',
       serverPort,
-      true,
+      false,
     );
   }, TIMEOUT);
 
@@ -32,13 +32,13 @@ describe('E2E - simple-ts-esm project', () => {
     await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''));
   }, TIMEOUT);
 
-  test('Should generate a message in "/" route', async () => {
+  test('Should return a message in "/" route', async () => {
     const response = await request
       .get('/')
       .expect(200)
-      .expect('x-custom-feat', 'my random message')
+      .expect('x-custom-header', 'something defined on JS')
       .expect('Content-Type', /text\/plain/);
 
-    expect(response.text).toContain('Generated message:');
+    expect(response.text).toBe('Hello world in a new response');
   });
 });

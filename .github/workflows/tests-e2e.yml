@@ -1,0 +1,30 @@
+name: Post-Merge Actions
+
+on:
+  push:
+    branches:
+      - main
+      - stage
+
+jobs:
+  post-merge-tasks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run E2E tests
+        run: yarn test:e2e
+
+      - name: Process README.md and Commit
+        run: |
+          git config --global user.email "vulcan@azion.com"
+          git config --global user.name "Vulcan Bot"
+          git add README.md
+          git commit -m "chore: update reports" --no-verify || echo "No changes to commit."
+          git push
+        env:
+          GH_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
