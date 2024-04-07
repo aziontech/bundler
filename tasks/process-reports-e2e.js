@@ -29,10 +29,6 @@ function processE2EReports() {
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 
-      // ignore simple examples
-      if (test.name.startsWith('Simple')) {
-        return null;
-      }
       // Check if all tests in the suite passed
       const suitePassed = test.assertionResults.every(
         (result) => result.status === 'passed',
