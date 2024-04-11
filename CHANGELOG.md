@@ -1,3 +1,15 @@
+## [2.6.0-stage.12](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.11...v2.6.0-stage.12) (2024-04-11)
+
+
+### Features
+
+* adding the origin configuration to the manifest ([#296](https://github.com/aziontech/vulcan/issues/296)) ([5890f73](https://github.com/aziontech/vulcan/commit/5890f73f047e4923b2ca461eab689a827d826102))
+
+
+### Bug Fixes
+
+*  error on access of non-default locales routes in NextJs ([#294](https://github.com/aziontech/vulcan/issues/294)) ([fc33e86](https://github.com/aziontech/vulcan/commit/fc33e8674cad8db2e6fd34c34bc2b7be1f88c387))
+
 ## [2.6.0-stage.11](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.10...v2.6.0-stage.11) (2024-04-02)
 
 
