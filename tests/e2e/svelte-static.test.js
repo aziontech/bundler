@@ -49,7 +49,7 @@ describe('E2E - svelte-static project', () => {
 
   test('Should return correct asset', async () => {
     await request
-      .get('/favicon.ico')
+      .get('/favicon.png')
       .expect(200)
       .expect('Content-Type', /image\/png/);
   });
