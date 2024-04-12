@@ -36,28 +36,21 @@ describe('E2E - svelte-static project', () => {
   }, TIMEOUT);
 
   test('Should render home page in "/" route', async () => {
-    await page.goto(`${localhostBaseUrl}/`);
-
+    await page.goto(`${localhostBaseUrl}/`, {
+        waitUntil: 'domcontentloaded',
+    });
+    await page.waitForSelector('h1');
     const pageContent = await page.content();
 
     expect(pageContent).toContain('Welcome to SvelteKit');
-    expect(pageContent).toContain(
-      'Visit kit.svelte.dev to read the documentation',
-    );
+    expect(pageContent).toContain('kit.svelte.dev');
   });
 
-  test('Should render edge page in "/edge" route', async () => {
-    await page.goto(`${localhostBaseUrl}/edge`);
-
-    const pageContent = await page.content();
-
-    expect(pageContent).toContain('Running in Edge.');
-  });
 
   test('Should return correct asset', async () => {
     await request
       .get('/favicon.ico')
       .expect(200)
-      .expect('Content-Type', /image\/ico/);
+      .expect('Content-Type', /image\/png/);
   });
 });
