@@ -1,3 +1,10 @@
+## [2.6.0-stage.14](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.13...v2.6.0-stage.14) (2024-04-16)
+
+
+### Features
+
+* add svelte preset ([#292](https://github.com/aziontech/vulcan/issues/292)) ([05b294b](https://github.com/aziontech/vulcan/commit/05b294b6dbd91d3b6faf91c5fc59e49eb90f5d97))
+
 ## [2.6.0-stage.13](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.12...v2.6.0-stage.13) (2024-04-16)
 
 
