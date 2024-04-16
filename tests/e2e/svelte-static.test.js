@@ -37,7 +37,7 @@ describe('E2E - svelte-static project', () => {
 
   test('Should render home page in "/" route', async () => {
     await page.goto(`${localhostBaseUrl}/`, {
-        waitUntil: 'domcontentloaded',
+      waitUntil: 'domcontentloaded',
     });
     await page.waitForSelector('h1');
     const pageContent = await page.content();
@@ -45,7 +45,6 @@ describe('E2E - svelte-static project', () => {
     expect(pageContent).toContain('Welcome to SvelteKit');
     expect(pageContent).toContain('kit.svelte.dev');
   });
-
 
   test('Should return correct asset', async () => {
     await request
