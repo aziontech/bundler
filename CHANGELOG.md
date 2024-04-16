@@ -1,3 +1,10 @@
+## [2.6.0-stage.13](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.12...v2.6.0-stage.13) (2024-04-16)
+
+
+### Bug Fixes
+
+* generating a temporary file for creating the manifest ([#301](https://github.com/aziontech/vulcan/issues/301)) ([a6db472](https://github.com/aziontech/vulcan/commit/a6db472b8556b9515f95c2946125fcc49383ab8a))
+
 ## [2.6.0-stage.12](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.11...v2.6.0-stage.12) (2024-04-11)
 
 
