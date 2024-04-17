@@ -1,3 +1,10 @@
+## [2.6.0-stage.15](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.14...v2.6.0-stage.15) (2024-04-17)
+
+
+### Features
+
+* enable preset selection on init option ([#302](https://github.com/aziontech/vulcan/issues/302)) ([61e54a9](https://github.com/aziontech/vulcan/commit/61e54a9ea2435e578317ee24e5a5763bdfc94eea))
+
 ## [2.6.0-stage.14](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.13...v2.6.0-stage.14) (2024-04-16)
 
 
