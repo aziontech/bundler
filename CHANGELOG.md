@@ -1,3 +1,10 @@
+## [2.6.0-stage.16](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.15...v2.6.0-stage.16) (2024-04-17)
+
+
+### Features
+
+* improve message when have invalid function to the build ([#279](https://github.com/aziontech/vulcan/issues/279)) ([17b3bb5](https://github.com/aziontech/vulcan/commit/17b3bb506eee93b40a5e118c460ecd2e1c18adc8))
+
 ## [2.6.0-stage.15](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.14...v2.6.0-stage.15) (2024-04-17)
 
 
