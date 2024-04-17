@@ -8,6 +8,10 @@ One of the key highlights of Vulcan is its ability to establish an intuitive and
 
 ## Supported
 
+E2E tests run daily in the [Vulcan Examples](https://github.com/aziontech/vulcan-examples/tree/main/examples) to ensure that the presets and frameworks continue to work correctly.
+
+Table:
+
 | Test                                 | Status |
 | ------------------------------------ | ------ |
 | Next 13 5 6 I18n                     | ✅      |
