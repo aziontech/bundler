@@ -1,3 +1,10 @@
+## [2.6.0-stage.20](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.19...v2.6.0-stage.20) (2024-04-18)
+
+
+### Bug Fixes
+
+* 'deliver' rule engine (manifest) ([b2575fd](https://github.com/aziontech/vulcan/commit/b2575fddca09ff3b03f1d137a3b7da5413a317d3))
+
 ## [2.6.0-stage.19](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.18...v2.6.0-stage.19) (2024-04-18)
 
 
