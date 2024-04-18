@@ -1,3 +1,10 @@
+## [2.6.0-stage.17](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.16...v2.6.0-stage.17) (2024-04-18)
+
+
+### Bug Fixes
+
+* presets (manifest) ([#304](https://github.com/aziontech/vulcan/issues/304)) ([f4dac4c](https://github.com/aziontech/vulcan/commit/f4dac4cb084312ea72cb83a2f829edf4781c58a3))
+
 ## [2.6.0-stage.16](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.15...v2.6.0-stage.16) (2024-04-17)
 
 
