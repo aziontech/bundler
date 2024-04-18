@@ -1,3 +1,10 @@
+## [2.6.0-stage.21](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.20...v2.6.0-stage.21) (2024-04-18)
+
+
+### Bug Fixes
+
+* manifest (next.js/node) ([891a9bb](https://github.com/aziontech/vulcan/commit/891a9bba51511a7f4fa6dabed9fed5562619f3e4))
+
 ## [2.6.0-stage.20](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.19...v2.6.0-stage.20) (2024-04-18)
 
 
