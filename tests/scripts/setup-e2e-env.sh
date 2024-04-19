@@ -40,7 +40,7 @@ else
     log_with_color "Container NOT initialized! Initializing container ..." $YELLOW
 
     # log_with_color "* Isolate examples" $GREEN
-    cp -r /vulcan/examples/ /examples/
+    cp -r /vulcan/examples/examples /examples/
 
     # create vulcan temp to install
     VULCAN_TEMP=vulcan-temp

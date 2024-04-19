@@ -1,0 +1,29 @@
+name: Report Generation
+
+on:
+  schedule:
+    - cron: '30 2 * * *'
+
+jobs:
+  post-merge-tasks:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/stage'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run E2E tests
+        run: yarn test:e2e
+
+      - name: Process README.md and Commit
+        run: |
+          git config --global user.email "vulcan@azion.com"
+          git config --global user.name "Vulcan Reports"
+          git add README.md
+          git commit -m "chore: update reports" --no-verify || echo "No changes to commit."
+          git push
+        env:
+          GH_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}

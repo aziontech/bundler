@@ -8,7 +8,8 @@ flowchart LR
 A[Trigger] -->|args| B(Dispatcher)
 B --> C(Prebuild)
 C -->|args| D(Common Build)
-D --> E[Artifacts]
+D --> E(Postbuild)
+E --> F[Artifacts]
 ```
 
 ### Trigger
@@ -35,6 +36,10 @@ Polyfills can be used to generate the worker(s) file(s).
 
 Some configs can be passed to the builder but if user tries to override `azion worker configs` this passed configs will be ignored.
 
+### Post Build
+
+Optional step to run post build actions after common build (bundlers action).
+
 ### Artifacts
 
 The **'.edge'** folder will be generated representing the edge locally. Files generated to run on the infrastructure:
@@ -42,3 +47,5 @@ The **'.edge'** folder will be generated representing the edge locally. Files ge
 - JS worker(s) => '.edge/workers.js';
 - Assets => '.edge/storage/\*';
 - Environment variables => '.edge/.env'.
+
+The **'.vulcan'** file also will be generated. This file contains build infos that can be used by local env or other tools.
