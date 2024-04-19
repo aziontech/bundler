@@ -1,3 +1,11 @@
+### [2.6.1-stage.1](https://github.com/aziontech/vulcan/compare/v2.6.0...v2.6.1-stage.1) (2024-04-19)
+
+
+### Bug Fixes
+
+* presets rules (rewrite) ([214a503](https://github.com/aziontech/vulcan/commit/214a503f8539445257ee93f2a1eb5b718a58eb36))
+* presets rules (rewrite) ([#308](https://github.com/aziontech/vulcan/issues/308)) ([518e46e](https://github.com/aziontech/vulcan/commit/518e46e801a6a4407dd010b97b1321cc1e912da2))
+
 ## [2.6.0](https://github.com/aziontech/vulcan/compare/v2.5.0...v2.6.0) (2024-04-19)
 
 
