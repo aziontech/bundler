@@ -37,6 +37,8 @@ Each preset is made up of three primary files: `config.js`, `prebuild.js`, and `
     - mountSSG: This function takes the request and sets up routes according to the SSG structure.
     - ErrorHTML: This edgehook provides a return of an HTML template showing the error and the description passed as a parameter. You can pass the captured error as the third parameter, and it will be displayed on the screen (it's a good way to debug).
 
+4.  `postbuild.js`: this file is optional. Here you can run actions after the common build done by bundlers.
+
 # How to add a new preset
 
 Here's a step-by-step guide on how to add a new preset in Vulcan:

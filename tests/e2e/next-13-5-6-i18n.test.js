@@ -10,7 +10,7 @@ const TIMEOUT = 10 * 60 * 1000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/next/edge-pages-13-5-6-i18n';
+const EXAMPLE_PATH = '/examples/nextjs/edge-pages-13-5-6-i18n';
 
 describe('E2E - next-13-5-6-i18n project', () => {
   let browser;

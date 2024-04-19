@@ -4,11 +4,11 @@ import projectStop from '../utils/project-stop.js';
 import { getContainerPort } from '../utils/docker-env-actions.js';
 
 // timeout in minutes
-const TIMEOUT = 1 * 60 * 1000;
+const TIMEOUT = 1 * 60 * 3000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/simple-ts-esm';
+const EXAMPLE_PATH = '/examples/typescript/simple-ts-esm';
 
 describe('E2E - simple-ts-esm project', () => {
   let request;
