@@ -10,7 +10,7 @@ const TIMEOUT = 10 * 60 * 1000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/nextjs/next-static';
+const EXAMPLE_PATH = '/examples/next/next-static';
 
 describe('E2E - next-static project', () => {
   let request;

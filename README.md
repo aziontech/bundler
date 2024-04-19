@@ -6,42 +6,6 @@ Vulcan is a powerful tool designed to streamline the development and deployment 
 
 One of the key highlights of Vulcan is its ability to establish an intuitive and efficient protocol for facilitating the creation of presets. This makes customization and adaptation to specific project needs even more accessible, providing developers with the necessary flexibility to optimize their applications effectively and efficiently.
 
-## Supported
-
-E2E tests run daily in the [Vulcan Examples](https://github.com/aziontech/vulcan-examples/tree/main/examples) to ensure that the presets and frameworks continue to work correctly.
-
-Table:
-
-| Test                                 | Status |
-| ------------------------------------ | ------ |
-| Next 13 5 6 I18n                     | ✅      |
-| Next 12 3 4 I18n                     | ✅      |
-| Hexo Static                          | ✅      |
-| Next 13 5 6 Middleware               | ✅      |
-| Next 12 3 4 Middleware               | ✅      |
-| Next Node Pages 12 3 1               | ✅      |
-| Next 13 5 6 Config                   | ✅      |
-| Next 12 3 4 Config                   | ✅      |
-| Next Static                          | ✅      |
-| Gatsby Static                        | ⚠️     |
-| Next Node Pages 12 3 1 Fs            | ✅      |
-| Vue Vite Static                      | ✅      |
-| Next 12 Static                       | ✅      |
-| Simple Js Env Vars                   | ✅      |
-| Astro Static                         | ✅      |
-| Eleventy Static                      | ✅      |
-| React Static                         | ✅      |
-| Angular Static                       | ✅      |
-| Simple Js Network List               | ✅      |
-| Simple Js Firewall Event             | ✅      |
-| Simple Js Network List With Firewall | ✅      |
-| Simple Js Esm UseOwnWorker           | ✅      |
-| Simple Js Esm Node                   | ✅      |
-| Simple Js Esm                        | ✅      |
-| Simple Ts Esm                        | ✅      |
-
- Date of the last time the test was run: 4/7/2024
-
 ## Quick Installation
 
 For those who just want to use Vulcan in their project without contributing to the development, you can install it directly from npm.
@@ -127,7 +91,7 @@ Here's a detailed breakdown of the configuration properties available in `vulcan
 
 **Type:** String
 
-**Description:**
+**Description:**  
 This represents the primary entry point for your application, where the building process begins.
 
 **Note:** `Entry` will be ignored for jamstack solutions.
@@ -136,28 +100,28 @@ This represents the primary entry point for your application, where the building
 
 **Type:** String ('esbuild' or 'webpack')
 
-**Description:**
+**Description:**  
 Defines which build tool to use. The available options are `esbuild` and `webpack`.
 
 ### UseNodePolyfills
 
 **Type:** Boolean
 
-**Description:**
+**Description:**  
 Determines whether Node.js polyfills should be applied. This is useful for projects that leverage specific Node.js functionality but target environments without these built-in features. The use of useNodePolyfills is ignored when used in mode `deliver` presets, as Node.js features must be resolved at build time by the framework process itself.
 
 ### UseOwnWorker
 
 **Type:** Boolean
 
-**Description:**
+**Description:**  
 This flag indicates that the constructed code inserts its own worker expression, such as `addEventListener("fetch")` or similar, without the need to inject a provider.
 
 ### Preset
 
 **Type:** Object
 
-**Description:**
+**Description:**  
 Provides preset-specific configurations.
 
 - **Name (Type: String):** Refers to the preset name, e.g., "vue" or "next".
@@ -167,7 +131,7 @@ Provides preset-specific configurations.
 
 **Type:** Object
 
-**Description:**
+**Description:**  
 Configurations related to the in-memory filesystem.
 
 - **InjectionDirs (Type: Array of Strings):** Directories to be injected into memory for runtime access via the fs API.
@@ -178,7 +142,7 @@ Configurations related to the in-memory filesystem.
 
 **Type:** Object
 
-**Description:**
+**Description:**  
 Allows you to extend the capabilities of the chosen bundler (either `webpack` or `esbuild`) with custom plugins or configurations.
 
 - **Plugins (Type: Object):** Add your custom plugins for your chosen bundler here.
@@ -213,12 +177,8 @@ module.exports = {
 
 - [Overview](docs/overview.md)
 - [Presets](docs/presets.md)
-- [Nextjs](docs/nextjs.md)
 - [Rust/Wasm example](examples/rust-wasm-yew-ssr/)
 - [Emscripten/Wasm example](examples/emscripten-wasm/)
-- [Env vars example](examples/simple-js-env-vars)
-- [Storage example](examples/simple-js-esm-storage)
-- [Firewall example](examples/simple-js-firewall-event)
 
 ## Wasm Notes
 

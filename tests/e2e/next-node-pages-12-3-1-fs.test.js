@@ -11,7 +11,7 @@ const TIMEOUT = 10 * 60 * 1000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/nextjs/node-pages-12-3-1-fs';
+const EXAMPLE_PATH = '/examples/next/node-pages-12-3-1-fs';
 
 describe('E2E - next-node-pages-12-3-1-fs project', () => {
   let request;
