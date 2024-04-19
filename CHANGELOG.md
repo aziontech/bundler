@@ -1,3 +1,10 @@
+### [2.6.2-stage.1](https://github.com/aziontech/vulcan/compare/v2.6.1...v2.6.2-stage.1) (2024-04-19)
+
+
+### Bug Fixes
+
+* rustwasm (preset) init ([2c2a4fd](https://github.com/aziontech/vulcan/commit/2c2a4fd7d86a474ef72d4e5f3e7360dddaaa8cdb))
+
 ### [2.6.1](https://github.com/aziontech/vulcan/compare/v2.6.0...v2.6.1) (2024-04-19)
 
 
