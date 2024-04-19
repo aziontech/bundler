@@ -1,3 +1,10 @@
+### [2.6.2-stage.3](https://github.com/aziontech/vulcan/compare/v2.6.2-stage.2...v2.6.2-stage.3) (2024-04-19)
+
+
+### Bug Fixes
+
+* emscripten <init> reference ([9aa71e8](https://github.com/aziontech/vulcan/commit/9aa71e8bf46b188a2cccba086cb9ac8b0c759e08))
+
 ### [2.6.2-stage.2](https://github.com/aziontech/vulcan/compare/v2.6.2-stage.1...v2.6.2-stage.2) (2024-04-19)
 
 
