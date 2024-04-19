@@ -1,3 +1,44 @@
+## [2.6.0](https://github.com/aziontech/vulcan/compare/v2.5.0...v2.6.0) (2024-04-19)
+
+
+### Features
+
+* add 'deliver' behavior ([53829d4](https://github.com/aziontech/vulcan/commit/53829d4a6fd8da9b3c5472cae36e6c3d70d1e2e2))
+* add eleventy framework to template options ([#305](https://github.com/aziontech/vulcan/issues/305)) ([954efca](https://github.com/aziontech/vulcan/commit/954efca2174e15ecf4ae13290129add4327e1128))
+* add runFunction rule ([c2991ed](https://github.com/aziontech/vulcan/commit/c2991ed08b8cd44299a5779a2536b49641f22c60))
+* add setCookie and setHader behavior ([ac26ef0](https://github.com/aziontech/vulcan/commit/ac26ef083639c412e123e421d20b9a72042336dc))
+* add support to network list api ([#260](https://github.com/aziontech/vulcan/issues/260)) ([79c20be](https://github.com/aziontech/vulcan/commit/79c20be283c32829a9eb2a1db2b0996bb3246d83))
+* add svelte preset ([#292](https://github.com/aziontech/vulcan/issues/292)) ([05b294b](https://github.com/aziontech/vulcan/commit/05b294b6dbd91d3b6faf91c5fc59e49eb90f5d97))
+* adding the origin configuration to the manifest ([#296](https://github.com/aziontech/vulcan/issues/296)) ([5890f73](https://github.com/aziontech/vulcan/commit/5890f73f047e4923b2ca461eab689a827d826102))
+* azion cdn config file ([#259](https://github.com/aziontech/vulcan/issues/259)) ([97e30d9](https://github.com/aziontech/vulcan/commit/97e30d9e1efd23596bb817b1a986f388e8efac7d))
+* eleventy framework preset ([#284](https://github.com/aziontech/vulcan/issues/284)) ([de176d6](https://github.com/aziontech/vulcan/commit/de176d66134c93703e22a4bac2631eafbfda5933))
+* enable preset selection on init option ([#302](https://github.com/aziontech/vulcan/issues/302)) ([61e54a9](https://github.com/aziontech/vulcan/commit/61e54a9ea2435e578317ee24e5a5763bdfc94eea))
+* generateManifest in the build phase ([3ebfe67](https://github.com/aziontech/vulcan/commit/3ebfe67a5ed1205bf8166e1d0942e12151bb636d))
+* handle _next/image paths in Nextjs preset ([#276](https://github.com/aziontech/vulcan/issues/276)) ([45d578e](https://github.com/aziontech/vulcan/commit/45d578eb8a2cf02533b6bcee1c295629c2a440cf))
+* improve message when have invalid function to the build ([#279](https://github.com/aziontech/vulcan/issues/279)) ([17b3bb5](https://github.com/aziontech/vulcan/commit/17b3bb506eee93b40a5e118c460ecd2e1c18adc8))
+* new generateManifest (utils) ([66a8890](https://github.com/aziontech/vulcan/commit/66a8890ed1ba819c86ed9bda78f61ae8d61fa45d))
+* postbuild feedback scope ([f54eade](https://github.com/aziontech/vulcan/commit/f54eade889f48929416c6ed51e1480e83cdbab0c))
+* update presets manifest ([272071b](https://github.com/aziontech/vulcan/commit/272071b3d8ea7b40a0fce4d3fdb516ef61c3e362))
+
+
+### Bug Fixes
+
+*  error on access of non-default locales routes in NextJs ([#294](https://github.com/aziontech/vulcan/issues/294)) ([fc33e86](https://github.com/aziontech/vulcan/commit/fc33e8674cad8db2e6fd34c34bc2b7be1f88c387))
+* 'deliver' rule engine (manifest) ([b2575fd](https://github.com/aziontech/vulcan/commit/b2575fddca09ff3b03f1d137a3b7da5413a317d3))
+* generating a temporary file for creating the manifest ([#301](https://github.com/aziontech/vulcan/issues/301)) ([a6db472](https://github.com/aziontech/vulcan/commit/a6db472b8556b9515f95c2946125fcc49383ab8a))
+* i18n and dynamic routes ([#275](https://github.com/aziontech/vulcan/issues/275)) ([246d069](https://github.com/aziontech/vulcan/commit/246d069e59c10330623ed5d6c89b1a01afe1197e))
+* manifest (next.js/node) ([891a9bb](https://github.com/aziontech/vulcan/commit/891a9bba51511a7f4fa6dabed9fed5562619f3e4))
+* manifest output structure  ([#283](https://github.com/aziontech/vulcan/issues/283)) ([6939940](https://github.com/aziontech/vulcan/commit/6939940d6a95987ecf2adf5b79301e0841beeee9))
+* next preset (manifest) ([6dac235](https://github.com/aziontech/vulcan/commit/6dac235e70b98d6c5e5f7d2a8fda664c2292548d))
+* nextjs config file read ([#261](https://github.com/aziontech/vulcan/issues/261)) ([39dbe3e](https://github.com/aziontech/vulcan/commit/39dbe3e840aba42802c442b240ad35551261d2db))
+* presets (manifest) ([#304](https://github.com/aziontech/vulcan/issues/304)) ([f4dac4c](https://github.com/aziontech/vulcan/commit/f4dac4cb084312ea72cb83a2f829edf4781c58a3))
+* presets manifest ([#268](https://github.com/aziontech/vulcan/issues/268)) ([17a20d8](https://github.com/aziontech/vulcan/commit/17a20d8f6f2b4bccb1de686a9736448dce009538))
+* priority in build command options ([#263](https://github.com/aziontech/vulcan/issues/263)) ([fc08670](https://github.com/aziontech/vulcan/commit/fc086706b5a65682e22a0a1eabb826ea247e3b73))
+* runFunction rule (manifest) ([0d36ba4](https://github.com/aziontech/vulcan/commit/0d36ba4b3d3d1fc6bd77c2215b1152d17eba7b2b))
+* set correct manifest attribute in emscripten prebuild ([#274](https://github.com/aziontech/vulcan/issues/274)) ([6983205](https://github.com/aziontech/vulcan/commit/698320539dc975642823629f15b76cbc45f6c5b1))
+* set deliver rule next.js manifest ([3af923b](https://github.com/aziontech/vulcan/commit/3af923bff29e701576efb9727232eb11c2ed45ac))
+* webpack config when ts loader ([#272](https://github.com/aziontech/vulcan/issues/272)) ([3627903](https://github.com/aziontech/vulcan/commit/362790383e39e40b35ad0d098d2eac81df6f4a79))
+
 ## [2.6.0-stage.21](https://github.com/aziontech/vulcan/compare/v2.6.0-stage.20...v2.6.0-stage.21) (2024-04-18)
 
 
