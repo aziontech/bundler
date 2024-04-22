@@ -1,3 +1,31 @@
+### [2.6.2-stage.4](https://github.com/aziontech/vulcan/compare/v2.6.2-stage.3...v2.6.2-stage.4) (2024-04-22)
+
+
+### Bug Fixes
+
+* copy assets in html preset ([#310](https://github.com/aziontech/vulcan/issues/310)) ([3639fc2](https://github.com/aziontech/vulcan/commit/3639fc2616ada17f809c07d1418565a236ffe40e))
+
+### [2.6.2-stage.3](https://github.com/aziontech/vulcan/compare/v2.6.2-stage.2...v2.6.2-stage.3) (2024-04-19)
+
+
+### Bug Fixes
+
+* emscripten <init> reference ([9aa71e8](https://github.com/aziontech/vulcan/commit/9aa71e8bf46b188a2cccba086cb9ac8b0c759e08))
+
+### [2.6.2-stage.2](https://github.com/aziontech/vulcan/compare/v2.6.2-stage.1...v2.6.2-stage.2) (2024-04-19)
+
+
+### Bug Fixes
+
+* emscripten (preset) init ([7962888](https://github.com/aziontech/vulcan/commit/7962888f1a329989b18be3dd603c18acc97da9ae))
+
+### [2.6.2-stage.1](https://github.com/aziontech/vulcan/compare/v2.6.1...v2.6.2-stage.1) (2024-04-19)
+
+
+### Bug Fixes
+
+* rustwasm (preset) init ([2c2a4fd](https://github.com/aziontech/vulcan/commit/2c2a4fd7d86a474ef72d4e5f3e7360dddaaa8cdb))
+
 ### [2.6.1](https://github.com/aziontech/vulcan/compare/v2.6.0...v2.6.1) (2024-04-19)
 
 
