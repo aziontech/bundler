@@ -1,3 +1,10 @@
+### [2.6.2-stage.4](https://github.com/aziontech/vulcan/compare/v2.6.2-stage.3...v2.6.2-stage.4) (2024-04-22)
+
+
+### Bug Fixes
+
+* copy assets in html preset ([#310](https://github.com/aziontech/vulcan/issues/310)) ([3639fc2](https://github.com/aziontech/vulcan/commit/3639fc2616ada17f809c07d1418565a236ffe40e))
+
 ### [2.6.2-stage.3](https://github.com/aziontech/vulcan/compare/v2.6.2-stage.2...v2.6.2-stage.3) (2024-04-19)
 
 
