@@ -24,6 +24,6 @@ jobs:
           git config --global user.name "Vulcan Reports"
           git add README.md
           git commit -m "chore: update reports" --no-verify || echo "No changes to commit."
-          git push
+          git push --force
         env:
           GH_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
