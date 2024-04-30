@@ -11,7 +11,6 @@ One of the key highlights of Vulcan is its ability to establish an intuitive and
 E2E tests run daily in the [Vulcan Examples](https://github.com/aziontech/vulcan-examples/tree/main/examples) to ensure that the presets and frameworks continue to work correctly.
 
 Table:
-
 | Test                                 | Status |
 | ------------------------------------ | ------ |
 | Next 13 5 6 I18n                     | ✅      |
@@ -23,7 +22,7 @@ Table:
 | Next 13 5 6 Config                   | ✅      |
 | Next 12 3 4 Config                   | ✅      |
 | Next Static                          | ✅      |
-| Gatsby Static                        | ⚠️     |
+| Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ✅      |
 | Vue Vite Static                      | ✅      |
 | Next 12 Static                       | ✅      |
@@ -33,6 +32,7 @@ Table:
 | React Static                         | ✅      |
 | Angular Static                       | ✅      |
 | Simple Js Network List               | ✅      |
+| Svelte Static                        | ✅      |
 | Simple Js Firewall Event             | ✅      |
 | Simple Js Network List With Firewall | ✅      |
 | Simple Js Esm UseOwnWorker           | ✅      |
@@ -40,8 +40,7 @@ Table:
 | Simple Js Esm                        | ✅      |
 | Simple Ts Esm                        | ✅      |
 
- Date of the last time the test was run: 4/7/2024
-
+Last test run date: 04/30/24 02:52:16 AM
 ## Quick Installation
 
 For those who just want to use Vulcan in their project without contributing to the development, you can install it directly from npm.
