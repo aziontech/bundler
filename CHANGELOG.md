@@ -1,3 +1,12 @@
+## [2.7.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.6.2...v2.7.0-stage.1) (2024-05-02)
+
+
+### Features
+
+* add commonJS support ([f5e45ee](https://github.com/aziontech/vulcan/commit/f5e45eef0eb085058c559dfe76e6775ac1e4dc8f))
+* eject azion.config.js file ([#314](https://github.com/aziontech/vulcan/issues/314)) ([5b6494b](https://github.com/aziontech/vulcan/commit/5b6494b19b506b9d7e0ce9a47b41213b681c6167))
+* eject manifest ([ae556fa](https://github.com/aziontech/vulcan/commit/ae556fa3ffdf7b2b97e01e2bf9ae4a766beca8df))
+
 ### [2.6.2](https://github.com/aziontech/vulcan/compare/v2.6.1...v2.6.2) (2024-04-22)
 
 
