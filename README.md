@@ -213,11 +213,11 @@ module.exports = {
 - [Overview](docs/overview.md)
 - [Presets](docs/presets.md)
 - [Nextjs](docs/nextjs.md)
-- [Rust/Wasm example](examples/rust-wasm-yew-ssr/)
-- [Emscripten/Wasm example](examples/emscripten-wasm/)
-- [Env vars example](examples/simple-js-env-vars)
-- [Storage example](examples/simple-js-esm-storage)
-- [Firewall example](examples/simple-js-firewall-event)
+- [Rust/Wasm example](https://github.com/aziontech/vulcan-examples/tree/main/examples/rust-wasm-yew-ssr/)
+- [Emscripten/Wasm example](https://github.com/aziontech/vulcan-examples/tree/main/examples/emscripten-wasm/)
+- [Env vars example](https://github.com/aziontech/vulcan-examples/tree/main/examples/javascript/simple-js-env-vars)
+- [Storage example](https://github.com/aziontech/vulcan-examples/tree/main/examples/javascript/simple-js-esm-storage)
+- [Firewall example](https://github.com/aziontech/vulcan-examples/tree/main/examples/javascript/simple-js-firewall-event)
 
 ## Wasm Notes
 
