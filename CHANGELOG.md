@@ -1,3 +1,11 @@
+## [2.7.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.7.0-stage.1...v2.7.0-stage.2) (2024-05-07)
+
+
+### Bug Fixes
+
+* local env loop ([99c3742](https://github.com/aziontech/vulcan/commit/99c37420102d5b49bb029133b6580f165b19f32b))
+* local env loop ([#319](https://github.com/aziontech/vulcan/issues/319)) ([05c4679](https://github.com/aziontech/vulcan/commit/05c4679d8ba6fd1d6d52f9bd44382fd6d1d9df93))
+
 ### [2.6.2](https://github.com/aziontech/vulcan/compare/v2.6.1...v2.6.2) (2024-04-22)
 
 
