@@ -1,3 +1,10 @@
+### [2.7.1](https://github.com/aziontech/vulcan/compare/v2.7.0...v2.7.1) (2024-05-08)
+
+
+### Bug Fixes
+
+* process env support at runtime ([#323](https://github.com/aziontech/vulcan/issues/323)) ([2a5c055](https://github.com/aziontech/vulcan/commit/2a5c055eaec220c32f319e97a0c6e2e462fea409))
+
 ### [2.7.1-stage.1](https://github.com/aziontech/vulcan/compare/v2.7.0...v2.7.1-stage.1) (2024-05-08)
 
 
