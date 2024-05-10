@@ -1,3 +1,10 @@
+### [2.7.2](https://github.com/aziontech/vulcan/compare/v2.7.1...v2.7.2) (2024-05-10)
+
+
+### Bug Fixes
+
+* vite with typescript and react.js ([#326](https://github.com/aziontech/vulcan/issues/326)) ([7b8a235](https://github.com/aziontech/vulcan/commit/7b8a235ef3fbaf45b2035d99212ba42bf21fdb2d))
+
 ### [2.7.2-stage.1](https://github.com/aziontech/vulcan/compare/v2.7.1...v2.7.2-stage.1) (2024-05-09)
 
 
