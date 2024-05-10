@@ -1,3 +1,10 @@
+### [2.7.3](https://github.com/aziontech/vulcan/compare/v2.7.2...v2.7.3) (2024-05-10)
+
+
+### Bug Fixes
+
+* restore overwritten features ([#328](https://github.com/aziontech/vulcan/issues/328)) ([99142dd](https://github.com/aziontech/vulcan/commit/99142dd711a7375bf877a5e79d6c8ab3960fa3a3))
+
 ### [2.7.3-stage.1](https://github.com/aziontech/vulcan/compare/v2.7.2...v2.7.3-stage.1) (2024-05-10)
 
 
