@@ -1,3 +1,13 @@
+### [2.7.4-stage.1](https://github.com/aziontech/vulcan/compare/v2.7.3...v2.7.4-stage.1) (2024-05-20)
+
+
+### Bug Fixes
+
+* react with vite ([d1eb167](https://github.com/aziontech/vulcan/commit/d1eb1676df781eca28271da29a0fbdfe1e4676a3))
+* react/vue with vite (preset) ([#325](https://github.com/aziontech/vulcan/issues/325)) ([976bb2e](https://github.com/aziontech/vulcan/commit/976bb2e23a8ccd5ffce5ffb85fb7ea812f4be5d6))
+* recover overwritten commits ([#327](https://github.com/aziontech/vulcan/issues/327)) ([47350a4](https://github.com/aziontech/vulcan/commit/47350a4689ee06b891c9d4bf05a28735bae0053d))
+* vite/vue with ts ([5446750](https://github.com/aziontech/vulcan/commit/54467505644c34f60330e14074786ddda6169fea))
+
 ### [2.7.3](https://github.com/aziontech/vulcan/compare/v2.7.2...v2.7.3) (2024-05-10)
 
 
