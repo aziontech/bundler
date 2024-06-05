@@ -14,7 +14,7 @@ services:
       - "./verdaccio/plugins:/verdaccio/plugins"
 
   test:
-    image: node:18-alpine3.17
+    build: .
     hostname: "test"
     container_name: "test"
     depends_on:
