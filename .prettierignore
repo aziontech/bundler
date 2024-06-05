@@ -5,3 +5,4 @@ CHANGELOG.md
 docker-compose.yml
 CODEOWNERS
 README.md
+docs/*
