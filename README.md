@@ -26,6 +26,7 @@ Table:
 | Next Node Pages 12 3 1 Fs            | ✅      |
 | Vue Vite Static                      | ✅      |
 | Next 12 Static                       | ✅      |
+| Jekyll                               | ✅      |
 | Simple Js Env Vars                   | ✅      |
 | Astro Static                         | ✅      |
 | Eleventy Static                      | ✅      |
