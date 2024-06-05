@@ -1,3 +1,15 @@
+## [2.8.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.7.4-stage.1...v2.8.0-stage.1) (2024-06-05)
+
+
+### Features
+
+* jekyll (preset)  ([#329](https://github.com/aziontech/vulcan/issues/329)) ([dde36dc](https://github.com/aziontech/vulcan/commit/dde36dc0bec3fddc5492e96dee05f3a61c9d56ce))
+
+
+### Bug Fixes
+
+* rewrite rule for spas ([#335](https://github.com/aziontech/vulcan/issues/335)) ([2a05d29](https://github.com/aziontech/vulcan/commit/2a05d297c53a76466acd87284ee9fe9b8831d30c))
+
 ### [2.7.4-stage.1](https://github.com/aziontech/vulcan/compare/v2.7.3...v2.7.4-stage.1) (2024-05-20)
 
 
