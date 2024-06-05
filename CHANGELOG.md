@@ -1,3 +1,19 @@
+## [2.8.0](https://github.com/aziontech/vulcan/compare/v2.7.3...v2.8.0) (2024-06-05)
+
+
+### Features
+
+* jekyll (preset)  ([#329](https://github.com/aziontech/vulcan/issues/329)) ([dde36dc](https://github.com/aziontech/vulcan/commit/dde36dc0bec3fddc5492e96dee05f3a61c9d56ce))
+
+
+### Bug Fixes
+
+* react with vite ([d1eb167](https://github.com/aziontech/vulcan/commit/d1eb1676df781eca28271da29a0fbdfe1e4676a3))
+* react/vue with vite (preset) ([#325](https://github.com/aziontech/vulcan/issues/325)) ([976bb2e](https://github.com/aziontech/vulcan/commit/976bb2e23a8ccd5ffce5ffb85fb7ea812f4be5d6))
+* recover overwritten commits ([#327](https://github.com/aziontech/vulcan/issues/327)) ([47350a4](https://github.com/aziontech/vulcan/commit/47350a4689ee06b891c9d4bf05a28735bae0053d))
+* rewrite rule for spas ([#335](https://github.com/aziontech/vulcan/issues/335)) ([2a05d29](https://github.com/aziontech/vulcan/commit/2a05d297c53a76466acd87284ee9fe9b8831d30c))
+* vite/vue with ts ([5446750](https://github.com/aziontech/vulcan/commit/54467505644c34f60330e14074786ddda6169fea))
+
 ### [2.7.4-stage.1](https://github.com/aziontech/vulcan/compare/v2.7.3...v2.7.4-stage.1) (2024-05-20)
 
 
