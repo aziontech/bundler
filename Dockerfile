@@ -6,6 +6,8 @@ RUN apk upgrade --no-cache --update
 
 RUN apk add linux-headers alpine-sdk
 
+RUN apk add build-base g++
+
 RUN apk add ruby-dev
 
 RUN gem install jekyll bundler
