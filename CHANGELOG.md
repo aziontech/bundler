@@ -1,3 +1,11 @@
+### [2.8.1](https://github.com/aziontech/vulcan/compare/v2.8.0...v2.8.1) (2024-06-07)
+
+
+### Bug Fixes
+
+* azion rules for SSG presets ([bef0d75](https://github.com/aziontech/vulcan/commit/bef0d758710581b29546e2fc2e4caf40d1b1b6a3))
+* azion rules for SSG presets ([#338](https://github.com/aziontech/vulcan/issues/338)) ([53eeee1](https://github.com/aziontech/vulcan/commit/53eeee12f1e8030b38aa5b0444afeb65d1ff79e7))
+
 ### [2.8.1-stage.1](https://github.com/aziontech/vulcan/compare/v2.8.0...v2.8.1-stage.1) (2024-06-07)
 
 
