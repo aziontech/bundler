@@ -41,7 +41,7 @@ Table:
 | Simple Js Esm                        | ✅      |
 | Simple Ts Esm                        | ✅      |
 
-Last test run date: 06/08/24 02:56:47 AM
+Last test run date: 06/09/24 02:58:49 AM
 ## Quick Installation
 
 For those who just want to use Vulcan in their project without contributing to the development, you can install it directly from npm.
