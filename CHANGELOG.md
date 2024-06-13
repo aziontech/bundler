@@ -1,3 +1,22 @@
+## [2.9.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.8.1...v2.9.0-stage.1) (2024-06-13)
+
+
+### Features
+
+* add capture_match_groups rule ([e5a9238](https://github.com/aziontech/vulcan/commit/e5a9238215759c536a43da519542f9bf5184694c))
+* add optional 'variable' field (azion.config) ([71e7184](https://github.com/aziontech/vulcan/commit/71e7184e052c239cb3d6116dc76216d56a3d64d2))
+* expand azion.config.js field support ([#340](https://github.com/aziontech/vulcan/issues/340)) ([266f257](https://github.com/aziontech/vulcan/commit/266f25743417ca57fdfbfd1667cceb0906d1cb95))
+* flag to build manifest only and skip other steps ([08201ce](https://github.com/aziontech/vulcan/commit/08201ceb81420a75f4d26f57b5d0555f886bc963))
+* request phase gzip field ([ac84e82](https://github.com/aziontech/vulcan/commit/ac84e82e93b33963c17d7f64e75ed49eed285eb2))
+* request phase redirects + bypass cache ([f49d8f5](https://github.com/aziontech/vulcan/commit/f49d8f59168c829990de4f08573bd154ecde2079))
+* support response phase in manifest ([5ee8717](https://github.com/aziontech/vulcan/commit/5ee8717804ac0004ea3c87c324956e589d5bbc92))
+
+
+### Bug Fixes
+
+* request or response are required ([8c8ca7e](https://github.com/aziontech/vulcan/commit/8c8ca7e06ef391a2cfee2998ce54a38ea245d906))
+* response phase criteria ([c85ef9f](https://github.com/aziontech/vulcan/commit/c85ef9f4ed9968e03a8668dcb11af2b34578b805))
+
 ### [2.8.1](https://github.com/aziontech/vulcan/compare/v2.8.0...v2.8.1) (2024-06-07)
 
 
