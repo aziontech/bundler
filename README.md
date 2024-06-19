@@ -19,7 +19,7 @@ Table:
 | Next 13 5 6 Middleware               | ✅      |
 | Next 12 3 4 Middleware               | ✅      |
 | Next Node Pages 12 3 1               | ✅      |
-| Next 13 5 6 Config                   | ⚠️     |
+| Next 13 5 6 Config                   | ✅      |
 | Next 12 3 4 Config                   | ✅      |
 | Next Static                          | ✅      |
 | Gatsby Static                        | ✅      |
@@ -41,7 +41,7 @@ Table:
 | Simple Js Esm                        | ✅      |
 | Simple Ts Esm                        | ✅      |
 
-Last test run date: 06/18/24 03:23:06 AM
+Last test run date: 06/19/24 03:23:16 AM
 ## Quick Installation
 
 For those who just want to use Vulcan in their project without contributing to the development, you can install it directly from npm.
