@@ -1,3 +1,10 @@
+## [2.9.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.9.0-stage.1...v2.9.0-stage.2) (2024-06-19)
+
+
+### Features
+
+* behavior order, description prop and active prop (azion.config.js) ([#341](https://github.com/aziontech/vulcan/issues/341)) ([9ace596](https://github.com/aziontech/vulcan/commit/9ace5961f7bbfe66419ab0754c5975aaf63ace76))
+
 ## [2.9.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.8.1...v2.9.0-stage.1) (2024-06-13)
 
 
