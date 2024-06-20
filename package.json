@@ -1,7 +1,7 @@
 {
   "name": "edge-functions",
   "type": "module",
-  "version": "2.8.1",
+  "version": "2.9.0-stage.2",
   "description": "Tool to launch and build JavaScript/Frameworks. This tool automates polyfills for Edge Computing and assists in creating Workers, notably for the Azion platform.",
   "main": "lib/main.js",
   "bin": {
@@ -98,7 +98,8 @@
     "util": "^0.12.5",
     "vm-browserify": "^1.1.2",
     "webpack": "^5.84.0",
-    "webpack-merge": "^5.9.0"
+    "webpack-merge": "^5.9.0",
+    "prettier": "^3.3.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^18.4.1",
@@ -127,7 +128,6 @@
     "jsdoc": "^4.0.2",
     "markdown-table": "^3.0.3",
     "mock-fs": "^5.2.0",
-    "prettier": "^3.0.3",
     "puppeteer": "^21.5.0",
     "supertest": "^6.3.3",
     "tmp": "^0.2.1",
