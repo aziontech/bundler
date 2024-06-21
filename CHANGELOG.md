@@ -1,3 +1,11 @@
+### [2.9.1-stage.1](https://github.com/aziontech/vulcan/compare/v2.9.0...v2.9.1-stage.1) (2024-06-21)
+
+
+### Bug Fixes
+
+* 'rewrite' property variable  ([#344](https://github.com/aziontech/vulcan/issues/344)) ([04f7664](https://github.com/aziontech/vulcan/commit/04f7664eba9c29fef0cc90cf8e4b35f7554a5f8d))
+* rewrite variable ([bfdc066](https://github.com/aziontech/vulcan/commit/bfdc066fe75026755cc4c8150482e105b4a87750))
+
 ## [2.9.0](https://github.com/aziontech/vulcan/compare/v2.8.1...v2.9.0) (2024-06-20)
 
 
