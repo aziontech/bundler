@@ -43,7 +43,8 @@
     "import/extensions": ["error", "always"],
     "no-console": "off",
     "no-plusplus": "off",
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "no-template-curly-in-string": "off"
   },
   "globals": {
     "AZION_VERSION_ID": "readonly"
