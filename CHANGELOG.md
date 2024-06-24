@@ -1,3 +1,10 @@
+### [2.9.2-stage.1](https://github.com/aziontech/vulcan/compare/v2.9.1...v2.9.2-stage.1) (2024-06-24)
+
+
+### Bug Fixes
+
+* simplify rewrite rule ([#346](https://github.com/aziontech/vulcan/issues/346)) ([4e5756b](https://github.com/aziontech/vulcan/commit/4e5756bd633c9191363c561c5e47e6f2c346ba90))
+
 ### [2.9.1](https://github.com/aziontech/vulcan/compare/v2.9.0...v2.9.1) (2024-06-21)
 
 
