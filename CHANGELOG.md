@@ -1,3 +1,10 @@
+## [2.10.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.9.2...v2.10.0-stage.1) (2024-07-02)
+
+
+### Features
+
+* Handle files to fs ([#348](https://github.com/aziontech/vulcan/issues/348)) ([8ef2f9b](https://github.com/aziontech/vulcan/commit/8ef2f9bfce7812eceb773e5c9979e1343ef91ab6))
+
 ### [2.9.2](https://github.com/aziontech/vulcan/compare/v2.9.1...v2.9.2) (2024-06-24)
 
 
