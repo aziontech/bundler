@@ -1,3 +1,12 @@
+## [2.10.0](https://github.com/aziontech/vulcan/compare/v2.9.2...v2.10.0) (2024-07-02)
+
+
+### Features
+
+* Handle files to fs ([#348](https://github.com/aziontech/vulcan/issues/348)) ([8ef2f9b](https://github.com/aziontech/vulcan/commit/8ef2f9bfce7812eceb773e5c9979e1343ef91ab6))
+* iac -> cache by query string and cache by cookie ([#350](https://github.com/aziontech/vulcan/issues/350)) ([0224c50](https://github.com/aziontech/vulcan/commit/0224c5052605a7c8801eb779e0dc677bf2e81c69))
+* process.env support ([#349](https://github.com/aziontech/vulcan/issues/349)) ([4c8ec03](https://github.com/aziontech/vulcan/commit/4c8ec03cead7949cef01d4949f5dd96c8e87fecb))
+
 ## [2.10.0-stage.3](https://github.com/aziontech/vulcan/compare/v2.10.0-stage.2...v2.10.0-stage.3) (2024-07-02)
 
 
