@@ -1,3 +1,10 @@
+## [2.10.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.10.0-stage.1...v2.10.0-stage.2) (2024-07-02)
+
+
+### Features
+
+* process.env support ([#349](https://github.com/aziontech/vulcan/issues/349)) ([4c8ec03](https://github.com/aziontech/vulcan/commit/4c8ec03cead7949cef01d4949f5dd96c8e87fecb))
+
 ## [2.10.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.9.2...v2.10.0-stage.1) (2024-07-02)
 
 
