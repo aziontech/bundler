@@ -1,3 +1,10 @@
+## [2.10.0-stage.3](https://github.com/aziontech/vulcan/compare/v2.10.0-stage.2...v2.10.0-stage.3) (2024-07-02)
+
+
+### Features
+
+* iac -> cache by query string and cache by cookie ([#350](https://github.com/aziontech/vulcan/issues/350)) ([0224c50](https://github.com/aziontech/vulcan/commit/0224c5052605a7c8801eb779e0dc677bf2e81c69))
+
 ## [2.10.0-stage.2](https://github.com/aziontech/vulcan/compare/v2.10.0-stage.1...v2.10.0-stage.2) (2024-07-02)
 
 
