@@ -1,3 +1,10 @@
+## [2.11.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.10.0...v2.11.0-stage.1) (2024-07-08)
+
+
+### Features
+
+* use runtime in async fs ([#352](https://github.com/aziontech/vulcan/issues/352)) ([6a6f195](https://github.com/aziontech/vulcan/commit/6a6f19543a31ab9d39efbc4eb165fa6b2780c95e))
+
 ## [2.10.0](https://github.com/aziontech/vulcan/compare/v2.9.2...v2.10.0) (2024-07-02)
 
 
