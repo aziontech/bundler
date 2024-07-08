@@ -24,7 +24,7 @@
     "e2e:start": "yarn submodule:update && tests/scripts/start-e2e-env.sh",
     "e2e:stop": "tests/scripts/stop-e2e-env.sh",
     "e2e:destroy": "tests/scripts/destroy-e2e-env.sh",
-    "test:e2e": "yarn e2e:start && jest --maxWorkers 1 tests/e2e/ --json --outputFile e2e_results.json && yarn e2e:reports && yarn e2e:stop; yarn task:reports",
+    "test:e2e": "yarn e2e:start && jest --maxWorkers 1 tests/e2e/ --json --outputFile e2e_results.json && yarn e2e:stop; yarn task:reports",
     "prepare": "husky install",
     "submodule:update": "git submodule update --init --recursive && git submodule foreach git pull origin main"
   },

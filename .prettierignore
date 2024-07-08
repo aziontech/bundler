@@ -6,3 +6,4 @@ docker-compose.yml
 CODEOWNERS
 README.md
 docs/*
+lib/build/bundlers/polyfills/node/fs.js
