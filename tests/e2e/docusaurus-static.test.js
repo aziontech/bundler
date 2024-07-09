@@ -1,5 +1,3 @@
-/* eslint-disable jest/expect-expect */
-import supertest from 'supertest';
 import puppeteer from 'puppeteer';
 import projectInitializer from '../utils/project-initializer.js';
 import projectStop from '../utils/project-stop.js';
@@ -13,15 +11,12 @@ let localhostBaseUrl;
 const EXAMPLE_PATH = '/examples/docusaurus-boilerplate-js';
 
 describe('E2E - docusaurus project', () => {
-  let request;
   let browser;
   let page;
 
   beforeAll(async () => {
     serverPort = getContainerPort();
     localhostBaseUrl = `http://0.0.0.0:${serverPort}`;
-
-    request = supertest(localhostBaseUrl);
 
     await projectInitializer(EXAMPLE_PATH, 'docusaurus', 'deliver', serverPort);
 
@@ -39,7 +34,6 @@ describe('E2E - docusaurus project', () => {
     await page.goto(`${localhostBaseUrl}/`);
 
     const pageContent = await page.content();
-    const pageTitle = await page.title();
 
     expect(pageContent).toContain('Dinosaurs are cool');
   });
