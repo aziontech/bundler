@@ -22,7 +22,7 @@ Table:
 | Next 13 5 6 Config                   | ✅      |
 | Next 12 3 4 Config                   | ✅      |
 | Next Static                          | ✅      |
-| Gatsby Static                        | ⚠️     |
+| Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ✅      |
 | Vue Vite Static                      | ✅      |
 | Next 12 Static                       | ✅      |
@@ -33,6 +33,7 @@ Table:
 | Angular Static                       | ✅      |
 | Simple Js Network List               | ✅      |
 | Svelte Static                        | ✅      |
+| Docusaurus Static                    | ✅      |
 | Simple Js Firewall Event             | ✅      |
 | Simple Js Network List With Firewall | ✅      |
 | Jekyll Static                        | ✅      |
@@ -41,7 +42,7 @@ Table:
 | Simple Js Esm                        | ✅      |
 | Simple Ts Esm                        | ✅      |
 
-Last test run date: 07/02/24 03:23:16 AM
+Last test run date: 07/12/24 03:25:57 AM
 ## Quick Installation
 
 For those who just want to use Vulcan in their project without contributing to the development, you can install it directly from npm.
