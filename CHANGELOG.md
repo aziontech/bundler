@@ -1,3 +1,10 @@
+## [2.12.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.11.0...v2.12.0-stage.1) (2024-07-12)
+
+
+### Features
+
+* vitepress ([#356](https://github.com/aziontech/vulcan/issues/356)) ([9d5310e](https://github.com/aziontech/vulcan/commit/9d5310e62f45c8e0cc12d2ac334bbcf76203dd0c))
+
 ## [2.11.0](https://github.com/aziontech/vulcan/compare/v2.10.0...v2.11.0) (2024-07-11)
 
 
