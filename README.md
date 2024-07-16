@@ -33,6 +33,7 @@ Table:
 | Angular Static                       | ✅      |
 | Simple Js Network List               | ✅      |
 | Svelte Static                        | ✅      |
+| Vitepress Static                     | ✅      |
 | Docusaurus Static                    | ✅      |
 | Simple Js Firewall Event             | ✅      |
 | Simple Js Network List With Firewall | ✅      |
@@ -42,9 +43,7 @@ Table:
 | Simple Js Esm                        | ✅      |
 | Simple Ts Esm                        | ✅      |
 
-
-Last test run date: 07/12/24 03:25:57 AM
-
+Last test run date: 07/16/24 03:27:44 AM
 ## Quick Installation
 
 For those who just want to use Vulcan in their project without contributing to the development, you can install it directly from npm.
