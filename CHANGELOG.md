@@ -1,3 +1,11 @@
+### [2.12.1-stage.1](https://github.com/aziontech/vulcan/compare/v2.12.0...v2.12.1-stage.1) (2024-07-16)
+
+
+### Bug Fixes
+
+* cacheByQueryString option ([ab03b4b](https://github.com/aziontech/vulcan/commit/ab03b4bb1236c67412d3cd9d9bd898301108faf8))
+* cacheByQueryString option ([#360](https://github.com/aziontech/vulcan/issues/360)) ([baf14c0](https://github.com/aziontech/vulcan/commit/baf14c08410bbf77fb4f14e50d503bb9338cacbf))
+
 ## [2.12.0](https://github.com/aziontech/vulcan/compare/v2.11.0...v2.12.0) (2024-07-15)
 
 
