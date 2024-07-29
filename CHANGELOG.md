@@ -1,3 +1,14 @@
+## [3.0.0](https://github.com/aziontech/vulcan/compare/v2.12.1...v3.0.0) (2024-07-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* change init command behavior.
+
+### Miscellaneous Chores
+
+* remove init cmd ([#364](https://github.com/aziontech/vulcan/issues/364)) ([eeb26bd](https://github.com/aziontech/vulcan/commit/eeb26bdac9a3f877cf54741b321e658ea5719158))
+
 ## [3.0.0-stage.1](https://github.com/aziontech/vulcan/compare/v2.12.1...v3.0.0-stage.1) (2024-07-25)
 
 
