@@ -22,7 +22,7 @@ Table:
 | Next 13 5 6 Config                   | ✅      |
 | Next 12 3 4 Config                   | ✅      |
 | Next Static                          | ✅      |
-| Gatsby Static                        | ✅      |
+| Gatsby Static                        | ⚠️     |
 | Next Node Pages 12 3 1 Fs            | ✅      |
 | Vue Vite Static                      | ✅      |
 | Next 12 Static                       | ✅      |
@@ -43,7 +43,7 @@ Table:
 | Simple Js Esm                        | ✅      |
 | Simple Ts Esm                        | ✅      |
 
-Last test run date: 07/30/24 03:36:36 AM
+Last test run date: 07/31/24 03:28:41 AM
 ## Quick Installation
 
 For those who just want to use Vulcan in their project without contributing to the development, you can install it directly from npm.
