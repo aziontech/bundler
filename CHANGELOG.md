@@ -1,3 +1,10 @@
+## [3.1.0-stage.1](https://github.com/aziontech/vulcan/compare/v3.0.0...v3.1.0-stage.1) (2024-08-02)
+
+
+### Features
+
+* adding support for domains in manifest generation. ([#366](https://github.com/aziontech/vulcan/issues/366)) ([7223c84](https://github.com/aziontech/vulcan/commit/7223c84c0121dd90026919874d3d520537b5325d))
+
 ## [3.0.0](https://github.com/aziontech/vulcan/compare/v2.12.1...v3.0.0) (2024-07-29)
 
 
