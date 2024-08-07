@@ -1,3 +1,10 @@
+## [3.1.0-stage.2](https://github.com/aziontech/vulcan/compare/v3.1.0-stage.1...v3.1.0-stage.2) (2024-08-07)
+
+
+### Features
+
+* added all origins parameters to the manifest ([#367](https://github.com/aziontech/vulcan/issues/367)) ([b0ee08b](https://github.com/aziontech/vulcan/commit/b0ee08bd0c931fe6185b1ccce13b4e08a70d0928))
+
 ## [3.1.0-stage.1](https://github.com/aziontech/vulcan/compare/v3.0.0...v3.1.0-stage.1) (2024-08-02)
 
 
