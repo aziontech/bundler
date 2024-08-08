@@ -1,3 +1,10 @@
+## [3.1.0-stage.3](https://github.com/aziontech/vulcan/compare/v3.1.0-stage.2...v3.1.0-stage.3) (2024-08-08)
+
+
+### Features
+
+* support azion.config with TypeScript ([#362](https://github.com/aziontech/vulcan/issues/362)) ([67ba4fe](https://github.com/aziontech/vulcan/commit/67ba4fe2352edd21cd2653cc3f6b63fd9739dd8f))
+
 ## [3.1.0-stage.2](https://github.com/aziontech/vulcan/compare/v3.1.0-stage.1...v3.1.0-stage.2) (2024-08-07)
 
 
