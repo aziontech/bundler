@@ -1,3 +1,10 @@
+## [3.1.0-stage.5](https://github.com/aziontech/vulcan/compare/v3.1.0-stage.4...v3.1.0-stage.5) (2024-08-09)
+
+
+### Features
+
+* enable writeFile, rename and realpath from Node FS ([#369](https://github.com/aziontech/vulcan/issues/369)) ([a219a57](https://github.com/aziontech/vulcan/commit/a219a57ec84ad4c5efaaacef8c9ffb7d3a78f3c0))
+
 ## [3.1.0-stage.4](https://github.com/aziontech/vulcan/compare/v3.1.0-stage.3...v3.1.0-stage.4) (2024-08-09)
 
 
