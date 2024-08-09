@@ -1,3 +1,10 @@
+## [3.1.0-stage.4](https://github.com/aziontech/vulcan/compare/v3.1.0-stage.3...v3.1.0-stage.4) (2024-08-09)
+
+
+### Features
+
+* added purge parameters to the manifest ([#368](https://github.com/aziontech/vulcan/issues/368)) ([a006b50](https://github.com/aziontech/vulcan/commit/a006b5021f9d9f5116bfbdaf7c247949e2b58024))
+
 ## [3.1.0-stage.3](https://github.com/aziontech/vulcan/compare/v3.1.0-stage.2...v3.1.0-stage.3) (2024-08-08)
 
 
