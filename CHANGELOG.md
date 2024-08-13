@@ -1,3 +1,14 @@
+## [3.1.0](https://github.com/aziontech/vulcan/compare/v3.0.0...v3.1.0) (2024-08-13)
+
+
+### Features
+
+* added all origins parameters to the manifest ([#367](https://github.com/aziontech/vulcan/issues/367)) ([b0ee08b](https://github.com/aziontech/vulcan/commit/b0ee08bd0c931fe6185b1ccce13b4e08a70d0928))
+* added purge parameters to the manifest ([#368](https://github.com/aziontech/vulcan/issues/368)) ([a006b50](https://github.com/aziontech/vulcan/commit/a006b5021f9d9f5116bfbdaf7c247949e2b58024))
+* adding support for domains in manifest generation. ([#366](https://github.com/aziontech/vulcan/issues/366)) ([7223c84](https://github.com/aziontech/vulcan/commit/7223c84c0121dd90026919874d3d520537b5325d))
+* enable writeFile, rename and realpath from Node FS ([#369](https://github.com/aziontech/vulcan/issues/369)) ([a219a57](https://github.com/aziontech/vulcan/commit/a219a57ec84ad4c5efaaacef8c9ffb7d3a78f3c0))
+* support azion.config with TypeScript ([#362](https://github.com/aziontech/vulcan/issues/362)) ([67ba4fe](https://github.com/aziontech/vulcan/commit/67ba4fe2352edd21cd2653cc3f6b63fd9739dd8f))
+
 ## [3.1.0-stage.5](https://github.com/aziontech/vulcan/compare/v3.1.0-stage.4...v3.1.0-stage.5) (2024-08-09)
 
 
