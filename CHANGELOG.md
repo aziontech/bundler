@@ -1,3 +1,11 @@
+## [3.2.0](https://github.com/aziontech/vulcan/compare/v3.1.0...v3.2.0) (2024-08-16)
+
+
+### Features
+
+* use 'defineConfig' method for azion.config ([ce01be7](https://github.com/aziontech/vulcan/commit/ce01be70e5454b831d7e9ae6d88e71bae7671669))
+* use defineConfig for azion.config ([#371](https://github.com/aziontech/vulcan/issues/371)) ([b797f4f](https://github.com/aziontech/vulcan/commit/b797f4f4efb16b736f1bd3841efa131243ebd57c))
+
 ## [3.2.0-stage.1](https://github.com/aziontech/vulcan/compare/v3.1.0...v3.2.0-stage.1) (2024-08-16)
 
 
