@@ -1,3 +1,10 @@
+### [3.2.1-stage.1](https://github.com/aziontech/vulcan/compare/v3.2.0...v3.2.1-stage.1) (2024-08-20)
+
+
+### Bug Fixes
+
+* update origin path handling to disallow / ([#375](https://github.com/aziontech/vulcan/issues/375)) ([ba22331](https://github.com/aziontech/vulcan/commit/ba22331857f141fb6f3d7b8d9f75090b1a94bcbd))
+
 ## [3.2.0](https://github.com/aziontech/vulcan/compare/v3.1.0...v3.2.0) (2024-08-16)
 
 
