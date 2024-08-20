@@ -44,7 +44,7 @@ Table:
 Last test run date: 08/01/24 03:39:54 AM
 ## Quick Installation
 
-For those who just want to use Azion Bundler in their project without contributing to the development, you can install it directly from npm.
+For those who just want to use Vulcan in their project without contributing to the development, you can install it directly from npm.
 
 ```shell
 npm install edge-functions
@@ -58,28 +58,28 @@ yarn add edge-functions
 
 ## Getting Started for Development
 
-Follow these steps to start using Azion Bundler:
+Follow these steps to start using Vulcan:
 
 1. Clone the repository: Clone the Vulcan repository from GitHub to your local machine.
 
    ```shell
-   git clone https://github.com/aziontech/bundler.git
+   git clone https://github.com/aziontech/vulcan.git
    ```
 
-2. Installation: Navigate to the cloned Azion Bundler directory and install the required dependencies.
+2. Installation: Navigate to the cloned Vulcan directory and install the required dependencies.
 
    ```shell
-   cd bundler
+   cd vulcan
    npm install
    ```
 
-3. Install the Azion Bundler CLI globally, which allows you to use it as a command-line tool from anywhere in your system.
+3. Install the Vulcan CLI globally, which allows you to use it as a command-line tool from anywhere in your system.
 
    ```shell
    npm install -g
    ```
 
-   This command sets up the necessary project structure and configuration files for Azion Bundler.
+   This command sets up the necessary project structure and configuration files for Vulcan.
 
 4. Start developing: Once the project is set up, you can start developing your JavaScript applications or frameworks using the power of Bundler. Leverage the automated polyfills, Worker creation assistance, and other features provided by Bundler to enhance your development workflow.
 
@@ -90,36 +90,36 @@ See some examples below:
 - Build a JavaScript/Node project (back-end)
 
   ```shell
-  azbundler build
+  vulcan build
   ```
 
 - Build a TypeScript/Node (back-end)
 
   ```shell
-  azbundler build --preset typescript
+  vulcan build --preset typescript
   ```
 
 - Build a Static Next.js project
 
   ```shell
-  azbundler build --preset next --mode deliver
+  vulcan build --preset next --mode deliver
   ```
 
 - Build a Static Astro.js project
 
   ```shell
-  azbundler build --preset astro --mode deliver
+  vulcan build --preset astro --mode deliver
   ```
 
 - Test your project locally (after build)
 
   ```shell
-  azbundler dev
+  vulcan dev
   ```
 
 ## Vulcan.config.js
 
-The `vulcan.config.js` file offers a robust configuration system for Azion Bundler. This file is not mandatory but acts as an override mechanism. If you define properties in this file, they will supersede the preset configurations. Properties not defined will rely on the preset.
+The `vulcan.config.js` file offers a robust configuration system for Vulcan. This file is not mandatory but acts as an override mechanism. If you define properties in this file, they will supersede the preset configurations. Properties not defined will rely on the preset.
 
 Here's a detailed breakdown of the configuration properties available in `vulcan.config.js`:
 

@@ -7,8 +7,7 @@
   "bin": {
     "vulcan": "lib/main.js",
     "edge-functions": "lib/main.js",
-    "ef": "lib/main.js",
-    "azbundler": "lib/main.js"
+    "ef": "lib/main.js"
   },
   "scripts": {
     "start": "node lib/main.js",
