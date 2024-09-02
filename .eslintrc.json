@@ -40,7 +40,16 @@
     }
   },
   "rules": {
-    "import/extensions": ["error", "always"],
+    "import/extensions": [
+      "error",
+      "always",
+      {
+        "ignorePackages": true,
+        "pattern": {
+          "js": "always"
+        }
+      }
+    ],
     "no-console": "off",
     "no-plusplus": "off",
     "prettier/prettier": "error",
