@@ -8,7 +8,6 @@ import {
  * Run actions to build and run project in docker container
  * @param {string} examplePath - project path in container
  * @param {string} preset - vulcan preset to build
- * @param {string} mode - vulcan preset mode to build
  * @param {number} serverPort - port to use in vulcan server
  * @param {boolean} installPkgs - dependencies need to be installed?
  * @param {string} url - url test container
@@ -17,7 +16,6 @@ import {
 async function projectInitializer(
   examplePath,
   preset,
-  mode,
   serverPort,
   installPkgs = true,
   url = 'http://localhost',
@@ -34,9 +32,7 @@ async function projectInitializer(
 
   feedback.info(`[${example}] Building the project ...`);
   await execCommandInContainer(
-    `${vulcanCmd} build --preset ${preset} --mode ${mode} ${
-      isFirewall ? '--firewall' : ''
-    }`,
+    `${vulcanCmd} build --preset ${preset}${isFirewall ? '--firewall' : ''}`,
     examplePath,
   );
 
