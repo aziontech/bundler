@@ -8,9 +8,9 @@ const TIMEOUT = 1 * 60 * 3000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/javascript/simple-js-esm-useOwnWorker';
+const EXAMPLE_PATH = '/examples/javascript/simple-js-esm-worker';
 
-describe('E2E - simple-js-esm-useOwnWorker project', () => {
+describe('E2E - simple-js-esm-worker project', () => {
   let request;
 
   beforeAll(async () => {
