@@ -23,7 +23,7 @@ describe('E2E - eleventy-static project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'eleventy', 'deliver', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'eleventy', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();

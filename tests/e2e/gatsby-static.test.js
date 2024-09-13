@@ -23,7 +23,7 @@ describe('E2E - gatsby-static project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'gatsby', 'deliver', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'gatsby', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();

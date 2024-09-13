@@ -30,7 +30,7 @@ describe('E2E - hexo-static project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'hexo', 'deliver', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'hexo', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();

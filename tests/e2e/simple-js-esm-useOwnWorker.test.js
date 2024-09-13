@@ -19,13 +19,7 @@ describe('E2E - simple-js-esm-worker project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(
-      EXAMPLE_PATH,
-      'javascript',
-      'compute',
-      serverPort,
-      false,
-    );
+    await projectInitializer(EXAMPLE_PATH, 'javascript', serverPort, false);
   }, TIMEOUT);
 
   afterAll(async () => {

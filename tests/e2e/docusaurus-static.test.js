@@ -18,7 +18,7 @@ describe('E2E - docusaurus project', () => {
     serverPort = getContainerPort();
     localhostBaseUrl = `http://0.0.0.0:${serverPort}`;
 
-    await projectInitializer(EXAMPLE_PATH, 'docusaurus', 'deliver', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'docusaurus', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();
