@@ -5,7 +5,7 @@
   "description": "Tool to launch and build JavaScript/Frameworks. This tool automates polyfills for Edge Computing and assists in creating Workers, notably for the Azion platform.",
   "main": "lib/main.js",
   "bin": {
-    "vulcan": "lib/main.js",
+    "azbundler": "lib/main.js",
     "edge-functions": "lib/main.js",
     "ef": "lib/main.js"
   },
@@ -152,10 +152,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aziontech/vulcan.git"
+    "url": "git+https://github.com/aziontech/bundler.git"
   },
   "bugs": {
-    "url": "https://github.com/aziontech/vulcan/issues"
+    "url": "https://github.com/aziontech/bundler/issues"
   },
-  "homepage": "https://github.com/aziontech/vulcan#readme"
+  "homepage": "https://github.com/aziontech/bundler#readme"
 }
