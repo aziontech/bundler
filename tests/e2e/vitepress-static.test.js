@@ -18,7 +18,7 @@ describe('E2E - vitepress project', () => {
     serverPort = getContainerPort();
     localhostBaseUrl = `http://0.0.0.0:${serverPort}`;
 
-    await projectInitializer(EXAMPLE_PATH, 'vitepress', 'deliver', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'vitepress', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();

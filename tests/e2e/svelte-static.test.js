@@ -23,7 +23,7 @@ describe('E2E - svelte-static project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'svelte', 'deliver', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'svelte', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();

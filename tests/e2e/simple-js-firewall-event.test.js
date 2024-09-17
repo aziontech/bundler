@@ -23,7 +23,6 @@ describe('E2E - simple-js-firewall-event project', () => {
     await projectInitializer(
       EXAMPLE_PATH,
       'javascript',
-      'compute',
       serverPort,
       false,
       undefined,

@@ -23,7 +23,7 @@ describe('E2E - angular-static project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'angular', 'deliver', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'angular', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();

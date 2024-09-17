@@ -23,7 +23,7 @@ describe('E2E - react-static project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'react', 'deliver', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'react', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();

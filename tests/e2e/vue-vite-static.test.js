@@ -23,7 +23,7 @@ describe('E2E - vue-vite-static project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'vue', 'deliver', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'vue', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();

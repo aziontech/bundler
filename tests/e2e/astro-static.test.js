@@ -23,7 +23,7 @@ describe('E2E - astro-static project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'astro', 'deliver', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'astro', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();
