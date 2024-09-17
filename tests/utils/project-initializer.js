@@ -32,7 +32,7 @@ async function projectInitializer(
 
   feedback.info(`[${example}] Building the project ...`);
   await execCommandInContainer(
-    `${vulcanCmd} build --preset ${preset}${isFirewall ? '--firewall' : ''}`,
+    `${vulcanCmd} build --preset ${preset} ${isFirewall ? '--firewall' : ''}`,
     examplePath,
   );
 
