@@ -1,3 +1,21 @@
+## [3.3.0-stage.1](https://github.com/aziontech/vulcan/compare/v3.2.1...v3.3.0-stage.1) (2024-09-17)
+
+
+### Features
+
+* useNodePolyfills true ([69ffa0f](https://github.com/aziontech/vulcan/commit/69ffa0f56cc4935aac37faa6e7485f532c4fbce8))
+
+
+### Bug Fixes
+
+* config module empty ([30c9c66](https://github.com/aziontech/vulcan/commit/30c9c665edb552c3a9d5e12391801a49f91f4b5c))
+* ignore node_modules changes ([6c6b6dd](https://github.com/aziontech/vulcan/commit/6c6b6ddf317b821b5f48322119d7d9790ee889a1))
+* inserting the import azion/utils into the polyfills manager ([10f7d3f](https://github.com/aziontech/vulcan/commit/10f7d3f38caa16ae2f11f9f4f2326e325c57056c))
+* local env dev server ([a5f9da4](https://github.com/aziontech/vulcan/commit/a5f9da4f62beb68d5e12fa92fca788c2e45b2ef6))
+* pnpm changes ([d951cc9](https://github.com/aziontech/vulcan/commit/d951cc9c1b5a1b32d4d566c59e50deca0b8b9162))
+* startwith local server ([e6fcc01](https://github.com/aziontech/vulcan/commit/e6fcc01dafcbeb7392a201f0ad330e74cef1faad))
+* temp file sufix ([5013387](https://github.com/aziontech/vulcan/commit/5013387ee7c9b1bad11e8ee17a992f5b6515fb63))
+
 ### [3.2.1](https://github.com/aziontech/vulcan/compare/v3.2.0...v3.2.1) (2024-08-20)
 
 

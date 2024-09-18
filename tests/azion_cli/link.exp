@@ -2,7 +2,7 @@
 
 set timeout -1
 
-spawn azion link --name "testproject" --mode "Compute" --preset "next"
+spawn azion link --name "testproject" --preset "next"
 
 expect "Do you want to link"
 send "y\r"

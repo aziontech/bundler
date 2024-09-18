@@ -1,11 +1,11 @@
 {
   "name": "edge-functions",
   "type": "module",
-  "version": "3.2.1",
+  "version": "3.3.0-stage.1",
   "description": "Tool to launch and build JavaScript/Frameworks. This tool automates polyfills for Edge Computing and assists in creating Workers, notably for the Azion platform.",
   "main": "lib/main.js",
   "bin": {
-    "vulcan": "lib/main.js",
+    "azbundler": "lib/main.js",
     "edge-functions": "lib/main.js",
     "ef": "lib/main.js"
   },
@@ -52,7 +52,7 @@
     "ajv-errors": "^3.0.0",
     "ajv-keywords": "^5.1.0",
     "assert": "^2.0.0",
-    "azion": "^1.5.0",
+    "azion": "^1.7.0",
     "bottleneck": "^2.19.5",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
@@ -130,7 +130,7 @@
     "jsdoc": "^4.0.2",
     "markdown-table": "^3.0.3",
     "mock-fs": "^5.2.0",
-    "puppeteer": "^21.5.0",
+    "puppeteer": "^23.3.0",
     "supertest": "^6.3.3",
     "tmp": "^0.2.1"
   },
@@ -152,10 +152,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aziontech/vulcan.git"
+    "url": "git+https://github.com/aziontech/bundler.git"
   },
   "bugs": {
-    "url": "https://github.com/aziontech/vulcan/issues"
+    "url": "https://github.com/aziontech/bundler/issues"
   },
-  "homepage": "https://github.com/aziontech/vulcan#readme"
+  "homepage": "https://github.com/aziontech/bundler#readme"
 }

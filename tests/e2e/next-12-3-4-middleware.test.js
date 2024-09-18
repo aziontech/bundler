@@ -20,7 +20,7 @@ describe('E2E - next-12-3-4-middleware project', () => {
     serverPort = getContainerPort();
     localhostBaseUrl = `http://0.0.0.0:${serverPort}`;
 
-    await projectInitializer(EXAMPLE_PATH, 'next', 'compute', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'next', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();

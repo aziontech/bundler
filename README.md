@@ -1,4 +1,4 @@
-# Azion Bundler - Building Applications for Azion Runtime.
+# Azion Bundler - Building Applications for Azion Runtime
 
 Azion Bundler is a powerful tool designed to streamline the development and deployment of JavaScript applications and frameworks. This powerful utility automates polyfills for Azion Runtime, significantly simplifying the process of creating Workers.
 
@@ -9,6 +9,7 @@ One of the key highlights of Azion Bundler is its ability to establish an intuit
 E2E tests run daily in the [Vulcan Examples](https://github.com/aziontech/vulcan-examples/tree/main/examples) to ensure that the presets and frameworks continue to work correctly.
 
 Table:
+
 | Test                                 | Status |
 | ------------------------------------ | ------ |
 | Next 13 5 6 I18n                     | ✅      |
@@ -42,9 +43,10 @@ Table:
 | Simple Ts Esm                        | ✅      |
 
 Last test run date: 08/01/24 03:39:54 AM
+
 ## Quick Installation
 
-For those who just want to use Vulcan in their project without contributing to the development, you can install it directly from npm.
+For those who just want to use Azion Bundler in their project without contributing to the development, you can install it directly from npm.
 
 ```shell
 npm install edge-functions
@@ -58,28 +60,28 @@ yarn add edge-functions
 
 ## Getting Started for Development
 
-Follow these steps to start using Vulcan:
+Follow these steps to start using Azion Bundler:
 
-1. Clone the repository: Clone the Vulcan repository from GitHub to your local machine.
-
-   ```shell
-   git clone https://github.com/aziontech/vulcan.git
-   ```
-
-2. Installation: Navigate to the cloned Vulcan directory and install the required dependencies.
+1. Clone the repository: Clone the Azion Bundler repository from GitHub to your local machine.
 
    ```shell
-   cd vulcan
-   npm install
+   git clone https://github.com/aziontech/bundler.git
    ```
 
-3. Install the Vulcan CLI globally, which allows you to use it as a command-line tool from anywhere in your system.
+2. Installation: Navigate to the cloned Azion Bundler directory and install the required dependencies.
+
+   ```shell
+   cd bundler
+   npm yarn install
+   ```
+
+3. Install the Azion Bundler CLI globally, which allows you to use it as a command-line tool from anywhere in your system.
 
    ```shell
    npm install -g
    ```
 
-   This command sets up the necessary project structure and configuration files for Vulcan.
+   This command sets up the necessary project structure and configuration files for Azion Bundler.
 
 4. Start developing: Once the project is set up, you can start developing your JavaScript applications or frameworks using the power of Bundler. Leverage the automated polyfills, Worker creation assistance, and other features provided by Bundler to enhance your development workflow.
 
@@ -90,38 +92,38 @@ See some examples below:
 - Build a JavaScript/Node project (back-end)
 
   ```shell
-  vulcan build
+  azbundler build
   ```
 
 - Build a TypeScript/Node (back-end)
 
   ```shell
-  vulcan build --preset typescript
+  azbundler build --preset typescript
   ```
 
-- Build a Static Next.js project
+- Build a Next.js project
 
   ```shell
-  vulcan build --preset next --mode deliver
+  azbundler build --preset next
   ```
 
-- Build a Static Astro.js project
+- Build Astro.js project
 
   ```shell
-  vulcan build --preset astro --mode deliver
+  azbundler build --preset astro
   ```
 
 - Test your project locally (after build)
 
   ```shell
-  vulcan dev
+  azbundler dev
   ```
 
-## Vulcan.config.js
+## Azion.config.js
 
-The `vulcan.config.js` file offers a robust configuration system for Vulcan. This file is not mandatory but acts as an override mechanism. If you define properties in this file, they will supersede the preset configurations. Properties not defined will rely on the preset.
+The `azion.config.js` file offers a robust configuration system for Bundler. This file is not mandatory but acts as an override mechanism. If you define properties in this file, they will supersede the preset configurations. Properties not defined will rely on the preset.
 
-Here's a detailed breakdown of the configuration properties available in `vulcan.config.js`:
+Here's a detailed breakdown of the configuration properties available in `azion.config.js`:
 
 ### Entry
 
@@ -139,19 +141,19 @@ This represents the primary entry point for your application, where the building
 **Description:**
 Defines which build tool to use. The available options are `esbuild` and `webpack`.
 
-### UseNodePolyfills
+### Polyfills
 
 **Type:** Boolean
 
 **Description:**
-Determines whether Node.js polyfills should be applied. This is useful for projects that leverage specific Node.js functionality but target environments without these built-in features. The use of useNodePolyfills is ignored when used in mode `deliver` presets, as Node.js features must be resolved at build time by the framework process itself.
+Determines whether Node.js polyfills should be applied. This is useful for projects that leverage specific Node.js functionality but target environments without these built-in features.
 
-### UseOwnWorker
+### Worker
 
 **Type:** Boolean
 
 **Description:**
-This flag indicates that the constructed code inserts its own worker expression, such as `addEventListener("fetch")` or similar, without the need to inject a provider.
+This flag indicates that the constructed code inserts its own worker expression, such as `addEventListener("fetch")`.
 
 ### Preset
 
@@ -160,8 +162,7 @@ This flag indicates that the constructed code inserts its own worker expression,
 **Description:**
 Provides preset-specific configurations.
 
-- **Name (Type: String):** Refers to the preset name, e.g., "vue" or "next".
-- **Mode (Type: String):** Specifies the mode for the preset, e.g., "compute" or "deliver".
+- **Name (Type: String):** Refers to the preset name, e.g., "vue" or "next"..
 
 ### MemoryFS
 
@@ -189,25 +190,24 @@ For a Next/Faststore-based project:
 
 ```javascript
 module.exports = {
-  entry: 'src/index.js',
-  builder: 'webpack',
-  useNodePolyfills: true,
-  useOwnWorker: false,
-  preset: {
-    name: 'next',
-    mode: 'compute',
-  },
-  memoryFS: {
-    injectionDirs: ['.faststore/@generated/graphql'],
-    removePathPrefix: '.faststore/',
-  },
-  custom: {
-    plugins: {},
-  },
+  build: {
+    entry: 'src/index.js',
+    builder: 'webpack',
+    polyfills: true,
+    worker: false,
+    preset: { name: 'next' },
+    memoryFS: {
+     injectionDirs: ['.faststore/@generated/graphql'],
+     removePathPrefix: '.faststore/',
+   },
+    custom: {
+      plugins: {},
+    },
+  }
 };
 ```
 
-**Note:** Adapting `vulcan.config.js` to your setup allows a personalized development experience, catering to the specific needs of your JavaScript applications and frameworks.
+**Note:** Adapting `azion.config.js` to your setup allows a personalized development experience, catering to the specific needs of your JavaScript applications and frameworks.
 
 ## Docs
 

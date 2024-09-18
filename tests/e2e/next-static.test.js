@@ -23,7 +23,7 @@ describe('E2E - next-static project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'next', 'deliver', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'next', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();

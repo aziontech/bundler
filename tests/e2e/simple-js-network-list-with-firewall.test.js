@@ -24,7 +24,6 @@ describe('E2E - simple-js-network-list-with-firewall project', () => {
     await projectInitializer(
       EXAMPLE_PATH,
       'javascript',
-      'compute',
       serverPort,
       false,
       undefined,

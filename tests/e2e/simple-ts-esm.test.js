@@ -19,13 +19,7 @@ describe('E2E - simple-ts-esm project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(
-      EXAMPLE_PATH,
-      'typescript',
-      'compute',
-      serverPort,
-      true,
-    );
+    await projectInitializer(EXAMPLE_PATH, 'typescript', serverPort, true);
   }, TIMEOUT);
 
   afterAll(async () => {

@@ -19,7 +19,7 @@ describe('E2E - jekyll-static project', () => {
     serverPort = getContainerPort();
     localhostBaseUrl = `http://0.0.0.0:${serverPort}`;
 
-    await projectInitializer(EXAMPLE_PATH, 'jekyll', 'deliver', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'jekyll', serverPort);
 
     browser = await puppeteer.launch({ headless: 'new' });
     page = await browser.newPage();
