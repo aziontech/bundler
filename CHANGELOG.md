@@ -1,3 +1,20 @@
+## [4.0.0](https://github.com/aziontech/bundler/compare/v3.3.0...v4.0.0) (2024-09-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* actually, version 3.3 already has a breaking change. sorry. you can read it in the repository changelog.
+
+### Features
+
+* default value for <init> scope ([77e78ae](https://github.com/aziontech/bundler/commit/77e78aec6b5cc6f82baf5387b7f714e2d6ce4631))
+
+
+### Bug Fixes
+
+* ls presets ([437b9c5](https://github.com/aziontech/bundler/commit/437b9c5910a7a992a4e468ec53b4ac8d6e19ddd7))
+* presets ls ([#384](https://github.com/aziontech/bundler/issues/384)) ([f8eb06e](https://github.com/aziontech/bundler/commit/f8eb06ec13baad1ed00697de42339785074eb83c))
+
 ## [4.0.0-stage.1](https://github.com/aziontech/bundler/compare/v3.3.0...v4.0.0-stage.1) (2024-09-25)
 
 
