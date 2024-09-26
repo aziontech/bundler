@@ -1,3 +1,10 @@
+### [4.0.1-stage.1](https://github.com/aziontech/bundler/compare/v4.0.0...v4.0.1-stage.1) (2024-09-26)
+
+
+### Bug Fixes
+
+* merge azion.config user with preset azion.config ([#386](https://github.com/aziontech/bundler/issues/386)) ([8b1054b](https://github.com/aziontech/bundler/commit/8b1054b4610c1e9a72fdb165ed7c785c8b15bddf))
+
 ## [4.0.0](https://github.com/aziontech/bundler/compare/v3.3.0...v4.0.0) (2024-09-25)
 
 
