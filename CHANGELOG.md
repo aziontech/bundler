@@ -1,3 +1,10 @@
+### [4.0.1-stage.3](https://github.com/aziontech/bundler/compare/v4.0.1-stage.2...v4.0.1-stage.3) (2024-09-30)
+
+
+### Bug Fixes
+
+* update azion package to version 1.8.0 ([#389](https://github.com/aziontech/bundler/issues/389)) ([5f8eebc](https://github.com/aziontech/bundler/commit/5f8eebc80a19d7ed9a37e8384c9a2c8450e6a4a0))
+
 ### [4.0.1-stage.2](https://github.com/aziontech/bundler/compare/v4.0.1-stage.1...v4.0.1-stage.2) (2024-09-30)
 
 
