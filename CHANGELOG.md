@@ -1,3 +1,10 @@
+### [4.0.1-stage.2](https://github.com/aziontech/bundler/compare/v4.0.1-stage.1...v4.0.1-stage.2) (2024-09-30)
+
+
+### Bug Fixes
+
+* checking if the project's azion.config exists ([#388](https://github.com/aziontech/bundler/issues/388)) ([88a8dff](https://github.com/aziontech/bundler/commit/88a8dff426e1e74ec6c043590746c1dbdcf5435d))
+
 ### [4.0.1-stage.1](https://github.com/aziontech/bundler/compare/v4.0.0...v4.0.1-stage.1) (2024-09-26)
 
 
