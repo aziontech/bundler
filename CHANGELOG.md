@@ -1,3 +1,12 @@
+### [4.0.1](https://github.com/aziontech/bundler/compare/v4.0.0...v4.0.1) (2024-09-30)
+
+
+### Bug Fixes
+
+* checking if the project's azion.config exists ([#388](https://github.com/aziontech/bundler/issues/388)) ([88a8dff](https://github.com/aziontech/bundler/commit/88a8dff426e1e74ec6c043590746c1dbdcf5435d))
+* merge azion.config user with preset azion.config ([#386](https://github.com/aziontech/bundler/issues/386)) ([8b1054b](https://github.com/aziontech/bundler/commit/8b1054b4610c1e9a72fdb165ed7c785c8b15bddf))
+* update azion package to version 1.8.0 ([#389](https://github.com/aziontech/bundler/issues/389)) ([5f8eebc](https://github.com/aziontech/bundler/commit/5f8eebc80a19d7ed9a37e8384c9a2c8450e6a4a0))
+
 ### [4.0.1-stage.3](https://github.com/aziontech/bundler/compare/v4.0.1-stage.2...v4.0.1-stage.3) (2024-09-30)
 
 
