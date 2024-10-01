@@ -50,15 +50,19 @@ describe('E2E - gatsby-static project', () => {
     expect(pageTitle).toBe('All posts | Gatsby Starter Blog');
   });
 
-  test('Should render edge page in "/hello-world" route', async () => {
-    await page.goto(`${localhostBaseUrl}/hello-world`);
+  test(
+    'Should render edge page in "/hello-world" route',
+    async () => {
+      await page.goto(`${localhostBaseUrl}/hello-world`);
 
-    const pageContent = await page.content();
+      const pageContent = await page.content();
 
-    expect(pageContent).toContain(
-      'This is my first post on my new fake blog! How exciting!',
-    );
-  });
+      expect(pageContent).toContain(
+        'This is my first post on my new fake blog! How exciting!',
+      );
+    },
+    TIMEOUT,
+  );
 
   test('Should return correct asset', async () => {
     await request

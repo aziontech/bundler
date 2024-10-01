@@ -24,7 +24,7 @@ describe('E2E - simple-js-firewall-event project', () => {
       EXAMPLE_PATH,
       'javascript',
       serverPort,
-      false,
+      true,
       undefined,
       true,
     );
