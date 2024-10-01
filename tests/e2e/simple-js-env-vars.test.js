@@ -36,7 +36,7 @@ describe('E2E - simple-js-env-vars project', () => {
       );
     }
 
-    await projectInitializer(EXAMPLE_PATH, 'javascript', serverPort, false);
+    await projectInitializer(EXAMPLE_PATH, 'javascript', serverPort, true);
   }, TIMEOUT);
 
   afterEach(async () => {
