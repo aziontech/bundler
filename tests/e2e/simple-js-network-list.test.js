@@ -24,7 +24,7 @@ describe('E2E - simple-js-network-list project', () => {
       EXAMPLE_PATH,
       'javascript',
       serverPort,
-      false,
+      true,
       undefined,
     );
   }, TIMEOUT);

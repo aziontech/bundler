@@ -25,7 +25,7 @@ describe('E2E - simple-js-network-list-with-firewall project', () => {
       EXAMPLE_PATH,
       'javascript',
       serverPort,
-      false,
+      true,
       undefined,
       true,
     );

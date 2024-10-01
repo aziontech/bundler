@@ -19,7 +19,7 @@ describe('E2E - simple-js-esm project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'javascript', serverPort, false);
+    await projectInitializer(EXAMPLE_PATH, 'javascript', serverPort, true);
   }, TIMEOUT);
 
   afterAll(async () => {
