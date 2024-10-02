@@ -1,3 +1,11 @@
+## [4.1.0-stage.1](https://github.com/aziontech/bundler/compare/v4.0.1...v4.1.0-stage.1) (2024-10-02)
+
+
+### Features
+
+* add FetchEventContext class to handle event initialization and args loading ([063c8a5](https://github.com/aziontech/bundler/commit/063c8a59b0cd7e3099038098704a7e1968b27bea))
+* add FetchEventContext class to handle event initialization and args loading ([#392](https://github.com/aziontech/bundler/issues/392)) ([cad66e4](https://github.com/aziontech/bundler/commit/cad66e4ce906072b5981eca07c6e1388bec3fd01))
+
 ### [4.0.1](https://github.com/aziontech/bundler/compare/v4.0.0...v4.0.1) (2024-09-30)
 
 
