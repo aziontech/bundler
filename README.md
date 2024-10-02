@@ -9,7 +9,6 @@ One of the key highlights of Azion Bundler is its ability to establish an intuit
 E2E tests run daily in the [Vulcan Examples](https://github.com/aziontech/vulcan-examples/tree/main/examples) to ensure that the presets and frameworks continue to work correctly.
 
 Table:
-
 | Test                                 | Status |
 | ------------------------------------ | ------ |
 | Next 13 5 6 I18n                     | ✅      |
@@ -18,15 +17,15 @@ Table:
 | Next 13 5 6 Middleware               | ✅      |
 | Next 12 3 4 Middleware               | ✅      |
 | Next Node Pages 12 3 1               | ✅      |
-| Next 13 5 6 Config                   | ⚠️     |
+| Next 13 5 6 Config                   | ✅      |
 | Next 12 3 4 Config                   | ✅      |
 | Next Static                          | ✅      |
 | Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ✅      |
 | Vue Vite Static                      | ✅      |
 | Next 12 Static                       | ✅      |
-| Simple Js Env Vars                   | ✅      |
 | Astro Static                         | ✅      |
+| Simple Js Env Vars                   | ✅      |
 | Eleventy Static                      | ✅      |
 | React Static                         | ✅      |
 | Angular Static                       | ✅      |
@@ -37,13 +36,12 @@ Table:
 | Simple Js Firewall Event             | ✅      |
 | Simple Js Network List With Firewall | ✅      |
 | Jekyll Static                        | ✅      |
-| Simple Js Esm UseOwnWorker           | ✅      |
+| Simple Js Esm Worker                 | ✅      |
 | Simple Js Esm Node                   | ✅      |
-| Simple Js Esm                        | ✅      |
 | Simple Ts Esm                        | ✅      |
+| Simple Js Esm                        | ✅      |
 
-Last test run date: 08/01/24 03:39:54 AM
-
+Last test run date: 10/02/24 03:35:49 AM
 ## Quick Installation
 
 For those who just want to use Azion Bundler in their project without contributing to the development, you can install it directly from npm.
