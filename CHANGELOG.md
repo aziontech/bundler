@@ -1,3 +1,10 @@
+### [4.1.1-stage.1](https://github.com/aziontech/bundler/compare/v4.1.0...v4.1.1-stage.1) (2024-10-03)
+
+
+### Bug Fixes
+
+* add dependency error handling ([#394](https://github.com/aziontech/bundler/issues/394)) ([9c4d22c](https://github.com/aziontech/bundler/commit/9c4d22cf678833d3e722de935ab9e6655947369d))
+
 ## [4.1.0](https://github.com/aziontech/bundler/compare/v4.0.1...v4.1.0) (2024-10-02)
 
 
