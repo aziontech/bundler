@@ -1,3 +1,10 @@
+### [4.1.1-stage.2](https://github.com/aziontech/bundler/compare/v4.1.1-stage.1...v4.1.1-stage.2) (2024-10-14)
+
+
+### Bug Fixes
+
+* adding the config build preset when creating azion.config ([#395](https://github.com/aziontech/bundler/issues/395)) ([cee7366](https://github.com/aziontech/bundler/commit/cee7366148ee7f2b69f0ce1a500a28f182117482))
+
 ### [4.1.1-stage.1](https://github.com/aziontech/bundler/compare/v4.1.0...v4.1.1-stage.1) (2024-10-03)
 
 
