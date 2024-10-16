@@ -45,6 +45,15 @@ describe('E2E - next-14-2-15-middleware project', () => {
     expect(pageTitle).toBe('500: Internal Server Error');
   });
 
+  test('Should render a page ssr', async () => {
+    await page.goto(`${localhostBaseUrl}/ssr`, {
+      waitUntil: 'networkidle0',
+    });
+    const pageContent = await page.content();
+
+    expect(pageContent).toMatch(/Server message/);
+  });
+
   test('Should render a page without middleware aciont', async () => {
     await page.goto(`${localhostBaseUrl}/common`, {
       waitUntil: 'networkidle0',
