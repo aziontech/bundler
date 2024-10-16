@@ -1,3 +1,10 @@
+### [4.1.1-stage.3](https://github.com/aziontech/bundler/compare/v4.1.1-stage.2...v4.1.1-stage.3) (2024-10-16)
+
+
+### Bug Fixes
+
+* update error message for invalid build preset ([#396](https://github.com/aziontech/bundler/issues/396)) ([6ac6159](https://github.com/aziontech/bundler/commit/6ac6159e1ef4e561f158f357aa3d48bf6a6ea04f))
+
 ### [4.1.1-stage.2](https://github.com/aziontech/bundler/compare/v4.1.1-stage.1...v4.1.1-stage.2) (2024-10-14)
 
 
