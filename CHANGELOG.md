@@ -1,3 +1,10 @@
+## [4.2.0-stage.1](https://github.com/aziontech/bundler/compare/v4.1.1-stage.4...v4.2.0-stage.1) (2024-10-17)
+
+
+### Features
+
+* adding support in next.js edge 14.x ([#398](https://github.com/aziontech/bundler/issues/398)) ([b3b89d2](https://github.com/aziontech/bundler/commit/b3b89d22a477276c526b34bd5259827d1830c51e))
+
 ### [4.1.1-stage.4](https://github.com/aziontech/bundler/compare/v4.1.1-stage.3...v4.1.1-stage.4) (2024-10-17)
 
 
