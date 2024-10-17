@@ -11,37 +11,37 @@ E2E tests run daily in the [Vulcan Examples](https://github.com/aziontech/vulcan
 Table:
 | Test                                 | Status |
 | ------------------------------------ | ------ |
-| Next 13 5 6 I18n                     | ⚠️     |
-| Next 12 3 4 I18n                     | ⚠️     |
-| Hexo Static                          | ⚠️     |
-| Next 13 5 6 Middleware               | ⚠️     |
-| Next 12 3 4 Middleware               | ⚠️     |
-| Next Node Pages 12 3 1               | ⚠️     |
-| Next 13 5 6 Config                   | ⚠️     |
-| Next 12 3 4 Config                   | ⚠️     |
-| Next Static                          | ⚠️     |
-| Gatsby Static                        | ⚠️     |
-| Next Node Pages 12 3 1 Fs            | ⚠️     |
-| Vue Vite Static                      | ⚠️     |
-| Next 12 Static                       | ⚠️     |
-| Astro Static                         | ⚠️     |
+| Next 13 5 6 I18n                     | ✅      |
+| Next 12 3 4 I18n                     | ✅      |
+| Hexo Static                          | ✅      |
+| Next 13 5 6 Middleware               | ✅      |
+| Next 12 3 4 Middleware               | ✅      |
+| Next Node Pages 12 3 1               | ✅      |
+| Next 13 5 6 Config                   | ✅      |
+| Next 12 3 4 Config                   | ✅      |
+| Next Static                          | ✅      |
+| Gatsby Static                        | ✅      |
+| Next Node Pages 12 3 1 Fs            | ✅      |
+| Vue Vite Static                      | ✅      |
+| Next 12 Static                       | ✅      |
+| Astro Static                         | ✅      |
 | Simple Js Env Vars                   | ✅      |
-| Eleventy Static                      | ⚠️     |
-| React Static                         | ⚠️     |
-| Angular Static                       | ⚠️     |
+| Eleventy Static                      | ✅      |
+| React Static                         | ✅      |
+| Angular Static                       | ✅      |
 | Simple Js Network List               | ✅      |
-| Svelte Static                        | ⚠️     |
-| Vitepress Static                     | ⚠️     |
-| Docusaurus Static                    | ⚠️     |
+| Svelte Static                        | ✅      |
+| Vitepress Static                     | ✅      |
+| Docusaurus Static                    | ✅      |
 | Simple Js Firewall Event             | ✅      |
 | Simple Js Network List With Firewall | ✅      |
-| Jekyll Static                        | ⚠️     |
+| Jekyll Static                        | ✅      |
 | Simple Js Esm Worker                 | ✅      |
 | Simple Js Esm Node                   | ✅      |
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 10/16/24 03:35:39 AM
+Last test run date: 10/17/24 03:36:19 AM
 ## Quick Installation
 
 For those who just want to use Azion Bundler in their project without contributing to the development, you can install it directly from npm.
