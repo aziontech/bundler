@@ -1,3 +1,10 @@
+## [4.2.0-stage.2](https://github.com/aziontech/bundler/compare/v4.2.0-stage.1...v4.2.0-stage.2) (2024-10-17)
+
+
+### Features
+
+* new preset nuxt ([#397](https://github.com/aziontech/bundler/issues/397)) ([472dab6](https://github.com/aziontech/bundler/commit/472dab6c115871941f87273c544063fef81879d4))
+
 ## [4.2.0-stage.1](https://github.com/aziontech/bundler/compare/v4.1.1-stage.4...v4.2.0-stage.1) (2024-10-17)
 
 
