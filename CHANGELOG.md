@@ -1,3 +1,10 @@
+### [4.1.1-stage.4](https://github.com/aziontech/bundler/compare/v4.1.1-stage.3...v4.1.1-stage.4) (2024-10-17)
+
+
+### Bug Fixes
+
+* removing the import of the azion package when creating the azion.config ([#399](https://github.com/aziontech/bundler/issues/399)) ([43ef4ab](https://github.com/aziontech/bundler/commit/43ef4abb24e0049bc7a88fba71868f926ebdbd6b))
+
 ### [4.1.1-stage.3](https://github.com/aziontech/bundler/compare/v4.1.1-stage.2...v4.1.1-stage.3) (2024-10-16)
 
 
