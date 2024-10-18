@@ -1,3 +1,45 @@
+## [4.2.0-stage.2](https://github.com/aziontech/bundler/compare/v4.2.0-stage.1...v4.2.0-stage.2) (2024-10-17)
+
+
+### Features
+
+* new preset nuxt ([#397](https://github.com/aziontech/bundler/issues/397)) ([472dab6](https://github.com/aziontech/bundler/commit/472dab6c115871941f87273c544063fef81879d4))
+
+## [4.2.0-stage.1](https://github.com/aziontech/bundler/compare/v4.1.1-stage.4...v4.2.0-stage.1) (2024-10-17)
+
+
+### Features
+
+* adding support in next.js edge 14.x ([#398](https://github.com/aziontech/bundler/issues/398)) ([b3b89d2](https://github.com/aziontech/bundler/commit/b3b89d22a477276c526b34bd5259827d1830c51e))
+
+### [4.1.1-stage.4](https://github.com/aziontech/bundler/compare/v4.1.1-stage.3...v4.1.1-stage.4) (2024-10-17)
+
+
+### Bug Fixes
+
+* removing the import of the azion package when creating the azion.config ([#399](https://github.com/aziontech/bundler/issues/399)) ([43ef4ab](https://github.com/aziontech/bundler/commit/43ef4abb24e0049bc7a88fba71868f926ebdbd6b))
+
+### [4.1.1-stage.3](https://github.com/aziontech/bundler/compare/v4.1.1-stage.2...v4.1.1-stage.3) (2024-10-16)
+
+
+### Bug Fixes
+
+* update error message for invalid build preset ([#396](https://github.com/aziontech/bundler/issues/396)) ([6ac6159](https://github.com/aziontech/bundler/commit/6ac6159e1ef4e561f158f357aa3d48bf6a6ea04f))
+
+### [4.1.1-stage.2](https://github.com/aziontech/bundler/compare/v4.1.1-stage.1...v4.1.1-stage.2) (2024-10-14)
+
+
+### Bug Fixes
+
+* adding the config build preset when creating azion.config ([#395](https://github.com/aziontech/bundler/issues/395)) ([cee7366](https://github.com/aziontech/bundler/commit/cee7366148ee7f2b69f0ce1a500a28f182117482))
+
+### [4.1.1-stage.1](https://github.com/aziontech/bundler/compare/v4.1.0...v4.1.1-stage.1) (2024-10-03)
+
+
+### Bug Fixes
+
+* add dependency error handling ([#394](https://github.com/aziontech/bundler/issues/394)) ([9c4d22c](https://github.com/aziontech/bundler/commit/9c4d22cf678833d3e722de935ab9e6655947369d))
+
 ## [4.1.0](https://github.com/aziontech/bundler/compare/v4.0.1...v4.1.0) (2024-10-02)
 
 
