@@ -11,6 +11,7 @@ E2E tests run daily in the [Vulcan Examples](https://github.com/aziontech/vulcan
 Table:
 | Test                                 | Status |
 | ------------------------------------ | ------ |
+| Next 14 2 15 Middleware              | ✅      |
 | Next 13 5 6 I18n                     | ✅      |
 | Next 12 3 4 I18n                     | ✅      |
 | Hexo Static                          | ✅      |
@@ -22,7 +23,7 @@ Table:
 | Next Static                          | ✅      |
 | Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ✅      |
-| Vue Vite Static                      | ✅      |
+| Vue Vite Static                      | ⚠️     |
 | Next 12 Static                       | ✅      |
 | Astro Static                         | ✅      |
 | Simple Js Env Vars                   | ✅      |
@@ -32,6 +33,7 @@ Table:
 | Simple Js Network List               | ✅      |
 | Svelte Static                        | ✅      |
 | Vitepress Static                     | ✅      |
+| Nuxt Static                          | ✅      |
 | Docusaurus Static                    | ✅      |
 | Simple Js Firewall Event             | ✅      |
 | Simple Js Network List With Firewall | ✅      |
@@ -41,7 +43,7 @@ Table:
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 10/18/24 03:36:23 AM
+Last test run date: 10/19/24 03:38:59 AM
 ## Quick Installation
 
 For those who just want to use Azion Bundler in their project without contributing to the development, you can install it directly from npm.
