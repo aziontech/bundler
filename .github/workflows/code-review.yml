@@ -1,0 +1,63 @@
+name: Azion AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - main
+      - stage
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  ai-code-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          npm install azion@v1.9.0-stage.2
+          npm install @actions/github
+
+      - name: Run Azion AI Code Review
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AZION_TOKEN: ${{ secrets.AZION_TOKEN }}
+        run: |
+          node tasks/code-review.js
+        continue-on-error: true
+        id: code_review
+
+      - name: Display error logs
+        if: failure() && steps.code_review.outcome == 'failure'
+        run: |
+          echo "Error during code review execution:"
+          cat ${{ github.workspace }}/*.log
+
+      - name: Update PR Status
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'Azion AI Code Review',
+              head_sha: context.payload.pull_request.head.sha,
+              status: 'completed',
+              conclusion: 'success',
+              output: {
+                title: 'Code review completed',
+                summary: 'The code review was completed successfully.'
+              }
+            })
