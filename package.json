@@ -52,7 +52,7 @@
     "ajv-errors": "^3.0.0",
     "ajv-keywords": "^5.1.0",
     "assert": "^2.0.0",
-    "azion": "^1.8.2",
+    "azion": "1.9.0-stage.2",
     "bottleneck": "^2.19.5",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
@@ -101,7 +101,8 @@
     "util": "^0.12.5",
     "vm-browserify": "^1.1.2",
     "webpack": "^5.84.0",
-    "webpack-merge": "^5.9.0"
+    "webpack-merge": "^5.9.0",
+    "yarn.lock": "^0.0.1-security"
   },
   "devDependencies": {
     "@commitlint/cli": "^18.4.1",
