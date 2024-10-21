@@ -31,7 +31,7 @@ jobs:
 
       - name: Run Azion AI Code Review
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
           AZION_TOKEN: ${{ secrets.AZION_TOKEN }}
         run: |
           node tasks/code-review.js
