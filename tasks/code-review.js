@@ -1,6 +1,6 @@
-import { chat } from 'azion/ai';
 // eslint-disable-next-line import/no-unresolved
 import * as github from '@actions/github';
+import { chat } from 'azion/ai';
 
 /**
  *
@@ -23,8 +23,10 @@ async function runCodeReview() {
     });
 
     let fullContent = '';
+    // eslint-disable-next-line no-restricted-syntax
     for (const file of files) {
       if (file.status !== 'removed') {
+        // eslint-disable-next-line no-await-in-loop
         const { data: content } = await octokit.rest.repos.getContent({
           owner: context.repo.owner,
           repo: context.repo.repo,
@@ -45,6 +47,7 @@ ${fullContent}
 
 Provide your analysis in Markdown format, starting with a general summary of the pull request.`;
 
+    console.log(prompt);
     const { data: response, error } = await chat(
       {
         messages: [{ role: 'user', content: prompt }],
