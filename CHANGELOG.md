@@ -1,3 +1,10 @@
+### [4.2.1-stage.2](https://github.com/aziontech/bundler/compare/v4.2.1-stage.1...v4.2.1-stage.2) (2024-10-23)
+
+
+### Bug Fixes
+
+* incorrect file extension in build command ([#404](https://github.com/aziontech/bundler/issues/404)) ([70bfb14](https://github.com/aziontech/bundler/commit/70bfb1464b898ed65054e8345b9b01f680c60901))
+
 ### [4.2.1-stage.1](https://github.com/aziontech/bundler/compare/v4.2.0...v4.2.1-stage.1) (2024-10-23)
 
 
