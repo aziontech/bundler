@@ -1,3 +1,10 @@
+### [4.2.1-stage.3](https://github.com/aziontech/bundler/compare/v4.2.1-stage.2...v4.2.1-stage.3) (2024-10-23)
+
+
+### Bug Fixes
+
+* use dedicated worker for dev env ([#403](https://github.com/aziontech/bundler/issues/403)) ([96aa489](https://github.com/aziontech/bundler/commit/96aa4899c15012906f6b9d023a4661062240d3cd))
+
 ### [4.2.1-stage.2](https://github.com/aziontech/bundler/compare/v4.2.1-stage.1...v4.2.1-stage.2) (2024-10-23)
 
 
