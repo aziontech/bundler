@@ -43,7 +43,7 @@ Table:
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 10/23/24 03:40:06 AM
+Last test run date: 10/24/24 03:44:52 AM
 ## Quick Installation
 
 For those who just want to use Azion Bundler in their project without contributing to the development, you can install it directly from npm.
