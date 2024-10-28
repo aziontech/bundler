@@ -1,3 +1,12 @@
+### [4.2.1](https://github.com/aziontech/bundler/compare/v4.2.0...v4.2.1) (2024-10-28)
+
+
+### Bug Fixes
+
+* incorrect file extension in build command ([#404](https://github.com/aziontech/bundler/issues/404)) ([70bfb14](https://github.com/aziontech/bundler/commit/70bfb1464b898ed65054e8345b9b01f680c60901))
+* removing the need to pass the preset flag when js ([#402](https://github.com/aziontech/bundler/issues/402)) ([3f3074c](https://github.com/aziontech/bundler/commit/3f3074cee0255c75daa5420356e2cb10c97725e7))
+* use dedicated worker for dev env ([#403](https://github.com/aziontech/bundler/issues/403)) ([96aa489](https://github.com/aziontech/bundler/commit/96aa4899c15012906f6b9d023a4661062240d3cd))
+
 ### [4.2.1-stage.3](https://github.com/aziontech/bundler/compare/v4.2.1-stage.2...v4.2.1-stage.3) (2024-10-23)
 
 
