@@ -18,12 +18,12 @@ Table:
 | Next 13 5 6 Middleware               | ✅      |
 | Next 12 3 4 Middleware               | ✅      |
 | Next Node Pages 12 3 1               | ✅      |
-| Next 13 5 6 Config                   | ✅      |
+| Next 13 5 6 Config                   | ⚠️     |
 | Next 12 3 4 Config                   | ✅      |
 | Next Static                          | ✅      |
 | Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ✅      |
-| Vue Vite Static                      | ⚠️     |
+| Vue Vite Static                      | ✅      |
 | Next 12 Static                       | ✅      |
 | Astro Static                         | ✅      |
 | Simple Js Env Vars                   | ✅      |
@@ -40,11 +40,10 @@ Table:
 | Jekyll Static                        | ✅      |
 | Simple Js Esm Worker                 | ✅      |
 | Simple Js Esm Node                   | ✅      |
-| Simple Ts Esm                        | ✅      |
+| Simple Ts Esm                        | ⚠️     |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 10/28/24 03:41:17 AM
-
+Last test run date: 10/29/24 03:39:14 AM
 ## Quick Installation
 
 For those who just want to use Azion Bundler in their project without contributing to the development, you can install it directly from npm.
