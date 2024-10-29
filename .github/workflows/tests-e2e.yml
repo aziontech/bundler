@@ -29,8 +29,8 @@ jobs:
 
       - name: Process README.md and Commit
         run: |
-          git config --global user.email "vulcan@azion.com"
-          git config --global user.name "Vulcan Reports"
+          git config --global user.email "bundler@azion.com"
+          git config --global user.name "Azion Bundler Reports"
           git add README.md
           git commit -m "chore: update reports" --no-verify || echo "No changes to commit."
           git push --force
