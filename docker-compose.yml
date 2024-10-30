@@ -22,6 +22,6 @@ services:
     ports:
       - "3000-3040:3000-3040"
     volumes:
-      - ./:/vulcan/
+      - ./:/bundler/
     working_dir: /
     tty: true
