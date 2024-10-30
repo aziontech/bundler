@@ -18,7 +18,7 @@ Table:
 | Next 13 5 6 Middleware               | ✅      |
 | Next 12 3 4 Middleware               | ✅      |
 | Next Node Pages 12 3 1               | ✅      |
-| Next 13 5 6 Config                   | ⚠️     |
+| Next 13 5 6 Config                   | ✅      |
 | Next 12 3 4 Config                   | ✅      |
 | Next Static                          | ✅      |
 | Gatsby Static                        | ✅      |
@@ -43,7 +43,7 @@ Table:
 | Simple Ts Esm                        | ⚠️     |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 10/29/24 03:39:14 AM
+Last test run date: 10/30/24 03:38:51 AM
 ## Quick Installation
 
 For those who just want to use Azion Bundler in their project without contributing to the development, you can install it directly from npm.
