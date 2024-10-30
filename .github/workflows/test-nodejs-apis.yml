@@ -1,0 +1,39 @@
+name: Test Node.js APIs
+
+on:
+  schedule:
+    # Run every day at 3:30 AM UTC
+    - cron: '30 3 * * *'
+
+jobs:
+  test-nodejs-apis:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/stage'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Install Docker Compose
+        run: |
+          curl -L "https://github.com/docker/compose/releases/download/v2.29.7/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+
+      - name: Run E2E tests
+        run: yarn test:nodejs-apis
+
+      - name: Process README.md and Commit
+        run: |
+          git config --global user.email "bundler@azion.com"
+          git config --global user.name "Azion Bundler Reports"
+          git add ./docs/nodejs-apis.md
+          git commit -m "chore: update reports node.js apis" --no-verify || echo "No changes to commit."
+          git push --force
+        env:
+          GH_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}

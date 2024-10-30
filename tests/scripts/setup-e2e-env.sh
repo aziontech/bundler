@@ -18,10 +18,10 @@ log_with_color() {
 #  isolate examples
 log_with_color "* STARTING ..." $GREEN
 
-SENTINEL_FILE="/vulcan/.initialized.keep"
+SENTINEL_FILE="/bundler/.initialized.keep"
 
-# create vulcan temp to install in verdaccio
-create_vulcan_temp() {
+# create bundler temp to install in verdaccio
+create_bundler_temp() {
     local target="$1"
     local folder="$2"
     rm -rf $folder
@@ -34,32 +34,32 @@ create_vulcan_temp() {
 # TODO: improve this init check
 if test -f $SENTINEL_FILE; then
     log_with_color "Container already initialized!" $CYAN
-    log_with_color "* Vulcan version:" $GREEN
+    log_with_color "* Bundler version:" $GREEN
     npx --yes --registry=http://verdaccio:4873 edge-functions@latest --version
 else
     log_with_color "Container NOT initialized! Initializing container ..." $YELLOW
 
     # log_with_color "* Isolate examples" $GREEN
-    cp -r /vulcan/examples/examples /examples/
+    cp -r /bundler/examples/examples /examples/
 
-    # create vulcan temp to install
-    VULCAN_TEMP=vulcan-temp
-    create_vulcan_temp /vulcan $VULCAN_TEMP
+    # create bundler temp to install
+    BUNDLER_TEMP=bundler-temp
+    create_bundler_temp /bundler $BUNDLER_TEMP
 
-    # install vulcan temp locally
-    log_with_color "* Install vulcan" $GREEN
-    cd /$VULCAN_TEMP
+    # install bundler temp locally
+    log_with_color "* Install Bundler" $GREEN
+    cd /$BUNDLER_TEMP
     yarn
 
     # login in verdaccio registry
     log_with_color "* Login in verdaccio" $GREEN
     npx --yes npm-cli-login -u test -p 1234 -e test@domain.test -r http://verdaccio:4873
 
-    # publish vulcan in verdaccio
-    log_with_color "* Publish vulcan in verdaccio" $GREEN
+    # publish bundler in verdaccio
+    log_with_color "* Publish Bundler in verdaccio" $GREEN
     npm publish --registry http://verdaccio:4873
     npm info edge-functions --json --registry http://verdaccio:4873
-    log_with_color "* Vulcan version:" $GREEN
+    log_with_color "* Bundler version:" $GREEN
     npx --yes --registry=http://verdaccio:4873 edge-functions@latest --version
 
     cd /

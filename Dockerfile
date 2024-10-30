@@ -10,4 +10,4 @@ RUN apk add ruby-dev
 
 RUN gem install jekyll bundler
 
-COPY . /vulcan
+COPY . /bundler
