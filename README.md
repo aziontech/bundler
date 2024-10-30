@@ -6,7 +6,7 @@ One of the key highlights of Azion Bundler is its ability to establish an intuit
 
 ## Supported
 
-E2E tests run daily in the [Vulcan Examples](https://github.com/aziontech/vulcan-examples/tree/main/examples) to ensure that the presets and frameworks continue to work correctly.
+E2E tests run daily in the [Azion Examples](https://github.com/aziontech/Azion-examples/tree/main/examples) to ensure that the presets and frameworks continue to work correctly.
 
 Table:
 | Test                                 | Status |
