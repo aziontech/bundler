@@ -5,7 +5,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  pr-tests:
+  tests-e2e:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
