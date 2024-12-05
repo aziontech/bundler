@@ -1,3 +1,10 @@
+### [4.2.2-stage.1](https://github.com/aziontech/bundler/compare/v4.2.1...v4.2.2-stage.1) (2024-11-11)
+
+
+### Bug Fixes
+
+* improve entry file selection logic in buildCommand ([18fee09](https://github.com/aziontech/bundler/commit/18fee090ccad28a0312d2401187b5fa21e2ad407))
+
 ### [4.2.1](https://github.com/aziontech/bundler/compare/v4.2.0...v4.2.1) (2024-10-28)
 
 
