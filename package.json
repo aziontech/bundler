@@ -82,6 +82,7 @@
     "lodash": "^4.17.21",
     "lodash.merge": "^4.6.2",
     "log-update": "^5.0.1",
+    "mathjs": "^14.0.1",
     "mime-types": "^2.1.35",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
