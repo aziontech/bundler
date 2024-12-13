@@ -1,7 +1,7 @@
 {
   "name": "edge-functions",
   "type": "module",
-  "version": "4.2.1",
+  "version": "4.3.0-stage.1",
   "description": "Tool to launch and build JavaScript/Frameworks. This tool automates polyfills for Edge Computing and assists in creating Workers, notably for the Azion platform.",
   "main": "lib/main.js",
   "bin": {
@@ -44,6 +44,7 @@
   "dependencies": {
     "@babel/generator": "^7.23.5",
     "@babel/parser": "^7.23.5",
+    "@babel/plugin-proposal-optional-chaining-assign": "^7.25.9",
     "@babel/traverse": "^7.23.5",
     "@babel/types": "^7.23.5",
     "@edge-runtime/node-utils": "^2.1.1",
@@ -54,7 +55,8 @@
     "ajv-errors": "^3.0.0",
     "ajv-keywords": "^5.1.0",
     "assert": "^2.0.0",
-    "azion": "^1.8.2",
+    "azion": "^1.10.0",
+    "babel-loader": "^9.2.1",
     "bottleneck": "^2.19.5",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
@@ -80,6 +82,7 @@
     "lodash": "^4.17.21",
     "lodash.merge": "^4.6.2",
     "log-update": "^5.0.1",
+    "mathjs": "^14.0.1",
     "mime-types": "^2.1.35",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",

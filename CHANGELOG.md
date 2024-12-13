@@ -1,3 +1,26 @@
+## [4.3.0-stage.1](https://github.com/aziontech/bundler/compare/v4.2.2-stage.1...v4.3.0-stage.1) (2024-12-13)
+
+
+### Features
+
+* add Babel custom loader plugin and update webpack configuration ([ef6e8d4](https://github.com/aziontech/bundler/commit/ef6e8d4815aa3601796e136d4337fe6ca738133f))
+* add Babel custom loader plugin and update webpack configuration ([#415](https://github.com/aziontech/bundler/issues/415)) ([8e7b06e](https://github.com/aziontech/bundler/commit/8e7b06e79a0d45e49ec23e37dba69eb8bfa10b7b))
+
+
+### Bug Fixes
+
+* duplicate error message ([45f6402](https://github.com/aziontech/bundler/commit/45f6402a0c88f197f165158a78ead03e7d47b082))
+* handle both ES Modules and CommonJS imports ([9b551d5](https://github.com/aziontech/bundler/commit/9b551d5a908cbb9f06f7b1bae6a234b5fa648fa5))
+* import azion.config.js (presets) ([#416](https://github.com/aziontech/bundler/issues/416)) ([e3428e6](https://github.com/aziontech/bundler/commit/e3428e6f2f29ce9e960f684e69486fa2072f5f09))
+* message error scope ([08439b5](https://github.com/aziontech/bundler/commit/08439b5f0a920e3632ec974b723486285a8fec41))
+
+### [4.2.2-stage.1](https://github.com/aziontech/bundler/compare/v4.2.1...v4.2.2-stage.1) (2024-11-11)
+
+
+### Bug Fixes
+
+* improve entry file selection logic in buildCommand ([18fee09](https://github.com/aziontech/bundler/commit/18fee090ccad28a0312d2401187b5fa21e2ad407))
+
 ### [4.2.1](https://github.com/aziontech/bundler/compare/v4.2.0...v4.2.1) (2024-10-28)
 
 
