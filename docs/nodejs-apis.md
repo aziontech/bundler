@@ -35,8 +35,8 @@ Table:
 | -------------- | ------ |
 | Zlib           | ✅      |
 | Process        | ✅      |
-| Os             | ✅      |
 | Path           | ✅      |
+| Os             | ✅      |
 | Http           | ✅      |
 | String Decoder | ✅      |
 | Crypto         | ✅      |
@@ -51,7 +51,7 @@ Table:
 | Fs             | ✅      |
 | Async Hooks    | ✅      |
 
-Last test run date: 12/12/24 04:00:36 AM
+Last test run date: 12/13/24 04:00:51 AM
 #### Docs support
 
 See support for the Node.js APIs in the [https://www.azion.com/en/documentation/products/azion-edge-runtime/compatibility/node/](https://www.azion.com/en/documentation/products/azion-edge-runtime/compatibility/node/)
