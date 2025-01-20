@@ -2493,10 +2493,10 @@ axios@^1.6.1:
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
-azion@^1.10.0:
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/azion/-/azion-1.10.0.tgz#547e21a2fa9e696176e068d6167a5aea49a54990"
-  integrity sha512-UE6BCaq6DbAUUUmiIIFZko0QhpX9A9qhMD/HCbyqVQK0b19+JmCLwPVsJ6RkL6OvYvUIWvOFfzFaB4qvEbitpA==
+azion@^1.12.0:
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/azion/-/azion-1.12.0.tgz#74d85b3cd406b6e20b61d984dc98aeaee417eb23"
+  integrity sha512-J9upHyyqi40xIhEIM15Wi9/G0RH24OEfTiskSQKK42wyazALtPTKQ0VmFI0l+Uy44cR1vNEo0/eS9NOCI6v12A==
   dependencies:
     chalk "^5.3.0"
     progress "^2.0.3"
