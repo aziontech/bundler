@@ -1,3 +1,10 @@
+## [4.4.0-stage.1](https://github.com/aziontech/bundler/compare/v4.3.0...v4.4.0-stage.1) (2025-01-13)
+
+
+### Features
+
+* transform json manifest into js command ([#417](https://github.com/aziontech/bundler/issues/417)) ([391b30d](https://github.com/aziontech/bundler/commit/391b30df01114aa0da55630e23147a6f9cfe797e))
+
 ## [4.3.0](https://github.com/aziontech/bundler/compare/v4.2.1...v4.3.0) (2024-12-13)
 
 

@@ -1,7 +1,7 @@
 {
   "name": "edge-functions",
   "type": "module",
-  "version": "4.3.0",
+  "version": "4.4.0-stage.1",
   "description": "Tool to launch and build JavaScript/Frameworks. This tool automates polyfills for Edge Computing and assists in creating Workers, notably for the Azion platform.",
   "main": "lib/main.js",
   "bin": {
@@ -55,7 +55,7 @@
     "ajv-errors": "^3.0.0",
     "ajv-keywords": "^5.1.0",
     "assert": "^2.0.0",
-    "azion": "^1.10.0",
+    "azion": "^1.12.0",
     "babel-loader": "^9.2.1",
     "bottleneck": "^2.19.5",
     "browserify-zlib": "^0.2.0",
