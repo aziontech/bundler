@@ -32,7 +32,10 @@ describe('E2E - hexo-static project', () => {
 
     await projectInitializer(EXAMPLE_PATH, 'hexo', serverPort);
 
-    browser = await puppeteer.launch({ headless: 'new' });
+    browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      headless: 'new',
+    });
     page = await browser.newPage();
   }, TIMEOUT);
 

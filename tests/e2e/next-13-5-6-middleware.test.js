@@ -22,7 +22,10 @@ describe('E2E - next-13-5-6-middleware project', () => {
 
     await projectInitializer(EXAMPLE_PATH, 'next', serverPort);
 
-    browser = await puppeteer.launch({ headless: 'new' });
+    browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      headless: 'new',
+    });
     page = await browser.newPage();
     page.setDefaultNavigationTimeout(60000);
   }, TIMEOUT);
