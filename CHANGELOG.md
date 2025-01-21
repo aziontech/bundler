@@ -1,3 +1,10 @@
+### [4.4.1](https://github.com/aziontech/bundler/compare/v4.4.0...v4.4.1) (2025-01-21)
+
+
+### Bug Fixes
+
+* add no-sandbox args for puppeteer launch in E2E tests and upgrade azion lib ([#420](https://github.com/aziontech/bundler/issues/420)) ([40a4345](https://github.com/aziontech/bundler/commit/40a43454bfe0fac8bd70cb56bce4d9813fc81dd9))
+
 ### [4.4.1-stage.1](https://github.com/aziontech/bundler/compare/v4.4.0...v4.4.1-stage.1) (2025-01-21)
 
 
