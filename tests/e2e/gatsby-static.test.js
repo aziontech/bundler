@@ -25,7 +25,10 @@ describe('E2E - gatsby-static project', () => {
 
     await projectInitializer(EXAMPLE_PATH, 'gatsby', serverPort);
 
-    browser = await puppeteer.launch({ headless: 'new' });
+    browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      headless: 'new',
+    });
     page = await browser.newPage();
   }, TIMEOUT);
 
