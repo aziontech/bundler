@@ -1,3 +1,11 @@
+### [4.4.2](https://github.com/aziontech/bundler/compare/v4.4.1...v4.4.2) (2025-01-21)
+
+
+### Bug Fixes
+
+* gatsby preset config import ([e705670](https://github.com/aziontech/bundler/commit/e70567027035b1b8595b78ac691ac88470d04d87))
+* gatsby preset config import ([#422](https://github.com/aziontech/bundler/issues/422)) ([3166d2d](https://github.com/aziontech/bundler/commit/3166d2d4a2908fbfc29ab7099bb7c87b17eae2b4))
+
 ### [4.4.2-stage.1](https://github.com/aziontech/bundler/compare/v4.4.1...v4.4.2-stage.1) (2025-01-21)
 
 
