@@ -1,3 +1,10 @@
+## [4.5.0-stage.1](https://github.com/aziontech/bundler/compare/v4.4.2...v4.5.0-stage.1) (2025-01-24)
+
+
+### Features
+
+* new preset qwik ([#424](https://github.com/aziontech/bundler/issues/424)) ([7386214](https://github.com/aziontech/bundler/commit/7386214a1fa15fc39835524ec108bd4a2e42c7ca))
+
 ### [4.4.2](https://github.com/aziontech/bundler/compare/v4.4.1...v4.4.2) (2025-01-21)
 
 
