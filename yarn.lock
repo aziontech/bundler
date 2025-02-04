@@ -2327,10 +2327,10 @@ axios@^1.6.1:
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
-azion@^1.14.0-stage.3:
-  version "1.14.0-stage.3"
-  resolved "https://registry.yarnpkg.com/azion/-/azion-1.14.0-stage.3.tgz#60e0f9579a6b9e488bb7cbd56d82c9e8b4265c8a"
-  integrity sha512-N1ramLuY8belbrlkgYyD0dVl4GurJNeLx+XsDGekPq57cLFnkowTNyG4lGTZh21Q2UyC/SnpdAMYXK151wIY9w==
+azion@^1.14.0-stage.4:
+  version "1.14.0-stage.4"
+  resolved "https://registry.yarnpkg.com/azion/-/azion-1.14.0-stage.4.tgz#9986c1237013a29ad4062127aeadbaea142182e9"
+  integrity sha512-SEzRx7louDr7xSEX30WEc5+T4O2GzkLW/p0PZxQGewfOJV6eElNyAL5RjVt6QANaqHFgGLkYQs+isgw8HcA/ng==
   dependencies:
     chalk "^5.3.0"
     crypto-browserify "^3.12.1"
