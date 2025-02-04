@@ -2327,12 +2327,13 @@ axios@^1.6.1:
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
-azion@^1.13.1:
-  version "1.13.1"
-  resolved "https://registry.yarnpkg.com/azion/-/azion-1.13.1.tgz#843a1c066ced3a17f14670631ea5fe76af063c2f"
-  integrity sha512-rU6bymdL2IjCxUqldrp2g9YlKW2hFvFwGtNKJ5DhrSlXDM87nzHP13Q3WKw9R/uCadiwbqSVWPRXVhX2kH+5/Q==
+azion@^1.14.0-stage.3:
+  version "1.14.0-stage.3"
+  resolved "https://registry.yarnpkg.com/azion/-/azion-1.14.0-stage.3.tgz#60e0f9579a6b9e488bb7cbd56d82c9e8b4265c8a"
+  integrity sha512-N1ramLuY8belbrlkgYyD0dVl4GurJNeLx+XsDGekPq57cLFnkowTNyG4lGTZh21Q2UyC/SnpdAMYXK151wIY9w==
   dependencies:
     chalk "^5.3.0"
+    crypto-browserify "^3.12.1"
     progress "^2.0.3"
 
 b4a@^1.6.4, b4a@^1.6.6:
@@ -8117,7 +8118,7 @@ readable-stream@3, readable-stream@^3.0.0, readable-stream@^3.4.0, readable-stre
 
 readable-stream@^2.0.0, readable-stream@^2.0.2, readable-stream@^2.3.8, readable-stream@~2.3.6:
   version "2.3.8"
-  resolved "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.8.tgz"
+  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.8.tgz#91125e8042bba1b9887f49345f6277027ce8be9b"
   integrity sha512-8p0AUk4XODgIewSi0l8Epjs+EVnWiK7NoDIEGU0HhE7+ZyY8D1IMY7odu5lRrFXGg71L15KG8QrPmum45RTtdA==
   dependencies:
     core-util-is "~1.0.0"
