@@ -1,3 +1,10 @@
+## [4.6.0](https://github.com/aziontech/bundler/compare/v4.5.0...v4.6.0) (2025-02-06)
+
+
+### Features
+
+* adding the unenv package and removing the polyfill manager ([#425](https://github.com/aziontech/bundler/issues/425)) ([529c267](https://github.com/aziontech/bundler/commit/529c267affba776467dd5127980078e8d98dbde6))
+
 ## [4.6.0-stage.1](https://github.com/aziontech/bundler/compare/v4.5.0...v4.6.0-stage.1) (2025-02-04)
 
 
