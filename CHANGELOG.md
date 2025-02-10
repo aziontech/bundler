@@ -1,3 +1,10 @@
+## [4.7.0](https://github.com/aziontech/bundler/compare/v4.6.1...v4.7.0) (2025-02-10)
+
+
+### Features
+
+* new preset for preact ssg ([#433](https://github.com/aziontech/bundler/issues/433)) ([83fbd18](https://github.com/aziontech/bundler/commit/83fbd183a123f6f692644ef99b6a1e52cdba9f70))
+
 ### [4.6.1](https://github.com/aziontech/bundler/compare/v4.6.0...v4.6.1) (2025-02-10)
 
 
