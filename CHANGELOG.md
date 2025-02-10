@@ -1,3 +1,10 @@
+### [4.6.1](https://github.com/aziontech/bundler/compare/v4.6.0...v4.6.1) (2025-02-10)
+
+
+### Bug Fixes
+
+* update azion package version to ~1.14.2 ([#431](https://github.com/aziontech/bundler/issues/431)) ([67bb1ab](https://github.com/aziontech/bundler/commit/67bb1abfc5824d86e02289f468c7dcee9f1c2b9e))
+
 ### [4.6.1-stage.1](https://github.com/aziontech/bundler/compare/v4.6.0...v4.6.1-stage.1) (2025-02-07)
 
 
