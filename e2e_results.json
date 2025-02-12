@@ -1,0 +1,129 @@
+{
+  "testResults": [
+    {
+      "name": "Next Static",
+      "passed": true
+    },
+    {
+      "name": "Next 14 2 15 Middleware",
+      "passed": true
+    },
+    {
+      "name": "Next 12 Static",
+      "passed": true
+    },
+    {
+      "name": "Next 13 5 6 Config",
+      "passed": true
+    },
+    {
+      "name": "Next 13 5 6 I18n",
+      "passed": true
+    },
+    {
+      "name": "Next 12 3 4 Config",
+      "passed": true
+    },
+    {
+      "name": "Next Node Pages 12 3 1 Fs",
+      "passed": true
+    },
+    {
+      "name": "Next Node Pages 12 3 1",
+      "passed": true
+    },
+    {
+      "name": "Next 12 3 4 I18n",
+      "passed": true
+    },
+    {
+      "name": "Next 13 5 6 Middleware",
+      "passed": true
+    },
+    {
+      "name": "Vitepress Static",
+      "passed": true
+    },
+    {
+      "name": "Next 12 3 4 Middleware",
+      "passed": true
+    },
+    {
+      "name": "Nuxt Static",
+      "passed": true
+    },
+    {
+      "name": "Docusaurus Static",
+      "passed": true
+    },
+    {
+      "name": "Simple Js Firewall Event",
+      "passed": true
+    },
+    {
+      "name": "Simple Js Network List With Firewall",
+      "passed": true
+    },
+    {
+      "name": "Jekyll Static",
+      "passed": true
+    },
+    {
+      "name": "Simple Js Esm Node",
+      "passed": true
+    },
+    {
+      "name": "Simple Js Esm",
+      "passed": true
+    },
+    {
+      "name": "Simple Js Esm Worker",
+      "passed": true
+    },
+    {
+      "name": "Simple Ts Esm",
+      "passed": true
+    },
+    {
+      "name": "Gatsby Static",
+      "passed": false
+    },
+    {
+      "name": "Angular Static",
+      "passed": false
+    },
+    {
+      "name": "React Static",
+      "passed": false
+    },
+    {
+      "name": "Astro Static",
+      "passed": false
+    },
+    {
+      "name": "Svelte Static",
+      "passed": false
+    },
+    {
+      "name": "Vue Vite Static",
+      "passed": false
+    },
+    {
+      "name": "Eleventy Static",
+      "passed": false
+    },
+    {
+      "name": "Hexo Static",
+      "passed": false
+    },
+    {
+      "name": "Simple Js Network List",
+      "passed": false
+    },
+    {
+      "name": "Simple Js Env Vars",
+      "passed": false
+    }
+  ],
+  "passes": false
+}
