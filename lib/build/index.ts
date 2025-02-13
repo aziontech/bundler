@@ -1,10 +1,39 @@
 import { AzionConfig } from 'azion/config';
 import { createBuildConfig } from './modules/config';
-import { loadPreset } from './modules/preset';
+import { loadPreset, validatePreset } from './modules/preset';
 import { executeBuildPipeline } from './modules/pipeline';
 import { generateManifest } from './modules/manifest';
-import { feedback, debug } from '#utils';
+import { feedback, debug, getPackageManager, getProjectJsonFile } from '#utils';
 import { BuildEnv } from 'azion/bundler';
+import { Messages } from '#constants';
+
+const checkNodeModules = async () => {
+  let projectJson;
+  try {
+    projectJson = getProjectJsonFile('package.json');
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      return;
+    }
+    feedback.prebuild.error(error);
+    process.exit(1);
+  }
+
+  if (
+    projectJson &&
+    (projectJson.dependencies || projectJson.devDependencies)
+  ) {
+    const pkgManager = await getPackageManager();
+    const existNodeModules = await folderExistsInProject('node_modules');
+
+    if (!existNodeModules) {
+      feedback.prebuild.error(
+        Messages.build.error.install_dependencies_failed(pkgManager),
+      );
+      process.exit(1);
+    }
+  }
+};
 
 /**
  * Main build function
@@ -14,15 +43,16 @@ export const build = async (
   ctx: BuildEnv,
 ): Promise<void> => {
   try {
-    // Load preset
+    // Check node_modules
+    await checkNodeModules();
+
+    // Load and validate preset
     const preset =
       typeof config.build?.preset === 'string'
         ? await loadPreset(config.build.preset)
         : config.build?.preset;
 
-    if (!preset?.handler || !preset?.meta?.name) {
-      throw new Error('Preset must have handler and meta.name');
-    }
+    validatePreset(preset);
 
     // Create build config
     const buildConfig = createBuildConfig(config);

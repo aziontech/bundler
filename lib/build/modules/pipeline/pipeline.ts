@@ -1,4 +1,3 @@
-/* @ts-nocheck */
 import { join } from 'path';
 import { existsSync, readFileSync, writeFileSync, rmSync } from 'fs';
 import {
@@ -15,43 +14,12 @@ import {
   debug,
   generateTimestamp,
   getAbsoluteLibDirPath,
-  presets,
   getExportedFunctionBody,
-  getPackageManager,
-  getProjectJsonFile,
   relocateImportsAndRequires,
   injectFilesInMem,
   helperHandlerCode,
 } from '#utils';
 import { Messages } from '#constants';
-
-const checkNodeModules = async () => {
-  let projectJson;
-  try {
-    projectJson = getProjectJsonFile('package.json');
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      return;
-    }
-    feedback.prebuild.error(error);
-    process.exit(1);
-  }
-
-  if (
-    projectJson &&
-    (projectJson.dependencies || projectJson.devDependencies)
-  ) {
-    const pkgManager = await getPackageManager();
-    const existNodeModules = await folderExistsInProject('node_modules');
-
-    if (!existNodeModules) {
-      feedback.prebuild.error(
-        Messages.build.error.install_dependencies_failed(pkgManager),
-      );
-      process.exit(1);
-    }
-  }
-};
 
 const processPresetHandler = (
   presetFiles: AzionBuildPreset,
@@ -196,20 +164,6 @@ export const executeBuildPipeline = async (
   let buildEntryTemp: string | undefined;
 
   try {
-    await checkNodeModules();
-
-    const VALID_BUILD_PRESETS = presets.getKeys();
-    const presetName = preset.meta.name.toLowerCase();
-
-    if (!VALID_BUILD_PRESETS.includes(presetName)) {
-      feedback.build.error(Messages.build.error.invalid_preset(presetName));
-      process.exit(1);
-    }
-
-    if (!preset.handler) {
-      throw new Error('Preset must have handler');
-    }
-
     buildEntryTemp = buildConfig.entry;
 
     const currentDir = process.cwd();
@@ -267,11 +221,11 @@ export const executeBuildPipeline = async (
     // Handle polyfills
     if (buildConfig.polyfills) {
       const edgeDir = join(process.cwd(), '.edge');
-      const outPath = env.production ? 'worker.js' : 'worker.dev.js';
+      const outPath = env.buildProd ? 'worker.js' : 'worker.dev.js';
       const workerPath = join(edgeDir, outPath);
 
       const content = readFileSync(workerPath, 'utf-8');
-      const codeToAdd = env.production
+      const codeToAdd = env.buildProd
         ? 'import SRC_NODE_FS from "node:fs";\n'
         : '';
       writeFileSync(workerPath, `${codeToAdd}${content}`);

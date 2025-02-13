@@ -1,6 +1,6 @@
 import { join } from 'path';
-import { generateTimestamp } from '../../../helpers/build-utils';
-import { BuildConfig } from '../../../types/build';
+import { generateTimestamp } from '#utils';
+import { BuildConfig } from 'azion/config';
 
 export const createBuildConfig = (config: BuildConfig): BuildConfig => {
   const buildConfig = { ...config };
@@ -14,7 +14,9 @@ export const createBuildConfig = (config: BuildConfig): BuildConfig => {
   const tempFile = `azion-${generateTimestamp()}.temp.${config.preset.name === 'typescript' ? 'ts' : 'js'}`;
 
   buildConfig.entry = join(currentDir, tempFile);
-  buildConfig.output = globalThis.vulcan?.isProduction ? '.edge/worker.js' : '.edge/worker.dev.js';
+  buildConfig.output = globalThis.vulcan?.isProduction
+    ? '.edge/worker.js'
+    : '.edge/worker.dev.js';
 
   return buildConfig;
 };
