@@ -1,22 +1,22 @@
 import { join } from 'path';
 import { generateTimestamp } from '#utils';
-import { BuildConfig } from 'azion/config';
+import { AzionConfig } from 'azion/config';
 
-export const createBuildConfig = (config: BuildConfig): BuildConfig => {
+export const createBuildConfig = (config: AzionConfig): AzionConfig => {
   const buildConfig = { ...config };
 
   // Set build flags
-  buildConfig.polyfills = Boolean(config.polyfills);
-  buildConfig.worker = Boolean(config.worker);
+  buildConfig.build.polyfills = Boolean(buildConfig.build.polyfills);
+  buildConfig.build.worker = Boolean(buildConfig.build.worker);
 
   // Set paths
   const currentDir = process.cwd();
-  const tempFile = `azion-${generateTimestamp()}.temp.${config.preset.name === 'typescript' ? 'ts' : 'js'}`;
+  const isTypescriptPreset =
+    typeof buildConfig.build.preset === 'string' &&
+    buildConfig.build.preset === 'typescript';
+  const tempFile = `azion-${generateTimestamp()}.temp.${isTypescriptPreset ? 'ts' : 'js'}`;
 
-  buildConfig.entry = join(currentDir, tempFile);
-  buildConfig.output = globalThis.vulcan?.isProduction
-    ? '.edge/worker.js'
-    : '.edge/worker.dev.js';
+  buildConfig.build.entry = join(currentDir, tempFile);
 
   return buildConfig;
 };

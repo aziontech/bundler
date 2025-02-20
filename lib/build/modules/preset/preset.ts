@@ -7,11 +7,11 @@ import { Messages } from '#constants';
  * Validates if preset is valid and has required properties
  */
 export const validatePreset = (preset: AzionBuildPreset): boolean => {
-  if (!preset?.handler || !preset?.meta?.name) {
+  if (!preset?.handler || !preset?.metadata?.name) {
     throw new Error('Preset must have handler and meta.name');
   }
 
-  const presetName = preset.meta.name.toLowerCase();
+  const presetName = preset.metadata.name.toLowerCase();
   const validPresets = Object.keys(presets);
 
   if (!validPresets.includes(presetName)) {
