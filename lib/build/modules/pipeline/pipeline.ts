@@ -8,7 +8,7 @@ import {
   type BuildEnv,
 } from 'azion/bundler';
 import type { AzionBuild } from 'azion/config';
-import type { AzionBuildPreset } from 'azion/presets';
+import type { AzionBuildPreset } from 'azion/config';
 import {
   feedback,
   debug,
@@ -53,8 +53,8 @@ const processPresetHandler = (
   }
 
   if (
-    presetFiles.meta.name === 'javascript' ||
-    presetFiles.meta.name === 'typescript'
+    presetFiles.metadata.name === 'javascript' ||
+    presetFiles.metadata.name === 'typescript'
   ) {
     try {
       const filePath = join(process.cwd(), config.entry);
@@ -95,26 +95,16 @@ const processPresetHandler = (
   return relocateImportsAndRequires(newHandlerContent);
 };
 
-const runPrebuild = async (context: any, buildConfig: AzionBuild) => {
-  const { handler, prebuild } = context;
-  const prebuildContext = {
-    entry: buildConfig.entry,
-    polyfills: buildConfig.polyfills,
-    worker: buildConfig.worker,
-    memoryFS: buildConfig.memoryFS,
-    preset: {
-      name: buildConfig.preset.name,
-      files: {
-        handler,
-        config: buildConfig,
-        prebuild,
-      },
-    },
-  };
+const runPrebuild = async (
+  context: AzionBuildPreset,
+  buildConfig: AzionBuild,
+) => {
+  const { prebuild } = context;
 
   feedback.prebuild.info('Starting prebuild...');
 
-  const prebuildResult = await prebuild(prebuildContext);
+  const prebuildResult = await prebuild(buildConfig);
+
   const filesToInject = prebuildResult?.filesToInject || null;
   const workerGlobalVars = prebuildResult?.workerGlobalVars || null;
   const bundlerPlugins = prebuildResult?.bundlerPlugins || null;
@@ -167,7 +157,7 @@ export const executeBuildPipeline = async (
     buildEntryTemp = buildConfig.entry;
 
     const currentDir = process.cwd();
-    const tempEntryFile = `azion-${generateTimestamp()}.temp.${preset.meta.name === 'typescript' ? 'ts' : 'js'}`;
+    const tempEntryFile = `azion-${generateTimestamp()}.temp.${preset.metadata.name === 'typescript' ? 'ts' : 'js'}`;
     buildConfig.entry = join(currentDir, tempEntryFile);
 
     const processedHandler = processPresetHandler(preset, buildConfig);
