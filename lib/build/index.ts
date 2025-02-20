@@ -1,3 +1,5 @@
+import { join } from 'path';
+import fs from 'fs';
 import { AzionConfig } from 'azion/config';
 import { createBuildConfig } from './modules/config';
 import { loadPreset, validatePreset } from './modules/preset';
@@ -6,6 +8,16 @@ import { generateManifest } from './modules/manifest';
 import { feedback, debug, getPackageManager, getProjectJsonFile } from '#utils';
 import { BuildEnv } from 'azion/bundler';
 import { Messages } from '#constants';
+
+async function folderExistsInProject(folder: string): Promise<boolean> {
+  const filePath = join(process.cwd(), folder);
+  try {
+    const stats = await fs.promises.stat(filePath);
+    return Promise.resolve(stats.isDirectory());
+  } catch (error) {
+    return Promise.resolve(false);
+  }
+}
 
 const checkNodeModules = async () => {
   let projectJson;
@@ -58,7 +70,7 @@ export const build = async (
     const buildConfig = createBuildConfig(config);
 
     // Execute build pipeline
-    await executeBuildPipeline(buildConfig, preset, ctx);
+    await executeBuildPipeline(buildConfig.build, preset, ctx);
 
     // Generate manifest
     await generateManifest(config);
