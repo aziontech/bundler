@@ -11,53 +11,32 @@ import {
   createAzionWebpackConfig,
   executeWebpackBuild,
 } from 'azion/bundler';
-import {
-  getExportedFunctionBody,
-  relocateImportsAndRequires,
-  helperHandlerCode,
-} from '#utils';
 
-interface BuildParams {
+import { mountServiceWorker, moveImportsToTopLevel } from './utils';
+
+interface CoreParams {
   buildConfig: AzionBuild;
   preset: AzionBuildPreset;
   prebuildResult: AzionPrebuildResult;
   ctx: BuildEnv;
 }
 
-const processPresetHandler = (preset: AzionBuildPreset, config: AzionBuild) => {
-  const handlerTemplate = preset.handler.toString();
-  const handlerTemplateBody = getExportedFunctionBody(handlerTemplate);
+const WORKER_TEMPLATES = {
+  fetch: (handler: string) => `addEventListener('fetch', (event) => {
+  event.respondWith(${handler});
+});`,
+  firewall: (handler: string) => `addEventListener('firewall', (event) => {
+  ${handler};
+});`,
+};
 
-  let newHandlerContent = config.worker
-    ? `(async function() {
-        ${handlerTemplateBody}
-      })()`
-    : handlerTemplate;
-
-  if (
-    preset.metadata.name === 'javascript' ||
-    preset.metadata.name === 'typescript'
-  ) {
-    const handlerContent = readFileSync(config.entry, 'utf-8');
-    const content = config.worker
-      ? handlerContent
-      : getExportedFunctionBody(handlerContent);
-    newHandlerContent = newHandlerContent.replace('__JS_CODE__', content);
-
-    const { matchEvent: isFirewallEvent } =
-      helperHandlerCode.checkAndChangeAddEventListener(
-        'firewall',
-        'firewall',
-        newHandlerContent,
-        false,
-      );
-
-    if (!config.worker && isFirewallEvent) {
-      throw new Error('Firewall events are not supported in this context');
-    }
-  }
-
-  return relocateImportsAndRequires(newHandlerContent);
+const getWorkerTemplate = (
+  handler: string,
+  event: 'firewall' | 'fetch',
+): string => {
+  return event === 'firewall'
+    ? WORKER_TEMPLATES.firewall(handler)
+    : WORKER_TEMPLATES.fetch(handler);
 };
 
 export const executeBuild = async ({
@@ -65,18 +44,24 @@ export const executeBuild = async ({
   preset,
   prebuildResult,
   ctx,
-}: BuildParams) => {
+}: CoreParams) => {
   let buildEntryTemp: string | undefined;
 
   try {
     buildEntryTemp = buildConfig.entry;
-    const processedHandler = processPresetHandler(preset, buildConfig);
-    writeFileSync(buildConfig.entry, processedHandler);
+    const processedHandler = mountServiceWorker(preset, buildConfig);
+
+    // Use worker template if not using custom worker
+    const finalHandler = buildConfig.worker
+      ? processedHandler
+      : getWorkerTemplate(processedHandler, ctx.event);
+
+    writeFileSync(buildConfig.entry, finalHandler);
 
     if (prebuildResult.injection.entry) {
       let entryContent = readFileSync(buildConfig.entry, 'utf-8');
       entryContent = `${prebuildResult.injection.entry} ${entryContent}`;
-      entryContent = relocateImportsAndRequires(entryContent);
+      entryContent = moveImportsToTopLevel(entryContent);
       writeFileSync(buildConfig.entry, entryContent);
     }
 
@@ -89,6 +74,7 @@ export const executeBuild = async ({
     };
 
     const bundler = buildConfig.bundler?.toLowerCase() || 'webpack';
+
     switch (bundler) {
       case 'esbuild': {
         const esbuildConfig = createAzionESBuildConfig(bundlerConfig, ctx);
