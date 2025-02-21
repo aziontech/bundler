@@ -1,15 +1,17 @@
 import { join } from 'path';
 import fs from 'fs';
-import { AzionConfig } from 'azion/config';
+import { AzionConfig, AzionPrebuildResult } from 'azion/config';
 import { feedback, debug } from '#utils';
 
 import { getPackageManager } from 'azion/utils/node';
 import { BuildEnv } from 'azion/bundler';
 
 /* Modules */
-import { createBuildConfig } from './modules/config';
-import { loadPreset, validatePreset } from './modules/preset';
-import { executeBuildPipeline } from './modules/pipeline';
+import { resolveBuildConfig } from './modules/config';
+import { resolvePreset } from './modules/preset';
+import { executePrebuild } from './modules/prebuild';
+import { executeBuild } from './modules/core';
+import { executePostbuild } from './modules/postbuild';
 import { generateManifest } from './modules/manifest';
 
 const readPackageJson = () => {
@@ -67,24 +69,24 @@ export const build = async (
   ctx: BuildEnv,
 ): Promise<void> => {
   try {
-    // Check node_modules
     await checkNodeModules();
+    const preset = await resolvePreset(config.build?.preset);
+    const { build: buildConfig } = resolveBuildConfig(config);
 
-    // Load and validate preset
-    const preset =
-      typeof config.build?.preset === 'string'
-        ? await loadPreset(config.build.preset)
-        : config.build?.preset;
+    // Execute build phases
+    const prebuildResult: AzionPrebuildResult = await executePrebuild(
+      buildConfig,
+      preset,
+      ctx,
+    );
+    await executeBuild({
+      buildConfig,
+      preset,
+      prebuildResult,
+      ctx,
+    });
+    await executePostbuild(buildConfig, preset);
 
-    validatePreset(preset);
-
-    // Create build config
-    const buildConfig = createBuildConfig(config);
-
-    // Execute build pipeline
-    await executeBuildPipeline(buildConfig.build, preset, ctx);
-
-    // Generate manifest
     await generateManifest(config);
   } catch (error: unknown) {
     debug.error(error);
