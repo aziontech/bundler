@@ -9,6 +9,7 @@ import {
 } from 'azion/bundler';
 import type { AzionBuild } from 'azion/config';
 import type { AzionBuildPreset } from 'azion/config';
+
 import {
   feedback,
   debug,
@@ -19,7 +20,6 @@ import {
   injectFilesInMem,
   helperHandlerCode,
 } from '#utils';
-import { Messages } from '#constants';
 
 const processPresetHandler = (
   presetFiles: AzionBuildPreset,
@@ -83,7 +83,7 @@ const processPresetHandler = (
         );
 
       if (!isFirewall && isFirewallEvent) {
-        throw new Error(Messages.build.error.firewall_disabled);
+        throw new Error('Firewall events are not supported in this context');
       }
     } catch (error) {
       feedback.build.error(error.message);
@@ -96,14 +96,15 @@ const processPresetHandler = (
 };
 
 const runPrebuild = async (
-  context: AzionBuildPreset,
+  preset: AzionBuildPreset,
   buildConfig: AzionBuild,
+  ctx: BuildEnv,
 ) => {
-  const { prebuild } = context;
+  const { prebuild } = preset;
 
   feedback.prebuild.info('Starting prebuild...');
 
-  const prebuildResult = await prebuild(buildConfig);
+  const prebuildResult = await prebuild(buildConfig, ctx);
 
   const filesToInject = prebuildResult?.filesToInject || null;
   const workerGlobalVars = prebuildResult?.workerGlobalVars || null;
@@ -149,7 +150,7 @@ const runPrebuild = async (
 export const executeBuildPipeline = async (
   buildConfig: AzionBuild,
   preset: AzionBuildPreset,
-  env: BuildEnv,
+  ctx: BuildEnv,
 ): Promise<void> => {
   let buildEntryTemp: string | undefined;
 
@@ -165,7 +166,7 @@ export const executeBuildPipeline = async (
 
     // Execute prebuild
     if (preset.prebuild) {
-      const prebuildContext = await runPrebuild(preset, buildConfig);
+      const prebuildContext = await runPrebuild(preset, buildConfig, ctx);
       const { codeToInjectInHandler, bundlerPlugins, defineVars } =
         prebuildContext;
 

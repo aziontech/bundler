@@ -1,28 +1,40 @@
 import { join } from 'path';
 import fs from 'fs';
 import { AzionConfig } from 'azion/config';
+import { feedback, debug } from '#utils';
+
+import { getPackageManager } from 'azion/utils/node';
+import { BuildEnv } from 'azion/bundler';
+
+/* Modules */
 import { createBuildConfig } from './modules/config';
 import { loadPreset, validatePreset } from './modules/preset';
 import { executeBuildPipeline } from './modules/pipeline';
 import { generateManifest } from './modules/manifest';
-import { feedback, debug, getPackageManager, getProjectJsonFile } from '#utils';
-import { BuildEnv } from 'azion/bundler';
-import { Messages } from '#constants';
 
-async function folderExistsInProject(folder: string): Promise<boolean> {
-  const filePath = join(process.cwd(), folder);
+const readPackageJson = () => {
+  const packageJsonPath = join(process.cwd(), 'package.json');
+  const content = fs.readFileSync(packageJsonPath, 'utf8');
+  return JSON.parse(content);
+};
+
+const hasNodeModulesDirectory = async (): Promise<boolean> => {
+  const nodeModulesPath = join(process.cwd(), 'node_modules');
   try {
-    const stats = await fs.promises.stat(filePath);
-    return Promise.resolve(stats.isDirectory());
+    const stats = await fs.promises.stat(nodeModulesPath);
+    return stats.isDirectory();
   } catch (error) {
-    return Promise.resolve(false);
+    return false;
   }
-}
+};
 
 const checkNodeModules = async () => {
-  let projectJson;
+  let projectJson: {
+    dependencies?: Record<string, string>;
+    devDependencies?: Record<string, string>;
+  };
   try {
-    projectJson = getProjectJsonFile('package.json');
+    projectJson = readPackageJson();
   } catch (error) {
     if (error.code === 'ENOENT') {
       return;
@@ -36,11 +48,11 @@ const checkNodeModules = async () => {
     (projectJson.dependencies || projectJson.devDependencies)
   ) {
     const pkgManager = await getPackageManager();
-    const existNodeModules = await folderExistsInProject('node_modules');
+    const nodeModulesExists = await hasNodeModulesDirectory();
 
-    if (!existNodeModules) {
+    if (!nodeModulesExists) {
       feedback.prebuild.error(
-        Messages.build.error.install_dependencies_failed(pkgManager),
+        `Please install dependencies using ${pkgManager}`,
       );
       process.exit(1);
     }
