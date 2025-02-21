@@ -1,12 +1,15 @@
 import { AzionBuild, AzionBuildPreset } from 'azion/config';
-import { feedback } from '#utils';
 
-export const executePostbuild = async (
-  buildConfig: AzionBuild,
-  preset: AzionBuildPreset,
-): Promise<void> => {
+export interface PostbuildParams {
+  buildConfig: AzionBuild;
+  preset: AzionBuildPreset;
+}
+
+export const executePostbuild = async ({
+  buildConfig,
+  preset,
+}: PostbuildParams): Promise<void> => {
   if (preset.postbuild) {
-    feedback.postbuild.info('Running post-build actions...');
     await preset.postbuild(buildConfig);
   }
 };
