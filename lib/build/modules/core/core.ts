@@ -22,9 +22,8 @@ interface CoreParams {
 }
 
 const WORKER_TEMPLATES = {
-  fetch: (handler: string) => `addEventListener('fetch', (event) => {
-  event.respondWith(${handler});
-});`,
+  fetch: (handler: string) =>
+    `addEventListener('fetch', (event) => { event.respondWith(${handler});});`,
   firewall: (handler: string) => `addEventListener('firewall', (event) => {
   ${handler};
 });`,
