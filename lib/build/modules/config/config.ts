@@ -2,7 +2,7 @@ import { join } from 'path';
 import { generateTimestamp } from '#utils';
 import { AzionConfig } from 'azion/config';
 
-export const createBuildConfig = (config: AzionConfig): AzionConfig => {
+export const resolveBuildConfig = (config: AzionConfig): AzionConfig => {
   const azionConfig = { ...config };
   const currentDir = process.cwd();
 

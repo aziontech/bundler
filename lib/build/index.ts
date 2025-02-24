@@ -1,78 +1,52 @@
-import { join } from 'path';
-import fs from 'fs';
-import { AzionConfig } from 'azion/config';
-import { createBuildConfig } from './modules/config';
-import { loadPreset, validatePreset } from './modules/preset';
-import { executeBuildPipeline } from './modules/pipeline';
-import { generateManifest } from './modules/manifest';
-import { feedback, debug, getPackageManager, getProjectJsonFile } from '#utils';
+import { AzionConfig, AzionPrebuildResult } from 'azion/config';
+import { feedback, debug } from '#utils';
 import { BuildEnv } from 'azion/bundler';
-import { Messages } from '#constants';
+/* Modules */
+import { resolveBuildConfig } from './modules/config';
+import { resolvePreset } from './modules/preset';
+import { executePrebuild } from './modules/prebuild';
+import { executeBuild } from './modules/core';
+import { executePostbuild } from './modules/postbuild';
+import { generateManifest } from './modules/manifest';
+import { checkDependenciesInstallation } from './utils';
 
-async function folderExistsInProject(folder: string): Promise<boolean> {
-  const filePath = join(process.cwd(), folder);
-  try {
-    const stats = await fs.promises.stat(filePath);
-    return Promise.resolve(stats.isDirectory());
-  } catch (error) {
-    return Promise.resolve(false);
-  }
+interface BuildParams {
+  config: AzionConfig;
+  ctx: BuildEnv;
 }
-
-const checkNodeModules = async () => {
-  let projectJson;
-  try {
-    projectJson = getProjectJsonFile('package.json');
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      return;
-    }
-    feedback.prebuild.error(error);
-    process.exit(1);
-  }
-
-  if (
-    projectJson &&
-    (projectJson.dependencies || projectJson.devDependencies)
-  ) {
-    const pkgManager = await getPackageManager();
-    const existNodeModules = await folderExistsInProject('node_modules');
-
-    if (!existNodeModules) {
-      feedback.prebuild.error(
-        Messages.build.error.install_dependencies_failed(pkgManager),
-      );
-      process.exit(1);
-    }
-  }
-};
 
 /**
  * Main build function
  */
-export const build = async (
-  config: AzionConfig,
-  ctx: BuildEnv,
-): Promise<void> => {
+export const build = async ({ config, ctx }: BuildParams): Promise<void> => {
   try {
-    // Check node_modules
-    await checkNodeModules();
+    await checkDependenciesInstallation();
+    const preset = await resolvePreset(config.build?.preset);
+    const { build: buildConfig } = resolveBuildConfig(config);
 
-    // Load and validate preset
-    const preset =
-      typeof config.build?.preset === 'string'
-        ? await loadPreset(config.build.preset)
-        : config.build?.preset;
+    /* Execute build phases */
 
-    validatePreset(preset);
+    // Phase 1: Prebuild
+    const prebuildResult: AzionPrebuildResult = await executePrebuild({
+      buildConfig,
+      preset,
+      ctx,
+    });
 
-    // Create build config
-    const buildConfig = createBuildConfig(config);
+    // Phase 2: Build
+    feedback.build.info('Starting build...');
+    await executeBuild({
+      buildConfig,
+      preset,
+      prebuildResult,
+      ctx,
+    });
+    feedback.build.success('Build completed successfully');
 
-    // Execute build pipeline
-    await executeBuildPipeline(buildConfig.build, preset, ctx);
+    // Phase 3: Postbuild
+    await executePostbuild({ buildConfig, preset });
 
-    // Generate manifest
+    // Phase 4: Generate manifest
     await generateManifest(config);
   } catch (error: unknown) {
     debug.error(error);

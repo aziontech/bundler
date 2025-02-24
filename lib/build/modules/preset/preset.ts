@@ -1,11 +1,12 @@
-import type { AzionBuildPreset } from 'azion/config';
+import type { AzionBuildPreset, PresetInput } from 'azion/config';
 import * as presets from 'azion/presets';
+
 /**
  * Validates if preset is valid and has required properties
  */
-export const validatePreset = (preset: AzionBuildPreset): boolean => {
+const validatePreset = (preset: AzionBuildPreset): boolean => {
   if (!preset?.handler || !preset?.metadata?.name) {
-    throw new Error('Preset must have handler and name. ');
+    throw new Error('Preset must have handler and name.');
   }
 
   const presetName = preset.metadata.name.toLowerCase();
@@ -21,16 +22,21 @@ export const validatePreset = (preset: AzionBuildPreset): boolean => {
 /**
  * Loads preset files by name
  */
-export const loadPreset = async (
-  presetName: string,
-): Promise<AzionBuildPreset> => {
+const loadPreset = async (presetName: string): Promise<AzionBuildPreset> => {
   const normalizedName = presetName.toLowerCase();
-
-  const preset = presets[
+  return presets[
     normalizedName as keyof typeof presets
   ] as unknown as AzionBuildPreset;
+};
+
+/**
+ * Loads and validates preset from input
+ */
+export const resolvePreset = async (
+  input: PresetInput,
+): Promise<AzionBuildPreset> => {
+  const preset = typeof input === 'string' ? await loadPreset(input) : input;
 
   validatePreset(preset);
-
   return preset;
 };
