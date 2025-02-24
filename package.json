@@ -1,17 +1,16 @@
 {
   "name": "edge-functions",
-  "type": "module",
   "version": "4.7.0",
   "description": "Tool to launch and build JavaScript/Frameworks. This tool automates polyfills for Edge Computing and assists in creating Workers, notably for the Azion platform.",
-  "main": "lib/main.js",
+  "main": "dist/main.mjs",
+  "module": "dist/main.mjs",
   "bin": {
-    "azbundler": "lib/main.js",
-    "edge-functions": "lib/main.js",
-    "ef": "lib/main.js"
+    "azbundler": "dist/main.mjs",
+    "edge-functions": "dist/main.mjs",
+    "ef": "dist/main.mjs"
   },
   "scripts": {
-    "start": "node lib/main.js",
-    "task:aliases": "node tasks/sync-aliases.js",
+    "build": "tsup --config ./tsup.config.ts",
     "task:reports": "node tasks/process-reports-e2e.js",
     "task:reports-nodejs-apis": "node tasks/process-reports-nodejs-apis.js",
     "lint": "eslint .",
@@ -77,7 +76,7 @@
     "prettier": "^3.3.2",
     "semantic-release": "^21.0.7",
     "semver": "^7.5.2",
-    "signale": "^1.4.0",
+    "signale": "1.2.1",
     "ts-loader": "^9.5.1",
     "typescript": "^5.5.3",
     "webpack": "^5.84.0",
@@ -112,21 +111,19 @@
     "mock-fs": "^5.2.0",
     "puppeteer": "^23.3.0",
     "supertest": "^6.3.3",
-    "tmp": "^0.2.1"
+    "tmp": "^0.2.1",
+    "tsup": "^8.3.6"
   },
   "imports": {
     "#root/*": "./",
     "#lib/*": "./lib",
     "#utils": "./lib/utils/index.js",
-    "#polyfills": "./lib/env/polyfills/index.js",
     "#build": "./lib/build/dispatcher/index.js",
     "#notations/*": "./lib/notations",
     "#namespaces": "./lib/notations/namespaces.js",
     "#typedef": "./lib/notations/typedef.js",
     "#env": "./lib/env/index.js",
-    "#platform": "./lib/platform/index.js",
     "#constants": "./lib/constants/index.js",
-    "#edge": "./lib/env/edgehooks/index.js",
     "#commands": "./lib/commands/index.js"
   },
   "repository": {
@@ -136,5 +133,10 @@
   "bugs": {
     "url": "https://github.com/aziontech/bundler/issues"
   },
-  "homepage": "https://github.com/aziontech/bundler#readme"
+  "homepage": "https://github.com/aziontech/bundler#readme",
+  "files": [
+    "dist",
+    "package.json",
+    "README.md"
+  ]
 }

@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "outDir": "./dist",
+    "rootDir": "./",
+    "baseUrl": "./",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "paths": {
+      "#root/*": ["./"],
+      "#lib/*": ["./lib"],
+      "#utils": ["./lib/utils/*"],
+      "#build": ["./lib/build/*"],
+      "#notations/*": ["./lib/notations/*"],
+      "#env": ["./lib/env/*"],
+      "#constants": ["./lib/constants/*"],
+      "#commands": ["./lib/commands/*"]
+    }
+  },
+  "exclude": ["node_modules"]
+}

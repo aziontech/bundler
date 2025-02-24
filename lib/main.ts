@@ -3,7 +3,8 @@ import { resolve, join } from 'path';
 import { readFileSync, readdirSync, unlinkSync, mkdirSync } from 'fs';
 import { Command } from 'commander';
 import { satisfies } from 'semver';
-import { feedback, debug, getAbsoluteLibDirPath } from '#utils';
+import { feedback, getAbsoluteLibDirPath } from 'azion/utils/node';
+import { debug } from '#utils';
 import { Messages } from '#constants';
 import os from 'os';
 import crypto from 'crypto';
@@ -11,7 +12,8 @@ import crypto from 'crypto';
 const MIN_NODE_VERSION = '18.0.0';
 
 const vulcanLibPath = getAbsoluteLibDirPath();
-const vulcanRootPath = resolve(vulcanLibPath, '..');
+
+const vulcanRootPath = resolve(vulcanLibPath, '.');
 const vulcanPackageJSON = JSON.parse(
   readFileSync(`${vulcanRootPath}/package.json`, 'utf8'),
 );
@@ -23,7 +25,6 @@ const program = new Command();
 
 /**
  * Generates a unique hash for the current project
- * @returns {string} MD5 hash of the project path
  */
 function generateProjectHash() {
   const projectPath = process.cwd();
@@ -32,7 +33,6 @@ function generateProjectHash() {
 
 /**
  * Creates and returns the path to the project's temporary folder
- * @returns {string} Path to the project's temporary folder
  */
 function createProjectTempPath() {
   const projectHash = generateProjectHash();
@@ -43,7 +43,6 @@ function createProjectTempPath() {
 
 /**
  * Validates if user is using the minimum Node version
- * @returns {boolean} - indicates if is a valid version
  */
 function validateNodeMinVersion() {
   const isAValidVersion = satisfies(process.version, `>= ${MIN_NODE_VERSION}`);
@@ -52,30 +51,45 @@ function validateNodeMinVersion() {
 
 /**
  * Converts object keys from kebab-case to camelCase.
- * @param {object} options - The original object with kebab-case keys.
- * @returns {object} A new object with the same properties, but keys in camelCase.
  * @example
  * const originalOptions = { 'polyfills': true, 'only-manifest': false };
  * const convertedOptions = convertOptions(originalOptions);
  * // Result: { polyfills: true, onlyManifest: false }
  */
-function convertOptions(options) {
-  return Object.entries(options).reduce((acc, [key, value]) => {
-    const camelKey = key.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
-    // Handle boolean flags
-    acc[camelKey] = value === '' ? true : value;
-    return acc;
-  }, {});
+function convertOptions(options: Record<string, unknown>) {
+  return Object.entries(options).reduce(
+    (acc, [key, value]) => {
+      const camelKey = key.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+      // Handle boolean flags
+      acc[camelKey] = value === '' ? true : value;
+      return acc;
+    },
+    {} as Record<string, unknown>,
+  );
 }
 /**
  * Sets the global Vulcan environment.
  *
  * Validates the ENV value and sets it as the environment in the global 'vulcan' object.
  * If the ENV value is invalid, it throws an error and terminates the process.
- * @throws {Error} If ENV is not one of 'production', 'stage', 'dev'.
  * @example
  *    setVulcanEnvironment();
  */
+interface VulcanContext {
+  env: string;
+  root: string;
+  package: Record<string, unknown>;
+  debug: boolean;
+  version: string;
+  buildProd: boolean;
+  tempPath: string;
+  argsPath: string;
+}
+
+declare global {
+  var vulcan: VulcanContext;
+}
+
 function setVulcanEnvironment() {
   const vulcanContext = {
     env: 'production',
@@ -90,7 +104,7 @@ function setVulcanEnvironment() {
 
   const AZION_ENV = process.env.AZION_ENV || vulcanContext.env;
   if (!['production', 'stage', 'local'].includes(AZION_ENV)) {
-    feedback.error(Messages.env.errors.invalid_environment);
+    (feedback as any).error(Messages.env.errors.invalid_environment);
     process.exit(1);
   } else {
     vulcanContext.env = AZION_ENV;
@@ -179,6 +193,7 @@ function startVulcanProgram() {
       '--polyfills [boolean]',
       'Use node polyfills in build. Use --polyfills or --polyfills=true to enable, --polyfills=false to disable',
     )
+    .option('--only-manifest', 'Process just the azion.config.js')
     .option(
       '--worker [boolean]',
       'Indicates that the constructed code inserts its own worker expression. Use --worker or --worker=true to enable, --worker=false to disable',
@@ -192,7 +207,10 @@ function startVulcanProgram() {
       const { buildCommand } = await import('#commands');
       globalThis.vulcan.buildProd = true;
       const convertedOptions = convertOptions(options);
-      await buildCommand(convertedOptions, convertedOptions.firewall);
+      await buildCommand(
+        convertedOptions,
+        convertedOptions.firewall as boolean,
+      );
     });
 
   program
@@ -212,7 +230,7 @@ function startVulcanProgram() {
       globalThis.vulcan.buildProd = false;
       const { devCommand } = await import('#commands');
       const convertedOptions = convertOptions(options);
-      await devCommand(entry, convertedOptions);
+      await devCommand(entry, convertedOptions as any);
     });
 
   program
@@ -234,7 +252,7 @@ function startVulcanProgram() {
     .option('-o, --output <path>', 'Output file path for convert command')
     .action(async (command, entry, options) => {
       const { manifestCommand } = await import('#commands');
-      await manifestCommand(command, entry, convertOptions(options));
+      await manifestCommand(command, entry, convertOptions(options) as any);
     });
 
   program.parse(process.argv);
@@ -247,11 +265,13 @@ try {
     setupVulcanProcessHandlers();
   }
   if (!validateNodeMinVersion()) {
-    feedback.error(Messages.errors.invalid_node_version(MIN_NODE_VERSION));
+    (feedback as any).error(
+      Messages.errors.invalid_node_version(MIN_NODE_VERSION),
+    );
     process.exit(1);
   }
 } catch (error) {
-  feedback.error(Messages.errors.unknown_error);
-  debug.error(error);
+  (feedback as any).error(Messages.errors.unknown_error);
+  (debug as any).error(error);
   process.exit(1);
 }

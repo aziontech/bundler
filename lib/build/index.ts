@@ -1,5 +1,6 @@
 import { AzionConfig, AzionPrebuildResult } from 'azion/config';
-import { feedback, debug } from '#utils';
+import { debug } from '#utils';
+import { feedback } from 'azion/utils/node';
 import { BuildEnv } from 'azion/bundler';
 /* Modules */
 import { resolveBuildConfig } from './modules/config';
@@ -21,7 +22,7 @@ interface BuildParams {
 export const build = async ({ config, ctx }: BuildParams): Promise<void> => {
   try {
     await checkDependenciesInstallation();
-    const preset = await resolvePreset(config.build?.preset);
+    const preset = await resolvePreset(config.build?.preset || '');
     const { build: buildConfig } = resolveBuildConfig(config);
 
     /* Execute build phases */
@@ -31,7 +32,7 @@ export const build = async ({ config, ctx }: BuildParams): Promise<void> => {
       buildConfig,
       preset,
       ctx,
-    });
+    } as any);
 
     // Phase 2: Build
     feedback.build.info('Starting build...');
@@ -40,16 +41,16 @@ export const build = async ({ config, ctx }: BuildParams): Promise<void> => {
       preset,
       prebuildResult,
       ctx,
-    });
+    } as any);
     feedback.build.success('Build completed successfully');
 
     // Phase 3: Postbuild
-    await executePostbuild({ buildConfig, preset });
+    await executePostbuild({ buildConfig, preset } as any);
 
     // Phase 4: Generate manifest
     await generateManifest(config);
   } catch (error: unknown) {
-    debug.error(error);
+    (debug as any).error(error);
     feedback.build.error((error as Error).message);
     process.exit(1);
   }
