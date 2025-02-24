@@ -11,6 +11,7 @@ import {
   createAzionWebpackConfig,
   executeWebpackBuild,
 } from 'azion/bundler';
+import { join } from 'path';
 
 import { mountServiceWorker, moveImportsToTopLevel } from './utils';
 
@@ -38,19 +39,29 @@ const getWorkerTemplate = (
     : WORKER_TEMPLATES.fetch(handler);
 };
 
+const injectHybridFsPolyfill = (
+  code: string,
+  buildConfig: AzionBuild,
+  ctx: BuildEnv,
+): string => {
+  if (buildConfig.polyfills && ctx.production) {
+    return `import SRC_NODE_FS from "node:fs";\n${code}`;
+  }
+  return code;
+};
+
 export const executeBuild = async ({
   buildConfig,
   preset,
   prebuildResult,
   ctx,
-}: CoreParams) => {
+}: CoreParams): Promise<void> => {
   let buildEntryTemp: string | undefined;
 
   try {
     buildEntryTemp = buildConfig.entry;
     const processedHandler = mountServiceWorker(preset, buildConfig);
 
-    // Use worker template if not using custom worker
     const finalHandler = buildConfig.worker
       ? processedHandler
       : getWorkerTemplate(processedHandler, ctx.event);
@@ -73,7 +84,6 @@ export const executeBuild = async ({
     };
 
     const bundler = buildConfig.bundler?.toLowerCase() || 'webpack';
-
     switch (bundler) {
       case 'esbuild': {
         const esbuildConfig = createAzionESBuildConfig(bundlerConfig, ctx);
@@ -88,10 +98,16 @@ export const executeBuild = async ({
       default:
         throw new Error(`Unsupported bundler: ${bundler}`);
     }
+
+    let bundledCode = readFileSync(join(process.cwd(), ctx.output), 'utf-8');
+    bundledCode = injectHybridFsPolyfill(bundledCode, buildConfig, ctx);
+
+    writeFileSync(join(process.cwd(), ctx.output), bundledCode);
+    return Promise.resolve();
   } catch (error) {
     if (buildEntryTemp && existsSync(buildEntryTemp)) {
       rmSync(buildEntryTemp);
     }
-    throw error;
+    return Promise.reject(error);
   }
 };

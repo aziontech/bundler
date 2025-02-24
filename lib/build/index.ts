@@ -1,7 +1,6 @@
 import { AzionConfig, AzionPrebuildResult } from 'azion/config';
 import { feedback, debug } from '#utils';
 import { BuildEnv } from 'azion/bundler';
-
 /* Modules */
 import { resolveBuildConfig } from './modules/config';
 import { resolvePreset } from './modules/preset';
@@ -11,7 +10,7 @@ import { executePostbuild } from './modules/postbuild';
 import { generateManifest } from './modules/manifest';
 import { checkDependenciesInstallation } from './utils';
 
-export interface BuildParams {
+interface BuildParams {
   config: AzionConfig;
   ctx: BuildEnv;
 }
@@ -28,14 +27,11 @@ export const build = async ({ config, ctx }: BuildParams): Promise<void> => {
     /* Execute build phases */
 
     // Phase 1: Prebuild
-    feedback.prebuild.info('Starting prebuild...');
     const prebuildResult: AzionPrebuildResult = await executePrebuild({
       buildConfig,
       preset,
       ctx,
     });
-
-    feedback.prebuild.success('Prebuild completed successfully');
 
     // Phase 2: Build
     feedback.build.info('Starting build...');
@@ -48,17 +44,10 @@ export const build = async ({ config, ctx }: BuildParams): Promise<void> => {
     feedback.build.success('Build completed successfully');
 
     // Phase 3: Postbuild
-    feedback.postbuild.info('Running post-build actions...');
-    await executePostbuild({
-      buildConfig,
-      preset,
-    });
-    feedback.postbuild.success('Post-build completed successfully');
+    await executePostbuild({ buildConfig, preset });
 
     // Phase 4: Generate manifest
-    feedback.build.info('Generating manifest...');
     await generateManifest(config);
-    feedback.build.success('Manifest generated successfully');
   } catch (error: unknown) {
     debug.error(error);
     feedback.build.error((error as Error).message);
