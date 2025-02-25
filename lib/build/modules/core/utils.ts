@@ -127,11 +127,9 @@ export const replaceEventListener = (
 /**
  * Process the preset handler template and inject the necessary code
  */
-export const mountServiceWorker = (
-  preset: AzionBuildPreset,
-  config: AzionBuild,
-): string => {
-  const handlerTemplate = preset.handler.toString();
+export const mountServiceWorker = (config: AzionBuild): string => {
+  const { preset } = config;
+  const handlerTemplate = (preset as AzionBuildPreset).handler.toString();
   const handlerTemplateBody = getExportedFunctionBody(handlerTemplate);
 
   let newHandlerContent = config.worker
@@ -141,8 +139,8 @@ export const mountServiceWorker = (
     : handlerTemplate;
 
   if (
-    preset.metadata.name === 'javascript' ||
-    preset.metadata.name === 'typescript'
+    (preset as AzionBuildPreset).metadata.name === 'javascript' ||
+    (preset as AzionBuildPreset).metadata.name === 'typescript'
   ) {
     const handlerContent = readFileSync(config.entry, 'utf-8');
     const content = config.worker

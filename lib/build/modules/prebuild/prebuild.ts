@@ -1,9 +1,8 @@
 import {
-  AzionBuild,
-  AzionBuildPreset,
   AzionPrebuildResult,
+  BuildContext,
+  BuildConfiguration,
 } from 'azion/config';
-import { BuildEnv } from 'azion/bundler';
 import {
   injectWorkerGlobals,
   injectWorkerMemoryFiles,
@@ -15,9 +14,8 @@ const EDGE_STORAGE = '.edge/files';
 const WORKER_NAMESPACE = 'vulcan';
 
 export interface PrebuildParams {
-  buildConfig: AzionBuild;
-  preset: AzionBuildPreset;
-  ctx: BuildEnv;
+  buildConfig: BuildConfiguration;
+  ctx: BuildContext;
 }
 
 const DEFAULT_PREBUILD_RESULT: AzionPrebuildResult = {
@@ -35,11 +33,11 @@ const DEFAULT_PREBUILD_RESULT: AzionPrebuildResult = {
 
 export const executePrebuild = async ({
   buildConfig,
-  preset,
   ctx,
 }: PrebuildParams): Promise<AzionPrebuildResult> => {
   const result =
-    (await preset.prebuild?.(buildConfig)) || DEFAULT_PREBUILD_RESULT;
+    (await buildConfig.preset.prebuild?.(buildConfig, ctx)) ||
+    DEFAULT_PREBUILD_RESULT;
 
   const globalThisWithVars = injectWorkerGlobals({
     namespace: WORKER_NAMESPACE,
