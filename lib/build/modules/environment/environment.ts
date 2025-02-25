@@ -40,7 +40,7 @@ export const setEnvironment = async ({
     await createVulcanEnv(
       {
         entry: ctx.entrypoint,
-        preset: (preset as AzionBuildPreset).metadata.name,
+        preset: preset.metadata.name,
         bundler: userConfig.build.bundler,
         polyfills: userConfig.build.polyfills,
         worker: userConfig.build.worker,

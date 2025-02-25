@@ -1,7 +1,7 @@
 import {
   AzionBuildPreset,
-  AzionConfig,
   AzionPrebuildResult,
+  AzionConfig,
   BuildContext,
   PresetInput,
 } from 'azion/config';
@@ -43,6 +43,7 @@ export const build = async ({
 
     const presetInput: PresetInput = userConfig.build?.preset;
     const resolvedPreset: AzionBuildPreset = await resolvePreset(presetInput);
+
     const buildConfigSetup = setupBuildConfig(userConfig, resolvedPreset);
 
     /* Execute build phases */
