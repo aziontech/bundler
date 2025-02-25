@@ -4,7 +4,7 @@ export default defineConfig({
   entry: ['lib/main.ts'],
   format: ['esm'],
   target: 'esnext',
-  splitting: false,
+  splitting: true,
   sourcemap: false,
   clean: true,
   bundle: true,

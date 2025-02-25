@@ -154,9 +154,7 @@ NEW_KEY=new_key_value`,
         '/project/azion.config.js': configContent,
       });
 
-      const config = await bundlerEnv.loadAzionConfig(
-        '/project/azion.config.js',
-      );
+      const config = await bundlerEnv.loadAzionConfig();
 
       expect(config).toEqual({
         build: {
