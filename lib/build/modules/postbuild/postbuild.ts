@@ -1,15 +1,16 @@
-import { AzionBuild, AzionBuildPreset } from 'azion/config';
+import { BuildConfiguration, BuildContext } from 'azion/config';
 
 export interface PostbuildParams {
-  buildConfig: AzionBuild;
-  preset: AzionBuildPreset;
+  buildConfig: BuildConfiguration;
+  ctx: BuildContext;
 }
 
 export const executePostbuild = async ({
   buildConfig,
-  preset,
+  ctx,
 }: PostbuildParams): Promise<void> => {
-  if (preset.postbuild) {
-    await preset.postbuild(buildConfig);
+  const { postbuild } = buildConfig.preset;
+  if (postbuild) {
+    await postbuild(buildConfig, ctx);
   }
 };

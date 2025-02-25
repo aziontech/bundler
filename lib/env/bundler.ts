@@ -21,7 +21,7 @@ import { createRequire } from 'module';
  * createBundlerEnv({ API_KEY: 'abc123', ANOTHER_KEY: 'xyz' }, 'global')
  *   .catch(error => console.error(error));
  */
-async function createBundlerEnv(
+export async function createBundlerEnv(
   variables: Record<string, unknown>,
   scope = 'global',
 ) {
@@ -92,7 +92,7 @@ async function createBundlerEnv(
  *   .then(env => console.log(env))
  *   .catch(error => console.error(error));
  */
-async function readBundlerEnv(scope = 'local') {
+export async function readBundlerEnv(scope = 'local') {
   let basePath;
   switch (scope) {
     case 'global':
@@ -158,24 +158,23 @@ function handleDependencyError(error: Error, configPath: string) {
  * Loads the azion.config file and returns the entire configuration object.
  * @async
  */
-async function loadAzionConfig(configPath?: string) {
+export async function loadAzionConfig() {
   const require = createRequire(import.meta.url);
   const extensions = ['.js', '.mjs', '.cjs', '.ts'];
   const configName = 'azion.config';
+  let configPath;
 
-  if (!configPath) {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const ext of extensions) {
-      const testPath = path.join(process.cwd(), `${configName}${ext}`);
-      if (fs.existsSync(testPath)) {
-        // eslint-disable-next-line no-param-reassign
-        configPath = testPath;
-        break;
-      }
+  // Procura pelo arquivo de configuração com as extensões suportadas
+  // eslint-disable-next-line no-restricted-syntax
+  for (const ext of extensions) {
+    const testPath = path.join(process.cwd(), `${configName}${ext}`);
+    if (fs.existsSync(testPath)) {
+      configPath = testPath;
+      break;
     }
   }
 
-  if (!configPath || !fs.existsSync(configPath)) {
+  if (!configPath) {
     return null;
   }
 
@@ -217,9 +216,8 @@ async function loadAzionConfig(configPath?: string) {
         } catch (error) {
           if ((error as Error).message === 'ERR_REQUIRE_ESM') {
             // eslint-disable-next-line import/no-dynamic-require
-            configModule = require(configPath); // Fallback to require for CommonJS
-          } else {
-            throw error; // Re-throw other errors
+            configModule = require(configPath); // Fallback para require em CommonJS
+            throw error;
           }
         }
         break;
@@ -236,12 +234,11 @@ async function loadAzionConfig(configPath?: string) {
     throw error;
   }
 }
-
 /**
  * Creates an Azion configuration file with the appropriate extension if it does not exist.
  * @async
  */
-async function createAzionConfigFile(
+export async function createAzionConfigFile(
   useCommonJS: boolean,
   module: Record<string, unknown>,
 ) {
@@ -282,30 +279,9 @@ async function createAzionConfigFile(
   }
 }
 
-/**
- * Gets the path of the existing Azion configuration file in the current working directory.
- * @async
- * @returns {Promise<string|null>} The path of the Azion configuration file if it exists, otherwise null.
- */
-async function getAzionConfigPath() {
-  const extensions = ['.js', '.mjs', '.cjs', '.ts'];
-  const configName = 'azion.config';
-
-  // eslint-disable-next-line no-restricted-syntax
-  for (const ext of extensions) {
-    const configPath = path.join(process.cwd(), `${configName}${ext}`);
-    if (fs.existsSync(configPath)) {
-      return configPath;
-    }
-  }
-
-  return null;
-}
-
 export default {
   createBundlerEnv,
   readBundlerEnv,
   loadAzionConfig,
   createAzionConfigFile,
-  getAzionConfigPath,
 };

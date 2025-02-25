@@ -1,10 +1,10 @@
 import { writeFileSync, readFileSync, existsSync, rmSync } from 'fs';
 import {
   AzionBuild,
-  AzionBuildPreset,
   AzionPrebuildResult,
+  BuildContext,
+  BuildConfiguration,
 } from 'azion/config';
-import { BuildEnv, BuildConfiguration } from 'azion/bundler';
 import {
   createAzionESBuildConfig,
   executeESBuildBuild,
@@ -16,10 +16,9 @@ import { join } from 'path';
 import { mountServiceWorker, moveImportsToTopLevel } from './utils';
 
 interface CoreParams {
-  buildConfig: AzionBuild;
-  preset: AzionBuildPreset;
+  buildConfig: BuildConfiguration;
   prebuildResult: AzionPrebuildResult;
-  ctx: BuildEnv;
+  ctx: BuildContext;
 }
 
 const WORKER_TEMPLATES = {
@@ -42,7 +41,7 @@ const getWorkerTemplate = (
 const injectHybridFsPolyfill = (
   code: string,
   buildConfig: AzionBuild,
-  ctx: BuildEnv,
+  ctx: BuildContext,
 ): string => {
   if (buildConfig.polyfills && ctx.production) {
     return `import SRC_NODE_FS from "node:fs";\n${code}`;
@@ -52,7 +51,6 @@ const injectHybridFsPolyfill = (
 
 export const executeBuild = async ({
   buildConfig,
-  preset,
   prebuildResult,
   ctx,
 }: CoreParams): Promise<void> => {
@@ -60,7 +58,7 @@ export const executeBuild = async ({
 
   try {
     buildEntryTemp = buildConfig.entry;
-    const processedHandler = mountServiceWorker(preset, buildConfig);
+    const processedHandler = mountServiceWorker(buildConfig);
 
     const finalHandler = buildConfig.worker
       ? processedHandler
@@ -76,8 +74,9 @@ export const executeBuild = async ({
     }
 
     const bundlerConfig: BuildConfiguration = {
-      config: buildConfig,
-      extras: {
+      ...buildConfig,
+      preset: buildConfig.preset,
+      setup: {
         contentToInject: prebuildResult.injection.banner,
         defineVars: prebuildResult.bundler.defineVars,
       },
