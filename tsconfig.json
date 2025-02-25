@@ -16,10 +16,9 @@
       "#root/*": ["./"],
       "#lib/*": ["./lib"],
       "#utils": ["./lib/utils/index.js"],
-      "#build": ["./lib/build/*"],
-      "#notations/*": ["./lib/notations/typedef.js"],
-      "#env": ["./lib/env/*"],
-      "#constants": ["./lib/constants/index.js"],
+      "#build": ["./lib/build/index.ts"],
+      "#env": ["./lib/env/index.ts"],
+      "#constants": ["./lib/constants/index.ts"],
       "#commands": ["lib/commands/index.ts"]
     }
   },

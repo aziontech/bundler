@@ -118,18 +118,6 @@
     "ts-node": "^10.9.2",
     "tsup": "^8.3.6"
   },
-  "imports": {
-    "#root/*": "./",
-    "#lib/*": "./lib",
-    "#utils": "./lib/utils/index.js",
-    "#build": "./lib/build/dispatcher/index.js",
-    "#notations/*": "./lib/notations",
-    "#namespaces": "./lib/notations/namespaces.js",
-    "#typedef": "./lib/notations/typedef.js",
-    "#env": "./lib/env/index.js",
-    "#constants": "./lib/constants/index.js",
-    "#commands": "./lib/commands/index.js"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aziontech/bundler.git"
