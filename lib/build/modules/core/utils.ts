@@ -3,7 +3,7 @@ import traverse from '@babel/traverse';
 import generate from '@babel/generator';
 import * as t from '@babel/types';
 import { readFileSync } from 'fs';
-import { AzionBuild, AzionBuildPreset } from 'azion/config';
+import { AzionBuildPreset, BuildConfiguration } from 'azion/config';
 
 /**
  * Extracts the body of the default exported function in a given code string,
@@ -127,10 +127,8 @@ export const replaceEventListener = (
 /**
  * Process the preset handler template and inject the necessary code
  */
-export const mountServiceWorker = (
-  preset: AzionBuildPreset,
-  config: AzionBuild,
-): string => {
+export const mountServiceWorker = (config: BuildConfiguration): string => {
+  const { preset } = config;
   const handlerTemplate = preset.handler.toString();
   const handlerTemplateBody = getExportedFunctionBody(handlerTemplate);
 
