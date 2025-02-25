@@ -2,21 +2,19 @@ import net from 'net';
 import { debug, readWorkerFile, helperHandlerCode } from '#utils';
 import { feedback } from 'azion/utils/node';
 import { Messages } from '#constants';
-import { runServer, EdgeRuntime } from 'edge-runtime';
 import chokidar from 'chokidar';
-import runtime from './runtime.env.js';
-import vulcan from './vulcan.env.js';
+import runtime from './runtime.js';
+import bundler from './bundler.js';
 import buildCommand from '../commands/build.commands.js';
+import { runServer } from 'edge-runtime';
 
-let currentServer;
+let currentServer: Awaited<ReturnType<typeof runServer>>;
 let isChangeHandlerRunning = false;
 
 /**
  * Checks if a port is in use by trying to connect to it.
- * @param {number} port - The port number to check.
- * @returns {Promise<boolean>} - True if the port is in use, false otherwise.
  */
-function checkPortAvailability(port) {
+function checkPortAvailability(port: number) {
   return new Promise((resolve) => {
     const client = new net.Socket();
     client.setTimeout(1000); // Timeout for the connection attempt
@@ -33,7 +31,7 @@ function checkPortAvailability(port) {
 
     client.on('error', (err) => {
       client.destroy();
-      if (err.code === 'ECONNREFUSED') {
+      if ((err as Error).message.includes('ECONNREFUSED')) {
         resolve(false); // Connection refused means the port is not in use
       } else {
         resolve(true); // Assume port is in use if there's an error
@@ -46,15 +44,12 @@ function checkPortAvailability(port) {
 
 /**
  * Read the worker code from a specified path.
- * @param {string} workerPath - Path to the worker file.
- * @returns {Promise<string>} - The worker code.
- * @throws {Error} - If unable to read the worker file.
  */
-async function readWorkerCode(workerPath) {
+async function readWorkerCode(workerPath: string) {
   try {
     return await readWorkerFile(workerPath);
   } catch (error) {
-    debug.error(error);
+    (debug as any).error(error);
     feedback.server.error(
       Messages.env.server.errors.load_worker_failed(workerPath),
     );
@@ -64,11 +59,8 @@ async function readWorkerCode(workerPath) {
 
 /**
  * Initialize and run the server with the given port and worker code.
- * @param {number} port - The port number.
- * @param {string} workerCode - The worker code.
- * @returns {Promise<EdgeRuntime>} - The initialized server.
  */
-async function initializeServer(port, workerCode) {
+async function initializeServer(port: number, workerCode: string) {
   // Check if the code is a Firewall event and change it to a Fetch event
   // This is required at this point because the VM used for the local runtime
   // server does not support any other type of event than "fetch".
@@ -77,7 +69,7 @@ async function initializeServer(port, workerCode) {
       'firewall',
       'fetch',
       workerCode,
-    );
+    ) as any;
   // Use the changed code if it's a Firewall event
   const initialCode = isFirewallEvent ? codeChanged : workerCode;
 
@@ -87,27 +79,27 @@ async function initializeServer(port, workerCode) {
 
 /**
  * Build to Local Server with polyfill external
- * @param {boolean} isFirewall - (Experimental) Enable isFirewall for local environment.
  */
-async function buildToLocalServer(isFirewall) {
-  const vulcanEnv = await vulcan.readVulcanEnv('global');
+async function buildToLocalServer(isFirewall: boolean) {
+  const vulcanEnv = await bundler.readBundlerEnv('global');
 
   if (!vulcanEnv) {
     const msg = Messages.env.server.errors.run_build_command;
     feedback.server.error(msg);
     throw new Error(msg);
   }
-  globalThis.vulcan.buildProd = false;
+  globalThis.bundler.buildProd = false;
   await buildCommand({}, isFirewall);
 }
 
 /**
  * Handle server operations: start, restart.
- * @param {string} workerPath - Path to the worker file.
- * @param {number} port - The port number.
- * @param {boolean} isFirewall - (Experimental) Enable isFirewall for local environment.
  */
-async function manageServer(workerPath, port, isFirewall) {
+async function manageServer(
+  workerPath: string,
+  port: number,
+  isFirewall: boolean,
+) {
   try {
     if (currentServer) {
       await currentServer.close();
@@ -125,7 +117,7 @@ async function manageServer(workerPath, port, isFirewall) {
         ),
       );
     } catch (error) {
-      if (error.code === 'EADDRINUSE') {
+      if ((error as any).message.includes('EADDRINUSE')) {
         await manageServer(workerPath, port + 1, isFirewall);
       } else {
         throw error;
@@ -142,12 +134,13 @@ async function manageServer(workerPath, port, isFirewall) {
 
 /**
  * Handle file changes and prevent concurrent execution.
- * @param {string} path - Path of the changed file.
- * @param {string} workerPath - Path to the worker file.
- * @param {number} port - The port number.
- * @param {boolean} isFirewall - (Experimental) Enable isFirewall for local environment.
  */
-async function handleFileChange(path, workerPath, port, isFirewall) {
+async function handleFileChange(
+  path: string,
+  workerPath: string,
+  port: number,
+  isFirewall: boolean,
+) {
   if (isChangeHandlerRunning) return;
 
   if (
@@ -166,7 +159,7 @@ async function handleFileChange(path, workerPath, port, isFirewall) {
     feedback.build.info(Messages.build.info.rebuilding);
     await manageServer(workerPath, port, isFirewall);
   } catch (error) {
-    debug.error(`Build or server restart failed: ${error}`);
+    (debug as any).error(`Build or server restart failed: ${error}`);
   } finally {
     isChangeHandlerRunning = false;
   }
@@ -174,11 +167,12 @@ async function handleFileChange(path, workerPath, port, isFirewall) {
 
 /**
  * Entry point function to start the server and watch for file changes.
- * @param {string} workerPath - Path to the worker file.
- * @param {boolean} isFirewall - (Experimental) Enable isFirewall for local environment.
- * @param {number} port - The port number.
  */
-async function startServer(workerPath, isFirewall, port) {
+async function startServer(
+  workerPath: string,
+  isFirewall: boolean,
+  port: number,
+) {
   const IsPortInUse = await checkPortAvailability(port);
   if (IsPortInUse) {
     feedback.server.error(
@@ -195,7 +189,7 @@ async function startServer(workerPath, isFirewall, port) {
     ignored: ['.git', '.vscode', '.idea', '.sublime-text', '.history'], // Added common IDE-related folders
   });
 
-  const handleUserFileChange = async (path) => {
+  const handleUserFileChange = async (path: string) => {
     await handleFileChange(path, workerPath, port, isFirewall);
   };
 
@@ -205,7 +199,7 @@ async function startServer(workerPath, isFirewall, port) {
     .on('unlink', handleUserFileChange)
     .on('addDir', handleUserFileChange)
     .on('unlinkDir', handleUserFileChange)
-    .on('error', (error) => debug.error(`Watcher error: ${error}`))
+    .on('error', (error) => (debug as any).error(`Watcher error: ${error}`))
     .on('ready', () =>
       feedback.server.info('Initial scan complete. Ready for changes.'),
     );

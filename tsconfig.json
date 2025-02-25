@@ -15,12 +15,12 @@
     "paths": {
       "#root/*": ["./"],
       "#lib/*": ["./lib"],
-      "#utils": ["./lib/utils/*"],
+      "#utils": ["./lib/utils/index.js"],
       "#build": ["./lib/build/*"],
-      "#notations/*": ["./lib/notations/*"],
+      "#notations/*": ["./lib/notations/typedef.js"],
       "#env": ["./lib/env/*"],
-      "#constants": ["./lib/constants/*"],
-      "#commands": ["./lib/commands/*"]
+      "#constants": ["./lib/constants/index.js"],
+      "#commands": ["./lib/commands/index.js"]
     }
   },
   "exclude": ["node_modules"]

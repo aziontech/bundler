@@ -1,4 +1,5 @@
 import { EdgeRuntime } from 'edge-runtime';
+import { EdgeContext } from '@edge-runtime/vm';
 
 import {
   fetchContext,
@@ -14,10 +15,7 @@ import {
 /**
  * Executes the specified JavaScript code within a sandbox environment,
  * simulating the behavior of edges that use isolates.
- * @param {string} code - The JavaScript code to be executed.
- * @param {boolean} isFirewallEvent - If the code is a Firewall event.
- * @returns {EdgeRuntime} An instance of the 'EdgeRuntime' class that represents
- *                        the sandboxed environment where the code will be executed.
+ * the sandboxed environment where the code will be executed.
  *
  * This function allows you to run JavaScript code within a sandboxed environment,
  * similar to how it would behave on edges that use isolates. It uses the 'EdgeRuntime'
@@ -44,8 +42,8 @@ import {
  *   console.log(response.status);
  * ```
  */
-function runtime(code, isFirewallEvent = false) {
-  const extend = (context) => {
+function runtime(code: string, isFirewallEvent = false) {
+  const extend = (context: EdgeContext) => {
     context.RESERVED_FETCH = context.fetch.bind(context);
     context.fetch = async (resource, options) =>
       fetchContext(context, resource, options);
@@ -68,7 +66,7 @@ function runtime(code, isFirewallEvent = false) {
     context.process = { env: process.env };
 
     /* ==== Cells Runtime/Azion does not have this interface ==== */
-    context.File = undefined;
+    context.File = undefined as any;
     context.WebSocket = undefined;
     /* ========================================================== */
 

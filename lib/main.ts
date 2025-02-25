@@ -75,7 +75,7 @@ function convertOptions(options: Record<string, unknown>) {
  * @example
  *    setVulcanEnvironment();
  */
-interface VulcanContext {
+interface BundlerGlobals {
   env: string;
   root: string;
   package: Record<string, unknown>;
@@ -87,7 +87,7 @@ interface VulcanContext {
 }
 
 declare global {
-  var vulcan: VulcanContext;
+  var bundler: BundlerGlobals;
 }
 
 function setVulcanEnvironment() {
@@ -104,12 +104,12 @@ function setVulcanEnvironment() {
 
   const AZION_ENV = process.env.AZION_ENV || vulcanContext.env;
   if (!['production', 'stage', 'local'].includes(AZION_ENV)) {
-    (feedback as any).error(Messages.env.errors.invalid_environment);
+    feedback.error(Messages.env.errors.invalid_environment);
     process.exit(1);
   } else {
     vulcanContext.env = AZION_ENV;
   }
-  globalThis.vulcan = vulcanContext;
+  globalThis.bundler = vulcanContext;
 }
 
 /**
@@ -205,7 +205,7 @@ function startVulcanProgram() {
     )
     .action(async (options) => {
       const { buildCommand } = await import('#commands');
-      globalThis.vulcan.buildProd = true;
+      globalThis.bundler.buildProd = true;
       const convertedOptions = convertOptions(options);
       await buildCommand(
         convertedOptions,
@@ -227,7 +227,7 @@ function startVulcanProgram() {
       false,
     )
     .action(async (entry, options) => {
-      globalThis.vulcan.buildProd = false;
+      globalThis.bundler.buildProd = false;
       const { devCommand } = await import('#commands');
       const convertedOptions = convertOptions(options);
       await devCommand(entry, convertedOptions as any);
@@ -265,13 +265,11 @@ try {
     setupVulcanProcessHandlers();
   }
   if (!validateNodeMinVersion()) {
-    (feedback as any).error(
-      Messages.errors.invalid_node_version(MIN_NODE_VERSION),
-    );
+    feedback.error(Messages.errors.invalid_node_version(MIN_NODE_VERSION));
     process.exit(1);
   }
 } catch (error) {
-  (feedback as any).error(Messages.errors.unknown_error);
+  feedback.error(Messages.errors.unknown_error);
   (debug as any).error(error);
   process.exit(1);
 }
