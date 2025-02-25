@@ -112,7 +112,6 @@ const runtimeApis = [
  * List of supported APIs available in the runtime of the edge.
  * This list includes various built-in objects, functions, and properties.
  * It serves as a whitelist for the allowed APIs in the edge runtime environment.
- * @type {string[]}
  */
 const Whitelist = new Set(runtimeApis);
 export default Whitelist;

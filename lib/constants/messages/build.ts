@@ -1,8 +1,5 @@
 /**
 Build messages object.
-@property {object} success - Success messages.
-@property {object} info - Information messages.
-@property {object} error - Error messages.
  */
 const build = {
   success: {
@@ -17,19 +14,23 @@ const build = {
   },
   error: {
     vulcan_build_failed: 'Azion build failed.',
-    invalid_preset: (preset) =>
+    invalid_preset: (preset: string) =>
       `Invalid build preset name: '${preset}'. Run "npx edge-functions presets ls" to view available presets.`,
-    invalid_preset_mode: (mode, preset) =>
+    invalid_preset_mode: (mode: string, preset: string) =>
       `Mode '${mode}' does not exists in preset '${preset}'. Try 'deliver' or 'compute'.`,
-    prebuild_error_validation_support: (framework, version, runtimes) =>
+    prebuild_error_validation_support: (
+      framework: string,
+      version: string,
+      runtimes: string,
+    ) =>
       `${framework} version (${version}) not supported to "${runtimes}" runtime(s).`,
-    install_dependencies_failed: (pckManager) =>
+    install_dependencies_failed: (pckManager: string) =>
       `Please run command to install dependencies. e.g ${pckManager} install.`,
     prebuild_error_nextjs_invalid_functions: (
-      framework,
-      version,
-      runtimes,
-      invalidFunctions,
+      framework: string,
+      version: string,
+      runtimes: string,
+      invalidFunctions: { function: string }[],
     ) =>
       `${framework} version (${version}) not supported to "${runtimes}" runtime(s).
       This project is not an edge project
