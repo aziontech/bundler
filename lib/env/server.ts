@@ -5,7 +5,7 @@ import { Messages } from '#constants';
 import chokidar from 'chokidar';
 import runtime from './runtime.js';
 import bundler from './bundler.js';
-import buildCommand from '../commands/build.commands.js';
+import buildCommand from '../commands/build.js';
 import { runServer } from 'edge-runtime';
 
 let currentServer: Awaited<ReturnType<typeof runServer>>;

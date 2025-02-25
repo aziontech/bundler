@@ -20,7 +20,7 @@
       "#notations/*": ["./lib/notations/typedef.js"],
       "#env": ["./lib/env/*"],
       "#constants": ["./lib/constants/index.js"],
-      "#commands": ["./lib/commands/index.js"]
+      "#commands": ["lib/commands/index.ts"]
     }
   },
   "exclude": ["node_modules"]

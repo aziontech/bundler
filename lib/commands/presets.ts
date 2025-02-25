@@ -3,19 +3,14 @@ import { createPromptModule } from 'inquirer';
 import { Messages } from '#constants';
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
-import { Commands } from '#namespaces';
 
 const prompt = createPromptModule();
 
 /**
  * @function
- * @memberof Commands
  * @description Manages presets for the application.
  * This command allows the user to create or list presets.
  * The user is guided by a series of prompts to enter a preset name.
- * @param {string} command - The operation to be performed:
- * 'create' to create a preset, 'ls' to list presets.
- * @returns {Promise<void>} - A promise that resolves when the action is complete.
  * @example
  *
  * // To create a new preset
@@ -24,8 +19,8 @@ const prompt = createPromptModule();
  * // To list existing presets
  * presetsCommand('ls');
  */
-async function presetsCommand(command) {
-  const { presets } = await import('#utils');
+async function presetsCommand(command: string) {
+  const { presets }: any = await import('#utils');
 
   let name;
 
@@ -44,7 +39,7 @@ async function presetsCommand(command) {
 
         const presetExists = presets
           .getKeys()
-          .map((existingPresetName) => existingPresetName.toLowerCase())
+          .map((existingPresetName: string) => existingPresetName.toLowerCase())
           .includes(inputPresetName.toLowerCase());
 
         if (presetExists) {
@@ -64,13 +59,15 @@ async function presetsCommand(command) {
           `Now open './lib/presets/${name}' and work on your preset.`,
         );
       } catch (error) {
-        debug.error(error);
+        (debug as any).error(error);
         feedback.error(Messages.errors.folder_creation_failed(name));
       }
       break;
 
     case 'ls':
-      presets.getBeautify().forEach((preset) => feedback.option(preset));
+      presets
+        .getBeautify()
+        .forEach((preset: string) => feedback.option(preset));
 
       break;
 
