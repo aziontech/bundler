@@ -22,6 +22,8 @@ interface BuildParams {
   ctx: BuildContext;
 }
 
+const DEFAULT_PRESET = 'javascript';
+
 /**
  * Main build function
  */
@@ -38,11 +40,11 @@ export const build = async ({
      * 2. A preset module that follows the AzionBuildPreset interface
      *
      * Example:
-     * - Using built-in preset: config.build.preset = "javascript"
+     * - Using built-in preset: config.build.preset = "javascript"3
      * - Using custom preset: config.build.preset = customPresetModule
      */
 
-    const presetInput: PresetInput = userConfig.build?.preset;
+    const presetInput = userConfig.build?.preset || DEFAULT_PRESET;
     const resolvedPreset: AzionBuildPreset = await resolvePreset(presetInput);
 
     const buildConfigSetup = setupBuildConfig(userConfig, resolvedPreset);

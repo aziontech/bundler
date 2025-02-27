@@ -40,7 +40,7 @@ const getWorkerTemplate = (
 
 const injectHybridFsPolyfill = (
   code: string,
-  buildConfig: AzionBuild,
+  buildConfig: BuildConfiguration,
   ctx: BuildContext,
 ): string => {
   if (buildConfig.polyfills && ctx.production) {
@@ -57,6 +57,10 @@ export const executeBuild = async ({
   let buildEntryTemp: string | undefined;
 
   try {
+    if (!buildConfig.entry) {
+      throw new Error('Build entry is required');
+    }
+
     buildEntryTemp = buildConfig.entry;
     const processedHandler = mountServiceWorker(buildConfig);
 
@@ -78,7 +82,15 @@ export const executeBuild = async ({
       preset: buildConfig.preset,
       setup: {
         contentToInject: prebuildResult.injection.banner,
-        defineVars: prebuildResult.bundler.defineVars,
+        // Transform defineVars object:
+        // 1. Convert object to entries
+        // 2. Remove any entries with undefined values
+        // 3. Ensure remaining values are typed as string
+        defineVars: Object.fromEntries(
+          Object.entries(prebuildResult.bundler.defineVars)
+            .filter(([_, v]) => v !== undefined)
+            .map(([k, v]) => [k, v as string]),
+        ),
       },
     };
 

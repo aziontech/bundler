@@ -16,7 +16,7 @@ export const getExportedFunctionBody = (inputCode: string): string => {
     plugins: ['typescript'],
   });
 
-  let functionBodyNodes = [];
+  let functionBodyNodes: t.Statement[] = [];
   let hasDefaultExport = false;
 
   traverse(ast, {
@@ -129,6 +129,7 @@ export const replaceEventListener = (
  */
 export const mountServiceWorker = (config: BuildConfiguration): string => {
   const { preset } = config;
+
   const handlerTemplate = preset.handler.toString();
   const handlerTemplateBody = getExportedFunctionBody(handlerTemplate);
 
