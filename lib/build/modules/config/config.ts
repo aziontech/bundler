@@ -7,20 +7,22 @@ export const setupBuildConfig = (
   azionConfig: AzionConfig,
   preset: AzionBuildPreset,
 ): BuildConfiguration => {
+  const fileExtension = `${preset.metadata.ext || 'js'}`;
+  const tempFile = `azion-${generateTimestamp()}.temp.${fileExtension}`;
+
   const buildConfigSetup: BuildConfiguration = {
     ...azionConfig.build,
+    entry: join(process.cwd(), tempFile),
     preset,
+    setup: {
+      contentToInject: undefined,
+      defineVars: {},
+    },
   };
 
   // Ensure polyfills and worker are always boolean values
-  buildConfigSetup.polyfills = Boolean(azionConfig.build.polyfills);
-  buildConfigSetup.worker = Boolean(azionConfig.build.worker);
-
-  // Set temporary entry file path for bundler
-  // This file will be used as the entry point during the build process
-  const fileExtension = `.${preset.metadata.ext || 'js'}`;
-  const tempFile = `azion-${generateTimestamp()}.temp${fileExtension}`;
-  buildConfigSetup.entry = join(process.cwd(), tempFile);
+  buildConfigSetup.polyfills = Boolean(azionConfig.build?.polyfills);
+  buildConfigSetup.worker = Boolean(azionConfig.build?.worker);
 
   return buildConfigSetup;
 };

@@ -42,7 +42,15 @@ export const executePrebuild = async ({
   const globalThisWithVars = injectWorkerGlobals({
     namespace: WORKER_NAMESPACE,
     property: 'globals',
-    vars: result.injection?.globals,
+    // Transform globals object:
+    // 1. Convert object to entries
+    // 2. Remove any entries with undefined values
+    // 3. Ensure remaining values are typed as string
+    vars: Object.fromEntries(
+      Object.entries(result.injection?.globals || {})
+        .filter(([_, v]) => v !== undefined)
+        .map(([k, v]) => [k, v as string]),
+    ),
   });
 
   const memoryFiles = await injectWorkerMemoryFiles({
