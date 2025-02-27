@@ -1,28 +1,34 @@
-import { feedback, debug } from '#utils';
+import { debug } from '#utils';
+import { feedback } from 'azion/utils/node';
 import { Messages } from '#constants';
 import fs from 'fs';
 import fsPromises from 'fs/promises';
 import path from 'path';
-import { transpileModule } from 'typescript';
+import {
+  ModuleKind,
+  ModuleResolutionKind,
+  ScriptTarget,
+  transpileModule,
+} from 'typescript';
 import prettier from 'prettier';
 import { createRequire } from 'module';
 
 /**
- * Creates or updates Vulcan environment variables.
+ * Creates or updates Bundler environment variables.
  * @async
- * @param {object} variables - An object containing the environment variables to set.
- * @param {string} [scope='local'] - Can be 'global', 'local', or a custom path.
- * @throws {Error} Throws an error if the environment file cannot be read or written.
  * @example
  * // Set multiple global environment variables
- * createVulcanEnv({ API_KEY: 'abc123', ANOTHER_KEY: 'xyz' }, 'global')
+ * createBundlerEnv({ API_KEY: 'abc123', ANOTHER_KEY: 'xyz' }, 'global')
  *   .catch(error => console.error(error));
  */
-export async function createVulcanEnv(variables, scope = 'global') {
+export async function createBundlerEnv(
+  variables: Record<string, unknown>,
+  scope = 'global',
+) {
   let basePath;
   switch (scope) {
     case 'global':
-      basePath = globalThis.vulcan.tempPath;
+      basePath = globalThis.bundler.tempPath;
       break;
     case 'local':
       basePath = path.join(process.cwd());
@@ -36,7 +42,7 @@ export async function createVulcanEnv(variables, scope = 'global') {
   try {
     await fsPromises.mkdir(basePath, { recursive: true });
   } catch (error) {
-    debug.error(error);
+    (debug as any).error(error);
     feedback.build.error(Messages.errors.folder_creation_failed(vulcanEnvPath));
     throw error;
   }
@@ -45,8 +51,8 @@ export async function createVulcanEnv(variables, scope = 'global') {
   try {
     envData = await fsPromises.readFile(vulcanEnvPath, 'utf8');
   } catch (error) {
-    if (error.code !== 'ENOENT') {
-      debug.error(error);
+    if ((error as Error).message.includes('ENOENT')) {
+      (debug as any).error(error);
       feedback.build.error(Messages.errors.file_doesnt_exist(vulcanEnvPath));
       throw error;
     }
@@ -66,7 +72,7 @@ export async function createVulcanEnv(variables, scope = 'global') {
   try {
     await fsPromises.writeFile(vulcanEnvPath, envData);
   } catch (error) {
-    debug.error(error);
+    (debug as any).error(error);
     feedback.build.error(Messages.errors.write_file_failed(vulcanEnvPath));
     throw error;
   }
@@ -74,26 +80,23 @@ export async function createVulcanEnv(variables, scope = 'global') {
 
 /**
  * Reads the .vulcan file and returns an object with the variables and their values.
- * @param {string} [scope='local'] - Can be 'global', 'local', or a custom path.
- * @returns {Promise<object|null>} A promise that resolves to an object with
  * the variables and their values, or null if the file doesn't exist.
- * @throws {Error} Throws an error if the environment file cannot be read.
  * @example
  * // Read global environment variables
- * readVulcanEnv('global')
+ * readBundlerEnv('global')
  *   .then(env => console.log(env))
  *   .catch(error => console.error(error));
  *
  * // Read project-level environment variables
- * readVulcanEnv('local')
+ * readBundlerEnv('local')
  *   .then(env => console.log(env))
  *   .catch(error => console.error(error));
  */
-export async function readVulcanEnv(scope = 'local') {
+export async function readBundlerEnv(scope = 'local') {
   let basePath;
   switch (scope) {
     case 'global':
-      basePath = globalThis.vulcan.tempPath;
+      basePath = globalThis.bundler.tempPath;
       break;
     case 'local':
       basePath = path.join(process.cwd());
@@ -108,7 +111,7 @@ export async function readVulcanEnv(scope = 'local') {
     await fsPromises.access(vulcanEnvPath);
     const fileContents = await fsPromises.readFile(vulcanEnvPath, 'utf8');
 
-    const variables = {};
+    const variables: Record<string, unknown> = {};
     const variableRegex = /^([^=]+)=(.*)$/gm;
     let match = variableRegex.exec(fileContents);
     while (match !== null) {
@@ -120,22 +123,19 @@ export async function readVulcanEnv(scope = 'local') {
 
     return variables;
   } catch (error) {
-    if (error.code === 'ENOENT') {
+    if ((error as Error).message === 'ENOENT') {
       return null;
     }
-    debug.error(error);
+    (debug as any).error(error);
     throw error;
   }
 }
 
 /**
  * Handles dependency-related errors and provides user feedback.
- * @param {Error} error - The error object caught during module loading.
- * @param {string} configPath - The path to the configuration file.
- * @throws {Error} Rethrows the original error if it's not a dependency issue.
  */
-function handleDependencyError(error, configPath) {
-  if (error.code === 'ERR_MODULE_NOT_FOUND') {
+function handleDependencyError(error: Error, configPath: string) {
+  if (error.message.includes('ERR_MODULE_NOT_FOUND')) {
     const missingPackage = error.message.match(/'([^']+)'/)?.[1];
     if (missingPackage) {
       feedback.build.error(
@@ -146,7 +146,7 @@ function handleDependencyError(error, configPath) {
         `A required dependency is missing. Please ensure all dependencies are installed.`,
       );
     }
-    debug.error(
+    (debug as any).error(
       `Failed to load configuration from ${configPath}. ${error.message}`,
     );
   } else {
@@ -157,8 +157,6 @@ function handleDependencyError(error, configPath) {
 /**
  * Loads the azion.config file and returns the entire configuration object.
  * @async
- * @returns {Promise<object|null>} A promise that resolves to the entire configuration from azion.config, or null if not found.
- * @throws {Error} Throws an error if there are issues reading or parsing the configuration file.
  */
 export async function loadAzionConfig() {
   const require = createRequire(import.meta.url);
@@ -191,9 +189,9 @@ export async function loadAzionConfig() {
         // eslint-disable-next-line no-case-declarations
         const jsContent = transpileModule(tsContent, {
           compilerOptions: {
-            module: 'commonjs',
-            target: 'es2020',
-            moduleResolution: 'node',
+            module: ModuleKind.CommonJS,
+            target: ScriptTarget.ES2020,
+            moduleResolution: ModuleResolutionKind.Node10,
           },
         }).outputText;
 
@@ -216,7 +214,7 @@ export async function loadAzionConfig() {
         try {
           configModule = await import(configPath);
         } catch (error) {
-          if (error.code === 'ERR_REQUIRE_ESM') {
+          if ((error as Error).message === 'ERR_REQUIRE_ESM') {
             // eslint-disable-next-line import/no-dynamic-require
             configModule = require(configPath); // Fallback para require em CommonJS
             throw error;
@@ -229,8 +227,8 @@ export async function loadAzionConfig() {
 
     return configModule.default || configModule;
   } catch (error) {
-    if (error.code === 'ERR_MODULE_NOT_FOUND') {
-      handleDependencyError(error, configPath);
+    if ((error as Error).message.includes('ERR_MODULE_NOT_FOUND')) {
+      handleDependencyError(error as Error, configPath);
       return null;
     }
     throw error;
@@ -239,16 +237,16 @@ export async function loadAzionConfig() {
 /**
  * Creates an Azion configuration file with the appropriate extension if it does not exist.
  * @async
- * @param {boolean} useCommonJS - If true, uses the '.cjs' extension and CommonJS format; otherwise, uses '.mjs' for ES Modules.
- * @param {object} module - The configuration object to be written to the file.
- * @returns {Promise<void>}
  */
-export async function createAzionConfigFile(useCommonJS, module) {
+export async function createAzionConfigFile(
+  useCommonJS: boolean,
+  module: Record<string, unknown>,
+) {
   const extension = useCommonJS ? '.cjs' : '.mjs';
   const configPath = path.join(process.cwd(), `azion.config${extension}`);
   const moduleExportStyle = useCommonJS ? 'module.exports =' : 'export default';
 
-  const replacer = (key, value) => {
+  const replacer = (key: string, value: unknown) => {
     if (typeof value === 'function') {
       return `__FUNCTION_START__${value.toString()}__FUNCTION_END__`;
     }
@@ -282,8 +280,8 @@ export async function createAzionConfigFile(useCommonJS, module) {
 }
 
 export default {
-  createVulcanEnv,
-  readVulcanEnv,
+  createBundlerEnv,
+  readBundlerEnv,
   loadAzionConfig,
   createAzionConfigFile,
 };

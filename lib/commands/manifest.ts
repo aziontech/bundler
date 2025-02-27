@@ -1,13 +1,12 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve, extname } from 'path';
-import { feedback, debug } from '#utils';
+import { debug } from '#utils';
+import { feedback } from 'azion/utils/node';
 import { Messages } from '#constants';
-import { convertJsonConfigToObject } from 'azion';
+import { convertJsonConfigToObject } from 'azion/config';
 
-import { Commands } from '#namespaces';
 /**
  * @function manifestCommand
- * @memberof Commands
  * @description
  * transforms a JSON manifest file to a JavaScript module.
  *
@@ -20,12 +19,12 @@ import { Commands } from '#namespaces';
  * ```bash
  * az manifest transform .edge/manifest.json -o azion.config.js
  * ```
- * @param {string} command - The operation to perform (only 'transform' for now)
- * @param {string} entry - Path to the input JSON file
- * @param {object} options - Command options
- * @param {string} options.output - Output file path for JS module
  */
-async function manifestCommand(command, entry, options) {
+async function manifestCommand(
+  command: string,
+  entry: string,
+  options: Record<string, any>,
+) {
   try {
     if (command !== 'transform') {
       feedback.error('Only transform command is supported');
@@ -59,7 +58,7 @@ async function manifestCommand(command, entry, options) {
       `Azion Platform configuration transformed into JavaScript module at ${options.output}`,
     );
   } catch (error) {
-    debug.error(error);
+    (debug as any).error(error);
     feedback.error(Messages.errors.unknown_error);
     process.exit(1);
   }

@@ -5,7 +5,8 @@ import {
   BuildContext,
   PresetInput,
 } from 'azion/config';
-import { feedback, debug } from '#utils';
+import { debug } from '#utils';
+import { feedback } from 'azion/utils/node';
 /* Modules */
 import { setupBuildConfig } from './modules/config';
 import { resolvePreset } from './modules/preset';
@@ -62,7 +63,7 @@ export const build = async ({
       buildConfig: buildConfigSetup,
       prebuildResult,
       ctx,
-    });
+    } as any);
     feedback.build.success('Build completed successfully');
 
     // Phase 3: Postbuild
@@ -74,7 +75,7 @@ export const build = async ({
     // Phase 5: Set Environment
     await setEnvironment({ userConfig, preset: resolvedPreset, ctx });
   } catch (error: unknown) {
-    debug.error(error);
+    (debug as any).error(error);
     feedback.build.error((error as Error).message);
     process.exit(1);
   }

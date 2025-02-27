@@ -12,15 +12,15 @@ const global = {
   errors: {
     unknown_error: 'An error occurred.',
     invalid_choice: 'Invalid choice.',
-    folder_name_already_exists: (folder) =>
+    folder_name_already_exists: (folder: string) =>
       `The folder ${folder} already exists. Please choose a different name.`,
-    folder_creation_failed: (folder) =>
+    folder_creation_failed: (folder: string) =>
       `An error occurred while creating the ${folder} folder.`,
-    write_file_failed: (file) =>
+    write_file_failed: (file: string) =>
       `An error occurred while writing the ${file} file.`,
-    file_doesnt_exist: (file) =>
+    file_doesnt_exist: (file: string) =>
       `An error occurred while reading the ${file} file.`,
-    invalid_node_version: (minVersion) =>
+    invalid_node_version: (minVersion: string) =>
       `Invalid Node version. Node version must be greater than ${minVersion}.`,
   },
 };

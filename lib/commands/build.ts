@@ -1,45 +1,35 @@
-import { Commands } from '#namespaces';
-import { checkingProjectTypeJS, feedback } from '#utils';
-import vulcan from '../env/vulcan.env.js';
+import { checkingProjectTypeJS } from '#utils';
+import { feedback } from 'azion/utils/node';
+import bundler from '../env/bundler';
 
 /**
  * Retrieves a configuration value based on priority.
- * Priority order: inputOption, customConfig, vulcanVariable, defaultValue.
- * @param {any} customConfig - Configuration from custom module.
- * @param {any} inputOption - Configuration provided as input.
- * @param {any} vulcanVariable - Configuration from the .azion-bundler file.
- * @param {any} defaultValue - Default value to use if no other configurations are available.
- * @returns {any} The chosen configuration value.
+ * Priority order: inputOption, customConfig, bundlerVariable, defaultValue.
  */
 function getConfigValue(
-  customConfig,
-  inputOption,
-  vulcanVariable,
-  defaultValue,
+  customConfig?: string | boolean | null,
+  inputOption?: string | boolean | null,
+  bundlerVariable?: string | boolean | null,
+  defaultValue?: string | boolean | null,
 ) {
-  return inputOption ?? customConfig ?? vulcanVariable ?? defaultValue;
+  return inputOption ?? customConfig ?? bundlerVariable ?? defaultValue;
 }
 
 /**
  * Retrieves a preset configuration value based on priority.
- * Priority order for both name : customConfig, inputOption, vulcanVariable, defaultValue.
- * @param {object} customConfig - Preset configuration from custom module.
- * @param {string} presetName - Preset name provided as input.
- * @param {object} vulcanVariable - Preset configuration from the .azion-bundler file.
- * @param {object} defaultValue - Default preset configuration.
- * @returns {object} The chosen preset configuration with name.
+ * Priority order for both name : customConfig, inputOption, bundlerVariable, defaultValue.
  */
 function getPresetValue(
-  customConfig,
-  presetName,
-  vulcanVariable,
-  defaultValue,
+  customConfig: Record<string, unknown>,
+  presetName: string,
+  bundlerVariable: Record<string, unknown>,
+  defaultValue: Record<string, unknown>,
 ) {
   const name = getConfigValue(
-    customConfig?.name,
+    customConfig?.name as string,
     presetName,
-    vulcanVariable?.preset,
-    defaultValue?.name,
+    bundlerVariable?.preset as string,
+    defaultValue?.name as string,
   );
   return { name };
 }
@@ -50,16 +40,6 @@ function getPresetValue(
  * If a parameter is provided, it uses the parameter value,
  * otherwise, it tries to use the .azion-bundler file configuration.
  * If neither is available, it resorts to default configurations.
- * @memberof Commands
- * @param {object} options - Configuration options for the build command.
- * @param {string} [options.entry] - The entry point file for the build.
- * @param {string} [options.builder] - The name of the Bundler you want to use (Esbuild or Webpack)
- * @param {string} [options.preset] - Preset to be used (e.g., 'javascript').
- * @param {boolean} [options.polyfills] - Whether to use Node.js polyfills.
- * @param {boolean} [options.worker] - This flag indicates that the constructed code inserts its own worker expression, such as addEventListener("fetch") or similar, without the need to inject a provider.
- * @param {boolean} [options.onlyManifest] - Skip build and process. just the manifest.
- * @param {boolean} [isFirewall] - (Experimental) Enable isFirewall for local environment.
- * @returns {Promise<void>} - A promise that resolves when the build is complete.
  * @example
  *
  * buildCommand({
@@ -69,18 +49,25 @@ function getPresetValue(
  * });
  */
 async function buildCommand(
-  { entry, builder, preset, polyfills, worker, onlyManifest },
-  isFirewall,
+  {
+    entry,
+    builder,
+    preset,
+    polyfills,
+    worker,
+    onlyManifest,
+  }: Record<string, any>,
+  isFirewall: boolean,
 ) {
-  const vulcanConfig = await vulcan.loadAzionConfig();
+  const vulcanConfig = await bundler.loadAzionConfig();
   const customConfigurationModule = vulcanConfig?.build || {};
-  const vulcanVariables = await vulcan.readVulcanEnv('global');
+  const vulcanVariables = await bundler.readBundlerEnv('global');
 
   const config = {
     entry: getConfigValue(
       customConfigurationModule?.entry,
       entry,
-      vulcanVariables?.entry,
+      vulcanVariables?.entry as string,
       (await checkingProjectTypeJS()) === 'javascript'
         ? './main.js'
         : './main.ts',
@@ -88,7 +75,7 @@ async function buildCommand(
     builder: getConfigValue(
       customConfigurationModule?.builder,
       builder,
-      vulcanVariables?.builder,
+      vulcanVariables?.builder as string,
       null,
     ),
     memoryFS: {
@@ -108,23 +95,23 @@ async function buildCommand(
     polyfills: getConfigValue(
       customConfigurationModule?.polyfills,
       polyfills,
-      vulcanVariables?.polyfills,
+      vulcanVariables?.polyfills as boolean,
       true,
     ),
     worker: getConfigValue(
       customConfigurationModule?.worker,
       worker,
-      vulcanVariables?.worker,
+      vulcanVariables?.worker as boolean,
       false,
     ),
     preset: getPresetValue(
       customConfigurationModule?.preset,
       preset,
-      vulcanVariables,
+      vulcanVariables as Record<string, unknown>,
       { name: '' },
     ),
     custom: customConfigurationModule?.custom ?? {},
-  };
+  } as Record<string, any>;
 
   // If no preset is provided, use the default preset.
   if (config.preset.name === '') {

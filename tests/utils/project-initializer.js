@@ -1,4 +1,4 @@
-import { feedback } from '#utils';
+import { feedback } from 'azion/utils/node';
 import {
   waitForVulcanServer,
   execCommandInContainer,

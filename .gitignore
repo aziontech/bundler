@@ -11,3 +11,4 @@ vulcan.env
 .vulcan
 wrangler.toml
 .initialized.keep
+package-lock.json
