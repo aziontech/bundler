@@ -9,7 +9,7 @@ export default defineConfig({
   clean: true,
   bundle: true,
   dts: false,
-  minify: false,
-  minifyWhitespace: false,
+  minify: true,
+  minifyWhitespace: true,
   tsconfig: 'tsconfig.json',
 });

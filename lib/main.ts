@@ -235,9 +235,7 @@ function startVulcanProgram() {
 
   program
     .command('presets <command>')
-    .description(
-      'Create <create> or list <ls> defined project presets for Azion',
-    )
+    .description('List <ls> defined project presets for Azion')
     .action(async (command) => {
       const { presetsCommand } = await import('#commands');
       await presetsCommand(command);
