@@ -1,4 +1,4 @@
-import helperHandlerCode from './index.js';
+import helperHandlerCode from './helperHandlerCode';
 
 describe('Helper Handler Code Utils', () => {
   describe('checkAndChangeAddEventListener', () => {

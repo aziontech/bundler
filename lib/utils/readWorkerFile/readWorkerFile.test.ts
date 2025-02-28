@@ -1,5 +1,5 @@
 import mockFs from 'mock-fs';
-import readWorkerFile from './index.js';
+import readWorkerFile from './readWorkerFile';
 
 describe('readWorkerFile utils', () => {
   test('Should read the content of a worker file.', async () => {

@@ -1,5 +1,7 @@
+import { jest } from '@jest/globals';
+
 describe('debug utils', () => {
-  let originalDebugValue;
+  let originalDebugValue: string | undefined;
 
   beforeAll(() => {
     originalDebugValue = process.env.DEBUG;
@@ -12,9 +14,8 @@ describe('debug utils', () => {
 
   test('Should log if debug flag is enabled', async () => {
     process.env.DEBUG = 'true';
-    jest.resetModules();
 
-    const { default: debug } = await import('./index.js');
+    const { default: debug } = await import('./debug');
 
     const consoleSpy = jest
       .spyOn(console, 'error')
@@ -32,7 +33,7 @@ describe('debug utils', () => {
     process.env.DEBUG = 'false';
     jest.resetModules();
 
-    const { default: debug } = await import('./index.js');
+    const { default: debug } = await import('./debug');
 
     const consoleSpy = jest
       .spyOn(console, 'error')

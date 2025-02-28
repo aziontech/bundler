@@ -2,7 +2,6 @@
  * @function
  
  * @description Generates a timestamp string in the format "YYYYMMDDHHmmss".
- * @returns {string} The generated timestamp.
  * @example
  *
  * // Example usage:

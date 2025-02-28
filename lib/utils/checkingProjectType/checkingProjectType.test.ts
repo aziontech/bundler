@@ -1,5 +1,5 @@
 import mockFs from 'mock-fs';
-import checkingProjectTypeJS from './checkingProjectType.utils.js';
+import checkingProjectTypeJS from './checkingProjectType';
 
 describe('checkingProjectType utils', () => {
   describe('checkingProjectTypeJS', () => {

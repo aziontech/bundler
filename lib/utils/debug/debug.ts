@@ -3,7 +3,6 @@
  
  * @description Debug method that conditionally logs based on process.env.DEBUG.
  * Inherits all methods from console.log.
- * @param {...*} args - Arguments to be logged.
  * @description By default, process.env.DEBUG is set to false.
  * When enabled, this method overrides console.log and allows you to log debug messages during
  * development without showing them to the end user. It provides a convenient way to debug your
@@ -16,17 +15,17 @@
  * debug.log('This is a debug message');
  */
 
-const debug = {};
+const debug: { [key: string]: (...args: any[]) => void } = {};
 const debugEnabled = process.env.DEBUG === 'true';
 
 /**
  * Iterate over the console methods and create corresponding debug methods.
  */
-Object.keys(console).forEach((method) => {
-  if (typeof console[method] === 'function') {
+Object.keys(console).forEach((method: string) => {
+  if (typeof (console as Console)[method as keyof Console] === 'function') {
     debug[method] = (...args) => {
       if (debugEnabled) {
-        console[method](...args);
+        (console as any)[method](...args);
       }
     };
   }

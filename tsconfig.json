@@ -15,7 +15,7 @@
     "paths": {
       "#root/*": ["./"],
       "#lib/*": ["./lib"],
-      "#utils": ["./lib/utils/index.js"],
+      "#utils": ["./lib/utils/index.ts"],
       "#build": ["./lib/build/index.ts"],
       "#env": ["./lib/env/index.ts"],
       "#constants": ["./lib/constants/index.ts"],

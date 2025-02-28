@@ -1,15 +1,10 @@
 /**
  * Check and change AddEventListener event
- * @param {string} eventTarget target event
- * @param {string} newEvent new event
- * @param {string} code code to be changed
- * @param {boolean} replaceCode code to replace
- * @returns {object} - Object with matchEvent and codeChanged
  */
 const checkAndChangeAddEventListener = (
-  eventTarget,
-  newEvent,
-  code,
+  eventTarget: string,
+  newEvent: string,
+  code: string,
   replaceCode = true,
 ) => {
   let codeChanged = code;
