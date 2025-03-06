@@ -3,7 +3,7 @@
   "version": "4.7.0",
   "description": "Tool to launch and build JavaScript/Frameworks. This tool automates polyfills for Edge Computing and assists in creating Workers, notably for the Azion platform.",
   "main": "dist/main.mjs",
-  "module": "dist/main.mjs",
+  "module": "dist/main.ts",
   "bin": {
     "azbundler": "dist/main.mjs",
     "edge-functions": "dist/main.mjs",

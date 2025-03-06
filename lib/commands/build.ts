@@ -1,17 +1,20 @@
 import { checkingProjectTypeJS } from '#utils';
 import { feedback } from 'azion/utils/node';
-import bundler from '../env/bundler';
+import bundlerEnv from '../env/bundler';
+import { build } from '#build';
+import { AzionConfig, PresetInput } from 'azion/config';
+import { resolvePreset } from '../build/modules/preset';
 
 /**
  * Retrieves a configuration value based on priority.
  * Priority order: inputOption, customConfig, bundlerVariable, defaultValue.
  */
-function getConfigValue(
-  customConfig?: string | boolean | null,
-  inputOption?: string | boolean | null,
-  bundlerVariable?: string | boolean | null,
-  defaultValue?: string | boolean | null,
-) {
+function getConfigValue<T>(
+  customConfig: T | undefined,
+  inputOption: T | undefined,
+  bundlerVariable: T | undefined,
+  defaultValue: T | undefined,
+): T | undefined {
   return inputOption ?? customConfig ?? bundlerVariable ?? defaultValue;
 }
 
@@ -21,17 +24,19 @@ function getConfigValue(
  */
 function getPresetValue(
   customConfig: Record<string, unknown>,
-  presetName: string,
+  presetName: string | undefined,
   bundlerVariable: Record<string, unknown>,
   defaultValue: Record<string, unknown>,
-) {
-  const name = getConfigValue(
-    customConfig?.name as string,
-    presetName,
-    bundlerVariable?.preset as string,
-    defaultValue?.name as string,
-  );
-  return { name };
+): PresetInput {
+  const name =
+    getConfigValue(
+      customConfig?.name as string,
+      presetName,
+      bundlerVariable?.preset as string,
+      defaultValue?.name as string,
+    ) || '';
+
+  return name;
 }
 
 /**
@@ -49,49 +54,42 @@ function getPresetValue(
  * });
  */
 async function buildCommand(
-  {
-    entry,
-    builder,
-    preset,
-    polyfills,
-    worker,
-    onlyManifest,
-  }: Record<string, any>,
+  { entry, bundler, preset, polyfills, worker }: Record<string, any>,
   isFirewall: boolean,
 ) {
-  const vulcanConfig = await bundler.loadAzionConfig();
+  const vulcanConfig = await bundlerEnv.loadAzionConfig();
   const customConfigurationModule = vulcanConfig?.build || {};
-  const vulcanVariables = await bundler.readBundlerEnv('global');
+  const vulcanVariables = await bundlerEnv.readBundlerEnv('global');
+  // Primeiro obtemos o preset para determinar os outros valores
+  let presetInput = getPresetValue(
+    customConfigurationModule?.preset,
+    preset,
+    vulcanVariables as Record<string, unknown>,
+    { name: '' },
+  );
 
-  const config = {
+  if (presetInput === '') {
+    const defaultPreset = await checkingProjectTypeJS();
+    feedback.warn(
+      `No preset provided. Using the default preset: ${defaultPreset}. Or you can provide a preset using the --preset argument.`,
+    );
+    presetInput = defaultPreset;
+  }
+
+  // Obtemos todos os valores de configuração
+  const configValues = {
     entry: getConfigValue(
       customConfigurationModule?.entry,
       entry,
       vulcanVariables?.entry as string,
-      (await checkingProjectTypeJS()) === 'javascript'
-        ? './main.js'
-        : './main.ts',
+      './main.js',
     ),
-    builder: getConfigValue(
-      customConfigurationModule?.builder,
-      builder,
-      vulcanVariables?.builder as string,
-      null,
+    bundler: getConfigValue(
+      customConfigurationModule?.bundler,
+      bundler,
+      vulcanVariables?.bundler as string,
+      undefined,
     ),
-    memoryFS: {
-      injectionDirs: getConfigValue(
-        customConfigurationModule?.memoryFS?.injectionDirs,
-        null,
-        null,
-        null,
-      ),
-      removePathPrefix: getConfigValue(
-        customConfigurationModule?.memoryFS?.removePathPrefix,
-        null,
-        null,
-        null,
-      ),
-    },
     polyfills: getConfigValue(
       customConfigurationModule?.polyfills,
       polyfills,
@@ -104,35 +102,38 @@ async function buildCommand(
       vulcanVariables?.worker as boolean,
       false,
     ),
-    preset: getPresetValue(
-      customConfigurationModule?.preset,
-      preset,
-      vulcanVariables as Record<string, unknown>,
-      { name: '' },
-    ),
-    custom: customConfigurationModule?.custom ?? {},
-  } as Record<string, any>;
+    preset: presetInput,
+  };
 
-  // If no preset is provided, use the default preset.
-  if (config.preset.name === '') {
-    config.preset.name = await checkingProjectTypeJS();
-    feedback.warn(
-      `No preset provided. Using the default preset: ${config.preset.name}. Or you can provide a preset using the --preset argument.`,
-    );
-  }
+  // Salvamos os valores no arquivo de configuração uma única vez
+  await bundlerEnv.createBundlerEnv(configValues);
+
+  const resolvedPreset = await resolvePreset(presetInput);
+
+  const config: AzionConfig = {
+    build: {
+      ...configValues,
+      preset: resolvedPreset,
+    },
+  };
 
   if (
-    config.preset.name === 'javascript' ||
-    config.preset.name === 'typescript'
+    resolvedPreset.metadata.name === 'javascript' ||
+    resolvedPreset.metadata.name === 'typescript'
   ) {
-    feedback.info(`Using ${config.entry} as entrypoint...`);
+    feedback.info(`Using ${config.build?.entry} as entrypoint...`);
     feedback.info("To change the entrypoint, use the '--entry' argument.");
   }
 
-  const BuildDispatcher = (await import('#build')).default;
-  const buildDispatcher = new BuildDispatcher(config, undefined, isFirewall);
-
-  await buildDispatcher.run(onlyManifest);
+  await build({
+    config,
+    ctx: {
+      production: true,
+      output: 'worker.js',
+      entrypoint: config.build?.entry || '',
+      event: isFirewall ? 'firewall' : 'fetch',
+    },
+  });
 }
 
 export default buildCommand;

@@ -37,7 +37,7 @@ export async function createBundlerEnv(
       basePath = scope;
       break;
   }
-  const vulcanEnvPath = path.join(basePath, '.azion-bundler');
+  const vulcanEnvPath = path.join(basePath, '.azion-bundler.json');
 
   try {
     await fsPromises.mkdir(basePath, { recursive: true });
@@ -47,30 +47,11 @@ export async function createBundlerEnv(
     throw error;
   }
 
-  let envData = '';
   try {
-    envData = await fsPromises.readFile(vulcanEnvPath, 'utf8');
-  } catch (error) {
-    if ((error as Error).message.includes('ENOENT')) {
-      (debug as any).error(error);
-      feedback.build.error(Messages.errors.file_doesnt_exist(vulcanEnvPath));
-      throw error;
-    }
-  }
-
-  Object.entries(variables).forEach(([key, value]) => {
-    const variableLine = `${key}=${value}`;
-    const variableRegex = new RegExp(`${key}=.+`);
-
-    if (envData.match(variableRegex)) {
-      envData = envData.replace(variableRegex, variableLine);
-    } else {
-      envData += `${variableLine}\n`;
-    }
-  });
-
-  try {
-    await fsPromises.writeFile(vulcanEnvPath, envData);
+    await fsPromises.writeFile(
+      vulcanEnvPath,
+      JSON.stringify(variables, null, 2),
+    );
   } catch (error) {
     (debug as any).error(error);
     feedback.build.error(Messages.errors.write_file_failed(vulcanEnvPath));
@@ -92,11 +73,11 @@ export async function createBundlerEnv(
  *   .then(env => console.log(env))
  *   .catch(error => console.error(error));
  */
-export async function readBundlerEnv(scope = 'local') {
+export async function readBundlerEnv(scope = 'global') {
   let basePath;
   switch (scope) {
     case 'global':
-      basePath = globalThis.bundler.tempPath;
+      basePath = globalThis.bundler?.tempPath;
       break;
     case 'local':
       basePath = path.join(process.cwd());
@@ -105,29 +86,21 @@ export async function readBundlerEnv(scope = 'local') {
       basePath = scope;
       break;
   }
-  const vulcanEnvPath = path.join(basePath, '.azion-bundler');
+
+  // Se não tiver tempPath definido, retorna objeto vazio
+  if (!basePath) {
+    return {};
+  }
+
+  const vulcanEnvPath = path.join(basePath, '.azion-bundler.json');
 
   try {
     await fsPromises.access(vulcanEnvPath);
     const fileContents = await fsPromises.readFile(vulcanEnvPath, 'utf8');
-
-    const variables: Record<string, unknown> = {};
-    const variableRegex = /^([^=]+)=(.*)$/gm;
-    let match = variableRegex.exec(fileContents);
-    while (match !== null) {
-      const key = match[1].trim();
-      const value = match[2].trim();
-      variables[key] = value;
-      match = variableRegex.exec(fileContents);
-    }
-
-    return variables;
+    return JSON.parse(fileContents);
   } catch (error) {
-    if ((error as Error).message === 'ENOENT') {
-      return null;
-    }
-    (debug as any).error(error);
-    throw error;
+    // Se o arquivo não existir ou houver qualquer erro, retorna objeto vazio
+    return {};
   }
 }
 

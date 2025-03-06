@@ -65,7 +65,7 @@ export const build = async ({
       buildConfig: buildConfigSetup,
       prebuildResult,
       ctx,
-    } as any);
+    });
     feedback.build.success('Build completed successfully');
 
     // Phase 3: Postbuild

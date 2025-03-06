@@ -13,7 +13,7 @@ import {
 } from 'azion/bundler';
 import { join } from 'path';
 
-import { mountServiceWorker, moveImportsToTopLevel } from './utils';
+import { getExportedFunctionBody, moveImportsToTopLevel } from './utils';
 
 interface CoreParams {
   buildConfig: BuildConfiguration;
@@ -57,24 +57,34 @@ export const executeBuild = async ({
   let buildEntryTemp: string | undefined;
 
   try {
-    if (!buildConfig.entry) {
-      throw new Error('Build entry is required');
+    buildEntryTemp = buildConfig.entry;
+    const isCustomHandler = !buildConfig.preset.metadata.customHandler;
+
+    let processedHandler: string;
+
+    if (isCustomHandler) {
+      const handlerContent = readFileSync(ctx.entrypoint, 'utf-8');
+      processedHandler = buildConfig.worker
+        ? handlerContent
+        : getExportedFunctionBody(handlerContent);
+    } else {
+      processedHandler = buildConfig.preset.handler.toString();
     }
 
-    buildEntryTemp = buildConfig.entry;
-    const processedHandler = mountServiceWorker(buildConfig);
-
-    const finalHandler = buildConfig.worker
-      ? processedHandler
-      : getWorkerTemplate(processedHandler, ctx.event);
+    const handlerWithTopLevelImports = moveImportsToTopLevel(processedHandler);
+    const finalHandler = getWorkerTemplate(
+      handlerWithTopLevelImports,
+      ctx.event || 'fetch',
+    );
 
     writeFileSync(buildConfig.entry, finalHandler);
 
     if (prebuildResult.injection.entry) {
-      let entryContent = readFileSync(buildConfig.entry, 'utf-8');
-      entryContent = `${prebuildResult.injection.entry} ${entryContent}`;
-      entryContent = moveImportsToTopLevel(entryContent);
-      writeFileSync(buildConfig.entry, entryContent);
+      const entryContent = readFileSync(buildConfig.entry, 'utf-8');
+      const contentWithInjection = `${prebuildResult.injection.entry} ${entryContent}`;
+      const contentWithTopLevelImports =
+        moveImportsToTopLevel(contentWithInjection);
+      writeFileSync(buildConfig.entry, contentWithTopLevelImports);
     }
 
     const bundlerConfig: BuildConfiguration = {
@@ -98,6 +108,7 @@ export const executeBuild = async ({
     switch (bundler) {
       case 'esbuild': {
         const esbuildConfig = createAzionESBuildConfig(bundlerConfig, ctx);
+        console.log(esbuildConfig);
         await executeESBuildBuild(esbuildConfig);
         break;
       }

@@ -3,7 +3,7 @@ import traverse from '@babel/traverse';
 import generate from '@babel/generator';
 import * as t from '@babel/types';
 import { readFileSync } from 'fs';
-import { AzionBuildPreset, BuildConfiguration } from 'azion/config';
+import { BuildContext, BuildConfiguration } from 'azion/config';
 
 /**
  * Extracts the body of the default exported function in a given code string,
@@ -72,7 +72,11 @@ export const getExportedFunctionBody = (inputCode: string): string => {
 
   ast.program.body = [...ast.program.body, ...functionBodyNodes];
   const { code: modifiedCode } = generate(ast);
-  return modifiedCode;
+
+  // IIFE
+  return `(async function(event) {
+    ${modifiedCode}
+  })(event)`;
 };
 
 /**
@@ -122,41 +126,6 @@ export const replaceEventListener = (
     'g',
   );
   return code.replace(eventRegex, `addEventListener("${newEvent}",`);
-};
-
-/**
- * Process the preset handler template and inject the necessary code
- */
-export const mountServiceWorker = (config: BuildConfiguration): string => {
-  const { preset } = config;
-
-  const handlerTemplate = preset.handler.toString();
-  const handlerTemplateBody = getExportedFunctionBody(handlerTemplate);
-
-  let newHandlerContent = config.worker
-    ? `(async function() {
-        ${handlerTemplateBody}
-      })()`
-    : handlerTemplate;
-
-  if (
-    preset.metadata.name === 'javascript' ||
-    preset.metadata.name === 'typescript'
-  ) {
-    const handlerContent = readFileSync(config.entry, 'utf-8');
-    const content = config.worker
-      ? handlerContent
-      : getExportedFunctionBody(handlerContent);
-    newHandlerContent = newHandlerContent.replace('__JS_CODE__', content);
-
-    const isFirewallEvent = detectEventListener('firewall', newHandlerContent);
-
-    if (!config.worker && isFirewallEvent) {
-      throw new Error('Firewall events are not supported in this context');
-    }
-  }
-
-  return moveImportsToTopLevel(newHandlerContent);
 };
 
 export const moveImportsToTopLevel = (code: string): string => {
