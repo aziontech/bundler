@@ -5,8 +5,8 @@ import * as presets from 'azion/presets';
  * Validates if preset is valid and has required properties
  */
 const validatePreset = (preset: AzionBuildPreset): boolean => {
-  if (!preset?.handler || !preset?.metadata?.name) {
-    throw new Error('Preset must have handler and name.');
+  if (!preset.metadata?.name || !preset.config) {
+    throw new Error('Preset must have name and config.');
   }
 
   const presetName = preset.metadata.name.toLowerCase();

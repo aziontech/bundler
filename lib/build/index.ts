@@ -3,10 +3,10 @@ import {
   AzionPrebuildResult,
   AzionConfig,
   BuildContext,
-  PresetInput,
 } from 'azion/config';
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
+import { writeFile } from 'fs/promises';
 /* Modules */
 import { setupBuildConfig } from './modules/config';
 import { resolvePreset } from './modules/preset';
@@ -16,13 +16,14 @@ import { executePostbuild } from './modules/postbuild';
 import { generateManifest } from './modules/manifest';
 import { checkDependenciesInstallation } from './utils';
 import { setEnvironment } from './modules/environment';
+import { setupWorkerCode } from './modules/worker';
+
+const DEFAULT_PRESET = 'javascript';
 
 interface BuildParams {
   config: AzionConfig;
   ctx: BuildContext;
 }
-
-const DEFAULT_PRESET = 'javascript';
 
 /**
  * Main build function
@@ -48,6 +49,22 @@ export const build = async ({
     const resolvedPreset: AzionBuildPreset = await resolvePreset(presetInput);
 
     const buildConfigSetup = setupBuildConfig(userConfig, resolvedPreset);
+
+    /**
+     * Resolves the handler function and converts ESM exports to worker format.
+     * This step is necessary because Azion's runtime currently only supports
+     * the worker format with addEventListener, not ESM modules.
+     *
+     * Example conversion:
+     * From ESM:
+     *   export default { fetch: (event) => new Response("Hello") }
+     * To Worker:
+     *   addEventListener('fetch', (event) => { event.respondWith(...) })
+     */
+    const adaptedHandler = await setupWorkerCode(buildConfigSetup, ctx);
+
+    // Write the adapted handler to the bundler's entry file (used by webpack/esbuild)
+    await writeFile(buildConfigSetup.entry, adaptedHandler);
 
     /* Execute build phases */
 

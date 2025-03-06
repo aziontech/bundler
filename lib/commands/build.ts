@@ -4,6 +4,7 @@ import bundlerEnv from '../env/bundler';
 import { build } from '#build';
 import { AzionConfig, PresetInput } from 'azion/config';
 import { resolvePreset } from '../build/modules/preset';
+import { join } from 'path';
 
 /**
  * Retrieves a configuration value based on priority.
@@ -117,11 +118,8 @@ async function buildCommand(
     },
   };
 
-  if (
-    resolvedPreset.metadata.name === 'javascript' ||
-    resolvedPreset.metadata.name === 'typescript'
-  ) {
-    feedback.info(`Using ${config.build?.entry} as entrypoint...`);
+  if (!resolvedPreset.handler) {
+    feedback.info(`Using ${configValues.entry} as entrypoint...`);
     feedback.info("To change the entrypoint, use the '--entry' argument.");
   }
 
@@ -129,8 +127,8 @@ async function buildCommand(
     config,
     ctx: {
       production: true,
-      output: 'worker.js',
-      entrypoint: config.build?.entry || '',
+      output: join(process.cwd(), '.edge', 'worker.js'),
+      entrypoint: join(process.cwd(), config.build?.entry || ''),
       event: isFirewall ? 'firewall' : 'fetch',
     },
   });
