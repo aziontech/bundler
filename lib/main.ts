@@ -3,7 +3,7 @@ import { resolve, join } from 'path';
 import { readFileSync, readdirSync, unlinkSync, mkdirSync } from 'fs';
 import { Command } from 'commander';
 import { satisfies } from 'semver';
-import { feedback, getAbsoluteLibDirPath } from 'azion/utils/node';
+import { feedback, getAbsoluteDirPath } from 'azion/utils/node';
 import { debug } from '#utils';
 import { Messages } from '#constants';
 import os from 'os';
@@ -11,7 +11,7 @@ import crypto from 'crypto';
 
 const MIN_NODE_VERSION = '18.0.0';
 
-const bundlerLibPath = getAbsoluteLibDirPath(import.meta.url, 'bundler');
+const bundlerLibPath = getAbsoluteDirPath(import.meta.url, 'bundler');
 
 const bundlerRootPath = resolve(bundlerLibPath, '.');
 const bundlerPackageJSON = JSON.parse(
