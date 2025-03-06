@@ -11,13 +11,13 @@ import crypto from 'crypto';
 
 const MIN_NODE_VERSION = '18.0.0';
 
-const vulcanLibPath = getAbsoluteLibDirPath();
+const bundlerLibPath = getAbsoluteLibDirPath(import.meta.url, 'bundler');
 
-const vulcanRootPath = resolve(vulcanLibPath, '.');
-const vulcanPackageJSON = JSON.parse(
-  readFileSync(`${vulcanRootPath}/package.json`, 'utf8'),
+const bundlerRootPath = resolve(bundlerLibPath, '.');
+const bundlerPackageJSON = JSON.parse(
+  readFileSync(`${bundlerRootPath}/package.json`, 'utf8'),
 );
-const vulcanVersion = vulcanPackageJSON.version;
+const bundlerVersion = bundlerPackageJSON.version;
 
 const debugEnabled = process.env.DEBUG === 'true';
 
@@ -68,12 +68,12 @@ function convertOptions(options: Record<string, unknown>) {
   );
 }
 /**
- * Sets the global Vulcan environment.
+ * Sets the global Bundler environment.
  *
- * Validates the ENV value and sets it as the environment in the global 'vulcan' object.
+ * Validates the ENV value and sets it as the environment in the global 'bundler' object.
  * If the ENV value is invalid, it throws an error and terminates the process.
  * @example
- *    setVulcanEnvironment();
+ *    setBundlerEnvironment();
  */
 interface BundlerGlobals {
   env: string;
@@ -90,30 +90,30 @@ declare global {
   var bundler: BundlerGlobals;
 }
 
-function setVulcanEnvironment() {
-  const vulcanContext = {
+function setBundlerEnvironment() {
+  const bundlerContext = {
     env: 'production',
-    root: vulcanRootPath,
-    package: vulcanPackageJSON,
+    root: bundlerRootPath,
+    package: bundlerPackageJSON,
     debug: debugEnabled,
-    version: vulcanVersion,
+    version: bundlerVersion,
     buildProd: true,
     tempPath: createProjectTempPath(),
     argsPath: `azion/args.json`,
   };
 
-  const AZION_ENV = process.env.AZION_ENV || vulcanContext.env;
+  const AZION_ENV = process.env.AZION_ENV || bundlerContext.env;
   if (!['production', 'stage', 'local'].includes(AZION_ENV)) {
     feedback.error(Messages.env.errors.invalid_environment);
     process.exit(1);
   } else {
-    vulcanContext.env = AZION_ENV;
+    bundlerContext.env = AZION_ENV;
   }
-  globalThis.bundler = vulcanContext;
+  globalThis.bundler = bundlerContext;
 }
 
 /**
- * Removes all temporary files starting with 'vulcan-' and ending with '.temp.js'.
+ * Removes all temporary files starting with 'bundler-' and ending with '.temp.js'.
  */
 function cleanUpTempFiles() {
   const directory = process.cwd();
@@ -130,7 +130,7 @@ function cleanUpTempFiles() {
 /**
  * Sets up event handlers for cleanup and error handling.
  */
-function setupVulcanProcessHandlers() {
+function setupBundlerProcessHandlers() {
   process.on('exit', cleanUpTempFiles);
   process.on('SIGINT', () => {
     cleanUpTempFiles();
@@ -163,10 +163,10 @@ function setupVulcanProcessHandlers() {
 /**
  * Starts the command-line interface program.
  * @example
- *    startVulcanProgram();
+ *    startBundlerProgram();
  */
-function startVulcanProgram() {
-  program.version(vulcanVersion);
+function startBundlerProgram() {
+  program.version(bundlerVersion);
 
   program
     .command('init')
@@ -258,9 +258,9 @@ function startVulcanProgram() {
 
 try {
   if (validateNodeMinVersion()) {
-    setVulcanEnvironment();
-    startVulcanProgram();
-    setupVulcanProcessHandlers();
+    setBundlerEnvironment();
+    startBundlerProgram();
+    setupBundlerProcessHandlers();
   }
   if (!validateNodeMinVersion()) {
     feedback.error(Messages.errors.invalid_node_version(MIN_NODE_VERSION));
