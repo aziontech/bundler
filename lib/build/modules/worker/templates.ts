@@ -2,7 +2,6 @@ export const createEventHandlerCode = (entrypoint: string): string => {
   return `
 import module from '${entrypoint}';
 
-const hasFetchHandler = module.fetch || module.default?.fetch;
 const hasFirewallHandler = module.firewall || module.default?.firewall;
 
 const eventType = hasFirewallHandler ? 'firewall' : 'fetch';
