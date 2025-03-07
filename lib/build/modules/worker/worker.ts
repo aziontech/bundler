@@ -1,31 +1,13 @@
 import { readFile } from 'fs/promises';
 import { BuildConfiguration, BuildContext } from 'azion/config';
 import { transpileTypescript } from './utils';
-
-const WORKER_TEMPLATES = {
-  fetch: (handler: string) =>
-    `addEventListener('fetch', (event) => { event.respondWith((async function(event) {
-      ${handler}
-    })(event));});`,
-  firewall: (handler: string) =>
-    `addEventListener('firewall', (event) => {
-      (async function(event) {
-        ${handler}
-      })(event);
-    });`,
-};
-
-export const getWorkerTemplate = (
-  handler: string,
-  event: 'firewall' | 'fetch',
-): string => {
-  return WORKER_TEMPLATES[event](handler);
-};
+import { WORKER_TEMPLATES } from './constants';
 
 export const setupWorkerCode = async (
   buildConfig: BuildConfiguration,
   ctx: BuildContext,
 ): Promise<string> => {
+  // If worker signature is already present, return the source code without any transformations
   if (buildConfig.worker) return readFile(ctx.entrypoint, 'utf-8');
 
   const sourceCode = await readFile(ctx.entrypoint, 'utf-8');
@@ -44,5 +26,5 @@ export const setupWorkerCode = async (
     throw new Error(`Handler for ${ctx.event} not found in module`);
   }
 
-  return getWorkerTemplate(handler.toString(), ctx.event);
+  return WORKER_TEMPLATES[ctx.event](handler.toString());
 };

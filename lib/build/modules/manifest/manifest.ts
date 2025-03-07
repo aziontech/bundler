@@ -20,7 +20,6 @@ export const generateManifest = async (
 
   // Process and transform config into manifest
   const manifest = processConfig(config);
-
   // Write manifest to file
   const manifestPath = join(outputPath, 'manifest.json');
   writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));

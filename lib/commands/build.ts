@@ -4,7 +4,7 @@ import bundlerEnv from '../env/bundler';
 import { build } from '#build';
 import { AzionConfig, PresetInput } from 'azion/config';
 import { resolvePreset } from '../build/modules/preset';
-import { join } from 'path';
+import { resolve } from 'path';
 
 /**
  * Retrieves a configuration value based on priority.
@@ -89,7 +89,7 @@ async function buildCommand(
       customConfigurationModule?.bundler,
       bundler,
       vulcanVariables?.bundler as string,
-      undefined,
+      'esbuild',
     ),
     polyfills: getConfigValue(
       customConfigurationModule?.polyfills,
@@ -111,25 +111,24 @@ async function buildCommand(
 
   const resolvedPreset = await resolvePreset(presetInput);
 
-  const config: AzionConfig = {
-    build: {
-      ...configValues,
-      preset: resolvedPreset,
-    },
-  };
-
   if (!resolvedPreset.handler) {
     feedback.info(`Using ${configValues.entry} as entrypoint...`);
     feedback.info("To change the entrypoint, use the '--entry' argument.");
   }
 
+  const config: AzionConfig = {
+    build: {
+      ...configValues,
+    },
+  };
+
   await build({
     config,
     ctx: {
       production: true,
-      output: join(process.cwd(), '.edge', 'worker.js'),
-      entrypoint: join(process.cwd(), config.build?.entry || ''),
       event: isFirewall ? 'firewall' : 'fetch',
+      output: resolve('.edge', 'worker.js'),
+      entrypoint: resolve(config.build?.entry || ''),
     },
   });
 }

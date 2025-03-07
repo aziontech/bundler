@@ -76,9 +76,9 @@ export const executeBuild = async ({
         throw new Error(`Unsupported bundler: ${bundler}`);
     }
 
-    let bundledCode = await readFile(join(process.cwd(), ctx.output), 'utf-8');
+    let bundledCode = await readFile(ctx.output, 'utf-8');
     bundledCode = injectHybridFsPolyfill(bundledCode, buildConfig, ctx);
-    await writeFile(join(process.cwd(), ctx.output), bundledCode);
+    await writeFile(ctx.output, bundledCode);
     return bundledCode;
   } catch (error) {
     if (buildEntryTemp && existsSync(buildEntryTemp)) {

@@ -94,6 +94,7 @@
     "@swc/jest": "^0.2.29",
     "@types/inquirer": "^9.0.7",
     "@types/jest": "^29.5.14",
+    "@types/lodash": "^4.17.16",
     "@types/mock-fs": "^4.13.4",
     "clean-jsdoc-theme": "^4.2.9",
     "conventional-changelog-conventionalcommits": "^4.6.0",

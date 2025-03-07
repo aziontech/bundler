@@ -4,7 +4,7 @@ import { isCommonJS, mergeConfigWithUserOverrides } from './utils';
 /* LEGACY MODULE */
 import { bundler as bundlerEnv } from '#env';
 
-const { createBundlerEnv, createAzionConfigFile } = bundlerEnv;
+const { createBundlerEnv, createAzionConfigFile, loadAzionConfig } = bundlerEnv;
 
 interface EnvironmentParams {
   userConfig: AzionConfig; // User configuration from azion.config
@@ -33,22 +33,20 @@ export const setEnvironment = async ({
       userConfig,
     );
 
-    // Create configuration file if user config doesn't exist
-    if (!userConfig) {
+    const hasCustomAzionConfig = await loadAzionConfig();
+    // Create configuration file if it doesn't exist
+    if (!hasCustomAzionConfig) {
       await createAzionConfigFile(isCommonJS(), mergedConfig);
     }
 
     // Setup Vulcan environment
-    await createBundlerEnv(
-      {
-        entry: ctx.entrypoint,
-        preset: preset.metadata.name,
-        bundler: userConfig?.build?.bundler,
-        polyfills: userConfig?.build?.polyfills,
-        worker: userConfig?.build?.worker,
-      },
-      'global',
-    );
+    await createBundlerEnv({
+      entry: ctx.entrypoint,
+      preset: preset.metadata.name,
+      bundler: userConfig?.build?.bundler,
+      polyfills: userConfig?.build?.polyfills,
+      worker: userConfig?.build?.worker,
+    });
   } catch (error) {
     throw new Error(`Failed to set environment: ${(error as Error).message}`);
   }
