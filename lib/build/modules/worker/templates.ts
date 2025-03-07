@@ -1,29 +1,35 @@
-export const createEventHandlerCode = (
-  entrypoint: string,
-  event: 'fetch' | 'firewall',
-): string => {
-  const respondWithWrapper = event === 'fetch' ? 'event.respondWith(' : '';
-  const closeRespondWith = event === 'fetch' ? ')' : '';
-
+export const createEventHandlerCode = (entrypoint: string): string => {
   return `
 import module from '${entrypoint}';
 
-const handler = module.${event} || module.default?.${event};
+const hasFetchHandler = module.fetch || module.default?.fetch;
+const hasFirewallHandler = module.firewall || module.default?.firewall;
+
+const eventType = hasFirewallHandler ? 'firewall' : 'fetch';
+const handler = module[eventType] || module.default?.[eventType];
 
 if (!handler) {
-  throw new Error("Handler for ${event} not found in module");
+  throw new Error("Handler not found in module");
 }
 
-addEventListener('${event}', (event) => {
-  ${respondWithWrapper}
-  (async function() {
-    try {
-      return handler(event);
-    } catch (error) {
-      return new Response(\`Error: \${error.message}\`, { status: 500 });
-    }
-  })()
-  ${closeRespondWith};
+addEventListener(eventType, (event) => {
+  if (eventType === 'fetch') {
+    event.respondWith((async function() {
+      try {
+        return handler(event);
+      } catch (error) {
+        return new Response(\`Error: \${error.message}\`, { status: 500 });
+      }
+    })());
+  } else {
+    (async function() {
+      try {
+        return handler(event);
+      } catch (error) {
+        return new Response(\`Error: \${error.message}\`, { status: 500 });
+      }
+    })();
+  }
 });
 `;
 };

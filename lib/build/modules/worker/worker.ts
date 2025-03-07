@@ -1,4 +1,5 @@
-import { readFile, writeFile } from 'fs/promises';
+import { readFile, writeFile, mkdir } from 'fs/promises';
+import { dirname } from 'path';
 import { BuildConfiguration, BuildContext } from 'azion/config';
 import { createEventHandlerCode } from './templates';
 
@@ -14,9 +15,11 @@ export const setupWorkerCode = async (
   ctx: BuildContext,
 ): Promise<string> => {
   if (!buildConfig.worker) {
-    const wrapperCode = createEventHandlerCode(ctx.entrypoint, ctx.event);
-    await writeFile(ctx.output, wrapperCode, 'utf-8');
+    const wrapperCode = createEventHandlerCode(ctx.entrypoint);
 
+    await mkdir(dirname(ctx.output), { recursive: true });
+
+    await writeFile(ctx.output, wrapperCode, 'utf-8');
     return wrapperCode;
   }
 

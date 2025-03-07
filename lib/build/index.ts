@@ -88,11 +88,12 @@ export const build = async ({
     // Phase 3: Postbuild
     await executePostbuild({ buildConfig: buildConfigSetup, ctx });
 
+    await setEnvironment({ userConfig, preset: resolvedPreset, ctx });
+
     // Phase 4: Generate manifest
     await generateManifest(userConfig);
 
     // Phase 5: Set Environment
-    await setEnvironment({ userConfig, preset: resolvedPreset, ctx });
   } catch (error: unknown) {
     (debug as any).error(error);
     feedback.build.error((error as Error).message);

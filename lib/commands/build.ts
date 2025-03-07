@@ -126,7 +126,6 @@ async function buildCommand(
     config,
     ctx: {
       production: true,
-      event: isFirewall ? 'firewall' : 'fetch',
       output: resolve('.edge', 'worker.js'),
       entrypoint: resolve(config.build?.entry || ''),
     },
