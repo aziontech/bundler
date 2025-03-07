@@ -23,7 +23,8 @@ const env = {
   },
   server: {
     success: {
-      server_running: (port: number) => `Function running on port ${port}`,
+      server_running: (port: number | string) =>
+        `Function running on port ${port}`,
     },
     info: {
       code_change_detect: 'Code change detected. Restarting...',

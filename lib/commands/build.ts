@@ -54,10 +54,14 @@ function getPresetValue(
  *   polyfills: false
  * });
  */
-async function buildCommand(
-  { entry, bundler, preset, polyfills, worker }: Record<string, any>,
-  isFirewall: boolean,
-) {
+async function buildCommand({
+  entry,
+  bundler,
+  preset,
+  polyfills,
+  worker,
+  production,
+}: Record<string, any>) {
   const vulcanConfig = await bundlerEnv.loadAzionConfig();
   const customConfigurationModule = vulcanConfig?.build || {};
   const vulcanVariables = await bundlerEnv.readBundlerEnv('global');
@@ -125,7 +129,7 @@ async function buildCommand(
   await build({
     config,
     ctx: {
-      production: true,
+      production,
       output: resolve('.edge', 'worker.js'),
       entrypoint: resolve(config.build?.entry || ''),
     },

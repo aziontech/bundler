@@ -88,8 +88,7 @@ async function buildToLocalServer(isFirewall: boolean) {
     feedback.server.error(msg);
     throw new Error(msg);
   }
-  globalThis.bundler.buildProd = false;
-  await buildCommand({}, isFirewall);
+  await buildCommand({ production: false });
 }
 
 /**

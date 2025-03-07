@@ -81,7 +81,6 @@ interface BundlerGlobals {
   package: Record<string, unknown>;
   debug: boolean;
   version: string;
-  buildProd: boolean;
   tempPath: string;
   argsPath: string;
 }
@@ -97,7 +96,6 @@ function setBundlerEnvironment() {
     package: bundlerPackageJSON,
     debug: debugEnabled,
     version: bundlerVersion,
-    buildProd: true,
     tempPath: createProjectTempPath(),
     argsPath: `azion/args.json`,
   };
@@ -205,12 +203,8 @@ function startBundlerProgram() {
     )
     .action(async (options) => {
       const { buildCommand } = await import('#commands');
-      globalThis.bundler.buildProd = true;
       const convertedOptions = convertOptions(options);
-      await buildCommand(
-        convertedOptions,
-        convertedOptions.firewall as boolean,
-      );
+      await buildCommand({ production: true, ...convertOptions });
     });
 
   program
@@ -227,7 +221,6 @@ function startBundlerProgram() {
       false,
     )
     .action(async (entry, options) => {
-      globalThis.bundler.buildProd = false;
       const { devCommand } = await import('#commands');
       const convertedOptions = convertOptions(options);
       await devCommand(entry, convertedOptions as any);
