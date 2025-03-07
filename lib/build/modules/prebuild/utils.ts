@@ -1,11 +1,10 @@
 import { cpSync, existsSync, mkdirSync } from 'fs';
 import { readdir, stat, readFile } from 'fs/promises';
 import { join } from 'path';
-import { AzionBuild } from 'azion/config';
 
 interface WorkerGlobalsConfig {
   namespace: string;
-  property: string;
+  property?: string;
   vars: Record<string, string>;
 }
 
@@ -77,9 +76,13 @@ export const injectWorkerGlobals = ({
   vars,
 }: WorkerGlobalsConfig) =>
   Object.entries(vars).reduce(
-    (acc, [key, value]) =>
-      `${acc} globalThis.${namespace}.${property}.${key}=${value};`,
-    `globalThis.${namespace}.${property}={};`,
+    (acc, [key, value]) => {
+      const propPath = property ? `${namespace}.${property}` : namespace;
+      return `${acc} globalThis.${propPath}.${key}=${value};`;
+    },
+    property
+      ? `globalThis.${namespace}.${property}={};`
+      : `globalThis.${namespace}={};`,
   );
 
 export const injectWorkerPathPrefix = async ({

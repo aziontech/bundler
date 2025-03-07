@@ -41,7 +41,6 @@ export const executePrebuild = async ({
 
   const globalThisWithVars = injectWorkerGlobals({
     namespace: WORKER_NAMESPACE,
-    property: 'globals',
     // Transform globals object:
     // 1. Convert object to entries
     // 2. Remove any entries with undefined values
