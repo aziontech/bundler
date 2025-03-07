@@ -11,7 +11,7 @@ import {
 } from './utils';
 
 const EDGE_STORAGE = '.edge/files';
-const WORKER_NAMESPACE = 'vulcan';
+const BUNDLER_NAMESPACE = 'bundler';
 
 export interface PrebuildParams {
   buildConfig: BuildConfiguration;
@@ -40,7 +40,7 @@ export const executePrebuild = async ({
     DEFAULT_PREBUILD_RESULT;
 
   const globalThisWithVars = injectWorkerGlobals({
-    namespace: WORKER_NAMESPACE,
+    namespace: BUNDLER_NAMESPACE,
     // Transform globals object:
     // 1. Convert object to entries
     // 2. Remove any entries with undefined values
@@ -53,13 +53,13 @@ export const executePrebuild = async ({
   });
 
   const memoryFiles = await injectWorkerMemoryFiles({
-    namespace: WORKER_NAMESPACE,
+    namespace: BUNDLER_NAMESPACE,
     property: '__FILES__',
     dirs: buildConfig.memoryFS?.injectionDirs || [],
   });
 
   const pathPrefix = await injectWorkerPathPrefix({
-    namespace: WORKER_NAMESPACE,
+    namespace: BUNDLER_NAMESPACE,
     property: 'FS_PATH_PREFIX_TO_REMOVE',
     prefix: buildConfig.memoryFS?.removePathPrefix || '',
   });
