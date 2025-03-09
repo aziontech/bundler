@@ -1,11 +1,31 @@
 export const createEventHandlerCode = (entrypoint: string): string => {
   return `
-import module from '${entrypoint}';
+import moduleOrFunction from '${entrypoint}';
 
-const hasFirewallHandler = module.firewall || module.default?.firewall;
+// Handle the case where import returns a function directly
+const module = typeof moduleOrFunction === 'function' 
+  ? { default: moduleOrFunction } 
+  : moduleOrFunction;
 
-const eventType = hasFirewallHandler ? 'firewall' : 'fetch';
-const handler = module[eventType] || module.default?.[eventType];
+// Check standard handlers first
+const hasFirewallHandler = module.firewall || (module.default && module.default.firewall);
+
+// Detect if the module exports a function directly (legacy)
+const isLegacyDefaultFunction = typeof module.default === 'function';
+
+let eventType = 'fetch';
+let handler;
+
+if (hasFirewallHandler) {
+  eventType = 'firewall';
+  handler = module.firewall || module.default.firewall;
+} else if (isLegacyDefaultFunction) {
+  // Legacy case: function exported directly as default
+  handler = module.default;
+} else {
+  // Normal case: look for fetch handler
+  handler = module.fetch || (module.default && module.default.fetch);
+}
 
 if (!handler) {
   throw new Error("Handler not found in module");

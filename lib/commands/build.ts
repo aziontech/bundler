@@ -65,7 +65,8 @@ async function buildCommand({
   const vulcanConfig = await bundlerEnv.loadAzionConfig();
   const customConfigurationModule = vulcanConfig?.build || {};
   const vulcanVariables = await bundlerEnv.readBundlerEnv('global');
-  // Primeiro obtemos o preset para determinar os outros valores
+
+  // Get preset first to determine other values
   let presetInput = getPresetValue(
     customConfigurationModule?.preset,
     preset,
@@ -81,13 +82,17 @@ async function buildCommand({
     presetInput = defaultPreset;
   }
 
-  // Obtemos todos os valores de configuração
+  // Resolve preset to get the handler
+  const resolvedPreset = await resolvePreset(presetInput);
+
+  // Get configuration values
   const configValues = {
     entry: getConfigValue(
       customConfigurationModule?.entry,
       entry,
       vulcanVariables?.entry as string,
-      './main.js',
+      // Use preset handler as fallback for entry
+      resolvedPreset.handler || './main.js',
     ),
     bundler: getConfigValue(
       customConfigurationModule?.bundler,
@@ -110,15 +115,18 @@ async function buildCommand({
     preset: presetInput,
   };
 
-  // Salvamos os valores no arquivo de configuração uma única vez
+  // Save values to config file
   await bundlerEnv.createBundlerEnv(configValues);
 
-  const resolvedPreset = await resolvePreset(presetInput);
-
-  if (!resolvedPreset.handler) {
-    feedback.info(`Using ${configValues.entry} as entrypoint...`);
-    feedback.info("To change the entrypoint, use the '--entry' argument.");
+  if (!configValues.entry && !resolvedPreset.handler) {
+    feedback.error(
+      "No entry point specified and preset doesn't provide a default handler",
+    );
+    process.exit(1);
   }
+
+  feedback.info(`Using ${configValues.entry} as entrypoint...`);
+  feedback.info("To change the entrypoint, use the '--entry' argument.");
 
   const config: AzionConfig = {
     build: {

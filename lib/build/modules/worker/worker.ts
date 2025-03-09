@@ -14,14 +14,21 @@ export const setupWorkerCode = async (
   buildConfig: BuildConfiguration,
   ctx: BuildContext,
 ): Promise<string> => {
-  if (!buildConfig.worker) {
+  try {
+    if (buildConfig.worker) {
+      return readFile(ctx.entrypoint, 'utf-8');
+    }
+
     const wrapperCode = createEventHandlerCode(ctx.entrypoint);
 
     await mkdir(dirname(ctx.output), { recursive: true });
 
     await writeFile(ctx.output, wrapperCode, 'utf-8');
-    return wrapperCode;
-  }
 
-  return readFile(ctx.entrypoint, 'utf-8');
+    return wrapperCode;
+  } catch (error: unknown) {
+    throw new Error(
+      `Failed to setup worker code: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
 };

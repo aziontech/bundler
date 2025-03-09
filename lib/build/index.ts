@@ -41,7 +41,7 @@ export const build = async ({
      * 2. A preset module that follows the AzionBuildPreset interface
      *
      * Example:
-     * - Using built-in preset: config.build.preset = "javascript"3
+     * - Using built-in preset: config.build.preset = "javascript"
      * - Using custom preset: config.build.preset = customPresetModule
      */
 
@@ -95,8 +95,10 @@ export const build = async ({
 
     // Phase 5: Set Environment
   } catch (error: unknown) {
-    (debug as any).error(error);
-    feedback.build.error((error as Error).message);
+    debug.error(error);
+    feedback.build.error(
+      error instanceof Error ? error.message : String(error),
+    );
     process.exit(1);
   }
 };
