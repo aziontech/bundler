@@ -1,5 +1,3 @@
-import { checkingProjectTypeJS } from '#utils';
-import { feedback } from 'azion/utils/node';
 import { readUserConfig, readStore, createStore } from '#env';
 import { build } from 'lib/commands/build/build';
 import { AzionConfig, PresetInput } from 'azion/config';
@@ -67,14 +65,6 @@ export async function buildCommand(options: BuildCommandOptions) {
     bundlerStore as Record<string, unknown>,
     { name: '' },
   );
-
-  if (presetInput === '') {
-    const defaultPreset = await checkingProjectTypeJS();
-    feedback.warn(
-      `No preset provided. Using the default preset: ${defaultPreset}. Or you can provide a preset using the --preset argument.`,
-    );
-    presetInput = defaultPreset;
-  }
 
   // Obtemos todos os valores de configuração
   const configValues = {

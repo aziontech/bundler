@@ -1,5 +1,5 @@
 import net from 'net';
-import { debug, readWorkerFile, helperHandlerCode } from '#utils';
+import { debug, helperHandlerCode } from '#utils';
 import { feedback } from 'azion/utils/node';
 import { Messages } from '#constants';
 
@@ -9,6 +9,7 @@ import bundler from './bundler.js';
 
 import { buildCommand } from '../commands/build/command.js';
 import { runServer } from 'edge-runtime';
+import fs from 'fs/promises';
 
 let currentServer: Awaited<ReturnType<typeof runServer>>;
 let isChangeHandlerRunning = false;
@@ -45,17 +46,17 @@ function checkPortAvailability(port: number) {
 }
 
 /**
- * Read the worker code from a specified path.
+ * Reads the content of a worker file
  */
-async function readWorkerCode(workerPath: string) {
+async function readWorkerFile(filePath: string): Promise<string> {
   try {
-    return await readWorkerFile(workerPath);
+    await fs.access(filePath);
+    return await fs.readFile(filePath, 'utf8');
   } catch (error) {
-    (debug as any).error(error);
-    feedback.server.error(
-      Messages.env.server.errors.load_worker_failed(workerPath),
-    );
-    throw error;
+    const errorMessage = (error as Error).message.includes('ENOENT')
+      ? 'File does not exist.'
+      : `An error occurred while reading the ${filePath} file.`;
+    throw new Error(errorMessage);
   }
 }
 
@@ -104,7 +105,7 @@ async function manageServer(workerPath: string, port: number) {
 
     await buildToLocalServer();
 
-    const workerCode = await readWorkerCode(workerPath);
+    const workerCode = await readWorkerFile(workerPath);
 
     try {
       currentServer = await initializeServer(port, workerCode);

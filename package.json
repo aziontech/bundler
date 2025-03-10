@@ -48,6 +48,7 @@
     "@babel/types": "^7.23.5",
     "@edge-runtime/node-utils": "^2.1.1",
     "@edge-runtime/primitives": "^3.0.4",
+    "@netlify/framework-info": "^9.9.1",
     "azion": "~1.14.2",
     "babel-loader": "^9.2.1",
     "bottleneck": "^2.19.5",

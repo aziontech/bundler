@@ -1,4 +1,4 @@
-import azionPresets from 'azion/presets';
+import * as azionPresets from 'azion/presets';
 
 /**
  * @function
