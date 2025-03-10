@@ -89,7 +89,7 @@ export async function detectProjectPreset(): Promise<string> {
     if (detectedFramework[0]?.id) {
       const hasPreset = Object.values(presets).some(
         (preset: AzionBuildPreset) =>
-          preset.metadata.registry === detectedFramework[0].id,
+          preset.metadata?.registry === detectedFramework[0].id,
       );
       if (hasPreset) return detectedFramework[0].id;
     }

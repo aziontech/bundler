@@ -5,6 +5,12 @@ import * as presets from 'azion/presets';
  * Validates if preset is valid and has required properties
  */
 const validatePreset = (preset: AzionBuildPreset): boolean => {
+  if (!preset) {
+    throw new Error(
+      'Preset not found. Please verify your preset and try again.',
+    );
+  }
+
   if (!preset.metadata?.name || !preset.config) {
     throw new Error('Preset must have name and config.');
   }
