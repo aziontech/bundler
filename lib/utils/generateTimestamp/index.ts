@@ -1,3 +1,1 @@
-import generateTimestamp from './generateTimestamp';
-
-export default generateTimestamp;
+export * from './generateTimestamp';

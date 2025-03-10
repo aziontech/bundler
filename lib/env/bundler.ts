@@ -1,6 +1,6 @@
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
-import { Messages } from '#constants';
+
 import fs from 'fs';
 import fsPromises from 'fs/promises';
 import path from 'path';
@@ -44,7 +44,9 @@ export async function createStore(
     await fsPromises.mkdir(basePath, { recursive: true });
   } catch (error) {
     (debug as any).error(error);
-    feedback.build.error(Messages.errors.folder_creation_failed(vulcanEnvPath));
+    feedback.build.error(
+      `An error occurred while creating the ${vulcanEnvPath} folder.`,
+    );
     throw error;
   }
 
@@ -55,7 +57,9 @@ export async function createStore(
     );
   } catch (error) {
     (debug as any).error(error);
-    feedback.build.error(Messages.errors.write_file_failed(vulcanEnvPath));
+    feedback.build.error(
+      `An error occurred while writing the ${vulcanEnvPath} file.`,
+    );
     throw error;
   }
 }

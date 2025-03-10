@@ -1,7 +1,6 @@
 import net from 'net';
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
-import { Messages } from '#constants';
 
 import chokidar from 'chokidar';
 import runtime from './runtime.js';
@@ -104,7 +103,7 @@ async function buildToLocalServer() {
   const vulcanEnv = await bundler.readStore('global');
 
   if (!vulcanEnv) {
-    const msg = Messages.env.server.errors.run_build_command;
+    const msg = 'Run the build command before running your project.';
     feedback.server.error(msg);
     throw new Error(msg);
   }
@@ -127,9 +126,7 @@ async function manageServer(workerPath: string, port: number) {
     try {
       currentServer = await initializeServer(port, workerCode);
       feedback.server.success(
-        Messages.env.server.success.server_running(
-          `0.0.0.0:${port}, url: http://localhost:${port}`,
-        ),
+        `Function running on port 0.0.0.0:${port}, url: http://localhost:${port}`,
       );
     } catch (error) {
       if ((error as any).message.includes('EADDRINUSE')) {
@@ -170,7 +167,7 @@ async function handleFileChange(
   isChangeHandlerRunning = true;
 
   try {
-    feedback.build.info(Messages.build.info.rebuilding);
+    feedback.build.info('Rebuilding with the new changes...');
     await manageServer(workerPath, port);
   } catch (error) {
     (debug as any).error(`Build or server restart failed: ${error}`);

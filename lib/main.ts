@@ -5,7 +5,6 @@ import { Command } from 'commander';
 import { satisfies } from 'semver';
 import { feedback, getAbsoluteDirPath } from 'azion/utils/node';
 import { debug } from '#utils';
-import { Messages } from '#constants';
 import os from 'os';
 import crypto from 'crypto';
 
@@ -220,11 +219,13 @@ try {
     setupBundlerProcessHandlers();
   }
   if (!validateNodeMinVersion()) {
-    feedback.error(Messages.errors.invalid_node_version(MIN_NODE_VERSION));
+    feedback.error(
+      `Invalid Node version. Node version must be greater than ${MIN_NODE_VERSION}.`,
+    );
     process.exit(1);
   }
 } catch (error) {
-  feedback.error(Messages.errors.unknown_error);
+  feedback.error('An unknown error occurred.');
   (debug as any).error(error);
   process.exit(1);
 }

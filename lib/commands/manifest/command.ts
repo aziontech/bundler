@@ -2,7 +2,6 @@ import { readFileSync, writeFileSync } from 'fs';
 import { resolve, extname } from 'path';
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
-import { Messages } from '#constants';
 import { convertJsonConfigToObject } from 'azion/config';
 
 /**
@@ -59,7 +58,7 @@ export async function manifestCommand(
     );
   } catch (error) {
     (debug as any).error(error);
-    feedback.error(Messages.errors.unknown_error);
+    feedback.error('An unknown error occurred.');
     process.exit(1);
   }
 }
