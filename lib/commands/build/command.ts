@@ -1,8 +1,8 @@
 import { readUserConfig, readStore, writeStore, type BundlerStore } from '#env';
 import { build } from 'lib/commands/build/build';
-import { AzionConfig, PresetInput } from 'azion/config';
+import { AzionConfig } from 'azion/config';
 import { resolve } from 'path';
-import { BuildCommandOptions } from './types';
+import type { BuildCommandOptions } from './types';
 import { resolveConfigPriority, resolvePresetPriority } from './utils';
 
 /**
