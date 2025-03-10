@@ -14,7 +14,6 @@ export async function initCommand({
 }) {
   try {
     if (!preset) throw new Error('Preset is required.');
-    if (!scope) throw new Error('Scope is required.');
 
     await createStore({ preset }, scope);
     feedback.info(`Temporary store file created!`);
