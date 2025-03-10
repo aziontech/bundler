@@ -20,7 +20,7 @@ import { convertJsonConfigToObject } from 'azion/config';
  * az manifest transform .edge/manifest.json -o azion.config.js
  * ```
  */
-async function manifestCommand(
+export async function manifestCommand(
   command: string,
   entry: string,
   options: Record<string, any>,
@@ -63,5 +63,3 @@ async function manifestCommand(
     process.exit(1);
   }
 }
-
-export default manifestCommand;

@@ -7,6 +7,9 @@ import {
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
 import { writeFile } from 'fs/promises';
+
+import { checkDependencies } from './utils';
+
 /* Modules */
 import { setupBuildConfig } from './modules/config';
 import { resolvePreset } from './modules/preset';
@@ -14,7 +17,6 @@ import { executePrebuild } from './modules/prebuild';
 import { executeBuild } from './modules/core';
 import { executePostbuild } from './modules/postbuild';
 import { generateManifest } from './modules/manifest';
-import { checkDependencies } from './utils';
 import { setEnvironment } from './modules/environment';
 import { setupWorkerCode } from './modules/worker';
 import { resolveEntrypoint } from './modules/entrypoint/entrypoint';
@@ -100,5 +102,3 @@ export const build = async ({ config, ctx }: BuildParams): Promise<void> => {
     process.exit(1);
   }
 };
-
-export default build;

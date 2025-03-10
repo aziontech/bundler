@@ -10,7 +10,7 @@ import { feedback } from 'azion/utils/node';
  * // To list existing presets
  * presetsCommand('ls');
  */
-async function presetsCommand(command: string) {
+export async function presetsCommand(command: string) {
   const { presets }: any = await import('#utils');
 
   switch (command) {
@@ -26,5 +26,3 @@ async function presetsCommand(command: string) {
       break;
   }
 }
-
-export default presetsCommand;

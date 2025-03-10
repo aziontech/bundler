@@ -1,38 +1,38 @@
 import { checkingProjectTypeJS } from '#utils';
 import { feedback } from 'azion/utils/node';
 import { readUserConfig, readStore, createStore } from '#env';
-import { build } from '#build';
+import { build } from 'lib/commands/build/build';
 import { AzionConfig, PresetInput } from 'azion/config';
 import { resolve } from 'path';
 
 /**
  * Retrieves a configuration value based on priority.
- * Priority order: inputOption, customConfig, bundlerVariable, defaultValue.
+ * Priority order: inputOption, userConfig, storeValue, defaultValue.
  */
 function getConfigValue<T>(
-  customConfig: T | undefined,
+  userConfig: T | undefined,
   inputOption: T | undefined,
-  bundlerVariable: T | undefined,
+  storeValue: T | undefined,
   defaultValue: T | undefined,
 ): T | undefined {
-  return inputOption ?? customConfig ?? bundlerVariable ?? defaultValue;
+  return inputOption ?? userConfig ?? storeValue ?? defaultValue;
 }
 
 /**
  * Retrieves a preset configuration value based on priority.
- * Priority order for both name : customConfig, inputOption, bundlerVariable, defaultValue.
+ * Priority order for both name : userConfig, inputOption, storeValue, defaultValue.
  */
 function getPresetValue(
-  customConfig: Record<string, unknown>,
+  userConfig: Record<string, unknown>,
   presetName: string | undefined,
-  bundlerVariable: Record<string, unknown>,
+  storeValue: Record<string, unknown>,
   defaultValue: Record<string, unknown>,
 ): PresetInput {
   const name =
     getConfigValue(
-      customConfig?.name as string,
+      userConfig?.name as string,
       presetName,
-      bundlerVariable?.preset as string,
+      storeValue?.preset as string,
       defaultValue?.name as string,
     ) || '';
 
@@ -86,7 +86,7 @@ interface BuildCommandOptions {
  *   polyfills: false
  * });
  */
-async function buildCommand({
+export async function buildCommand({
   entry,
   preset,
   polyfills,
@@ -158,5 +158,3 @@ async function buildCommand({
     },
   });
 }
-
-export default buildCommand;

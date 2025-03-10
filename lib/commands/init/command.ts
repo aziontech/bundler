@@ -12,7 +12,7 @@ function throwError(arg: string) {
  * @function
  * @description Initializes a new 'temporary store' file.
  */
-async function initCommand({
+export async function initCommand({
   preset,
   scope,
 }: {
@@ -33,5 +33,3 @@ async function initCommand({
     process.exit(1);
   }
 }
-
-export default initCommand;

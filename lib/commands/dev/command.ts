@@ -10,7 +10,7 @@ import { join } from 'path';
  *
  * devCommand('./path/to/entry.js', { port: 3000 });
  */
-async function devCommand(entry: string, { port }: { port: string }) {
+export async function devCommand(entry: string, { port }: { port: string }) {
   const parsedPort = parseInt(port, 10);
   const { server } = await import('#env');
 
@@ -25,5 +25,3 @@ async function devCommand(entry: string, { port }: { port: string }) {
 
   server(entryPoint, parsedPort);
 }
-
-export default devCommand;
