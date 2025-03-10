@@ -2,15 +2,8 @@ import { createStore } from '#env';
 import { feedback } from 'azion/utils/node';
 
 /**
- * Throw a required attribute error.
- */
-function throwError(arg: string) {
-  throw new Error(`'${arg}' is required.`);
-}
-
-/**
  * @function
- * @description Initializes a new 'temporary store' file.
+ * @description Creates a temporary JSON file in system's temp directory to store program state
  */
 export async function initCommand({
   preset,
@@ -20,11 +13,10 @@ export async function initCommand({
   scope: string;
 }) {
   try {
-    if (!preset) throwError('preset');
-    if (!scope) throwError('scope');
+    if (!preset) throw new Error('Preset is required.');
+    if (!scope) throw new Error('Scope is required.');
 
     await createStore({ preset }, scope);
-
     feedback.info(`Temporary store file created!`);
   } catch (error) {
     feedback.error(

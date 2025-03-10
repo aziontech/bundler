@@ -142,7 +142,7 @@ function startBundlerProgram() {
   program
     .command('init')
     .option('--preset <preset_name>', 'Preset name', false)
-    .option('--scope <scope>', 'project scope', 'global')
+    .option('--scope <scope>', 'Project scope', 'global')
     .description('Initialize temporary store')
     .action(async (options) => {
       const { initCommand } = await import('#commands');
