@@ -3,12 +3,13 @@ import {
   AzionPrebuildResult,
   AzionConfig,
   BuildContext,
+  PresetInput,
 } from 'azion/config';
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
 import { writeFile } from 'fs/promises';
 
-import { checkDependencies } from './utils';
+import { checkDependencies, inferPreset } from './utils';
 
 /* Modules */
 import { setupBuildConfig } from './modules/config';
@@ -20,8 +21,6 @@ import { generateManifest } from './modules/manifest';
 import { setEnvironment } from './modules/environment';
 import { setupWorkerCode } from './modules/worker';
 import { resolveEntrypoint } from './modules/entrypoint/entrypoint';
-
-const DEFAULT_PRESET = 'javascript';
 
 interface BuildParams {
   config: AzionConfig;
@@ -42,7 +41,9 @@ export const build = async ({ config, ctx }: BuildParams): Promise<void> => {
      * - Using custom preset: config.build.preset = customPresetModule
      */
 
-    const presetInput = config.build?.preset || DEFAULT_PRESET;
+    const fallbackPreset = await inferPreset();
+
+    const presetInput: PresetInput = config.build?.preset || fallbackPreset;
     const resolvedPreset: AzionBuildPreset = await resolvePreset(presetInput);
 
     const buildConfigSetup = setupBuildConfig(config, resolvedPreset);

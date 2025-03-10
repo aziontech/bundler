@@ -80,7 +80,7 @@ export const checkDependencies = async (): Promise<void> => {
  * Detects project type by analyzing package.json dependencies
  * @returns The detected preset name based on project dependencies
  */
-export async function detectProjectPreset(): Promise<string> {
+export async function inferPreset(): Promise<string> {
   try {
     // Try framework detection with @netlify/framework-info
     const detectedFramework = await listFrameworks({

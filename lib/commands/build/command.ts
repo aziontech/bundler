@@ -1,8 +1,12 @@
-import { readUserConfig, readStore, createStore } from '#env';
+import {
+  readUserConfig,
+  readStore,
+  createStore,
+  type BundlerStore,
+} from '#env';
 import { build } from 'lib/commands/build/build';
 import { AzionConfig, PresetInput } from 'azion/config';
 import { resolve } from 'path';
-
 import { BuildCommandOptions } from './types';
 
 /**
@@ -10,8 +14,8 @@ import { BuildCommandOptions } from './types';
  * Priority order: inputOption, userConfig, storeValue, defaultValue.
  */
 function getConfigValue<T>(
-  userConfig: T | undefined,
   inputOption: T | undefined,
+  userConfig: T | undefined,
   storeValue: T | undefined,
   defaultValue: T | undefined,
 ): T | undefined {
@@ -20,23 +24,26 @@ function getConfigValue<T>(
 
 /**
  * Retrieves a preset configuration value based on priority.
- * Priority order for both name : userConfig, inputOption, storeValue, defaultValue.
+ * Priority order: inputOption, userConfig, storeValue, defaultValue
  */
 function getPresetValue(
-  userConfig: Record<string, unknown>,
-  presetName: string | undefined,
-  storeValue: Record<string, unknown>,
-  defaultValue: Record<string, unknown>,
-): PresetInput {
-  const name =
-    getConfigValue(
-      userConfig?.name as string,
-      presetName,
-      storeValue?.preset as string,
-      defaultValue?.name as string,
-    ) || '';
+  inputOption: string | undefined,
+  userPreset: PresetInput | undefined,
+  storeValue: PresetInput | undefined,
+  defaultValue: string | undefined,
+): PresetInput | undefined {
+  // If userPreset is an AzionBuildPreset object, return it with highest priority
+  if (typeof userPreset === 'object' && userPreset.metadata?.name) {
+    return userPreset;
+  }
 
-  return name;
+  // If store has a preset object, return it with second priority
+  if (typeof storeValue === 'object' && storeValue.metadata?.name) {
+    return storeValue;
+  }
+
+  // Otherwise, handle as string values with standard priority order
+  return getConfigValue(inputOption, userPreset, storeValue, defaultValue);
 }
 
 /**
@@ -54,42 +61,42 @@ function getPresetValue(
  * });
  */
 export async function buildCommand(options: BuildCommandOptions) {
-  const userConfig = await readUserConfig();
-  const userConfigBuild = userConfig?.build || {};
+  // Read user config, defaulting to empty object if file doesn't exist
+  const { build: userBuildConfig = {} } = (await readUserConfig()) || {};
 
-  const bundlerStore = await readStore();
-  // Primeiro obtemos o preset para determinar os outros valores
+  const bundlerStore: BundlerStore = await readStore();
+
+  // Get preset with auto-detection as fallback
   let presetInput = getPresetValue(
-    userConfigBuild?.preset,
     options.preset,
-    bundlerStore as Record<string, unknown>,
-    { name: '' },
+    userBuildConfig?.preset,
+    bundlerStore.preset,
+    undefined,
   );
 
-  // Obtemos todos os valores de configuração
   const configValues = {
     entry: getConfigValue(
-      userConfigBuild?.entry,
       options.entry,
-      bundlerStore?.entry as string,
+      userBuildConfig?.entry,
+      bundlerStore?.entry,
       undefined,
     ),
     bundler: getConfigValue(
-      userConfigBuild?.bundler,
+      userBuildConfig?.bundler,
       undefined,
-      bundlerStore?.bundler as string,
+      bundlerStore?.bundler,
       'esbuild',
     ),
     polyfills: getConfigValue(
-      userConfigBuild?.polyfills,
+      userBuildConfig?.polyfills,
       options.polyfills,
-      bundlerStore?.polyfills as boolean,
+      bundlerStore?.polyfills,
       true,
     ),
     worker: getConfigValue(
-      userConfigBuild?.worker,
+      userBuildConfig?.worker,
       options.worker,
-      bundlerStore?.worker as boolean,
+      bundlerStore?.worker,
       false,
     ),
     preset: presetInput,

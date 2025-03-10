@@ -72,12 +72,14 @@ function setBundlerEnvironment() {
 }
 
 /**
- * Removes all temporary files starting with 'bundler-' and ending with '.temp.js'.
+ * Removes all temporary files starting with 'azion-' and ending with '.temp.js' or '.temp.ts'.
  */
 function cleanUpTempFiles() {
   const directory = process.cwd();
   const tempFiles = readdirSync(directory).filter(
-    (file) => file.startsWith('azion-') && file.endsWith('.temp.js'),
+    (file) =>
+      file.startsWith('azion-') &&
+      (file.endsWith('.temp.js') || file.endsWith('.temp.ts')),
   );
 
   tempFiles.forEach((file) => {
@@ -127,13 +129,17 @@ function setupBundlerProcessHandlers() {
 function startBundler() {
   AzionBundler.version(BUNDLER_CURRENT_VERSION);
 
-  AzionBundler.command('init')
-    .option('--preset <preset_name>', 'Preset name', false)
+  AzionBundler.command('store <command>')
+    .description('Manage store configuration (init/destroy)')
     .option('--scope <scope>', 'Project scope', 'global')
-    .description('Initialize temporary store')
-    .action(async (options) => {
-      const { initCommand } = await import('#commands');
-      await initCommand(options);
+    .option('--preset <string>', 'Preset name')
+    .option('--entry <string>', 'Code entrypoint')
+    .option('--bundler <type>', 'Bundler type (webpack/esbuild)')
+    .option('--polyfills [boolean]', 'Use node polyfills in build')
+    .option('--worker [boolean]', 'Indicates worker expression')
+    .action(async (command, options) => {
+      const { storeCommand } = await import('#commands');
+      await storeCommand({ command, options });
     });
 
   AzionBundler.command('build')

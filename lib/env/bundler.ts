@@ -1,5 +1,6 @@
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
+import { PresetInput } from 'azion/config';
 
 import fs from 'fs';
 import fsPromises from 'fs/promises';
@@ -14,6 +15,14 @@ import prettier from 'prettier';
 import { createRequire } from 'module';
 import { AzionConfig } from 'azion/config';
 
+export interface BundlerStore {
+  preset?: PresetInput;
+  entry?: string;
+  bundler?: 'webpack' | 'esbuild';
+  polyfills?: boolean;
+  worker?: boolean;
+}
+
 /**
  * Creates or updates Bundler environment variables.
  * @async
@@ -22,10 +31,7 @@ import { AzionConfig } from 'azion/config';
  * createStore({ API_KEY: 'abc123', ANOTHER_KEY: 'xyz' }, 'global')
  *   .catch(error => console.error(error));
  */
-export async function createStore(
-  variables: Record<string, unknown>,
-  scope = 'global',
-) {
+export async function createStore(values: BundlerStore, scope = 'global') {
   let basePath;
   switch (scope) {
     case 'global':
@@ -51,10 +57,7 @@ export async function createStore(
   }
 
   try {
-    await fsPromises.writeFile(
-      vulcanEnvPath,
-      JSON.stringify(variables, null, 2),
-    );
+    await fsPromises.writeFile(vulcanEnvPath, JSON.stringify(values, null, 2));
   } catch (error) {
     (debug as any).error(error);
     feedback.build.error(

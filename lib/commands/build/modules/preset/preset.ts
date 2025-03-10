@@ -42,7 +42,6 @@ export const resolvePreset = async (
   input: PresetInput,
 ): Promise<AzionBuildPreset> => {
   const preset = typeof input === 'string' ? await loadPreset(input) : input;
-
   validatePreset(preset);
   return preset;
 };
