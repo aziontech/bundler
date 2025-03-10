@@ -1,3 +1,4 @@
+import { PresetInput } from 'azion/config';
 /**
  * Build command options received from CLI
  */
@@ -36,4 +37,18 @@ export interface PackageJson {
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
   [key: string]: unknown;
+}
+
+export interface ConfigValueOptions<T> {
+  inputValue?: T;
+  fileValue?: T;
+  storeValue?: T;
+  defaultValue?: T;
+}
+
+export interface PresetValueOptions {
+  inputValue?: string;
+  fileValue?: PresetInput;
+  storeValue?: PresetInput;
+  defaultValue?: string;
 }

@@ -1,4 +1,4 @@
-import { createStore, BundlerStore } from '#env';
+import { writeStore, BundlerStore } from '#env';
 import { feedback } from 'azion/utils/node';
 import { rm } from 'fs/promises';
 
@@ -35,7 +35,7 @@ export async function storeCommand({
           worker: options.worker,
         };
 
-        await createStore(store, scope);
+        await writeStore(store, scope);
         feedback.info(
           `Store file ${options.preset ? 'created' : 'initialized'} with scope: ${scope}`,
         );

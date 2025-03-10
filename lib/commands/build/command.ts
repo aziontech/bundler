@@ -1,50 +1,9 @@
-import {
-  readUserConfig,
-  readStore,
-  createStore,
-  type BundlerStore,
-} from '#env';
+import { readUserConfig, readStore, writeStore, type BundlerStore } from '#env';
 import { build } from 'lib/commands/build/build';
 import { AzionConfig, PresetInput } from 'azion/config';
 import { resolve } from 'path';
 import { BuildCommandOptions } from './types';
-
-/**
- * Retrieves a configuration value based on priority.
- * Priority order: inputOption, userConfig, storeValue, defaultValue.
- */
-function getConfigValue<T>(
-  inputOption: T | undefined,
-  userConfig: T | undefined,
-  storeValue: T | undefined,
-  defaultValue: T | undefined,
-): T | undefined {
-  return inputOption ?? userConfig ?? storeValue ?? defaultValue;
-}
-
-/**
- * Retrieves a preset configuration value based on priority.
- * Priority order: inputOption, userConfig, storeValue, defaultValue
- */
-function getPresetValue(
-  inputOption: string | undefined,
-  userPreset: PresetInput | undefined,
-  storeValue: PresetInput | undefined,
-  defaultValue: string | undefined,
-): PresetInput | undefined {
-  // If userPreset is an AzionBuildPreset object, return it with highest priority
-  if (typeof userPreset === 'object' && userPreset.metadata?.name) {
-    return userPreset;
-  }
-
-  // If store has a preset object, return it with second priority
-  if (typeof storeValue === 'object' && storeValue.metadata?.name) {
-    return storeValue;
-  }
-
-  // Otherwise, handle as string values with standard priority order
-  return getConfigValue(inputOption, userPreset, storeValue, defaultValue);
-}
+import { resolveConfigPriority, resolvePresetPriority } from './utils';
 
 /**
  * A command to initiate the build process.
@@ -61,51 +20,50 @@ function getPresetValue(
  * });
  */
 export async function buildCommand(options: BuildCommandOptions) {
-  // Read user config, defaulting to empty object if file doesn't exist
   const { build: userBuildConfig = {} } = (await readUserConfig()) || {};
 
   const bundlerStore: BundlerStore = await readStore();
 
-  // Get preset with auto-detection as fallback
-  let presetInput = getPresetValue(
-    options.preset,
-    userBuildConfig?.preset,
-    bundlerStore.preset,
-    undefined,
-  );
+  let presetInput = resolvePresetPriority({
+    inputValue: options.preset,
+    fileValue: userBuildConfig?.preset,
+    storeValue: bundlerStore.preset,
+    defaultValue: undefined,
+  });
 
-  const configValues = {
-    entry: getConfigValue(
-      options.entry,
-      userBuildConfig?.entry,
-      bundlerStore?.entry,
-      undefined,
-    ),
-    bundler: getConfigValue(
-      userBuildConfig?.bundler,
-      undefined,
-      bundlerStore?.bundler,
-      'esbuild',
-    ),
-    polyfills: getConfigValue(
-      userBuildConfig?.polyfills,
-      options.polyfills,
-      bundlerStore?.polyfills,
-      true,
-    ),
-    worker: getConfigValue(
-      userBuildConfig?.worker,
-      options.worker,
-      bundlerStore?.worker,
-      false,
-    ),
+  const buildConfig = {
+    entry: resolveConfigPriority({
+      inputValue: options.entry,
+      fileValue: userBuildConfig?.entry,
+      storeValue: bundlerStore?.entry,
+      defaultValue: undefined,
+    }),
+    bundler: resolveConfigPriority({
+      inputValue: userBuildConfig?.bundler,
+      fileValue: undefined,
+      storeValue: bundlerStore?.bundler,
+      defaultValue: 'esbuild',
+    }),
+    polyfills: resolveConfigPriority({
+      inputValue: userBuildConfig?.polyfills,
+      fileValue: options.polyfills,
+      storeValue: bundlerStore?.polyfills,
+      defaultValue: true,
+    }),
+    worker: resolveConfigPriority({
+      inputValue: userBuildConfig?.worker,
+      fileValue: options.worker,
+      storeValue: bundlerStore?.worker,
+      defaultValue: false,
+    }),
     preset: presetInput,
   };
-  await createStore(configValues);
+
+  await writeStore(buildConfig);
 
   const config: AzionConfig = {
     build: {
-      ...configValues,
+      ...buildConfig,
     },
   };
 
@@ -114,7 +72,7 @@ export async function buildCommand(options: BuildCommandOptions) {
     ctx: {
       production: options.production ?? true,
       output: resolve('.edge', 'worker.js'),
-      entrypoint: configValues.entry ? resolve(configValues.entry) : '',
+      entrypoint: buildConfig.entry ? resolve(buildConfig.entry) : '',
     },
   });
 }

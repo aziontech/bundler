@@ -28,10 +28,10 @@ export interface BundlerStore {
  * @async
  * @example
  * // Set multiple global environment variables
- * createStore({ API_KEY: 'abc123', ANOTHER_KEY: 'xyz' }, 'global')
+ * writeStore({ API_KEY: 'abc123', ANOTHER_KEY: 'xyz' }, 'global')
  *   .catch(error => console.error(error));
  */
-export async function createStore(values: BundlerStore, scope = 'global') {
+export async function writeStore(values: BundlerStore, scope = 'global') {
   let basePath;
   switch (scope) {
     case 'global':
@@ -277,7 +277,7 @@ export async function writeUserConfig(config: AzionConfig): Promise<void> {
 }
 
 export default {
-  createStore,
+  writeStore,
   readStore,
   readUserConfig,
   writeUserConfig,

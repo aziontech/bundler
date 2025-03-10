@@ -2,7 +2,7 @@ import { AzionConfig, AzionBuildPreset, BuildContext } from 'azion/config';
 import { mergeConfigWithUserOverrides } from './utils';
 
 /* LEGACY MODULE */
-import { createStore, writeUserConfig, readUserConfig } from '#env';
+import { writeStore, writeUserConfig, readUserConfig } from '#env';
 
 interface EnvironmentParams {
   config: AzionConfig;
@@ -42,7 +42,7 @@ export const setEnvironment = async ({
     if (!hasCustomConfig) await writeUserConfig(mergedConfig);
 
     // Setup environment store
-    await createStore({
+    await writeStore({
       entry: ctx.entrypoint,
       preset: preset.metadata.name,
       bundler: config?.build?.bundler,

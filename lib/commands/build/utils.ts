@@ -7,6 +7,8 @@ import type { AzionBuildPreset } from 'azion/config';
 import * as presets from 'azion/presets';
 import { getPackageManager } from 'azion/utils/node';
 import type { PackageJson } from './types';
+import { ConfigValueOptions, PresetValueOptions } from './types';
+import { PresetInput } from 'azion/config';
 
 // @ts-expect-error - Types are not properly exported
 import { listFrameworks } from '@netlify/framework-info';
@@ -109,4 +111,48 @@ export async function inferPreset(): Promise<string> {
   } catch (error) {
     return 'javascript';
   }
+}
+
+/**
+ * Resolves a configuration value based on priority chain:
+ * CLI input > Config file > Store > Default
+ */
+export function resolveConfigPriority<T>({
+  inputValue,
+  fileValue,
+  storeValue,
+  defaultValue,
+}: ConfigValueOptions<T>): T | undefined {
+  return inputValue ?? fileValue ?? storeValue ?? defaultValue;
+}
+
+/**
+ * Resolves preset configuration with special handling for preset objects:
+ * 1. Preset object from config file
+ * 2. Preset object from store
+ * 3. String values following standard priority chain
+ */
+export function resolvePresetPriority({
+  inputValue,
+  fileValue,
+  storeValue,
+  defaultValue,
+}: PresetValueOptions): PresetInput | undefined {
+  // If fileValue is an AzionBuildPreset object, return it with highest priority
+  if (typeof fileValue === 'object' && fileValue.metadata?.name) {
+    return fileValue;
+  }
+
+  // If store has a preset object, return it with second priority
+  if (typeof storeValue === 'object' && storeValue.metadata?.name) {
+    return storeValue;
+  }
+
+  // Otherwise, handle as string values with standard priority order
+  return resolveConfigPriority({
+    inputValue,
+    fileValue,
+    storeValue,
+    defaultValue,
+  });
 }

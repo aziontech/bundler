@@ -9,7 +9,7 @@ import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
 import { writeFile } from 'fs/promises';
 
-import { checkDependencies, inferPreset } from './utils';
+import { checkDependencies } from './utils';
 
 /* Modules */
 import { setupBuildConfig } from './modules/config';
@@ -41,11 +41,7 @@ export const build = async ({ config, ctx }: BuildParams): Promise<void> => {
      * - Using custom preset: config.build.preset = customPresetModule
      */
 
-    const fallbackPreset = await inferPreset();
-
-    const presetInput: PresetInput = config.build?.preset || fallbackPreset;
-    const resolvedPreset: AzionBuildPreset = await resolvePreset(presetInput);
-
+    const resolvedPreset = await resolvePreset(config.build?.preset);
     const buildConfigSetup = setupBuildConfig(config, resolvedPreset);
 
     ctx.entrypoint = await resolveEntrypoint({

@@ -1,16 +1,54 @@
 import type { AzionBuildPreset, PresetInput } from 'azion/config';
 import * as presets from 'azion/presets';
+import { feedback } from 'azion/utils/node';
+import { join } from 'path';
+import { existsSync, readdirSync } from 'fs';
+import { extname } from 'path';
+// @ts-expect-error - Types are not properly exported
+import { detectFramework } from '@netlify/framework-info';
+
+/**
+ * Infers the appropriate preset based on project structure and dependencies.
+ * First tries to detect the framework using @netlify/framework-info.
+ * If a matching preset is found for the framework, returns its ID.
+ * Otherwise, checks for TypeScript configuration or files.
+ * Falls back to JavaScript preset if no specific technology is detected.
+ *
+ * @returns Promise<string> The inferred preset name
+ */
+export async function inferPreset(): Promise<string> {
+  try {
+    // Try framework detection with @netlify/framework-info
+    const detectedFramework = await detectFramework(process.cwd());
+    if (detectedFramework?.id) {
+      const hasPreset = Object.values(presets).some(
+        (preset: AzionBuildPreset) =>
+          preset.metadata?.registry === detectedFramework.id,
+      );
+      if (hasPreset) return detectedFramework.id;
+    }
+
+    // Check for TypeScript configuration or files
+    const tsConfigPath = join(process.cwd(), 'tsconfig.json');
+    const tsConfigExists = existsSync(tsConfigPath);
+    if (tsConfigExists) return 'typescript';
+
+    const files = readdirSync(process.cwd());
+    const hasTypeScriptFiles = files.some((file) =>
+      ['.ts', '.tsx'].includes(extname(file)),
+    );
+    if (hasTypeScriptFiles) return 'typescript';
+
+    return 'javascript';
+  } catch (error) {
+    return 'javascript';
+  }
+}
 
 /**
  * Validates if preset is valid and has required properties
  */
 const validatePreset = (preset: AzionBuildPreset): boolean => {
-  if (!preset) {
-    throw new Error(
-      'Preset not found. Please verify your preset and try again.',
-    );
-  }
-
   if (!preset.metadata?.name || !preset.config) {
     throw new Error('Preset must have name and config.');
   }
@@ -39,8 +77,13 @@ const loadPreset = async (presetName: string): Promise<AzionBuildPreset> => {
  * Loads and validates preset from input
  */
 export const resolvePreset = async (
-  input: PresetInput,
+  input?: PresetInput,
 ): Promise<AzionBuildPreset> => {
+  if (!input) {
+    feedback.build.info('No preset specified, using automatic detection...');
+    input = await inferPreset();
+  }
+
   const preset = typeof input === 'string' ? await loadPreset(input) : input;
   validatePreset(preset);
   return preset;
