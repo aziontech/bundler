@@ -44,24 +44,27 @@ export async function createStore(values: BundlerStore, scope = 'global') {
       basePath = scope;
       break;
   }
-  const vulcanEnvPath = path.join(basePath, '.azion-bundler.json');
+  const bundlerSesssionStorePath = path.join(basePath, '.azion-bundler.json');
 
   try {
     await fsPromises.mkdir(basePath, { recursive: true });
   } catch (error) {
     (debug as any).error(error);
     feedback.build.error(
-      `An error occurred while creating the ${vulcanEnvPath} folder.`,
+      `An error occurred while creating the ${bundlerSesssionStorePath} folder.`,
     );
     throw error;
   }
 
   try {
-    await fsPromises.writeFile(vulcanEnvPath, JSON.stringify(values, null, 2));
+    await fsPromises.writeFile(
+      bundlerSesssionStorePath,
+      JSON.stringify(values, null, 2),
+    );
   } catch (error) {
     (debug as any).error(error);
     feedback.build.error(
-      `An error occurred while writing the ${vulcanEnvPath} file.`,
+      `An error occurred while writing the ${bundlerSesssionStorePath} file.`,
     );
     throw error;
   }

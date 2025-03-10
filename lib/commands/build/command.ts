@@ -114,7 +114,7 @@ export async function buildCommand(options: BuildCommandOptions) {
     ctx: {
       production: options.production ?? true,
       output: resolve('.edge', 'worker.js'),
-      entrypoint: resolve(config.build?.entry || ''),
+      entrypoint: configValues.entry ? resolve(configValues.entry) : '',
     },
   });
 }

@@ -20,26 +20,30 @@ export const resolveEntrypoint = async ({
   preset,
 }: EntrypointOptions): Promise<string> => {
   // Step 1: Check for user-provided entrypoint
-  if (ctx.entrypoint) {
+  if (ctx.entrypoint && !preset.handler) {
     feedback.build.info(`Using ${ctx.entrypoint} as entry point.`);
     return ctx.entrypoint;
   }
 
-  // Step 2: Check for preset handler
+  // Step 2: Check for preset handler (agora tem prioridade sobre entry point do store)
   if (preset.handler) {
-    feedback.build.info(
-      `Using built-in handler from "${preset.metadata.name}" preset.`,
-    );
-
-    // Resolve handler path from bundler's node_modules
-    return resolve(
+    const handlerPath = resolve(
       globalThis.bundler.root,
       'node_modules',
       'azion',
+      'packages',
+      'presets',
+      'src',
       'presets',
       preset.metadata.name,
       'handler.ts',
     );
+
+    feedback.build.info(
+      `Using built-in handler from "${preset.metadata.name}" preset.`,
+    );
+
+    return handlerPath;
   }
 
   // Step 3: Check for preset's default entry
