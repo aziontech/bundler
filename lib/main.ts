@@ -50,24 +50,6 @@ function validateNodeMinVersion() {
 }
 
 /**
- * Converts object keys from kebab-case to camelCase.
- * @example
- * const originalOptions = { 'polyfills': true, 'only-manifest': false };
- * const convertedOptions = convertOptions(originalOptions);
- * // Result: { polyfills: true, onlyManifest: false }
- */
-function convertOptions(options: Record<string, unknown>) {
-  return Object.entries(options).reduce(
-    (acc, [key, value]) => {
-      const camelKey = key.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
-      // Handle boolean flags
-      acc[camelKey] = value === '' ? true : value;
-      return acc;
-    },
-    {} as Record<string, unknown>,
-  );
-}
-/**
  * Sets the global Bundler environment.
  *
  * Validates the ENV value and sets it as the environment in the global 'bundler' object.
@@ -191,15 +173,13 @@ function startBundlerProgram() {
       '--polyfills [boolean]',
       'Use node polyfills in build. Use --polyfills or --polyfills=true to enable, --polyfills=false to disable',
     )
-    .option('--only-manifest', 'Process just the azion.config.js')
     .option(
       '--worker [boolean]',
       'Indicates that the constructed code inserts its own worker expression. Use --worker or --worker=true to enable, --worker=false to disable',
     )
     .action(async (options) => {
       const { buildCommand } = await import('#commands');
-      const convertedOptions = convertOptions(options);
-      await buildCommand({ production: true, ...convertOptions });
+      await buildCommand({ production: true, ...options });
     });
 
   program
@@ -210,15 +190,9 @@ function startBundlerProgram() {
       'Specify the entry file (default: .edge/worker.dev.js)',
     )
     .option('-p, --port <port>', 'Specify the port', '3333')
-    .option(
-      '--firewall',
-      'To enable the firewall (Experimental) for local environment (default: false)',
-      false,
-    )
     .action(async (entry, options) => {
       const { devCommand } = await import('#commands');
-      const convertedOptions = convertOptions(options);
-      await devCommand(entry, convertedOptions as any);
+      await devCommand(entry, options);
     });
 
   program
@@ -238,7 +212,7 @@ function startBundlerProgram() {
     .option('-o, --output <path>', 'Output file path for convert command')
     .action(async (command, entry, options) => {
       const { manifestCommand } = await import('#commands');
-      await manifestCommand(command, entry, convertOptions(options) as any);
+      await manifestCommand(command, entry, options);
     });
 
   program.parse(process.argv);

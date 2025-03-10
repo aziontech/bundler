@@ -14,12 +14,11 @@ import { executePrebuild } from './modules/prebuild';
 import { executeBuild } from './modules/core';
 import { executePostbuild } from './modules/postbuild';
 import { generateManifest } from './modules/manifest';
-import { checkDependenciesInstallation } from './utils';
+import { checkDependencies } from './utils';
 import { setEnvironment } from './modules/environment';
 import { setupWorkerCode } from './modules/worker';
 import { resolveEntrypoint } from './modules/entrypoint/entrypoint';
 
-import { angular } from 'azion/presets';
 const DEFAULT_PRESET = 'javascript';
 
 interface BuildParams {
@@ -27,19 +26,13 @@ interface BuildParams {
   ctx: BuildContext;
 }
 
-/**
- * Main build function
- */
-export const build = async ({
-  config: userConfig,
-  ctx,
-}: BuildParams): Promise<void> => {
+export const build = async ({ config, ctx }: BuildParams): Promise<void> => {
   try {
-    await checkDependenciesInstallation();
+    await checkDependencies();
 
     /**
      * Users can provide either:
-     * 1. A preset name (string) that will be resolved from the library's built-in presets
+     * 1. A preset name (string) that will be resolved from the library's built-in presets (azion/presets)
      * 2. A preset module that follows the AzionBuildPreset interface
      *
      * Example:
@@ -47,16 +40,14 @@ export const build = async ({
      * - Using custom preset: config.build.preset = customPresetModule
      */
 
-    const presetInput = userConfig.build?.preset || DEFAULT_PRESET;
+    const presetInput = config.build?.preset || DEFAULT_PRESET;
     const resolvedPreset: AzionBuildPreset = await resolvePreset(presetInput);
 
-    const buildConfigSetup = setupBuildConfig(userConfig, resolvedPreset);
+    const buildConfigSetup = setupBuildConfig(config, resolvedPreset);
 
-    // Resolve the correct entrypoint
     ctx.entrypoint = await resolveEntrypoint({
-      entrypoint: ctx.entrypoint,
+      ctx,
       preset: resolvedPreset,
-      userConfig,
     });
 
     /**
@@ -96,12 +87,11 @@ export const build = async ({
     // Phase 3: Postbuild
     await executePostbuild({ buildConfig: buildConfigSetup, ctx });
 
-    await setEnvironment({ userConfig, preset: resolvedPreset, ctx });
+    // Phase 4: Set Environment
+    await setEnvironment({ config, preset: resolvedPreset, ctx });
 
-    // Phase 4: Generate manifest
-    await generateManifest(userConfig);
-
-    // Phase 5: Set Environment
+    // Phase 5: Generate manifest
+    await generateManifest(config);
   } catch (error: unknown) {
     debug.error(error);
     feedback.build.error(

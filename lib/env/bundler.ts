@@ -12,16 +12,17 @@ import {
 } from 'typescript';
 import prettier from 'prettier';
 import { createRequire } from 'module';
+import { AzionConfig } from 'azion/config';
 
 /**
  * Creates or updates Bundler environment variables.
  * @async
  * @example
  * // Set multiple global environment variables
- * createBundlerEnv({ API_KEY: 'abc123', ANOTHER_KEY: 'xyz' }, 'global')
+ * createStore({ API_KEY: 'abc123', ANOTHER_KEY: 'xyz' }, 'global')
  *   .catch(error => console.error(error));
  */
-export async function createBundlerEnv(
+export async function createStore(
   variables: Record<string, unknown>,
   scope = 'global',
 ) {
@@ -64,16 +65,16 @@ export async function createBundlerEnv(
  * the variables and their values, or null if the file doesn't exist.
  * @example
  * // Read global environment variables
- * readBundlerEnv('global')
+ * readStore('global')
  *   .then(env => console.log(env))
  *   .catch(error => console.error(error));
  *
  * // Read project-level environment variables
- * readBundlerEnv('local')
+ * readStore('local')
  *   .then(env => console.log(env))
  *   .catch(error => console.error(error));
  */
-export async function readBundlerEnv(scope = 'global') {
+export async function readStore(scope = 'global') {
   let basePath;
   switch (scope) {
     case 'global':
@@ -131,7 +132,7 @@ function handleDependencyError(error: Error, configPath: string) {
  * Loads the azion.config file and returns the entire configuration object.
  * @async
  */
-export async function loadAzionConfig() {
+export async function readUserConfig() {
   const require = createRequire(import.meta.url);
   const extensions = ['.js', '.mjs', '.cjs', '.ts'];
   const configName = 'azion.config';
@@ -207,14 +208,29 @@ export async function loadAzionConfig() {
     throw error;
   }
 }
+
 /**
- * Creates an Azion configuration file with the appropriate extension if it does not exist.
+ * Checks if the project is using CommonJS based on package.json
+ * If there's no package.json or no 'type' field, assumes CommonJS
+ */
+function isCommonJS(): boolean {
+  const packageJsonPath = path.join(process.cwd(), 'package.json');
+
+  if (fs.existsSync(packageJsonPath)) {
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    return packageJson.type !== 'module';
+  }
+
+  return true;
+}
+
+/**
+ * Creates an Azion configuration file with the appropriate extension.
+ * Determines module type (CommonJS/ESM) from package.json
  * @async
  */
-export async function createAzionConfigFile(
-  useCommonJS: boolean,
-  module: Record<string, unknown>,
-) {
+export async function writeUserConfig(config: AzionConfig): Promise<void> {
+  const useCommonJS = isCommonJS();
   const extension = useCommonJS ? '.cjs' : '.mjs';
   const configPath = path.join(process.cwd(), `azion.config${extension}`);
   const moduleExportStyle = useCommonJS ? 'module.exports =' : 'export default';
@@ -226,7 +242,7 @@ export async function createAzionConfigFile(
     return value;
   };
 
-  let jsonString = JSON.stringify(module, replacer, 2);
+  let jsonString = JSON.stringify(config, replacer, 2);
 
   jsonString = jsonString.replace(
     /"__FUNCTION_START__(.*?)__FUNCTION_END__"/g,
@@ -245,16 +261,14 @@ export async function createAzionConfigFile(
     },
   );
 
-  const finalContent = `${formattedContent}`;
-
   if (!fs.existsSync(configPath)) {
-    await fsPromises.writeFile(configPath, finalContent);
+    await fsPromises.writeFile(configPath, formattedContent);
   }
 }
 
 export default {
-  createBundlerEnv,
-  readBundlerEnv,
-  loadAzionConfig,
-  createAzionConfigFile,
+  createStore,
+  readStore,
+  readUserConfig,
+  writeUserConfig,
 };

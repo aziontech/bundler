@@ -1,5 +1,18 @@
 import runtime from './runtime';
 import server from './server';
-import bundler from './bundler';
 
-export { runtime, server, bundler };
+import {
+  readUserConfig,
+  writeUserConfig,
+  readStore,
+  createStore,
+} from './bundler';
+
+export {
+  runtime,
+  server,
+  readUserConfig,
+  writeUserConfig,
+  readStore,
+  createStore,
+};

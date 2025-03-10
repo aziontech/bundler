@@ -81,7 +81,7 @@ async function initializeServer(port: number, workerCode: string) {
  * Build to Local Server with polyfill external
  */
 async function buildToLocalServer() {
-  const vulcanEnv = await bundler.readBundlerEnv('global');
+  const vulcanEnv = await bundler.readStore('global');
 
   if (!vulcanEnv) {
     const msg = Messages.env.server.errors.run_build_command;

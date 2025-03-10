@@ -1,4 +1,4 @@
-import { bundler } from '#env';
+import { createStore } from '#env';
 import { feedback } from 'azion/utils/node';
 
 /**
@@ -23,7 +23,7 @@ async function initCommand({
     if (!preset) throwError('preset');
     if (!scope) throwError('scope');
 
-    await bundler.createBundlerEnv({ preset }, scope);
+    await createStore({ preset }, scope);
 
     feedback.info(`Temporary store file created!`);
   } catch (error) {

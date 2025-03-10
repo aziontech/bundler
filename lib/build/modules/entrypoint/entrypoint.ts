@@ -1,79 +1,55 @@
-import { AzionBuildPreset, AzionConfig } from 'azion/config';
+import { AzionBuildPreset, BuildContext } from 'azion/config';
 import { feedback } from 'azion/utils/node';
-import { join, dirname, resolve } from 'path';
-import { existsSync } from 'fs';
-import { fileURLToPath } from 'url';
+import { resolve } from 'path';
 
 interface EntrypointOptions {
-  entrypoint?: string;
+  ctx: BuildContext;
   preset: AzionBuildPreset;
-  userConfig: AzionConfig;
 }
-
-// Obtém o caminho base do bundler
-const bundlerRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../');
 
 /**
  * Resolves the entrypoint based on priority:
- * 1. User-defined entrypoint
- * 2. Preset handler
- * 3. Preset default entry config
+ * 1. Command line entrypoint (ctx.entrypoint)
+ * 2. Preset handler (if preset.handler is true)
+ * 3. Preset default entry config (preset.config.build.entry)
+ *
+ * @throws Error if no valid entrypoint is found
  */
 export const resolveEntrypoint = async ({
-  entrypoint,
+  ctx,
   preset,
-  userConfig,
 }: EntrypointOptions): Promise<string> => {
-  // Prioridade 1: Entrypoint definido pelo usuário
-  if (entrypoint && existsSync(entrypoint)) {
-    feedback.build.info(`Using ${entrypoint} as entry point.`);
-    return entrypoint;
+  // Step 1: Check for user-provided entrypoint
+  if (ctx.entrypoint) {
+    feedback.build.info(`Using ${ctx.entrypoint} as entry point.`);
+    return ctx.entrypoint;
   }
 
-  // Prioridade 2: Handler do preset
+  // Step 2: Check for preset handler
   if (preset.handler) {
     feedback.build.info(
       `Using built-in handler from "${preset.metadata.name}" preset.`,
     );
 
-    // Procura o handler nas dependências do bundler
-    const handlerPath = resolve(
-      bundlerRoot,
+    // Resolve handler path from bundler's node_modules
+    return resolve(
+      globalThis.bundler.root,
       'node_modules',
       'azion',
-      'packages',
-      'presets',
-      'src',
       'presets',
       preset.metadata.name,
       'handler.ts',
     );
-
-    if (existsSync(handlerPath)) {
-      return handlerPath;
-    }
-
-    throw new Error(
-      `Handler file not found for preset "${preset.metadata.name}" at ${handlerPath}`,
-    );
   }
 
-  // Prioridade 3: Entrada padrão do preset
-  if (preset.config?.build?.entry) {
+  // Step 3: Check for preset's default entry
+  if (preset.config.build?.entry) {
     const presetEntry = preset.config.build.entry;
-    const entryPath = resolve(presetEntry);
-
-    if (existsSync(entryPath)) {
-      feedback.build.info(`Using preset default entry: ${presetEntry}`);
-      return entryPath;
-    }
-
-    throw new Error(
-      `Preset "${preset.metadata.name}" default entry file not found: ${presetEntry}`,
-    );
+    feedback.build.info(`Using preset default entry: ${presetEntry}`);
+    return resolve(presetEntry);
   }
 
-  // Se chegou até aqui, não foi possível resolver o entrypoint
+  // No valid entrypoint found
   throw new Error(
     `Cannot determine entry point. Please specify one using --entry or in your configuration.`,
   );

@@ -48,7 +48,7 @@ export const hasNodeModulesDirectory = async (): Promise<boolean> => {
   }
 };
 
-export const checkDependenciesInstallation = async (): Promise<void> => {
+export const checkDependencies = async (): Promise<void> => {
   let projectJson: PackageJson;
 
   try {

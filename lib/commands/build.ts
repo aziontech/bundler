@@ -1,9 +1,8 @@
 import { checkingProjectTypeJS } from '#utils';
 import { feedback } from 'azion/utils/node';
-import bundlerEnv from '../env/bundler';
+import { readUserConfig, readStore, createStore } from '#env';
 import { build } from '#build';
 import { AzionConfig, PresetInput } from 'azion/config';
-import { resolvePreset } from '../build/modules/preset';
 import { resolve } from 'path';
 
 /**
@@ -41,6 +40,39 @@ function getPresetValue(
 }
 
 /**
+ * Build command options received from CLI
+ */
+interface BuildCommandOptions {
+  /**
+   * Code entrypoint path
+   * @default './main.js' or './main.ts'
+   */
+  entry?: string;
+
+  /**
+   * Preset of build target (e.g., vue, next, javascript)
+   */
+  preset?: string;
+
+  /**
+   * Use node polyfills in build
+   * @default true
+   */
+  polyfills?: boolean;
+  /**
+   * Indicates that the constructed code inserts its own worker expression
+   * @default false
+   */
+  worker?: boolean;
+
+  /**
+   * Build mode
+   * @default true
+   */
+  production?: boolean;
+}
+
+/**
  * A command to initiate the build process.
  * This command prioritizes parameters over .azion-bundler file configurations.
  * If a parameter is provided, it uses the parameter value,
@@ -56,20 +88,20 @@ function getPresetValue(
  */
 async function buildCommand({
   entry,
-  bundler,
   preset,
   polyfills,
   worker,
   production = true,
-}: Record<string, any>) {
-  const vulcanConfig = await bundlerEnv.loadAzionConfig();
-  const customConfigurationModule = vulcanConfig?.build || {};
-  const vulcanVariables = await bundlerEnv.readBundlerEnv('global');
+}: BuildCommandOptions) {
+  const userConfig = await readUserConfig();
+  const userConfigBuild = userConfig?.build || {};
+
+  const bundlerStore = await readStore();
   // Primeiro obtemos o preset para determinar os outros valores
   let presetInput = getPresetValue(
-    customConfigurationModule?.preset,
+    userConfigBuild?.preset,
     preset,
-    vulcanVariables as Record<string, unknown>,
+    bundlerStore as Record<string, unknown>,
     { name: '' },
   );
 
@@ -84,41 +116,32 @@ async function buildCommand({
   // Obtemos todos os valores de configuração
   const configValues = {
     entry: getConfigValue(
-      customConfigurationModule?.entry,
+      userConfigBuild?.entry,
       entry,
-      vulcanVariables?.entry as string,
+      bundlerStore?.entry as string,
       undefined,
     ),
     bundler: getConfigValue(
-      customConfigurationModule?.bundler,
-      bundler,
-      vulcanVariables?.bundler as string,
+      userConfigBuild?.bundler,
+      undefined,
+      bundlerStore?.bundler as string,
       'esbuild',
     ),
     polyfills: getConfigValue(
-      customConfigurationModule?.polyfills,
+      userConfigBuild?.polyfills,
       polyfills,
-      vulcanVariables?.polyfills as boolean,
+      bundlerStore?.polyfills as boolean,
       true,
     ),
     worker: getConfigValue(
-      customConfigurationModule?.worker,
+      userConfigBuild?.worker,
       worker,
-      vulcanVariables?.worker as boolean,
+      bundlerStore?.worker as boolean,
       false,
     ),
     preset: presetInput,
   };
-
-  // Salvamos os valores no arquivo de configuração uma única vez
-  await bundlerEnv.createBundlerEnv(configValues);
-
-  const resolvedPreset = await resolvePreset(presetInput);
-
-  if (!resolvedPreset.handler) {
-    feedback.info(`Using ${configValues.entry} as entrypoint...`);
-    feedback.info("To change the entrypoint, use the '--entry' argument.");
-  }
+  await createStore(configValues);
 
   const config: AzionConfig = {
     build: {
