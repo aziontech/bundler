@@ -3,7 +3,6 @@ import generateTimestamp from './generateTimestamp/index';
 import checkingProjectTypeJS from './checkingProjectType/index';
 import helperHandlerCode from './helperHandlerCode/index';
 import readWorkerFile from './readWorkerFile/index';
-import presets from './presets/index';
 
 export {
   helperHandlerCode,
@@ -11,5 +10,4 @@ export {
   generateTimestamp,
   checkingProjectTypeJS,
   readWorkerFile,
-  presets,
 };

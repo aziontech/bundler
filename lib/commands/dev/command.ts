@@ -3,25 +3,25 @@ import { join } from 'path';
 /**
  * @function
  * @description A command to start the development server.
- * This function takes a file path and options object as arguments.
- * The file path is the entry point for the development server,
- * and the options object contains the port number.
+ * This function takes an options object containing the entry point and port number.
  * @example
  *
- * devCommand('./path/to/entry.js', { port: 3000 });
+ * devCommand({ entry: './path/to/entry.js', port: '3000' });
  */
-export async function devCommand(entry: string, { port }: { port: string }) {
+export async function devCommand({
+  entry,
+  port,
+}: {
+  entry?: string;
+  port: string;
+}) {
   const parsedPort = parseInt(port, 10);
   const { server } = await import('#env');
 
   const edgeDir = join(process.cwd(), '.edge');
   const devWorkerPath = join(edgeDir, 'worker.dev.js');
 
-  let entryPoint = entry;
-
-  if (!entryPoint) {
-    entryPoint = devWorkerPath;
-  }
+  const entryPoint = entry || devWorkerPath;
 
   server(entryPoint, parsedPort);
 }

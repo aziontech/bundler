@@ -2,10 +2,12 @@ import net from 'net';
 import { debug, readWorkerFile, helperHandlerCode } from '#utils';
 import { feedback } from 'azion/utils/node';
 import { Messages } from '#constants';
+
 import chokidar from 'chokidar';
 import runtime from './runtime.js';
 import bundler from './bundler.js';
-import buildCommand from '../commands/build/command.js';
+
+import { buildCommand } from '../commands/build/command.js';
 import { runServer } from 'edge-runtime';
 
 let currentServer: Awaited<ReturnType<typeof runServer>>;

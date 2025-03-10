@@ -1,6 +1,6 @@
 import mockFs from 'mock-fs';
 import { afterEach, expect } from '@jest/globals';
-import presets from './presets';
+import { getKeys } from './presets';
 
 describe('getPresetsList utils', () => {
   afterEach(() => {
@@ -31,7 +31,7 @@ describe('getPresetsList utils', () => {
       'vue',
     ];
 
-    const result = presets.getKeys();
+    const result = getKeys();
 
     expect(result).toEqual(expectedOutput);
   });

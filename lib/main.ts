@@ -177,9 +177,13 @@ function startBundlerProgram() {
       '--worker [boolean]',
       'Indicates that the constructed code inserts its own worker expression. Use --worker or --worker=true to enable, --worker=false to disable',
     )
+    .option('--development', 'Build in development mode', false)
     .action(async (options) => {
       const { buildCommand } = await import('#commands');
-      await buildCommand({ production: true, ...options });
+      await buildCommand({
+        ...options,
+        production: !options.development,
+      });
     });
 
   program
@@ -192,7 +196,7 @@ function startBundlerProgram() {
     .option('-p, --port <port>', 'Specify the port', '3333')
     .action(async (entry, options) => {
       const { devCommand } = await import('#commands');
-      await devCommand(entry, options);
+      await devCommand({ entry, ...options });
     });
 
   program

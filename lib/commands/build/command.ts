@@ -5,6 +5,8 @@ import { build } from 'lib/commands/build/build';
 import { AzionConfig, PresetInput } from 'azion/config';
 import { resolve } from 'path';
 
+import { BuildCommandOptions } from './types';
+
 /**
  * Retrieves a configuration value based on priority.
  * Priority order: inputOption, userConfig, storeValue, defaultValue.
@@ -40,39 +42,6 @@ function getPresetValue(
 }
 
 /**
- * Build command options received from CLI
- */
-interface BuildCommandOptions {
-  /**
-   * Code entrypoint path
-   * @default './main.js' or './main.ts'
-   */
-  entry?: string;
-
-  /**
-   * Preset of build target (e.g., vue, next, javascript)
-   */
-  preset?: string;
-
-  /**
-   * Use node polyfills in build
-   * @default true
-   */
-  polyfills?: boolean;
-  /**
-   * Indicates that the constructed code inserts its own worker expression
-   * @default false
-   */
-  worker?: boolean;
-
-  /**
-   * Build mode
-   * @default true
-   */
-  production?: boolean;
-}
-
-/**
  * A command to initiate the build process.
  * This command prioritizes parameters over .azion-bundler file configurations.
  * If a parameter is provided, it uses the parameter value,
@@ -86,13 +55,7 @@ interface BuildCommandOptions {
  *   polyfills: false
  * });
  */
-export async function buildCommand({
-  entry,
-  preset,
-  polyfills,
-  worker,
-  production = true,
-}: BuildCommandOptions) {
+export async function buildCommand(options: BuildCommandOptions) {
   const userConfig = await readUserConfig();
   const userConfigBuild = userConfig?.build || {};
 
@@ -100,7 +63,7 @@ export async function buildCommand({
   // Primeiro obtemos o preset para determinar os outros valores
   let presetInput = getPresetValue(
     userConfigBuild?.preset,
-    preset,
+    options.preset,
     bundlerStore as Record<string, unknown>,
     { name: '' },
   );
@@ -117,7 +80,7 @@ export async function buildCommand({
   const configValues = {
     entry: getConfigValue(
       userConfigBuild?.entry,
-      entry,
+      options.entry,
       bundlerStore?.entry as string,
       undefined,
     ),
@@ -129,13 +92,13 @@ export async function buildCommand({
     ),
     polyfills: getConfigValue(
       userConfigBuild?.polyfills,
-      polyfills,
+      options.polyfills,
       bundlerStore?.polyfills as boolean,
       true,
     ),
     worker: getConfigValue(
       userConfigBuild?.worker,
-      worker,
+      options.worker,
       bundlerStore?.worker as boolean,
       false,
     ),
@@ -152,7 +115,7 @@ export async function buildCommand({
   await build({
     config,
     ctx: {
-      production,
+      production: options.production ?? true,
       output: resolve('.edge', 'worker.js'),
       entrypoint: resolve(config.build?.entry || ''),
     },

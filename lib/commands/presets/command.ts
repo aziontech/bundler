@@ -1,4 +1,5 @@
 import { feedback } from 'azion/utils/node';
+import { getBeautify } from './presets';
 
 /**
  * @function
@@ -11,14 +12,9 @@ import { feedback } from 'azion/utils/node';
  * presetsCommand('ls');
  */
 export async function presetsCommand(command: string) {
-  const { presets }: any = await import('#utils');
-
   switch (command) {
     case 'ls':
-      presets
-        .getBeautify()
-        .forEach((preset: string) => feedback.option(preset));
-
+      getBeautify().forEach((preset: string) => feedback.option(preset));
       break;
 
     default:
