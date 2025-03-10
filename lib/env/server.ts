@@ -80,7 +80,7 @@ async function initializeServer(port: number, workerCode: string) {
 /**
  * Build to Local Server with polyfill external
  */
-async function buildToLocalServer(isFirewall: boolean) {
+async function buildToLocalServer() {
   const vulcanEnv = await bundler.readBundlerEnv('global');
 
   if (!vulcanEnv) {
@@ -94,17 +94,13 @@ async function buildToLocalServer(isFirewall: boolean) {
 /**
  * Handle server operations: start, restart.
  */
-async function manageServer(
-  workerPath: string,
-  port: number,
-  isFirewall: boolean,
-) {
+async function manageServer(workerPath: string, port: number) {
   try {
     if (currentServer) {
       await currentServer.close();
     }
 
-    await buildToLocalServer(isFirewall);
+    await buildToLocalServer();
 
     const workerCode = await readWorkerCode(workerPath);
 
@@ -117,7 +113,7 @@ async function manageServer(
       );
     } catch (error) {
       if ((error as any).message.includes('EADDRINUSE')) {
-        await manageServer(workerPath, port + 1, isFirewall);
+        await manageServer(workerPath, port + 1);
       } else {
         throw error;
       }
@@ -138,7 +134,6 @@ async function handleFileChange(
   path: string,
   workerPath: string,
   port: number,
-  isFirewall: boolean,
 ) {
   if (isChangeHandlerRunning) return;
 
@@ -156,7 +151,7 @@ async function handleFileChange(
 
   try {
     feedback.build.info(Messages.build.info.rebuilding);
-    await manageServer(workerPath, port, isFirewall);
+    await manageServer(workerPath, port);
   } catch (error) {
     (debug as any).error(`Build or server restart failed: ${error}`);
   } finally {
@@ -167,11 +162,7 @@ async function handleFileChange(
 /**
  * Entry point function to start the server and watch for file changes.
  */
-async function startServer(
-  workerPath: string,
-  isFirewall: boolean,
-  port: number,
-) {
+async function startServer(workerPath: string, port: number) {
   const IsPortInUse = await checkPortAvailability(port);
   if (IsPortInUse) {
     feedback.server.error(
@@ -179,7 +170,7 @@ async function startServer(
     );
     process.exit(1);
   }
-  await manageServer(workerPath, port, isFirewall);
+  await manageServer(workerPath, port);
 
   const watcher = chokidar.watch('./', {
     persistent: true,
@@ -189,7 +180,7 @@ async function startServer(
   });
 
   const handleUserFileChange = async (path: string) => {
-    await handleFileChange(path, workerPath, port, isFirewall);
+    await handleFileChange(path, workerPath, port);
   };
 
   watcher

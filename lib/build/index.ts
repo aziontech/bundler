@@ -17,7 +17,9 @@ import { generateManifest } from './modules/manifest';
 import { checkDependenciesInstallation } from './utils';
 import { setEnvironment } from './modules/environment';
 import { setupWorkerCode } from './modules/worker';
+import { resolveEntrypoint } from './modules/entrypoint/entrypoint';
 
+import { angular } from 'azion/presets';
 const DEFAULT_PRESET = 'javascript';
 
 interface BuildParams {
@@ -50,6 +52,13 @@ export const build = async ({
 
     const buildConfigSetup = setupBuildConfig(userConfig, resolvedPreset);
 
+    // Resolve the correct entrypoint
+    ctx.entrypoint = await resolveEntrypoint({
+      entrypoint: ctx.entrypoint,
+      preset: resolvedPreset,
+      userConfig,
+    });
+
     /**
      * Resolves the handler function and converts ESM exports to worker format.
      * This step is necessary because Azion's runtime currently only supports
@@ -61,9 +70,8 @@ export const build = async ({
      * To Worker:
      *   addEventListener('fetch', (event) => { event.respondWith(...) })
      */
-    const adaptedHandler = await setupWorkerCode(buildConfigSetup, ctx);
 
-    // Write the adapted handler to the bundler's entry file (used by webpack/esbuild)
+    const adaptedHandler = await setupWorkerCode(buildConfigSetup, ctx);
     await writeFile(buildConfigSetup.entry, adaptedHandler);
 
     /* Execute build phases */

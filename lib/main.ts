@@ -196,11 +196,6 @@ function startBundlerProgram() {
       '--worker [boolean]',
       'Indicates that the constructed code inserts its own worker expression. Use --worker or --worker=true to enable, --worker=false to disable',
     )
-    .option(
-      '--firewall',
-      'To enable the firewall (Experimental) for local environment',
-      false,
-    )
     .action(async (options) => {
       const { buildCommand } = await import('#commands');
       const convertedOptions = convertOptions(options);
