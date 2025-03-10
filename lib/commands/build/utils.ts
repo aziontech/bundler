@@ -1,17 +1,9 @@
 import { join } from 'path';
 import fs from 'fs';
-import { existsSync, readdirSync } from 'fs';
-import { extname } from 'path';
-
-import type { AzionBuildPreset } from 'azion/config';
-import * as presets from 'azion/presets';
 import { getPackageManager } from 'azion/utils/node';
 import type { PackageJson } from './types';
 import { ConfigValueOptions, PresetValueOptions } from './types';
 import { PresetInput } from 'azion/config';
-
-// @ts-expect-error - Types are not properly exported
-import { listFrameworks } from '@netlify/framework-info';
 
 export class PackageJsonError extends Error {
   constructor(
@@ -77,41 +69,6 @@ export const checkDependencies = async (): Promise<void> => {
     }
   }
 };
-
-/**
- * Detects project type by analyzing package.json dependencies
- * @returns The detected preset name based on project dependencies
- */
-export async function inferPreset(): Promise<string> {
-  try {
-    // Try framework detection with @netlify/framework-info
-    const detectedFramework = await listFrameworks({
-      projectDir: process.cwd(),
-    });
-    if (detectedFramework[0]?.id) {
-      const hasPreset = Object.values(presets).some(
-        (preset: AzionBuildPreset) =>
-          preset.metadata?.registry === detectedFramework[0].id,
-      );
-      if (hasPreset) return detectedFramework[0].id;
-    }
-
-    // Check for TypeScript
-    const tsConfigPath = join(process.cwd(), 'tsconfig.json');
-    const tsConfigExists = existsSync(tsConfigPath);
-    if (tsConfigExists) return 'typescript';
-
-    const files = readdirSync(process.cwd());
-    const hasTypeScriptFiles = files.some((file) =>
-      ['.ts', '.tsx'].includes(extname(file)),
-    );
-    if (hasTypeScriptFiles) return 'typescript';
-
-    return 'javascript';
-  } catch (error) {
-    return 'javascript';
-  }
-}
 
 /**
  * Resolves a configuration value based on priority chain:

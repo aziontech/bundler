@@ -5,7 +5,7 @@ import { join } from 'path';
 import { existsSync, readdirSync } from 'fs';
 import { extname } from 'path';
 // @ts-expect-error - Types are not properly exported
-import { detectFramework } from '@netlify/framework-info';
+import { listFrameworks } from '@netlify/framework-info';
 
 /**
  * Infers the appropriate preset based on project structure and dependencies.
@@ -16,19 +16,22 @@ import { detectFramework } from '@netlify/framework-info';
  *
  * @returns Promise<string> The inferred preset name
  */
+
 export async function inferPreset(): Promise<string> {
   try {
     // Try framework detection with @netlify/framework-info
-    const detectedFramework = await detectFramework(process.cwd());
-    if (detectedFramework?.id) {
+    const detectedFramework = await listFrameworks({
+      projectDir: process.cwd(),
+    });
+    if (detectedFramework[0]?.id) {
       const hasPreset = Object.values(presets).some(
         (preset: AzionBuildPreset) =>
-          preset.metadata?.registry === detectedFramework.id,
+          preset.metadata?.registry === detectedFramework[0].id,
       );
-      if (hasPreset) return detectedFramework.id;
+      if (hasPreset) return detectedFramework[0].id;
     }
 
-    // Check for TypeScript configuration or files
+    // Check for TypeScript
     const tsConfigPath = join(process.cwd(), 'tsconfig.json');
     const tsConfigExists = existsSync(tsConfigPath);
     if (tsConfigExists) return 'typescript';
