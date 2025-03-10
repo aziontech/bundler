@@ -4,6 +4,7 @@ import { AzionConfig } from 'azion/config';
 import { resolve } from 'path';
 import type { BuildCommandOptions } from './types';
 import { resolveConfigPriority, resolvePresetPriority } from './utils';
+import { AzionBuild } from 'azion/config';
 
 /**
  * A command to initiate the build process.
@@ -20,7 +21,8 @@ import { resolveConfigPriority, resolvePresetPriority } from './utils';
  * });
  */
 export async function buildCommand(options: BuildCommandOptions) {
-  const { build: userBuildConfig = {} } = (await readUserConfig()) || {};
+  const userConfig: AzionConfig = (await readUserConfig()) || {};
+  const { build: userBuildConfig } = userConfig;
 
   const bundlerStore: BundlerStore = await readStore();
 
@@ -38,9 +40,9 @@ export async function buildCommand(options: BuildCommandOptions) {
       storeValue: bundlerStore?.entry,
       defaultValue: undefined,
     }),
-    bundler: resolveConfigPriority({
-      inputValue: userBuildConfig?.bundler,
-      fileValue: undefined,
+    bundler: resolveConfigPriority<'webpack' | 'esbuild'>({
+      inputValue: undefined,
+      fileValue: userBuildConfig?.bundler,
       storeValue: bundlerStore?.bundler,
       defaultValue: 'esbuild',
     }),
