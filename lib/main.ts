@@ -58,7 +58,6 @@ function validateNodeMinVersion() {
  *    setBundlerEnvironment();
  */
 interface BundlerGlobals {
-  env: string;
   root: string;
   package: Record<string, unknown>;
   debug: boolean;
@@ -73,7 +72,6 @@ declare global {
 
 function setBundlerEnvironment() {
   const bundlerContext = {
-    env: 'production',
     root: bundlerRootPath,
     package: bundlerPackageJSON,
     debug: debugEnabled,
@@ -82,13 +80,6 @@ function setBundlerEnvironment() {
     argsPath: `azion/args.json`,
   };
 
-  const AZION_ENV = process.env.AZION_ENV || bundlerContext.env;
-  if (!['production', 'stage', 'local'].includes(AZION_ENV)) {
-    feedback.error(Messages.env.errors.invalid_environment);
-    process.exit(1);
-  } else {
-    bundlerContext.env = AZION_ENV;
-  }
   globalThis.bundler = bundlerContext;
 }
 
