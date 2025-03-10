@@ -1,5 +1,5 @@
 import net from 'net';
-import { debug, helperHandlerCode } from '#utils';
+import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
 import { Messages } from '#constants';
 
@@ -13,6 +13,27 @@ import fs from 'fs/promises';
 
 let currentServer: Awaited<ReturnType<typeof runServer>>;
 let isChangeHandlerRunning = false;
+
+/**
+ * Check and change AddEventListener event
+ */
+const checkAndChangeAddEventListener = (
+  eventTarget: string,
+  newEvent: string,
+  code: string,
+  replaceCode = true,
+) => {
+  let codeChanged = code;
+  const eventRegex = new RegExp(
+    `addEventListener\\((['"]?)${eventTarget}\\1,`,
+    'g',
+  );
+  const matchEvent = !!code.match(eventRegex);
+  if (matchEvent && replaceCode) {
+    codeChanged = code.replace(eventRegex, `addEventListener("${newEvent}",`);
+  }
+  return { matchEvent, codeChanged };
+};
 
 /**
  * Checks if a port is in use by trying to connect to it.
@@ -68,11 +89,7 @@ async function initializeServer(port: number, workerCode: string) {
   // This is required at this point because the VM used for the local runtime
   // server does not support any other type of event than "fetch".
   const { matchEvent: isFirewallEvent, codeChanged } =
-    helperHandlerCode.checkAndChangeAddEventListener(
-      'firewall',
-      'fetch',
-      workerCode,
-    ) as any;
+    checkAndChangeAddEventListener('firewall', 'fetch', workerCode) as any;
   // Use the changed code if it's a Firewall event
   const initialCode = isFirewallEvent ? codeChanged : workerCode;
 
