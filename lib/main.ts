@@ -3,29 +3,31 @@ import { resolve, join } from 'path';
 import { readFileSync, readdirSync, unlinkSync, mkdirSync } from 'fs';
 import { Command } from 'commander';
 import { satisfies } from 'semver';
-import { feedback, getAbsoluteDirPath } from 'azion/utils/node';
-import { debug } from '#utils';
 import os from 'os';
 import crypto from 'crypto';
 
+import { debug } from '#utils';
+import { feedback, getAbsoluteDirPath } from 'azion/utils/node';
+
 const MIN_NODE_VERSION = '18.0.0';
 
-const bundlerLibPath = getAbsoluteDirPath(import.meta.url, 'bundler');
-
-const bundlerRootPath = resolve(bundlerLibPath, '.');
-const bundlerPackageJSON = JSON.parse(
-  readFileSync(`${bundlerRootPath}/package.json`, 'utf8'),
+const BUNDLER_LIB_DIR_ABSOLUTE_PATH = getAbsoluteDirPath(
+  import.meta.url,
+  'bundler',
 );
-const bundlerVersion = bundlerPackageJSON.version;
+const BUNDLER_ROOT_ABSOLUTE_PATH = resolve(BUNDLER_LIB_DIR_ABSOLUTE_PATH, '.');
+const BUNDLER_PACKAGE_JSON = JSON.parse(
+  readFileSync(`${BUNDLER_ROOT_ABSOLUTE_PATH}/package.json`, 'utf8'),
+);
+const BUNDLER_CURRENT_VERSION = BUNDLER_PACKAGE_JSON.version;
+const IS_DEBUG_ENABLED = process.env.DEBUG === 'true';
 
-const debugEnabled = process.env.DEBUG === 'true';
-
-const program = new Command();
+const AzionBundler = new Command();
 
 /**
  * Generates a unique hash for the current project
  */
-function generateProjectHash() {
+function generateProjectID() {
   const projectPath = process.cwd();
   return crypto.createHash('md5').update(projectPath).digest('hex');
 }
@@ -33,9 +35,9 @@ function generateProjectHash() {
 /**
  * Creates and returns the path to the project's temporary folder
  */
-function createProjectTempPath() {
-  const projectHash = generateProjectHash();
-  const tempPath = join(os.tmpdir(), '.azion', projectHash);
+function createSessionTempDir() {
+  const projectID = generateProjectID();
+  const tempPath = join(os.tmpdir(), '.azion', projectID);
   mkdirSync(tempPath, { recursive: true });
   return tempPath;
 }
@@ -56,26 +58,13 @@ function validateNodeMinVersion() {
  * @example
  *    setBundlerEnvironment();
  */
-interface BundlerGlobals {
-  root: string;
-  package: Record<string, unknown>;
-  debug: boolean;
-  version: string;
-  tempPath: string;
-  argsPath: string;
-}
-
-declare global {
-  var bundler: BundlerGlobals;
-}
-
 function setBundlerEnvironment() {
   const bundlerContext = {
-    root: bundlerRootPath,
-    package: bundlerPackageJSON,
-    debug: debugEnabled,
-    version: bundlerVersion,
-    tempPath: createProjectTempPath(),
+    root: BUNDLER_ROOT_ABSOLUTE_PATH,
+    package: BUNDLER_PACKAGE_JSON,
+    debug: IS_DEBUG_ENABLED,
+    version: BUNDLER_CURRENT_VERSION,
+    tempPath: createSessionTempDir(),
     argsPath: `azion/args.json`,
   };
 
@@ -131,15 +120,14 @@ function setupBundlerProcessHandlers() {
 }
 
 /**
- * Starts the command-line interface program.
+ * Starts the command-line interface AzionBundler.
  * @example
- *    startBundlerProgram();
+ *    startBundler();
  */
-function startBundlerProgram() {
-  program.version(bundlerVersion);
+function startBundler() {
+  AzionBundler.version(BUNDLER_CURRENT_VERSION);
 
-  program
-    .command('init')
+  AzionBundler.command('init')
     .option('--preset <preset_name>', 'Preset name', false)
     .option('--scope <scope>', 'Project scope', 'global')
     .description('Initialize temporary store')
@@ -148,8 +136,7 @@ function startBundlerProgram() {
       await initCommand(options);
     });
 
-  program
-    .command('build')
+  AzionBundler.command('build')
     .description('Build a project for edge deployment')
     .option(
       '--entry <string>',
@@ -176,8 +163,7 @@ function startBundlerProgram() {
       });
     });
 
-  program
-    .command('dev')
+  AzionBundler.command('dev')
     .description('Start local environment')
     .argument(
       '[entry]',
@@ -189,16 +175,14 @@ function startBundlerProgram() {
       await devCommand({ entry, ...options });
     });
 
-  program
-    .command('presets <command>')
+  AzionBundler.command('presets <command>')
     .description('List <ls> defined project presets for Azion')
     .action(async (command) => {
       const { presetsCommand } = await import('#commands');
       await presetsCommand(command);
     });
 
-  program
-    .command('manifest <command>')
+  AzionBundler.command('manifest <command>')
     .description(
       'Trasnform <transform> or validate <validate> manifest files for Azion',
     )
@@ -209,13 +193,13 @@ function startBundlerProgram() {
       await manifestCommand(command, entry, options);
     });
 
-  program.parse(process.argv);
+  AzionBundler.parse(process.argv);
 }
 
 try {
   if (validateNodeMinVersion()) {
     setBundlerEnvironment();
-    startBundlerProgram();
+    startBundler();
     setupBundlerProcessHandlers();
   }
   if (!validateNodeMinVersion()) {
