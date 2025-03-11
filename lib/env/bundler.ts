@@ -242,8 +242,16 @@ function isCommonJS(): boolean {
 export async function writeUserConfig(config: AzionConfig): Promise<void> {
   const useCommonJS = isCommonJS();
   const extension = useCommonJS ? '.cjs' : '.mjs';
-  const configPath = path.join(process.cwd(), `azion.config${extension}`);
-  const moduleExportStyle = useCommonJS ? 'module.exports =' : 'export default';
+
+  const isTypeScript = config.build?.preset === 'typescript';
+  const configExtension = isTypeScript ? '.ts' : extension;
+  const configPath = path.join(process.cwd(), `azion.config${configExtension}`);
+
+  const moduleExportStyle = isTypeScript
+    ? 'export default'
+    : useCommonJS
+      ? 'module.exports ='
+      : 'export default';
 
   const replacer = (key: string, value: unknown) => {
     if (typeof value === 'function') {
