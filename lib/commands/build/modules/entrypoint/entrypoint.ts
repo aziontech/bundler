@@ -1,6 +1,8 @@
 import { AzionBuildPreset, BuildContext } from 'azion/config';
 import { feedback } from 'azion/utils/node';
 import { resolve } from 'path';
+import { access } from 'fs/promises';
+import { debug } from '#utils';
 
 interface EntrypointOptions {
   ctx: BuildContext;
@@ -13,7 +15,7 @@ interface EntrypointOptions {
  * 2. Preset handler (if preset.handler is true)
  * 3. Preset default entry config (preset.config.build.entry)
  *
- * @throws Error if no valid entrypoint is found
+ * @throws Error if no valid entrypoint is found or if provided entrypoint doesn't exist
  */
 export const resolveEntrypoint = async ({
   ctx,
@@ -21,8 +23,17 @@ export const resolveEntrypoint = async ({
 }: EntrypointOptions): Promise<string> => {
   // Step 1: Check for user-provided entrypoint
   if (ctx.entrypoint && !preset.handler) {
-    feedback.build.info(`Using ${ctx.entrypoint} as entry point.`);
-    return ctx.entrypoint;
+    const entrypointPath = resolve(ctx.entrypoint);
+    try {
+      await access(entrypointPath);
+      feedback.build.info(`Using ${ctx.entrypoint} as entry point.`);
+      return ctx.entrypoint;
+    } catch (error) {
+      debug.error(error);
+      throw new Error(
+        `Entry point "${ctx.entrypoint}" was not found. Please verify the path and try again.`,
+      );
+    }
   }
 
   // Step 2: Check for preset handler (agora tem prioridade sobre entry point do store)
