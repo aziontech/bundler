@@ -36,7 +36,7 @@ export const resolveEntrypoint = async ({
     }
   }
 
-  // Step 2: Check for preset handler (agora tem prioridade sobre entry point do store)
+  // Step 2: Check for preset handler
   if (preset.handler) {
     const handlerPath = resolve(
       globalThis.bundler.root,
