@@ -31,4 +31,4 @@ Object.keys(console).forEach((method: string) => {
   }
 });
 
-export default debug;
+export { debug };

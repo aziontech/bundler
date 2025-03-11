@@ -1,6 +1,12 @@
+/**
+ * @deprecated Legacy module that needs refactoring.
+ * This module manages bundler configuration and environment setup.
+ * Should be restructured to improve configuration management and type safety.
+ */
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
-import { Messages } from '#constants';
+import { PresetInput } from 'azion/config';
+
 import fs from 'fs';
 import fsPromises from 'fs/promises';
 import path from 'path';
@@ -12,19 +18,25 @@ import {
 } from 'typescript';
 import prettier from 'prettier';
 import { createRequire } from 'module';
+import { AzionConfig } from 'azion/config';
+
+export interface BundlerStore {
+  preset?: PresetInput;
+  entry?: string;
+  bundler?: 'webpack' | 'esbuild';
+  polyfills?: boolean;
+  worker?: boolean;
+}
 
 /**
  * Creates or updates Bundler environment variables.
  * @async
  * @example
  * // Set multiple global environment variables
- * createBundlerEnv({ API_KEY: 'abc123', ANOTHER_KEY: 'xyz' }, 'global')
+ * writeStore({ API_KEY: 'abc123', ANOTHER_KEY: 'xyz' }, 'global')
  *   .catch(error => console.error(error));
  */
-export async function createBundlerEnv(
-  variables: Record<string, unknown>,
-  scope = 'global',
-) {
+export async function writeStore(values: BundlerStore, scope = 'global') {
   let basePath;
   switch (scope) {
     case 'global':
@@ -37,62 +49,39 @@ export async function createBundlerEnv(
       basePath = scope;
       break;
   }
-  const vulcanEnvPath = path.join(basePath, '.azion-bundler');
+  const bundlerSesssionStorePath = path.join(basePath, '.azion-bundler.json');
 
   try {
     await fsPromises.mkdir(basePath, { recursive: true });
   } catch (error) {
     (debug as any).error(error);
-    feedback.build.error(Messages.errors.folder_creation_failed(vulcanEnvPath));
+    feedback.build.error(
+      `An error occurred while creating the ${bundlerSesssionStorePath} folder.`,
+    );
     throw error;
   }
 
-  let envData = '';
   try {
-    envData = await fsPromises.readFile(vulcanEnvPath, 'utf8');
-  } catch (error) {
-    if ((error as Error).message.includes('ENOENT')) {
-      (debug as any).error(error);
-      feedback.build.error(Messages.errors.file_doesnt_exist(vulcanEnvPath));
-      throw error;
-    }
-  }
-
-  Object.entries(variables).forEach(([key, value]) => {
-    const variableLine = `${key}=${value}`;
-    const variableRegex = new RegExp(`${key}=.+`);
-
-    if (envData.match(variableRegex)) {
-      envData = envData.replace(variableRegex, variableLine);
-    } else {
-      envData += `${variableLine}\n`;
-    }
-  });
-
-  try {
-    await fsPromises.writeFile(vulcanEnvPath, envData);
+    await fsPromises.writeFile(
+      bundlerSesssionStorePath,
+      JSON.stringify(values, null, 2),
+    );
   } catch (error) {
     (debug as any).error(error);
-    feedback.build.error(Messages.errors.write_file_failed(vulcanEnvPath));
+    feedback.build.error(
+      `An error occurred while writing the ${bundlerSesssionStorePath} file.`,
+    );
     throw error;
   }
 }
 
 /**
- * Reads the .vulcan file and returns an object with the variables and their values.
- * the variables and their values, or null if the file doesn't exist.
- * @example
- * // Read global environment variables
- * readBundlerEnv('global')
- *   .then(env => console.log(env))
- *   .catch(error => console.error(error));
- *
- * // Read project-level environment variables
- * readBundlerEnv('local')
- *   .then(env => console.log(env))
- *   .catch(error => console.error(error));
+ * Reads the .azion-bundler.json file and returns the stored configuration.
+ * Returns an empty object if the file doesn't exist.
  */
-export async function readBundlerEnv(scope = 'local') {
+export async function readStore(
+  scope: 'global' | 'local' | string = 'global',
+): Promise<BundlerStore> {
   let basePath;
   switch (scope) {
     case 'global':
@@ -105,29 +94,20 @@ export async function readBundlerEnv(scope = 'local') {
       basePath = scope;
       break;
   }
-  const vulcanEnvPath = path.join(basePath, '.azion-bundler');
+
+  if (!basePath) return {};
+
+  const bundlerStoreFilePath = path.join(basePath, '.azion-bundler.json');
 
   try {
-    await fsPromises.access(vulcanEnvPath);
-    const fileContents = await fsPromises.readFile(vulcanEnvPath, 'utf8');
-
-    const variables: Record<string, unknown> = {};
-    const variableRegex = /^([^=]+)=(.*)$/gm;
-    let match = variableRegex.exec(fileContents);
-    while (match !== null) {
-      const key = match[1].trim();
-      const value = match[2].trim();
-      variables[key] = value;
-      match = variableRegex.exec(fileContents);
-    }
-
-    return variables;
+    await fsPromises.access(bundlerStoreFilePath);
+    const fileContents = await fsPromises.readFile(
+      bundlerStoreFilePath,
+      'utf8',
+    );
+    return JSON.parse(fileContents);
   } catch (error) {
-    if ((error as Error).message === 'ENOENT') {
-      return null;
-    }
-    (debug as any).error(error);
-    throw error;
+    return {};
   }
 }
 
@@ -158,7 +138,7 @@ function handleDependencyError(error: Error, configPath: string) {
  * Loads the azion.config file and returns the entire configuration object.
  * @async
  */
-export async function loadAzionConfig() {
+export async function readUserConfig() {
   const require = createRequire(import.meta.url);
   const extensions = ['.js', '.mjs', '.cjs', '.ts'];
   const configName = 'azion.config';
@@ -234,17 +214,53 @@ export async function loadAzionConfig() {
     throw error;
   }
 }
+
 /**
- * Creates an Azion configuration file with the appropriate extension if it does not exist.
+ * Checks if the project is using CommonJS based on package.json
+ * If there's no package.json or no 'type' field, assumes CommonJS
+ */
+function isCommonJS(): boolean {
+  const packageJsonPath = path.join(process.cwd(), 'package.json');
+
+  if (fs.existsSync(packageJsonPath)) {
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    return packageJson.type !== 'module';
+  }
+
+  return true;
+}
+
+/**
+ * Creates an Azion configuration file with the appropriate extension.
+ * Determines module type (CommonJS/ESM) from package.json
  * @async
  */
-export async function createAzionConfigFile(
-  useCommonJS: boolean,
-  module: Record<string, unknown>,
-) {
+export async function writeUserConfig(config: AzionConfig): Promise<void> {
+  const useCommonJS = isCommonJS();
   const extension = useCommonJS ? '.cjs' : '.mjs';
-  const configPath = path.join(process.cwd(), `azion.config${extension}`);
-  const moduleExportStyle = useCommonJS ? 'module.exports =' : 'export default';
+
+  const isTypeScript = config.build?.preset === 'typescript';
+  const configExtension = isTypeScript ? '.ts' : extension;
+  const configPath = path.join(process.cwd(), `azion.config${configExtension}`);
+
+  const moduleExportStyle = isTypeScript
+    ? 'export default'
+    : useCommonJS
+      ? 'module.exports ='
+      : 'export default';
+  const configComment = `/**
+ * This file was automatically generated based on your preset configuration.
+ * 
+ * For better type checking and IntelliSense:
+ * 1. Install azion as dev dependency:
+ *    npm install -D azion
+ * 
+ * 2. Use defineConfig:
+ *    import { defineConfig } from 'azion'
+ * 
+ * For more configuration options, visit:
+ * https://github.com/aziontech/azion
+ */\n\n`;
 
   const replacer = (key: string, value: unknown) => {
     if (typeof value === 'function') {
@@ -253,17 +269,9 @@ export async function createAzionConfigFile(
     return value;
   };
 
-  let jsonString = JSON.stringify(module, replacer, 2);
-
-  jsonString = jsonString.replace(
-    /"__FUNCTION_START__(.*?)__FUNCTION_END__"/g,
-    (match, p1) => {
-      return p1.replace(/\\n/g, ' ').replace(/\\'/g, "'");
-    },
-  );
-
   const formattedContent = await prettier.format(
-    `${moduleExportStyle} ${jsonString};`,
+    configComment +
+      `${moduleExportStyle} ${JSON.stringify(config, replacer, 2)};`,
     {
       parser: 'babel',
       semi: false,
@@ -272,16 +280,14 @@ export async function createAzionConfigFile(
     },
   );
 
-  const finalContent = `${formattedContent}`;
-
   if (!fs.existsSync(configPath)) {
-    await fsPromises.writeFile(configPath, finalContent);
+    await fsPromises.writeFile(configPath, formattedContent);
   }
 }
 
 export default {
-  createBundlerEnv,
-  readBundlerEnv,
-  loadAzionConfig,
-  createAzionConfigFile,
+  writeStore,
+  readStore,
+  readUserConfig,
+  writeUserConfig,
 };

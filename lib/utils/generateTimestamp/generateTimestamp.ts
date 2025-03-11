@@ -8,7 +8,7 @@
  * const timestamp = generateTimestamp();
  * console.log(timestamp); // "20220623123456"
  */
-function generateTimestamp() {
+export function generateTimestamp() {
   const now = new Date();
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -19,5 +19,3 @@ function generateTimestamp() {
 
   return `${year}${month}${day}${hours}${minutes}${seconds}`;
 }
-
-export default generateTimestamp;

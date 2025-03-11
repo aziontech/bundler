@@ -1,15 +1,44 @@
+/**
+ * @deprecated Legacy module that needs refactoring.
+ * This module handles local development server functionality
+ * and should be restructured to improve file watching, port management,
+ * and server initialization.
+ */
 import net from 'net';
-import { debug, readWorkerFile, helperHandlerCode } from '#utils';
+import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
-import { Messages } from '#constants';
+
 import chokidar from 'chokidar';
 import runtime from './runtime.js';
 import bundler from './bundler.js';
-import buildCommand from '../commands/build.js';
+
+import { buildCommand } from '../commands/build/command.js';
 import { runServer } from 'edge-runtime';
+import fs from 'fs/promises';
 
 let currentServer: Awaited<ReturnType<typeof runServer>>;
 let isChangeHandlerRunning = false;
+
+/**
+ * Check and change AddEventListener event
+ */
+const checkAndChangeAddEventListener = (
+  eventTarget: string,
+  newEvent: string,
+  code: string,
+  replaceCode = true,
+) => {
+  let codeChanged = code;
+  const eventRegex = new RegExp(
+    `addEventListener\\((['"]?)${eventTarget}\\1,`,
+    'g',
+  );
+  const matchEvent = !!code.match(eventRegex);
+  if (matchEvent && replaceCode) {
+    codeChanged = code.replace(eventRegex, `addEventListener("${newEvent}",`);
+  }
+  return { matchEvent, codeChanged };
+};
 
 /**
  * Checks if a port is in use by trying to connect to it.
@@ -43,17 +72,17 @@ function checkPortAvailability(port: number) {
 }
 
 /**
- * Read the worker code from a specified path.
+ * Reads the content of a worker file
  */
-async function readWorkerCode(workerPath: string) {
+async function readWorkerFile(filePath: string): Promise<string> {
   try {
-    return await readWorkerFile(workerPath);
+    await fs.access(filePath);
+    return await fs.readFile(filePath, 'utf8');
   } catch (error) {
-    (debug as any).error(error);
-    feedback.server.error(
-      Messages.env.server.errors.load_worker_failed(workerPath),
-    );
-    throw error;
+    const errorMessage = (error as Error).message.includes('ENOENT')
+      ? 'File does not exist.'
+      : `An error occurred while reading the ${filePath} file.`;
+    throw new Error(errorMessage);
   }
 }
 
@@ -65,11 +94,7 @@ async function initializeServer(port: number, workerCode: string) {
   // This is required at this point because the VM used for the local runtime
   // server does not support any other type of event than "fetch".
   const { matchEvent: isFirewallEvent, codeChanged } =
-    helperHandlerCode.checkAndChangeAddEventListener(
-      'firewall',
-      'fetch',
-      workerCode,
-    ) as any;
+    checkAndChangeAddEventListener('firewall', 'fetch', workerCode) as any;
   // Use the changed code if it's a Firewall event
   const initialCode = isFirewallEvent ? codeChanged : workerCode;
 
@@ -80,45 +105,38 @@ async function initializeServer(port: number, workerCode: string) {
 /**
  * Build to Local Server with polyfill external
  */
-async function buildToLocalServer(isFirewall: boolean) {
-  const vulcanEnv = await bundler.readBundlerEnv('global');
+async function buildToLocalServer() {
+  const vulcanEnv = await bundler.readStore('global');
 
   if (!vulcanEnv) {
-    const msg = Messages.env.server.errors.run_build_command;
+    const msg = 'Run the build command before running your project.';
     feedback.server.error(msg);
     throw new Error(msg);
   }
-  globalThis.bundler.buildProd = false;
-  await buildCommand({}, isFirewall);
+  await buildCommand({ production: false });
 }
 
 /**
  * Handle server operations: start, restart.
  */
-async function manageServer(
-  workerPath: string,
-  port: number,
-  isFirewall: boolean,
-) {
+async function manageServer(workerPath: string, port: number) {
   try {
     if (currentServer) {
       await currentServer.close();
     }
 
-    await buildToLocalServer(isFirewall);
+    await buildToLocalServer();
 
-    const workerCode = await readWorkerCode(workerPath);
+    const workerCode = await readWorkerFile(workerPath);
 
     try {
       currentServer = await initializeServer(port, workerCode);
       feedback.server.success(
-        Messages.env.server.success.server_running(
-          `0.0.0.0:${port}, url: http://localhost:${port}`,
-        ),
+        `Function running on port 0.0.0.0:${port}, url: http://localhost:${port}`,
       );
     } catch (error) {
       if ((error as any).message.includes('EADDRINUSE')) {
-        await manageServer(workerPath, port + 1, isFirewall);
+        await manageServer(workerPath, port + 1);
       } else {
         throw error;
       }
@@ -139,7 +157,6 @@ async function handleFileChange(
   path: string,
   workerPath: string,
   port: number,
-  isFirewall: boolean,
 ) {
   if (isChangeHandlerRunning) return;
 
@@ -156,8 +173,8 @@ async function handleFileChange(
   isChangeHandlerRunning = true;
 
   try {
-    feedback.build.info(Messages.build.info.rebuilding);
-    await manageServer(workerPath, port, isFirewall);
+    feedback.build.info('Rebuilding with the new changes...');
+    await manageServer(workerPath, port);
   } catch (error) {
     (debug as any).error(`Build or server restart failed: ${error}`);
   } finally {
@@ -168,11 +185,7 @@ async function handleFileChange(
 /**
  * Entry point function to start the server and watch for file changes.
  */
-async function startServer(
-  workerPath: string,
-  isFirewall: boolean,
-  port: number,
-) {
+async function startServer(workerPath: string, port: number) {
   const IsPortInUse = await checkPortAvailability(port);
   if (IsPortInUse) {
     feedback.server.error(
@@ -180,7 +193,7 @@ async function startServer(
     );
     process.exit(1);
   }
-  await manageServer(workerPath, port, isFirewall);
+  await manageServer(workerPath, port);
 
   const watcher = chokidar.watch('./', {
     persistent: true,
@@ -190,7 +203,7 @@ async function startServer(
   });
 
   const handleUserFileChange = async (path: string) => {
-    await handleFileChange(path, workerPath, port, isFirewall);
+    await handleFileChange(path, workerPath, port);
   };
 
   watcher
