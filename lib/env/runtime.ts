@@ -1,3 +1,8 @@
+/**
+ * @deprecated Legacy module that needs refactoring.
+ * This module provides edge runtime simulation and should be restructured
+ * to better handle different event types and contexts.
+ */
 import { EdgeRuntime } from 'edge-runtime';
 import { EdgeContext } from '@edge-runtime/vm';
 

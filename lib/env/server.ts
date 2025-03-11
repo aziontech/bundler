@@ -1,3 +1,9 @@
+/**
+ * @deprecated Legacy module that needs refactoring.
+ * This module handles local development server functionality
+ * and should be restructured to improve file watching, port management,
+ * and server initialization.
+ */
 import net from 'net';
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';

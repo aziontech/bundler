@@ -1,3 +1,8 @@
+/**
+ * @deprecated Legacy module that needs refactoring.
+ * This module manages bundler configuration and environment setup.
+ * Should be restructured to improve configuration management and type safety.
+ */
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
 import { PresetInput } from 'azion/config';
@@ -71,24 +76,16 @@ export async function writeStore(values: BundlerStore, scope = 'global') {
 }
 
 /**
- * Reads the .vulcan file and returns an object with the variables and their values.
- * the variables and their values, or null if the file doesn't exist.
- * @example
- * // Read global environment variables
- * readStore('global')
- *   .then(env => console.log(env))
- *   .catch(error => console.error(error));
- *
- * // Read project-level environment variables
- * readStore('local')
- *   .then(env => console.log(env))
- *   .catch(error => console.error(error));
+ * Reads the .azion-bundler.json file and returns the stored configuration.
+ * Returns an empty object if the file doesn't exist.
  */
-export async function readStore(scope = 'global') {
+export async function readStore(
+  scope: 'global' | 'local' | string = 'global',
+): Promise<BundlerStore> {
   let basePath;
   switch (scope) {
     case 'global':
-      basePath = globalThis.bundler?.tempPath;
+      basePath = globalThis.bundler.tempPath;
       break;
     case 'local':
       basePath = path.join(process.cwd());
@@ -98,19 +95,18 @@ export async function readStore(scope = 'global') {
       break;
   }
 
-  // Se não tiver tempPath definido, retorna objeto vazio
-  if (!basePath) {
-    return {};
-  }
+  if (!basePath) return {};
 
-  const vulcanEnvPath = path.join(basePath, '.azion-bundler.json');
+  const bundlerStoreFilePath = path.join(basePath, '.azion-bundler.json');
 
   try {
-    await fsPromises.access(vulcanEnvPath);
-    const fileContents = await fsPromises.readFile(vulcanEnvPath, 'utf8');
+    await fsPromises.access(bundlerStoreFilePath);
+    const fileContents = await fsPromises.readFile(
+      bundlerStoreFilePath,
+      'utf8',
+    );
     return JSON.parse(fileContents);
   } catch (error) {
-    // Se o arquivo não existir ou houver qualquer erro, retorna objeto vazio
     return {};
   }
 }
@@ -253,6 +249,28 @@ export async function writeUserConfig(config: AzionConfig): Promise<void> {
       ? 'module.exports ='
       : 'export default';
 
+  const configComment = isTypeScript
+    ? `/**
+ * For better type checking and IntelliSense, you can use:
+ * npm install -D azion
+ * 
+ * Then:
+ * import { defineConfig } from 'azion'
+ * export default defineConfig({
+ *   ...
+ * })
+ */\n\n`
+    : `/**
+ * For better type checking and IntelliSense, you can:
+ * 1. Install azion as dev dependency:
+ *    npm install -D azion
+ *    Then use:
+ *    import { defineConfig } from 'azion'
+ * 
+ * 2. Or add JSDoc type annotation:
+ *    /** @type {import('azion').AzionConfig} *\/
+ */\n\n`;
+
   const replacer = (key: string, value: unknown) => {
     if (typeof value === 'function') {
       return `__FUNCTION_START__${value.toString()}__FUNCTION_END__`;
@@ -260,17 +278,9 @@ export async function writeUserConfig(config: AzionConfig): Promise<void> {
     return value;
   };
 
-  let jsonString = JSON.stringify(config, replacer, 2);
-
-  jsonString = jsonString.replace(
-    /"__FUNCTION_START__(.*?)__FUNCTION_END__"/g,
-    (match, p1) => {
-      return p1.replace(/\\n/g, ' ').replace(/\\'/g, "'");
-    },
-  );
-
   const formattedContent = await prettier.format(
-    `${moduleExportStyle} ${jsonString};`,
+    configComment +
+      `${moduleExportStyle} ${JSON.stringify(config, replacer, 2)};`,
     {
       parser: 'babel',
       semi: false,
