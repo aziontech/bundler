@@ -216,6 +216,6 @@ try {
   }
 } catch (error) {
   feedback.error('An unknown error occurred.');
-  (debug as any).error(error);
+  debug.error(error);
   process.exit(1);
 }
