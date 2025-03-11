@@ -61,8 +61,8 @@ export const build = async ({ config, ctx }: BuildParams): Promise<void> => {
      *   addEventListener('fetch', (event) => { event.respondWith(...) })
      */
 
-    const adaptedHandler = await setupWorkerCode(buildConfigSetup, ctx);
-    await writeFile(buildConfigSetup.entry, adaptedHandler);
+    const worker = await setupWorkerCode(buildConfigSetup, ctx);
+    await writeFile(buildConfigSetup.entry, worker);
 
     /* Execute build phases */
 
