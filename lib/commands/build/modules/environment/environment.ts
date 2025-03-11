@@ -60,10 +60,10 @@ export const setEnvironment = async ({
       };
     }
 
-    const hasCustomConfig = await readUserConfig();
+    const hasUserConfig = await readUserConfig();
 
     // Create initial config file if none exists
-    if (!hasCustomConfig) await writeUserConfig(mergedConfig);
+    if (!hasUserConfig) await writeUserConfig(mergedConfig);
 
     /**
      * Setup environment store with the following rules:
