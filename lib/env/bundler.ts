@@ -248,28 +248,35 @@ export async function writeUserConfig(config: AzionConfig): Promise<void> {
     : useCommonJS
       ? 'module.exports ='
       : 'export default';
-
   const configComment = isTypeScript
     ? `/**
- * For better type checking and IntelliSense, you can use:
- * npm install -D azion
- * 
- * Then:
- * import { defineConfig } from 'azion'
- * export default defineConfig({
- *   ...
- * })
- */\n\n`
+   * This file was automatically generated based on your preset configuration.
+   * 
+   * For better type checking and IntelliSense, you can use:
+   * npm install -D azion
+   * 
+   * Then:
+   * import { defineConfig } from 'azion'
+   * export default defineConfig({
+   *   ...
+   * })
+   * 
+   * For more configuration options, visit:
+   * https://github.com/aziontech/lib/tree/main/packages/config
+   */\n\n`
     : `/**
- * For better type checking and IntelliSense, you can:
- * 1. Install azion as dev dependency:
- *    npm install -D azion
- *    Then use:
- *    import { defineConfig } from 'azion'
- * 
- * 2. Or add JSDoc type annotation:
- *    /** @type {import('azion').AzionConfig} *\/
- */\n\n`;
+   * This file was automatically generated based on your preset configuration.
+   * 
+   * For better type checking and IntelliSense:
+   * 1. Install azion as dev dependency:
+   *    npm install -D azion
+   * 
+   * 2. Use defineConfig:
+   *    import { defineConfig } from 'azion'
+   * 
+   * For more configuration options, visit:
+   * https://github.com/aziontech/azion
+   */\n\n`;
 
   const replacer = (key: string, value: unknown) => {
     if (typeof value === 'function') {
