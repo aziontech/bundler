@@ -1,5 +1,3 @@
-import { join } from 'path';
-import { existsSync, readFileSync } from 'fs';
 import lodash from 'lodash';
 import { AzionConfig } from 'azion/config';
 

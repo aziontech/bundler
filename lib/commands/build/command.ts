@@ -34,6 +34,7 @@ export async function buildCommand(options: BuildCommandOptions) {
   });
 
   const buildConfig = {
+    preset: presetInput,
     entry: resolveConfigPriority({
       inputValue: options.entry,
       fileValue: userBuildConfig?.entry,
@@ -58,7 +59,6 @@ export async function buildCommand(options: BuildCommandOptions) {
       storeValue: bundlerStore?.worker,
       defaultValue: false,
     }),
-    preset: presetInput,
   };
 
   await writeStore(buildConfig);

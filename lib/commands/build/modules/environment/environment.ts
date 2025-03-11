@@ -1,8 +1,12 @@
 import { AzionConfig, AzionBuildPreset, BuildContext } from 'azion/config';
 import { mergeConfigWithUserOverrides } from './utils';
 
-/* LEGACY MODULE */
-import { writeStore, writeUserConfig, readUserConfig } from '#env';
+import {
+  writeStore,
+  writeUserConfig,
+  readUserConfig,
+  type BundlerStore,
+} from '#env';
 
 interface EnvironmentParams {
   config: AzionConfig;
@@ -23,32 +27,61 @@ interface EnvironmentParams {
  * configuration while maintaining flexibility for customization.
  */
 export const setEnvironment = async ({
-  config,
+  config: userConfig,
   preset,
   ctx,
 }: EnvironmentParams): Promise<void> => {
   try {
     const { config: presetConfig } = preset;
 
-    // Merge configurations (user config takes precedence)
+    /**
+     * Merge configurations with the following priority:
+     * 1. User config (from azion.config.js)
+     * 2. Preset config (from preset module)
+     */
     const mergedConfig: AzionConfig = mergeConfigWithUserOverrides(
       presetConfig,
-      config,
+      userConfig,
     );
+
+    /**
+     * Include preset name in the config file for user reference.
+     * This helps users identify which preset is being used and
+     * how to change it if needed.
+     */
+    if (!mergedConfig.build?.preset) {
+      mergedConfig.build = {
+        ...mergedConfig.build,
+        preset: preset.metadata.name,
+        ...(!preset.handler &&
+          preset.config.build?.entry && {
+            entry: preset.config.build.entry,
+          }),
+      };
+    }
 
     const hasCustomConfig = await readUserConfig();
 
     // Create initial config file if none exists
     if (!hasCustomConfig) await writeUserConfig(mergedConfig);
 
-    // Setup environment store
-    await writeStore({
-      entry: ctx.entrypoint,
-      preset: preset.metadata.name,
-      bundler: config?.build?.bundler,
-      polyfills: config?.build?.polyfills,
-      worker: config?.build?.worker,
-    });
+    /**
+     * Setup environment store with the following rules:
+     * - Always include preset name for framework identification
+     * - Include build configurations (bundler, polyfills, worker)
+     * - Only include entry point if:
+     *   1. User provided an entrypoint AND
+     *   2. Preset doesn't have a built-in handler
+     */
+    const storeConfig: BundlerStore = {
+      preset: mergedConfig.build.preset,
+      bundler: mergedConfig.build?.bundler,
+      polyfills: mergedConfig.build?.polyfills,
+      worker: mergedConfig.build?.worker,
+      entry: mergedConfig.build.entry,
+    };
+
+    await writeStore(storeConfig);
   } catch (error) {
     throw new Error(`Failed to set environment: ${(error as Error).message}`);
   }
