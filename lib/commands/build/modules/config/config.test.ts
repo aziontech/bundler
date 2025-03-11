@@ -1,7 +1,5 @@
 import { describe, it, expect, jest } from '@jest/globals';
 import { setupBuildConfig } from './config';
-import { generateTimestamp } from '#utils';
-import { join } from 'path';
 
 jest.mock('#utils', () => ({
   generateTimestamp: jest.fn(() => '123456'),

@@ -51,15 +51,21 @@ export const moveImportsToTopLevel = (code: string): string => {
   const importRegex = /import\s+.*?from\s*['"](.*?)['"];?/g;
   const requireRegex = /(const\s+.*?=\s*require\(.*\).*);/g;
 
-  const importsList = (code.match(importRegex) || []).map(
-    (match: string) => match,
+  const importsList = (code.match(importRegex) || []).map((match) =>
+    match.trim(),
   );
-  const requiresList = (code.match(requireRegex) || []).map(
-    (match: string) => match,
+  const requiresList = (code.match(requireRegex) || []).map((match) =>
+    match.trim(),
   );
 
-  let newCode = code.replace(importRegex, '').replace(requireRegex, '');
-  newCode = `${[...importsList, ...requiresList].join('\n')}\n${newCode}`;
+  let newCode = code
+    .replace(importRegex, '')
+    .replace(requireRegex, '')
+    .replace(/\n\s*\n\s*\n/g, '\n\n');
+
+  if (importsList.length || requiresList.length) {
+    newCode = `${[...importsList, ...requiresList].join('\n')}\n\n${newCode.trim()}`;
+  }
 
   return newCode;
 };

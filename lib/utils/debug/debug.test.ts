@@ -15,7 +15,7 @@ describe('debug utils', () => {
   test('Should log if debug flag is enabled', async () => {
     process.env.DEBUG = 'true';
 
-    const { default: debug } = await import('./debug');
+    const { debug } = await import('./debug');
 
     const consoleSpy = jest
       .spyOn(console, 'error')
@@ -33,7 +33,7 @@ describe('debug utils', () => {
     process.env.DEBUG = 'false';
     jest.resetModules();
 
-    const { default: debug } = await import('./debug');
+    const { debug } = await import('./debug');
 
     const consoleSpy = jest
       .spyOn(console, 'error')

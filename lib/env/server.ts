@@ -9,10 +9,10 @@ import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
 
 import chokidar from 'chokidar';
-import runtime from './runtime.js';
-import bundler from './bundler.js';
+import runtime from './runtime';
+import bundler from './bundler';
 
-import { buildCommand } from '../commands/build/command.js';
+import { buildCommand } from '../commands/build';
 import { runServer } from 'edge-runtime';
 import fs from 'fs/promises';
 

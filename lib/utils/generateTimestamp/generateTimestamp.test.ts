@@ -1,4 +1,4 @@
-import generateTimestamp from './generateTimestamp';
+import { generateTimestamp } from './generateTimestamp';
 
 describe('generateTimestamp utils', () => {
   test('Should generate a timestamp string in the format "YYYYMMDDHHmmss".', async () => {

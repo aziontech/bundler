@@ -1,0 +1,6 @@
+{
+  "preset": "test-preset",
+  "polyfills": true,
+  "worker": false,
+  "entry": "src/index.ts"
+}

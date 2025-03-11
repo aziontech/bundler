@@ -1,5 +1,5 @@
 import { readUserConfig, readStore, writeStore, type BundlerStore } from '#env';
-import { build } from 'lib/commands/build/build';
+import { build } from './build';
 import { AzionConfig } from 'azion/config';
 import { resolve } from 'path';
 import type { BuildCommandOptions } from './types';

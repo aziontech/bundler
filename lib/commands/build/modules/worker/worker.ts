@@ -1,14 +1,14 @@
 import { readFile, writeFile, mkdir } from 'fs/promises';
 import { dirname } from 'path';
 import { BuildConfiguration, BuildContext } from 'azion/config';
-import { createEventHandlerCode } from './templates';
+import { createEventHandlerCode } from './utils';
 
 /**
- * Configura o código do worker com base na entrada do usuário
+ * Configures the worker code based on user input
  *
- * @param buildConfig - Configuração de build
- * @param ctx - Contexto de build com informações de entrada/saída
- * @returns O código do worker gerado ou original
+ * @param buildConfig - Build configuration
+ * @param ctx - Build context with input/output information
+ * @returns The generated or original worker code
  */
 export const setupWorkerCode = async (
   buildConfig: BuildConfiguration,
