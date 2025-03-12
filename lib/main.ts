@@ -162,11 +162,13 @@ function startBundler() {
     )
     .option('--development', 'Build in development mode', false)
     .action(async (options) => {
-      const { buildCommand } = await import('#commands');
-      await buildCommand({
+      const { buildCommand, manifestCommand } = await import('#commands');
+      const { config, ctx } = await buildCommand({
         ...options,
         production: !options.development,
       });
+
+      await manifestCommand({ action: 'generate', config });
     });
 
   AzionBundler.command('dev')
@@ -188,15 +190,34 @@ function startBundler() {
       await presetsCommand(command);
     });
 
-  AzionBundler.command('manifest <command>')
+  AzionBundler.command('manifest [action]')
     .description(
-      'Trasnform <transform> or validate <validate> manifest files for Azion',
+      'Manage manifest files for Azion. Available actions: transform, generate',
     )
-    .argument('[entry]', 'Path to the input file')
-    .option('-o, --output <path>', 'Output file path for convert command')
-    .action(async (command, entry, options) => {
+    .argument(
+      '[action]',
+      'Action to perform: "transform" (JSON to JS) or "generate" (config to manifest)',
+      'generate',
+    )
+    .option('--entry <path>', 'Path to the input file or configuration file')
+    .option('--output <path>', 'Output file/directory path')
+    .addHelpText(
+      'after',
+      `
+Examples:
+  $ az manifest transform --entry=manifest.json --output=azion.config.js
+  $ az manifest generate --entry=azion.config.js --output=.edge
+  $ az manifest --entry=azion.config.js --output=.edge
+    `,
+    )
+    .action(async (action, options) => {
       const { manifestCommand } = await import('#commands');
-      await manifestCommand(command, entry, options);
+
+      // Passar todas as opções diretamente com action em vez de command
+      await manifestCommand({
+        ...options,
+        action,
+      });
     });
 
   AzionBundler.parse(process.argv);

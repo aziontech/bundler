@@ -1,64 +1,68 @@
-import { readFileSync, writeFileSync } from 'fs';
-import { resolve, extname } from 'path';
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
-import { convertJsonConfigToObject } from 'azion/config';
+import { generateManifest, transformManifest } from './manifest';
+import { AzionConfig } from 'azion/config';
+
+export enum ManifestAction {
+  GENERATE = 'generate',
+  TRANSFORM = 'transform',
+}
+
+// Constants for default paths
+const DEFAULT_TRANSFORM_INPUT_PATH = '.edge/manifest.json';
+const DEFAULT_TRANSFORM_OUTPUT_PATH = 'azion.config.js';
+
+export interface ManifestCommandOptions {
+  action?: ManifestAction | string;
+  entry?: string;
+  config?: AzionConfig;
+  output?: string;
+}
 
 /**
  * @function manifestCommand
  * @description
- * transforms a JSON manifest file to a JavaScript module.
+ * Manages manifest operations for generation and transformation.
  *
  * Usage:
  * ```bash
- * az manifest transform <input.json> -o <output.js>
- * ```
- *
- * Example:
- * ```bash
- * az manifest transform .edge/manifest.json -o azion.config.js
+ * az manifest transform --entry=<input.json> --output=<output.js>
+ * az manifest generate --entry=<input.config.js> --output=<output.dir>
+ * az manifest --entry=<input.config.js> --output=<output.dir>
  * ```
  */
 export async function manifestCommand(
-  command: string,
-  entry: string,
-  options: Record<string, any>,
-) {
+  options: ManifestCommandOptions,
+): Promise<void> {
   try {
-    if (command !== 'transform') {
-      feedback.error('Only transform command is supported');
-      process.exit(1);
+    // If action is not specified, infer from context
+    const action =
+      options.action ||
+      (options.config ? ManifestAction.GENERATE : ManifestAction.TRANSFORM);
+
+    switch (action) {
+      case ManifestAction.GENERATE:
+        const input = options.entry || options.config || undefined;
+        await generateManifest(input, options.output);
+        break;
+
+      case ManifestAction.TRANSFORM:
+        // Use default paths when not specified
+        const inputPath = options.entry || DEFAULT_TRANSFORM_INPUT_PATH;
+        const outputPath = options.output || DEFAULT_TRANSFORM_OUTPUT_PATH;
+
+        await transformManifest(inputPath, outputPath);
+        break;
+
+      default:
+        feedback.error(
+          `Only ${ManifestAction.TRANSFORM} and ${ManifestAction.GENERATE} actions are supported`,
+        );
+        process.exit(1);
     }
-
-    if (!entry) {
-      feedback.error('Input file path is required');
-      process.exit(1);
-    }
-
-    if (!options.output) {
-      feedback.error('Output file path is required (--output)');
-      process.exit(1);
-    }
-
-    const fileExtension = extname(entry).toLowerCase();
-    if (fileExtension !== '.json') {
-      feedback.error('Input file must be .json');
-      process.exit(1);
-    }
-
-    const absolutePath = resolve(process.cwd(), entry);
-    const jsonString = readFileSync(absolutePath, 'utf8');
-    const config = convertJsonConfigToObject(jsonString);
-
-    const jsContent = `export default ${JSON.stringify(config, null, 2)};`;
-    writeFileSync(options.output, jsContent);
-
-    feedback.success(
-      `Azion Platform configuration transformed into JavaScript module at ${options.output}`,
-    );
   } catch (error) {
     (debug as any).error(error);
-    feedback.error('An unknown error occurred.');
+    feedback.error(error instanceof Error ? error.message : String(error));
     process.exit(1);
   }
 }
