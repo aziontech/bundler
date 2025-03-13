@@ -1,6 +1,7 @@
-import { type AzionConfig, processConfig } from 'azion/config';
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { type AzionConfig } from 'azion/config';
+import fs from 'fs';
 import { join } from 'path';
+import util from './util';
 
 /**
  * Generates or updates the CDN manifest based on a custom configuration module.
@@ -14,15 +15,16 @@ export const generateManifest = async (
   outputPath = join(process.cwd(), '.edge'),
 ): Promise<void> => {
   // Ensure output directory exists
-  if (!existsSync(outputPath)) {
-    mkdirSync(outputPath, { recursive: true });
+  if (!fs.existsSync(outputPath)) {
+    fs.mkdirSync(outputPath, { recursive: true });
   }
 
   // Process and transform config into manifest
-  const manifest = processConfig(config);
+  const manifest = util.processConfigWrapper(config);
+
   // Write manifest to file
   const manifestPath = join(outputPath, 'manifest.json');
-  writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
 };
 
 export default generateManifest;
