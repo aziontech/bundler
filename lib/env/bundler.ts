@@ -20,6 +20,11 @@ import prettier from 'prettier';
 import { createRequire } from 'module';
 import { AzionConfig } from 'azion/config';
 
+/**
+ * The store uses the local disk to save configurations,
+ * allowing the development environment to run according to
+ * the settings defined in the build without having to pass arguments
+ */
 export interface BundlerStore {
   preset?: PresetInput;
   entry?: string;
@@ -137,35 +142,50 @@ function handleDependencyError(error: Error, configPath: string) {
 /**
  * Loads the azion.config file and returns the entire configuration object.
  * @async
+ * @param configPath - Optional specific config file path to read
  */
-export async function readUserConfig() {
+export async function readUserConfig(configPath?: string) {
   const require = createRequire(import.meta.url);
   const extensions = ['.js', '.mjs', '.cjs', '.ts'];
   const configName = 'azion.config';
-  let configPath;
+  let resolvedConfigPath;
 
-  // Procura pelo arquivo de configuração com as extensões suportadas
-  // eslint-disable-next-line no-restricted-syntax
-  for (const ext of extensions) {
-    const testPath = path.join(process.cwd(), `${configName}${ext}`);
-    if (fs.existsSync(testPath)) {
-      configPath = testPath;
-      break;
+  if (configPath) {
+    // Usar o caminho específico fornecido
+    resolvedConfigPath = path.isAbsolute(configPath)
+      ? configPath
+      : path.join(process.cwd(), configPath);
+
+    if (!fs.existsSync(resolvedConfigPath)) {
+      return null;
+    }
+  } else {
+    // Procura pelo arquivo de configuração com as extensões suportadas
+    // eslint-disable-next-line no-restricted-syntax
+    for (const ext of extensions) {
+      const testPath = path.join(process.cwd(), `${configName}${ext}`);
+      if (fs.existsSync(testPath)) {
+        resolvedConfigPath = testPath;
+        break;
+      }
     }
   }
 
-  if (!configPath) {
+  if (!resolvedConfigPath) {
     return null;
   }
 
-  const extension = path.extname(configPath);
+  const extension = path.extname(resolvedConfigPath);
   let configModule;
 
   try {
     switch (extension) {
       case '.ts':
         // eslint-disable-next-line no-case-declarations
-        const tsContent = await fsPromises.readFile(configPath, 'utf-8');
+        const tsContent = await fsPromises.readFile(
+          resolvedConfigPath,
+          'utf-8',
+        );
         // eslint-disable-next-line no-case-declarations
         const jsContent = transpileModule(tsContent, {
           compilerOptions: {
@@ -176,7 +196,7 @@ export async function readUserConfig() {
         }).outputText;
 
         // eslint-disable-next-line no-case-declarations
-        const tempJsPath = configPath.replace('.ts', '.temp.js');
+        const tempJsPath = resolvedConfigPath.replace('.ts', '.temp.js');
         await fsPromises.writeFile(tempJsPath, jsContent);
 
         try {
@@ -187,16 +207,16 @@ export async function readUserConfig() {
         }
         break;
       case '.mjs':
-        configModule = await import(configPath);
+        configModule = await import(resolvedConfigPath);
         break;
       case '.cjs':
       case '.js':
         try {
-          configModule = await import(configPath);
+          configModule = await import(resolvedConfigPath);
         } catch (error) {
           if ((error as Error).message === 'ERR_REQUIRE_ESM') {
             // eslint-disable-next-line import/no-dynamic-require
-            configModule = require(configPath); // Fallback para require em CommonJS
+            configModule = require(resolvedConfigPath); // Fallback para require em CommonJS
             throw error;
           }
         }
@@ -208,7 +228,7 @@ export async function readUserConfig() {
     return configModule.default || configModule;
   } catch (error) {
     if ((error as Error).message.includes('ERR_MODULE_NOT_FOUND')) {
-      handleDependencyError(error as Error, configPath);
+      handleDependencyError(error as Error, resolvedConfigPath);
       return null;
     }
     throw error;

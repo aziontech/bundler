@@ -24,6 +24,13 @@ export async function buildCommand(options: BuildCommandOptions) {
   const userConfig: AzionConfig = (await readUserConfig()) || {};
   const { build: userBuildConfig } = userConfig;
 
+  /**
+   * The store uses the local disk to save configurations,
+   * allowing the development environment to run according to
+   * the settings defined in the build without having to pass arguments.
+   * This is also useful for other system components that don't follow
+   * the standard dependency injection flow and need access to configuration.
+   */
   const bundlerStore: BundlerStore = await readStore();
 
   let presetInput = resolvePresetPriority({
@@ -69,7 +76,7 @@ export async function buildCommand(options: BuildCommandOptions) {
     },
   };
 
-  await build({
+  return build({
     config,
     ctx: {
       production: options.production ?? true,
