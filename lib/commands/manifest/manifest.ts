@@ -6,11 +6,11 @@ import {
 import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
 import { join, resolve, extname } from 'path';
 import { feedback } from 'azion/utils/node';
-import { readUserConfig } from '../../env/bundler';
+import { readUserConfig, writeUserConfig } from '../../env/bundler';
 import { promises as fsPromises } from 'fs';
 
 export const DEFAULT_TRANSFORM_INPUT_PATH = '.edge/manifest.json';
-export const DEFAULT_TRANSFORM_OUTPUT_PATH = 'azion.config.js';
+export const DEFAULT_TRANSFORM_OUTPUT_PATH = 'azion.config';
 
 /**
  * Generates or updates the CDN manifest based on a custom configuration.
@@ -30,10 +30,8 @@ export const generateManifest = async (
   let config: AzionConfig;
 
   if (typeof input === 'object') {
-    // Direct object input
     config = input;
   } else {
-    // Use readUserConfig to find configuration file (handles both undefined and string path)
     config = await readUserConfig(input);
     if (!config) {
       throw new Error(
@@ -54,14 +52,14 @@ export const generateManifest = async (
 };
 
 /**
- * Transforms a JSON manifest file or config object into an Azion configuration module.
+ * Transforms a JSON manifest file into an Azion configuration module.
  * If no input is provided, uses the default manifest path.
  *
- * @param input - Path to manifest file or configuration object (optional)
+ * @param input - Path to manifest file
  * @param outputPath - Path for the output JS file
  */
 export const transformManifest = async (
-  input?: string | AzionConfig,
+  input?: string,
   outputPath = DEFAULT_TRANSFORM_OUTPUT_PATH,
 ): Promise<void> => {
   const readConfigFromPath = async (filePath: string): Promise<AzionConfig> => {
@@ -75,28 +73,10 @@ export const transformManifest = async (
     return convertJsonConfigToObject(jsonString);
   };
 
-  const readDefaultConfig = async (): Promise<AzionConfig> => {
-    const defaultPath = resolve(process.cwd(), DEFAULT_TRANSFORM_INPUT_PATH);
-
-    if (!existsSync(defaultPath)) {
-      throw new Error(
-        `Default manifest file not found at ${DEFAULT_TRANSFORM_INPUT_PATH}. Please specify an input file path.`,
-      );
-    }
-
-    return readConfigFromPath(DEFAULT_TRANSFORM_INPUT_PATH);
-  };
-
-  const config: AzionConfig = await (async () => {
-    if (!input) return readDefaultConfig();
-    if (typeof input === 'string') return readConfigFromPath(input);
-
-    return input;
-  })();
-
-  // Generate and write the output
-  const content = `export default ${JSON.stringify(config, null, 2)};`;
-  await fsPromises.writeFile(outputPath, content);
+  const config = await readConfigFromPath(
+    input || DEFAULT_TRANSFORM_INPUT_PATH,
+  );
+  await writeUserConfig(config);
 
   feedback.success(`Config file generated successfully at ${outputPath}`);
 };
