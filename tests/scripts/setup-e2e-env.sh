@@ -51,6 +51,10 @@ else
     cd /$BUNDLER_TEMP
     yarn
 
+    # compile bundler
+    log_with_color "* Compile Bundler" $GREEN
+    yarn build
+
     # login in verdaccio registry
     log_with_color "* Login in verdaccio" $GREEN
     npx --yes npm-cli-login -u test -p 1234 -e test@domain.test -r http://verdaccio:4873
