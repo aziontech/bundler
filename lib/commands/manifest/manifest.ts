@@ -64,34 +64,38 @@ export const transformManifest = async (
   input?: string | AzionConfig,
   outputPath = DEFAULT_TRANSFORM_OUTPUT_PATH,
 ): Promise<void> => {
-  let config: AzionConfig;
+  const readConfigFromPath = async (filePath: string): Promise<AzionConfig> => {
+    const resolvedPath = resolve(process.cwd(), filePath);
 
-  if (!input) {
-    // Use default input path
+    if (extname(resolvedPath) !== '.json') {
+      throw new Error('Input file must be .json');
+    }
+
+    const jsonString = await fsPromises.readFile(resolvedPath, 'utf8');
+    return convertJsonConfigToObject(jsonString);
+  };
+
+  const readDefaultConfig = async (): Promise<AzionConfig> => {
     const defaultPath = resolve(process.cwd(), DEFAULT_TRANSFORM_INPUT_PATH);
+
     if (!existsSync(defaultPath)) {
       throw new Error(
         `Default manifest file not found at ${DEFAULT_TRANSFORM_INPUT_PATH}. Please specify an input file path.`,
       );
     }
 
-    const jsonString = await fsPromises.readFile(defaultPath, 'utf8');
-    config = convertJsonConfigToObject(jsonString);
-  } else if (typeof input === 'string') {
-    const inputPath = resolve(process.cwd(), input);
+    return readConfigFromPath(DEFAULT_TRANSFORM_INPUT_PATH);
+  };
 
-    if (extname(inputPath) !== '.json') {
-      throw new Error('Input file must be .json');
-    }
+  const config: AzionConfig = await (async () => {
+    if (!input) return readDefaultConfig();
+    if (typeof input === 'string') return readConfigFromPath(input);
 
-    const jsonString = await fsPromises.readFile(inputPath, 'utf8');
-    config = convertJsonConfigToObject(jsonString);
-  } else {
-    config = input;
-  }
+    return input;
+  })();
 
+  // Generate and write the output
   const content = `export default ${JSON.stringify(config, null, 2)};`;
-
   await fsPromises.writeFile(outputPath, content);
 
   feedback.success(`Config file generated successfully at ${outputPath}`);
