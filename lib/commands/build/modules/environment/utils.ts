@@ -19,3 +19,5 @@ export const mergeConfigWithUserOverrides = (
 
   return lodash.mergeWith({}, baseConfig, userConfig, customizer);
 };
+
+export default { mergeConfigWithUserOverrides };
