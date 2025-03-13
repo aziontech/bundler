@@ -8,10 +8,6 @@ export enum ManifestAction {
   TRANSFORM = 'transform',
 }
 
-// Constants for default paths
-const DEFAULT_TRANSFORM_INPUT_PATH = '.edge/manifest.json';
-const DEFAULT_TRANSFORM_OUTPUT_PATH = 'azion.config.js';
-
 export interface ManifestCommandOptions {
   action?: ManifestAction | string;
   entry?: string;
@@ -35,30 +31,32 @@ export async function manifestCommand(
   options: ManifestCommandOptions,
 ): Promise<void> {
   try {
-    // If action is not specified, infer from context
     const action =
       options.action ||
       (options.config ? ManifestAction.GENERATE : ManifestAction.TRANSFORM);
 
-    switch (action) {
-      case ManifestAction.GENERATE:
-        const input = options.entry || options.config || undefined;
+    const actionHandlers = {
+      [ManifestAction.GENERATE]: async () => {
+        const input = options.entry || options.config;
         await generateManifest(input, options.output);
-        break;
+      },
 
-      case ManifestAction.TRANSFORM:
-        // Use default paths when not specified
-        const inputPath = options.entry || DEFAULT_TRANSFORM_INPUT_PATH;
-        const outputPath = options.output || DEFAULT_TRANSFORM_OUTPUT_PATH;
+      [ManifestAction.TRANSFORM]: async () => {
+        await transformManifest(options.entry, options.output);
+      },
+    };
 
-        await transformManifest(inputPath, outputPath);
-        break;
+    // Execute the appropriate handler or show error
+    const handler = actionHandlers[action as ManifestAction];
 
-      default:
-        feedback.error(
-          `Only ${ManifestAction.TRANSFORM} and ${ManifestAction.GENERATE} actions are supported`,
-        );
-        process.exit(1);
+    if (handler) {
+      await handler();
+    }
+    if (!handler) {
+      feedback.error(
+        `Only ${ManifestAction.TRANSFORM} and ${ManifestAction.GENERATE} actions are supported`,
+      );
+      process.exit(1);
     }
   } catch (error) {
     (debug as any).error(error);

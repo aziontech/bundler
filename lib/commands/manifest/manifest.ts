@@ -9,9 +9,8 @@ import { feedback } from 'azion/utils/node';
 import { readUserConfig } from '../../env/bundler';
 import { promises as fsPromises } from 'fs';
 
-// Constants for default paths (matching those in command.ts)
-const DEFAULT_TRANSFORM_INPUT_PATH = '.edge/manifest.json';
-const DEFAULT_TRANSFORM_OUTPUT_PATH = 'azion.config.js';
+export const DEFAULT_TRANSFORM_INPUT_PATH = '.edge/manifest.json';
+export const DEFAULT_TRANSFORM_OUTPUT_PATH = 'azion.config.js';
 
 /**
  * Generates or updates the CDN manifest based on a custom configuration.
@@ -79,26 +78,20 @@ export const transformManifest = async (
     const jsonString = await fsPromises.readFile(defaultPath, 'utf8');
     config = convertJsonConfigToObject(jsonString);
   } else if (typeof input === 'string') {
-    // Resolve input path
     const inputPath = resolve(process.cwd(), input);
 
-    // Validate file extension
     if (extname(inputPath) !== '.json') {
       throw new Error('Input file must be .json');
     }
 
-    // Read and parse JSON file
     const jsonString = await fsPromises.readFile(inputPath, 'utf8');
     config = convertJsonConfigToObject(jsonString);
   } else {
-    // Use input directly as config object
     config = input;
   }
 
-  // Generate JavaScript module content
   const content = `export default ${JSON.stringify(config, null, 2)};`;
 
-  // Write to output file
   await fsPromises.writeFile(outputPath, content);
 
   feedback.success(`Config file generated successfully at ${outputPath}`);
