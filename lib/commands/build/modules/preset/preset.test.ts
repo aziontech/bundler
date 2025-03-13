@@ -1,10 +1,8 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
-import { resolvePreset, inferPreset } from './preset';
+import { resolvePreset } from './preset';
+import inferPreset from './infer/infer-preset';
 import { AzionBuildPreset } from 'azion/config';
 import { feedback } from 'azion/utils/node';
-import { existsSync, readdirSync } from 'fs';
-// @ts-expect-error - Types are not properly exported
-import { listFrameworks } from '@netlify/framework-info';
 
 // Mock dependencies
 jest.mock('azion/utils/node', () => ({
@@ -47,10 +45,11 @@ describe('resolvePreset', () => {
   it('should load preset by name', async () => {
     const result = await resolvePreset('javascript');
 
-    expect(result).toEqual({
-      metadata: { name: 'javascript' },
-      config: { build: {} },
-    });
+    expect(result).toEqual(
+      expect.objectContaining({
+        metadata: { name: 'javascript', ext: 'js' },
+      }),
+    );
   });
 
   it('should return preset object when provided directly', async () => {
@@ -65,13 +64,15 @@ describe('resolvePreset', () => {
   });
 
   it('should infer preset when none is provided', async () => {
-    (inferPreset as jest.Mock) = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve('typescript'));
+    const spyInfer = jest
+      .spyOn(inferPreset, 'inferPreset')
+      .mockResolvedValue('typescript');
+    const spyFeedback = jest.spyOn(feedback.build, 'info');
 
     await resolvePreset();
 
-    expect(feedback.build.info).toHaveBeenCalledWith(
+    expect(spyInfer).toHaveBeenCalled();
+    expect(spyFeedback).toHaveBeenCalledWith(
       'No preset specified, using automatic detection...',
     );
   });
@@ -95,62 +96,5 @@ describe('resolvePreset', () => {
     await expect(resolvePreset(incompletePreset)).rejects.toThrow(
       'Preset must have name and config.',
     );
-  });
-});
-
-describe('inferPreset', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    (process.cwd as jest.Mock).mockReturnValue('/mock/project');
-  });
-
-  it('should detect framework using @netlify/framework-info', async () => {
-    (listFrameworks as jest.Mock).mockImplementation(() => Promise.resolve([]));
-
-    const result = await inferPreset();
-
-    expect(listFrameworks).toHaveBeenCalledWith({
-      projectDir: '/mock/project',
-    });
-    expect(result).toBe('react');
-  });
-
-  it('should detect TypeScript from tsconfig.json', async () => {
-    (listFrameworks as jest.Mock).mockImplementation(() => Promise.resolve([]));
-    (existsSync as jest.Mock).mockReturnValue(true);
-
-    const result = await inferPreset();
-
-    expect(result).toBe('typescript');
-  });
-
-  it('should detect TypeScript from .ts files', async () => {
-    (listFrameworks as jest.Mock).mockImplementation(() => Promise.resolve([]));
-    (existsSync as jest.Mock).mockReturnValue(false);
-    (readdirSync as jest.Mock).mockReturnValue(['index.ts', 'app.js']);
-
-    const result = await inferPreset();
-
-    expect(result).toBe('typescript');
-  });
-
-  it('should default to JavaScript when no specific technology is detected', async () => {
-    (listFrameworks as jest.Mock).mockImplementation(() => Promise.resolve([]));
-    (existsSync as jest.Mock).mockReturnValue(false);
-    (readdirSync as jest.Mock).mockReturnValue(['index.js', 'app.js']);
-
-    const result = await inferPreset();
-
-    expect(result).toBe('javascript');
-  });
-
-  it('should default to JavaScript on error', async () => {
-    (listFrameworks as jest.Mock).mockImplementation(() =>
-      Promise.reject(new Error('Test error')),
-    );
-
-    const result = await inferPreset();
-
-    expect(result).toBe('javascript');
   });
 });

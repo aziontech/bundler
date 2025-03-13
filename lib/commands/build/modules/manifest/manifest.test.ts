@@ -2,7 +2,7 @@ import { jest } from '@jest/globals';
 import fs from 'fs';
 import type { AzionConfig } from 'azion/config';
 import { generateManifest } from './manifest';
-import util from './util';
+import util from './utils/util';
 
 jest.mock('fs');
 

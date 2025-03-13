@@ -1,7 +1,7 @@
 import { type AzionConfig } from 'azion/config';
 import fs from 'fs';
 import { join } from 'path';
-import util from './util';
+import util from './utils/util';
 
 /**
  * Generates or updates the CDN manifest based on a custom configuration module.
