@@ -40,6 +40,7 @@ export const hasNodeModulesDirectory = async (): Promise<boolean> => {
   try {
     const stats = await fs.promises.stat(nodeModulesPath);
     return stats.isDirectory();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return false;
   }

@@ -71,6 +71,7 @@ function runtime(code: string, isFirewallEvent = false) {
     context.process = { env: process.env };
 
     /* ==== Cells Runtime/Azion does not have this interface ==== */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     context.File = undefined as any;
     context.WebSocket = undefined;
     /* ========================================================== */

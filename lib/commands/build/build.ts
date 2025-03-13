@@ -1,10 +1,4 @@
-import {
-  AzionBuildPreset,
-  AzionPrebuildResult,
-  AzionConfig,
-  BuildContext,
-  PresetInput,
-} from 'azion/config';
+import { AzionPrebuildResult, AzionConfig, BuildContext } from 'azion/config';
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
 import { writeFile } from 'fs/promises';

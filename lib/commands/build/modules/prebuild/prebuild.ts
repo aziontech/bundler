@@ -47,6 +47,7 @@ export const executePrebuild = async ({
     // 3. Ensure remaining values are typed as string
     vars: Object.fromEntries(
       Object.entries(result.injection?.globals || {})
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .filter(([_, v]) => v !== undefined)
         .map(([k, v]) => [k, v as string]),
     ),

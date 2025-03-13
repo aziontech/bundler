@@ -9,6 +9,7 @@ jest.mock('fs/promises', () => ({
 
 globalThis.bundler = {
   tempPath: './test/mock/temp/path',
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 } as any;
 
 // Mock das dependências
@@ -17,7 +18,9 @@ jest.mock('lib/env/server', () => ({}), { virtual: true });
 jest.mock('./runtime', () => ({}), { virtual: true });
 
 // Mock das funções do #env
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockStore: { userConfig?: any } = {};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const readUserConfigMock = jest.fn<() => Promise<any>>();
 const writeUserConfigMock = jest.fn<(config: AzionConfig) => Promise<void>>();
 const writeStoreMock = jest.fn<(data: BundlerStore) => Promise<void>>();

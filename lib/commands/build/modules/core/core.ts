@@ -11,7 +11,6 @@ import {
   createAzionWebpackConfig,
   executeWebpackBuild,
 } from 'azion/bundler';
-import { join } from 'path';
 import { moveImportsToTopLevel } from './utils';
 
 interface CoreParams {
@@ -54,6 +53,7 @@ export const executeBuild = async ({
         contentToInject: prebuildResult.injection.banner,
         defineVars: Object.fromEntries(
           Object.entries(prebuildResult.bundler.defineVars)
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             .filter(([_, v]) => v !== undefined)
             .map(([k, v]) => [k, v as string]),
         ),

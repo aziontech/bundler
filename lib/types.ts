@@ -8,5 +8,6 @@ export interface BundlerGlobals {
 }
 
 declare global {
+  // eslint-disable-next-line no-var
   var bundler: BundlerGlobals;
 }

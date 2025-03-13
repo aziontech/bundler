@@ -29,6 +29,7 @@ interface EnvironmentParams {
 export const setEnvironment = async ({
   config: userConfig,
   preset,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ctx,
 }: EnvironmentParams): Promise<void> => {
   try {

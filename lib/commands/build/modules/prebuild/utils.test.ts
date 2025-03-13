@@ -7,7 +7,6 @@ import {
 } from './utils';
 import { cpSync, existsSync, mkdirSync } from 'fs';
 import { readdir, stat, readFile } from 'fs/promises';
-import { join } from 'path';
 
 // Mock dependencies
 jest.mock('fs', () => ({

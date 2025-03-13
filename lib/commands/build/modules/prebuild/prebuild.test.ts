@@ -9,7 +9,6 @@ import {
   injectWorkerGlobals,
   injectWorkerMemoryFiles,
   copyFilesToLocalEdgeStorage,
-  injectWorkerPathPrefix,
 } from './utils';
 
 // Mock dependencies

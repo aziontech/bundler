@@ -54,6 +54,7 @@ export async function writeStore(values: BundlerStore, scope = 'global') {
   try {
     await fsPromises.mkdir(basePath, { recursive: true });
   } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (debug as any).error(error);
     feedback.build.error(
       `An error occurred while creating the ${bundlerSesssionStorePath} folder.`,
@@ -67,6 +68,7 @@ export async function writeStore(values: BundlerStore, scope = 'global') {
       JSON.stringify(values, null, 2),
     );
   } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (debug as any).error(error);
     feedback.build.error(
       `An error occurred while writing the ${bundlerSesssionStorePath} file.`,
@@ -106,6 +108,7 @@ export async function readStore(
       'utf8',
     );
     return JSON.parse(fileContents);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return {};
   }
@@ -126,6 +129,7 @@ function handleDependencyError(error: Error, configPath: string) {
         `A required dependency is missing. Please ensure all dependencies are installed.`,
       );
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (debug as any).error(
       `Failed to load configuration from ${configPath}. ${error.message}`,
     );
@@ -180,7 +184,6 @@ export async function readUserConfig() {
         await fsPromises.writeFile(tempJsPath, jsContent);
 
         try {
-          // eslint-disable-next-line import/no-dynamic-require
           configModule = require(tempJsPath);
         } finally {
           await fsPromises.unlink(tempJsPath);
@@ -195,7 +198,6 @@ export async function readUserConfig() {
           configModule = await import(configPath);
         } catch (error) {
           if ((error as Error).message === 'ERR_REQUIRE_ESM') {
-            // eslint-disable-next-line import/no-dynamic-require
             configModule = require(configPath); // Fallback para require em CommonJS
             throw error;
           }

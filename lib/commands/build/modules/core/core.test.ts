@@ -5,7 +5,6 @@ import {
   BuildContext,
   AzionPrebuildResult,
 } from 'azion/config';
-import path from 'path';
 
 // Primeiro, declaramos variáveis para armazenar os mocks
 const mockReadFile = jest.fn();
@@ -74,7 +73,7 @@ mockReadFile.mockImplementation((path) => {
 
 // Importamos depois de mockar
 import { readFile, writeFile } from 'fs/promises';
-import { existsSync, rmSync } from 'fs';
+import { rmSync } from 'fs';
 import {
   createAzionESBuildConfig,
   executeESBuildBuild,
@@ -233,6 +232,7 @@ describe('executeBuild', () => {
   it('should throw error for unsupported bundler', async () => {
     const invalidConfig = {
       ...mockBuildConfig,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       bundler: 'invalid' as any,
     };
 

@@ -27,6 +27,7 @@ export async function storeCommand({
   try {
     switch (command) {
       case 'init':
+        // eslint-disable-next-line no-case-declarations
         const store: BundlerStore = {
           preset: options.preset,
           entry: options.entry,

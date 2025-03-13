@@ -4,7 +4,6 @@ import { AzionConfig } from 'azion/config';
 import { resolve } from 'path';
 import type { BuildCommandOptions } from './types';
 import { resolveConfigPriority, resolvePresetPriority } from './utils';
-import { AzionBuild } from 'azion/config';
 
 /**
  * A command to initiate the build process.
@@ -26,7 +25,7 @@ export async function buildCommand(options: BuildCommandOptions) {
 
   const bundlerStore: BundlerStore = await readStore();
 
-  let presetInput = resolvePresetPriority({
+  const presetInput = resolvePresetPriority({
     inputValue: options.preset,
     fileValue: userBuildConfig?.preset,
     storeValue: bundlerStore.preset,

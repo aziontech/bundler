@@ -77,7 +77,7 @@ describe('resolveEntrypoint', () => {
   it('should resolve entrypoint from preset when context entrypoint is not available', async () => {
     const contextWithoutEntrypoint = { ...mockContext, entrypoint: '' };
 
-    const result = await resolveEntrypoint({
+    await resolveEntrypoint({
       ctx: contextWithoutEntrypoint,
       preset: mockPreset,
     });

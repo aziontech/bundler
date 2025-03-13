@@ -43,6 +43,7 @@ export async function inferPreset(): Promise<string> {
     if (hasTypeScriptFiles) return 'typescript';
 
     return 'javascript';
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return 'javascript';
   }

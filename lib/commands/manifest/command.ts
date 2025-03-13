@@ -22,6 +22,7 @@ import { convertJsonConfigToObject } from 'azion/config';
 export async function manifestCommand(
   command: string,
   entry: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options: Record<string, any>,
 ) {
   try {
@@ -57,6 +58,7 @@ export async function manifestCommand(
       `Azion Platform configuration transformed into JavaScript module at ${options.output}`,
     );
   } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (debug as any).error(error);
     feedback.error('An unknown error occurred.');
     process.exit(1);
