@@ -1,3 +1,17 @@
+## [4.8.0-stage.2](https://github.com/aziontech/bundler/compare/v4.8.0-stage.1...v4.8.0-stage.2) (2025-03-12)
+
+
+### Bug Fixes
+
+* enhance Dispatcher to support dynamic entry path configuration ([#445](https://github.com/aziontech/bundler/issues/445)) ([79e8ef5](https://github.com/aziontech/bundler/commit/79e8ef50dc664e6b15b6e90fb828677c5fb06853))
+
+## [4.8.0-stage.1](https://github.com/aziontech/bundler/compare/v4.7.0...v4.8.0-stage.1) (2025-02-10)
+
+
+### Features
+
+* new preset for preact ssg ([#435](https://github.com/aziontech/bundler/issues/435)) ([daf8d48](https://github.com/aziontech/bundler/commit/daf8d48ba4598635a117c75f96b36dd6955a8146))
+
 ## [4.7.0](https://github.com/aziontech/bundler/compare/v4.6.1...v4.7.0) (2025-02-10)
 
 
