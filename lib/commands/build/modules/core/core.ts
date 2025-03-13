@@ -1,16 +1,11 @@
-import { existsSync, rmSync } from 'fs';
-import { readFile, writeFile } from 'fs/promises';
+import fsPromises from 'fs/promises';
 import {
   AzionPrebuildResult,
   BuildContext,
   BuildConfiguration,
 } from 'azion/config';
-import {
-  createAzionESBuildConfig,
-  executeESBuildBuild,
-  createAzionWebpackConfig,
-  executeWebpackBuild,
-} from 'azion/bundler';
+import bundlerExecute from './bundler-execute';
+
 import { moveImportsToTopLevel } from './utils';
 
 interface CoreParams {
@@ -35,15 +30,19 @@ export const executeBuild = async ({
   prebuildResult,
   ctx,
 }: CoreParams): Promise<string> => {
-  let buildEntryTemp: string | undefined;
+  // let buildEntryTemp: string | undefined;
 
   try {
     if (prebuildResult.injection.entry) {
-      const entryContent = await readFile(buildConfig.entry, 'utf-8');
+      const entryContent = await fsPromises.readFile(
+        buildConfig.entry,
+        'utf-8',
+      );
+
       const contentWithInjection = `${prebuildResult.injection.entry} ${entryContent}`;
       const contentWithTopLevelImports =
         moveImportsToTopLevel(contentWithInjection);
-      await writeFile(buildConfig.entry, contentWithTopLevelImports);
+      await fsPromises.writeFile(buildConfig.entry, contentWithTopLevelImports);
     }
 
     const bundlerConfig: BuildConfiguration = {
@@ -63,27 +62,34 @@ export const executeBuild = async ({
     const bundler = buildConfig.bundler;
     switch (bundler) {
       case 'esbuild': {
-        const esbuildConfig = createAzionESBuildConfig(bundlerConfig, ctx);
-        await executeESBuildBuild(esbuildConfig);
+        const esbuildConfig = bundlerExecute.createAzionESBuildConfigWrapper(
+          bundlerConfig,
+          ctx,
+        );
+        await bundlerExecute.executeESBuildBuildWrapper(esbuildConfig);
         break;
       }
       case 'webpack': {
-        const webpackConfig = createAzionWebpackConfig(bundlerConfig, ctx);
-        await executeWebpackBuild(webpackConfig);
+        const webpackConfig = bundlerExecute.createAzionWebpackConfigWrapper(
+          bundlerConfig,
+          ctx,
+        );
+        await bundlerExecute.executeWebpackBuildWrapper(webpackConfig);
         break;
       }
       default:
         throw new Error(`Unsupported bundler: ${bundler}`);
     }
 
-    let bundledCode = await readFile(ctx.output, 'utf-8');
+    let bundledCode = await fsPromises.readFile(ctx.output, 'utf-8');
     bundledCode = injectHybridFsPolyfill(bundledCode, buildConfig, ctx);
-    await writeFile(ctx.output, bundledCode);
+    await fsPromises.writeFile(ctx.output, bundledCode);
     return bundledCode;
   } catch (error) {
-    if (buildEntryTemp && existsSync(buildEntryTemp)) {
-      rmSync(buildEntryTemp);
-    }
+    // TODO: check if this is necessary
+    // if (buildEntryTemp && fs.existsSync(buildEntryTemp)) {
+    //   fs.rmSync(buildEntryTemp);
+    // }
     return Promise.reject(error);
   }
 };
