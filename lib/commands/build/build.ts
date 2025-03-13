@@ -11,7 +11,6 @@ import { resolvePreset } from './modules/preset';
 import { executePrebuild } from './modules/prebuild';
 import { executeBuild } from './modules/core';
 import { executePostbuild } from './modules/postbuild';
-import { generateManifest } from './modules/manifest';
 import { setEnvironment } from './modules/environment';
 import { setupWorkerCode } from './modules/worker';
 import { resolveEntrypoint } from './modules/entrypoint/entrypoint';
@@ -21,7 +20,10 @@ interface BuildParams {
   ctx: BuildContext;
 }
 
-export const build = async ({ config, ctx }: BuildParams): Promise<void> => {
+export const build = async ({
+  config,
+  ctx,
+}: BuildParams): Promise<{ config: AzionConfig; ctx: BuildContext }> => {
   try {
     await checkDependencies();
 
@@ -83,8 +85,10 @@ export const build = async ({ config, ctx }: BuildParams): Promise<void> => {
     // Phase 4: Set Environment
     await setEnvironment({ config, preset: resolvedPreset, ctx });
 
-    // Phase 5: Generate manifest
-    await generateManifest(config);
+    return {
+      config,
+      ctx,
+    };
   } catch (error: unknown) {
     debug.error(error);
     feedback.build.error(

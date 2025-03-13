@@ -1,66 +1,67 @@
-import { readFileSync, writeFileSync } from 'fs';
-import { resolve, extname } from 'path';
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
-import { convertJsonConfigToObject } from 'azion/config';
+import { generateManifest, transformManifest } from './manifest';
+import { AzionConfig } from 'azion/config';
+
+export enum ManifestAction {
+  GENERATE = 'generate',
+  TRANSFORM = 'transform',
+}
+
+export interface ManifestCommandOptions {
+  action?: ManifestAction | string;
+  entry?: string;
+  config?: AzionConfig;
+  output?: string;
+}
 
 /**
  * @function manifestCommand
  * @description
- * transforms a JSON manifest file to a JavaScript module.
+ * Manages manifest operations for generation and transformation.
  *
  * Usage:
  * ```bash
- * az manifest transform <input.json> -o <output.js>
- * ```
- *
- * Example:
- * ```bash
- * az manifest transform .edge/manifest.json -o azion.config.js
+ * az manifest transform --entry=<input.json> --output=<output.js>
+ * az manifest generate --entry=<input.config.js> --output=<output.dir>
+ * az manifest --entry=<input.config.js> --output=<output.dir>
  * ```
  */
 export async function manifestCommand(
-  command: string,
-  entry: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options: Record<string, any>,
-) {
+  options: ManifestCommandOptions,
+): Promise<void> {
   try {
-    if (command !== 'transform') {
-      feedback.error('Only transform command is supported');
+    const action =
+      options.action ||
+      (options.config ? ManifestAction.GENERATE : ManifestAction.TRANSFORM);
+
+    const actionHandlers = {
+      [ManifestAction.GENERATE]: async () => {
+        const input = options.entry || options.config;
+        await generateManifest(input, options.output);
+      },
+
+      [ManifestAction.TRANSFORM]: async () => {
+        await transformManifest(options.entry, options.output);
+      },
+    };
+
+    // Execute the appropriate handler or show error
+    const handler = actionHandlers[action as ManifestAction];
+
+    if (handler) {
+      await handler();
+    }
+    if (!handler) {
+      feedback.error(
+        `Only ${ManifestAction.TRANSFORM} and ${ManifestAction.GENERATE} actions are supported`,
+      );
       process.exit(1);
     }
-
-    if (!entry) {
-      feedback.error('Input file path is required');
-      process.exit(1);
-    }
-
-    if (!options.output) {
-      feedback.error('Output file path is required (--output)');
-      process.exit(1);
-    }
-
-    const fileExtension = extname(entry).toLowerCase();
-    if (fileExtension !== '.json') {
-      feedback.error('Input file must be .json');
-      process.exit(1);
-    }
-
-    const absolutePath = resolve(process.cwd(), entry);
-    const jsonString = readFileSync(absolutePath, 'utf8');
-    const config = convertJsonConfigToObject(jsonString);
-
-    const jsContent = `export default ${JSON.stringify(config, null, 2)};`;
-    writeFileSync(options.output, jsContent);
-
-    feedback.success(
-      `Azion Platform configuration transformed into JavaScript module at ${options.output}`,
-    );
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (debug as any).error(error);
-    feedback.error('An unknown error occurred.');
+    feedback.error(error instanceof Error ? error.message : String(error));
     process.exit(1);
   }
 }
