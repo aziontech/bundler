@@ -2861,10 +2861,10 @@ axios@^1.6.1:
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
-azion@~1.17.0-stage.2:
-  version "1.17.0-stage.2"
-  resolved "https://registry.yarnpkg.com/azion/-/azion-1.17.0-stage.2.tgz#7987a303be3e28c82bba8603bb9d6f0e1cb4dc64"
-  integrity sha512-f4KDt6OXTPkhyWhVL97rs/qd7v8T0JPO/9DknOT8OTDMjCg9MPTNS8wFNH53MZq2h9QRR9ms6MhiM1SPdMFGrw==
+azion@~1.17.0-stage.3:
+  version "1.17.0-stage.3"
+  resolved "https://registry.yarnpkg.com/azion/-/azion-1.17.0-stage.3.tgz#9484317febb1b35496231cfd14c7e0caaf153337"
+  integrity sha512-iv3K9JnlOpBwHAa+FZ7UiW8PSU+EHEPHzYc+UOYoYt35NqqRM/Fujf1uj7XhKpj9fKgoVELXHVq647Jd2j08Og==
   dependencies:
     "@edge-runtime/primitives" "^6.0.0"
     "@fastly/http-compute-js" "^1.1.5"
