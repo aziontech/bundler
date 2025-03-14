@@ -70,6 +70,7 @@ export async function buildCommand(options: BuildCommandOptions) {
   await writeStore(buildConfig);
 
   const config: AzionConfig = {
+    ...userConfig,
     build: {
       ...buildConfig,
     },
