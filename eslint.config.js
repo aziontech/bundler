@@ -4,7 +4,7 @@ import tseslint from 'typescript-eslint';
 
 export default [
   { files: ['**/*.{js,mjs,cjs,ts}'] },
-  { ignores: ['**/dist/*'] },
+  { ignores: ['**/dist/*', 'examples/*'] },
   {
     languageOptions: {
       ecmaVersion: 2022,
