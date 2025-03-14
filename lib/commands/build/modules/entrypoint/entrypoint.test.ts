@@ -1,34 +1,16 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { resolveEntrypoint } from './entrypoint';
 import { AzionBuildPreset, BuildContext } from 'azion/config';
-import { feedback } from 'azion/utils/node';
-import { access } from 'fs/promises';
-import { resolve } from 'path';
-
-// Mock dependencies
-jest.mock('fs/promises', () => ({
-  access: jest.fn(),
-}));
-
-jest.mock('azion/utils/node', () => ({
-  feedback: {
-    build: {
-      info: jest.fn(),
-    },
-  },
-}));
-
-jest.mock('path', () => ({
-  resolve: jest.fn((...args) => args.join('/')),
-}));
-
-jest.mock('#utils', () => ({
-  debug: {
-    error: jest.fn(),
-  },
-}));
+import * as utilsNode from 'azion/utils/node';
+import fsPromises from 'fs/promises';
+import path from 'path';
 
 describe('resolveEntrypoint', () => {
+  let spyFeedbackBuildInfo: jest.SpiedFunction<
+    typeof utilsNode.feedback.build.info
+  >;
+  let spyAccess: jest.SpiedFunction<typeof fsPromises.access>;
+
   const mockContext: BuildContext = {
     production: true,
     output: '.edge/worker.js',
@@ -48,9 +30,6 @@ describe('resolveEntrypoint', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    (access as jest.Mock).mockImplementation(() => Promise.resolve(undefined));
-
     // Mock for globalThis.bundler
     globalThis.bundler = {
       root: '/mock/root',
@@ -60,6 +39,16 @@ describe('resolveEntrypoint', () => {
       tempPath: '/mock/temp',
       argsPath: '/mock/args',
     };
+    spyFeedbackBuildInfo = jest
+      .spyOn(utilsNode.feedback.build, 'info')
+      .mockReturnValue();
+    spyAccess = jest
+      .spyOn(fsPromises, 'access')
+      .mockImplementation(() => Promise.resolve());
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should use context entrypoint when available', async () => {
@@ -69,30 +58,29 @@ describe('resolveEntrypoint', () => {
     });
 
     expect(result).toBe(mockContext.entrypoint);
-    expect(feedback.build.info).toHaveBeenCalledWith(
-      expect.stringContaining('Using entrypoint'),
+    expect(spyFeedbackBuildInfo).toHaveBeenCalledWith(
+      expect.stringContaining('Using src/index.js as entry point.'),
     );
   });
 
   it('should resolve entrypoint from preset when context entrypoint is not available', async () => {
+    const spyPath = jest.spyOn(path, 'resolve');
+
     const contextWithoutEntrypoint = { ...mockContext, entrypoint: '' };
 
-    const result = await resolveEntrypoint({
+    await resolveEntrypoint({
       ctx: contextWithoutEntrypoint,
       preset: mockPreset,
     });
 
-    expect(resolve).toHaveBeenCalledWith(
-      '/mock/root',
-      mockPreset.config.build!.entry,
-    );
-    expect(feedback.build.info).toHaveBeenCalledWith(
-      expect.stringContaining('Using preset entrypoint'),
+    expect(spyPath).toHaveBeenCalledWith('src/index.js');
+    expect(spyFeedbackBuildInfo).toHaveBeenCalledWith(
+      expect.stringContaining('Using preset default entry: src/index.js'),
     );
   });
 
   it('should throw error when entrypoint file does not exist', async () => {
-    (access as jest.Mock).mockImplementationOnce(() =>
+    spyAccess.mockImplementationOnce(() =>
       Promise.reject(new Error('File not found')),
     );
 
@@ -101,6 +89,8 @@ describe('resolveEntrypoint', () => {
         ctx: mockContext,
         preset: mockPreset,
       }),
-    ).rejects.toThrow('Entrypoint file not found');
+    ).rejects.toThrow(
+      'Entry point "src/index.js" was not found. Please verify the path and try again.',
+    );
   });
 });

@@ -3,12 +3,7 @@ import {
   BuildContext,
   BuildConfiguration,
 } from 'azion/config';
-import {
-  injectWorkerGlobals,
-  injectWorkerMemoryFiles,
-  copyFilesToLocalEdgeStorage,
-  injectWorkerPathPrefix,
-} from './utils';
+import utils from './utils';
 
 const EDGE_STORAGE = '.edge/files';
 const BUNDLER_NAMESPACE = 'bundler';
@@ -39,7 +34,7 @@ export const executePrebuild = async ({
     (await buildConfig.preset.prebuild?.(buildConfig, ctx)) ||
     DEFAULT_PREBUILD_RESULT;
 
-  const globalThisWithVars = injectWorkerGlobals({
+  const globalThisWithVars = utils.injectWorkerGlobals({
     namespace: BUNDLER_NAMESPACE,
     // Transform globals object:
     // 1. Convert object to entries
@@ -47,18 +42,19 @@ export const executePrebuild = async ({
     // 3. Ensure remaining values are typed as string
     vars: Object.fromEntries(
       Object.entries(result.injection?.globals || {})
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .filter(([_, v]) => v !== undefined)
         .map(([k, v]) => [k, v as string]),
     ),
   });
 
-  const memoryFiles = await injectWorkerMemoryFiles({
+  const memoryFiles = await utils.injectWorkerMemoryFiles({
     namespace: BUNDLER_NAMESPACE,
     property: '__FILES__',
     dirs: buildConfig.memoryFS?.injectionDirs || [],
   });
 
-  const pathPrefix = await injectWorkerPathPrefix({
+  const pathPrefix = await utils.injectWorkerPathPrefix({
     namespace: BUNDLER_NAMESPACE,
     property: 'FS_PATH_PREFIX_TO_REMOVE',
     prefix: buildConfig.memoryFS?.removePathPrefix || '',
@@ -67,7 +63,7 @@ export const executePrebuild = async ({
   const globalThisWithInjections = `${globalThisWithVars}${pathPrefix}\n${memoryFiles}`;
 
   if (result.filesToInject?.length) {
-    copyFilesToLocalEdgeStorage({
+    utils.copyFilesToLocalEdgeStorage({
       dirs: result.filesToInject,
       prefix: '',
       outputPath: EDGE_STORAGE,

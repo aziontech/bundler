@@ -9,6 +9,7 @@ export const mergeConfigWithUserOverrides = (
   baseConfig: AzionConfig,
   userConfig: AzionConfig | null,
 ): AzionConfig => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const customizer = (objValue: any, srcValue: any) => {
     if (objValue && !objValue.build) {
       return srcValue;
@@ -18,3 +19,5 @@ export const mergeConfigWithUserOverrides = (
 
   return lodash.mergeWith({}, baseConfig, userConfig, customizer);
 };
+
+export default { mergeConfigWithUserOverrides };

@@ -1,7 +1,7 @@
 import { AzionBuildPreset, BuildContext } from 'azion/config';
-import { feedback } from 'azion/utils/node';
-import { resolve } from 'path';
-import { access } from 'fs/promises';
+import * as utilsNode from 'azion/utils/node';
+import path from 'path';
+import fsPromises from 'fs/promises';
 import { debug } from '#utils';
 
 interface EntrypointOptions {
@@ -23,10 +23,10 @@ export const resolveEntrypoint = async ({
 }: EntrypointOptions): Promise<string> => {
   // Step 1: Check for user-provided entrypoint
   if (ctx.entrypoint && !preset.handler) {
-    const entrypointPath = resolve(ctx.entrypoint);
+    const entrypointPath = path.resolve(ctx.entrypoint);
     try {
-      await access(entrypointPath);
-      feedback.build.info(`Using ${ctx.entrypoint} as entry point.`);
+      await fsPromises.access(entrypointPath);
+      utilsNode.feedback.build.info(`Using ${ctx.entrypoint} as entry point.`);
       return ctx.entrypoint;
     } catch (error) {
       debug.error(error);
@@ -38,7 +38,7 @@ export const resolveEntrypoint = async ({
 
   // Step 2: Check for preset handler
   if (preset.handler) {
-    const handlerPath = resolve(
+    const handlerPath = path.resolve(
       globalThis.bundler.root,
       'node_modules',
       'azion',
@@ -50,7 +50,7 @@ export const resolveEntrypoint = async ({
       'handler.ts',
     );
 
-    feedback.build.info(
+    utilsNode.feedback.build.info(
       `Using built-in handler from "${preset.metadata.name}" preset.`,
     );
 
@@ -60,8 +60,8 @@ export const resolveEntrypoint = async ({
   // Step 3: Check for preset's default entry
   if (preset.config.build?.entry) {
     const presetEntry = preset.config.build.entry;
-    feedback.build.info(`Using preset default entry: ${presetEntry}`);
-    return resolve(presetEntry);
+    utilsNode.feedback.build.info(`Using preset default entry: ${presetEntry}`);
+    return path.resolve(presetEntry);
   }
 
   // No valid entrypoint found

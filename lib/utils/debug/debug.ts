@@ -14,7 +14,7 @@
  * // Log a debug message
  * debug.log('This is a debug message');
  */
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const debug: { [key: string]: (...args: any[]) => void } = {};
 const debugEnabled = process.env.DEBUG === 'true';
 
@@ -25,6 +25,7 @@ Object.keys(console).forEach((method: string) => {
   if (typeof (console as Console)[method as keyof Console] === 'function') {
     debug[method] = (...args) => {
       if (debugEnabled) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (console as any)[method](...args);
       }
     };

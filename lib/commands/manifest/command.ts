@@ -59,6 +59,7 @@ export async function manifestCommand(
       process.exit(1);
     }
   } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (debug as any).error(error);
     feedback.error(error instanceof Error ? error.message : String(error));
     process.exit(1);

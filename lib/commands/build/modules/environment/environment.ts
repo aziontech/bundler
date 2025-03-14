@@ -1,12 +1,7 @@
 import { AzionConfig, AzionBuildPreset, BuildContext } from 'azion/config';
-import { mergeConfigWithUserOverrides } from './utils';
+import utilsDefault from './utils';
 
-import {
-  writeStore,
-  writeUserConfig,
-  readUserConfig,
-  type BundlerStore,
-} from '#env';
+import envDefault, { type BundlerStore } from '#env';
 
 interface EnvironmentParams {
   config: AzionConfig;
@@ -29,6 +24,7 @@ interface EnvironmentParams {
 export const setEnvironment = async ({
   config: userConfig,
   preset,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ctx,
 }: EnvironmentParams): Promise<void> => {
   try {
@@ -39,7 +35,7 @@ export const setEnvironment = async ({
      * 1. User config (from azion.config.js)
      * 2. Preset config (from preset module)
      */
-    const mergedConfig: AzionConfig = mergeConfigWithUserOverrides(
+    const mergedConfig: AzionConfig = utilsDefault.mergeConfigWithUserOverrides(
       presetConfig,
       userConfig,
     );
@@ -60,10 +56,10 @@ export const setEnvironment = async ({
       };
     }
 
-    const hasUserConfig = await readUserConfig();
+    const hasUserConfig = await envDefault.readUserConfig();
 
     // Create initial config file if none exists
-    if (!hasUserConfig) await writeUserConfig(mergedConfig);
+    if (!hasUserConfig) await envDefault.writeUserConfig(mergedConfig);
 
     /**
      * Setup environment store with the following rules:
@@ -81,7 +77,7 @@ export const setEnvironment = async ({
       entry: mergedConfig.build.entry,
     };
 
-    await writeStore(storeConfig);
+    await envDefault.writeStore(storeConfig);
   } catch (error) {
     throw new Error(`Failed to set environment: ${(error as Error).message}`);
   }

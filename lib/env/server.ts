@@ -94,6 +94,7 @@ async function initializeServer(port: number, workerCode: string) {
   // This is required at this point because the VM used for the local runtime
   // server does not support any other type of event than "fetch".
   const { matchEvent: isFirewallEvent, codeChanged } =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     checkAndChangeAddEventListener('firewall', 'fetch', workerCode) as any;
   // Use the changed code if it's a Firewall event
   const initialCode = isFirewallEvent ? codeChanged : workerCode;
@@ -135,6 +136,7 @@ async function manageServer(workerPath: string, port: number) {
         `Function running on port 0.0.0.0:${port}, url: http://localhost:${port}`,
       );
     } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((error as any).message.includes('EADDRINUSE')) {
         await manageServer(workerPath, port + 1);
       } else {
@@ -176,6 +178,7 @@ async function handleFileChange(
     feedback.build.info('Rebuilding with the new changes...');
     await manageServer(workerPath, port);
   } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (debug as any).error(`Build or server restart failed: ${error}`);
   } finally {
     isChangeHandlerRunning = false;
@@ -212,6 +215,7 @@ async function startServer(workerPath: string, port: number) {
     .on('unlink', handleUserFileChange)
     .on('addDir', handleUserFileChange)
     .on('unlinkDir', handleUserFileChange)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .on('error', (error) => (debug as any).error(`Watcher error: ${error}`))
     .on('ready', () =>
       feedback.server.info('Initial scan complete. Ready for changes.'),
