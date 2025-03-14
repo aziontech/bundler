@@ -1,7 +1,7 @@
-import { readFile, writeFile, mkdir } from 'fs/promises';
+import fsPromises from 'fs/promises';
 import { dirname } from 'path';
 import { BuildConfiguration, BuildContext } from 'azion/config';
-import { createEventHandlerCode } from './utils';
+import util from './utils';
 
 /**
  * Configures the worker code based on user input
@@ -16,14 +16,13 @@ export const setupWorkerCode = async (
 ): Promise<string> => {
   try {
     if (buildConfig.worker) {
-      return readFile(ctx.entrypoint, 'utf-8');
+      return fsPromises.readFile(ctx.entrypoint, 'utf-8');
     }
+    const wrapperCode = util.createEventHandlerCode(ctx.entrypoint);
 
-    const wrapperCode = createEventHandlerCode(ctx.entrypoint);
+    await fsPromises.mkdir(dirname(ctx.output), { recursive: true });
 
-    await mkdir(dirname(ctx.output), { recursive: true });
-
-    await writeFile(ctx.output, wrapperCode, 'utf-8');
+    await fsPromises.writeFile(ctx.output, wrapperCode, 'utf-8');
 
     return wrapperCode;
   } catch (error: unknown) {

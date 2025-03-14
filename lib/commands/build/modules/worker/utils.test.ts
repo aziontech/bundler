@@ -1,10 +1,10 @@
 import { describe, it, expect } from '@jest/globals';
-import { createEventHandlerCode } from './utils';
+import util from './utils';
 
 describe('createEventHandlerCode', () => {
   it('should generate handler code with correct entry path', () => {
     const entrypoint = 'src/index.js';
-    const result = createEventHandlerCode(entrypoint);
+    const result = util.createEventHandlerCode(entrypoint);
 
     expect(result).toContain(`import moduleOrFunction from '${entrypoint}'`);
     expect(result).toContain('addEventListener(eventType, (event)');
@@ -12,7 +12,7 @@ describe('createEventHandlerCode', () => {
   });
 
   it('should include logic to detect handler type', () => {
-    const result = createEventHandlerCode('app.js');
+    const result = util.createEventHandlerCode('app.js');
 
     expect(result).toContain('const hasFirewallHandler');
     expect(result).toContain('const isLegacyDefaultFunction');
@@ -20,7 +20,7 @@ describe('createEventHandlerCode', () => {
   });
 
   it('should include error handling', () => {
-    const result = createEventHandlerCode('app.js');
+    const result = util.createEventHandlerCode('app.js');
 
     expect(result).toContain('try {');
     expect(result).toContain('catch (error) {');

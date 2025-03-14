@@ -1,6 +1,6 @@
 import type { AzionBuildPreset, PresetInput } from 'azion/config';
 import * as presets from 'azion/presets';
-import { feedback } from 'azion/utils/node';
+import * as utilsNode from 'azion/utils/node';
 import inferPreset from './infer/infer-preset';
 
 /**
@@ -38,7 +38,9 @@ export const resolvePreset = async (
   input?: PresetInput,
 ): Promise<AzionBuildPreset> => {
   if (!input) {
-    feedback.build.info('No preset specified, using automatic detection...');
+    utilsNode.feedback.build.info(
+      'No preset specified, using automatic detection...',
+    );
     input = await inferPreset.inferPreset();
   }
 

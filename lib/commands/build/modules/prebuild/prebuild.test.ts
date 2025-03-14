@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { executePrebuild } from './prebuild';
 import {
@@ -5,31 +6,19 @@ import {
   BuildContext,
   AzionPrebuildResult,
 } from 'azion/config';
-import {
-  injectWorkerGlobals,
-  injectWorkerMemoryFiles,
-  copyFilesToLocalEdgeStorage,
-} from './utils';
-
-// Mock dependencies
-jest.mock('./utils', () => ({
-  injectWorkerGlobals: jest.fn().mockReturnValue('globalThis.bundler={}'),
-  injectWorkerMemoryFiles: jest
-    .fn()
-    .mockImplementation(() =>
-      Promise.resolve('globalThis.bundler.__FILES__={}'),
-    ),
-  copyFilesToLocalEdgeStorage: jest.fn(),
-  injectWorkerPathPrefix: jest
-    .fn()
-    .mockImplementation(() =>
-      Promise.resolve(
-        'globalThis.bundler = {}; globalThis.bundler.FS_PATH_PREFIX_TO_REMOVE = "";',
-      ),
-    ),
-}));
+import utils from './utils';
 
 describe('executePrebuild', () => {
+  let spyinjectWorkerGlobals: jest.SpiedFunction<
+    typeof utils.injectWorkerGlobals
+  >;
+  let spyinjectWorkerMemoryFiles: jest.SpiedFunction<
+    typeof utils.injectWorkerMemoryFiles
+  >;
+  let spycopyFilesToLocalEdgeStorage: jest.SpiedFunction<
+    typeof utils.copyFilesToLocalEdgeStorage
+  >;
+
   const mockBuildConfig: BuildConfiguration = {
     entry: 'src/index.js',
     preset: {
@@ -68,10 +57,22 @@ describe('executePrebuild', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
     (mockBuildConfig.preset.prebuild as jest.Mock).mockImplementation(() =>
       Promise.resolve(mockPrebuildResult),
     );
+    spyinjectWorkerGlobals = jest
+      .spyOn(utils, 'injectWorkerGlobals')
+      .mockReturnValue('');
+    spyinjectWorkerMemoryFiles = jest
+      .spyOn(utils, 'injectWorkerMemoryFiles')
+      .mockResolvedValue('');
+    spycopyFilesToLocalEdgeStorage = jest
+      .spyOn(utils, 'copyFilesToLocalEdgeStorage')
+      .mockReturnValue();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should execute preset prebuild function and process result', async () => {
@@ -84,16 +85,16 @@ describe('executePrebuild', () => {
       mockBuildConfig,
       mockContext,
     );
-    expect(injectWorkerGlobals).toHaveBeenCalledWith({
+    expect(utils.injectWorkerGlobals).toHaveBeenCalledWith({
       namespace: 'bundler',
       vars: { API_KEY: '"test-key"' },
     });
-    expect(injectWorkerMemoryFiles).toHaveBeenCalledWith({
+    expect(utils.injectWorkerMemoryFiles).toHaveBeenCalledWith({
       namespace: 'bundler',
       property: '__FILES__',
       dirs: [],
     });
-    expect(copyFilesToLocalEdgeStorage).toHaveBeenCalledWith({
+    expect(utils.copyFilesToLocalEdgeStorage).toHaveBeenCalledWith({
       dirs: ['public'],
       prefix: '',
       outputPath: '.edge/files',
@@ -157,7 +158,7 @@ describe('executePrebuild', () => {
       ctx: mockContext,
     });
 
-    expect(injectWorkerGlobals).toHaveBeenCalledWith({
+    expect(utils.injectWorkerGlobals).toHaveBeenCalledWith({
       namespace: 'bundler',
       vars: { API_KEY: '"test-key"' },
     });

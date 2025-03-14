@@ -52,3 +52,5 @@ addEventListener(eventType, (event) => {
 });
 `;
 };
+
+export default { createEventHandlerCode };

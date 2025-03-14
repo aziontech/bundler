@@ -1,8 +1,10 @@
 import { jest } from '@jest/globals';
 import fs from 'fs';
+import fsPromises from 'fs/promises';
 import type { AzionConfig } from 'azion/config';
 import { generateManifest } from './manifest';
-import util from './utils/util';
+import util from './util';
+import * as utilNode from 'azion/utils/node';
 
 jest.mock('fs');
 
@@ -20,9 +22,13 @@ describe('generateManifest', () => {
   };
 
   beforeEach(() => {
+    jest.spyOn(utilNode.feedback, 'success').mockReturnValue(void 0);
     jest.spyOn(process, 'cwd').mockReturnValue('./');
     jest.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
     jest.spyOn(fs, 'mkdirSync').mockImplementation(() => void 0);
+    jest
+      .spyOn(fsPromises, 'readFile')
+      .mockResolvedValue(JSON.stringify(mockConfig));
   });
 
   afterEach(() => {

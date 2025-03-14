@@ -218,7 +218,6 @@ export async function readUserConfig(configPath?: string) {
           configModule = await import(resolvedConfigPath);
         } catch (error) {
           if ((error as Error).message === 'ERR_REQUIRE_ESM') {
-            // eslint-disable-next-line import/no-dynamic-require
             configModule = require(resolvedConfigPath); // Fallback para require em CommonJS
             throw error;
           }

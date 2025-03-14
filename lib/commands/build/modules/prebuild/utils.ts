@@ -1,5 +1,5 @@
-import { cpSync, existsSync, mkdirSync } from 'fs';
-import { readdir, stat, readFile } from 'fs/promises';
+import fs from 'fs';
+import fsPromises from 'fs/promises';
 import { join } from 'path';
 
 interface WorkerGlobalsConfig {
@@ -28,11 +28,11 @@ export const injectWorkerMemoryFiles = async ({
   const result: Record<string, { content: string }> = {};
 
   for (const dir of dirs) {
-    const files = await readdir(dir);
+    const files = await fsPromises.readdir(dir);
 
     for (const file of files) {
       const filePath = join(dir, file);
-      const stats = await stat(filePath);
+      const stats = await fsPromises.stat(filePath);
 
       if (stats.isDirectory()) {
         const subDirContent = await injectWorkerMemoryFiles({
@@ -42,7 +42,7 @@ export const injectWorkerMemoryFiles = async ({
         });
         Object.assign(result, subDirContent);
       } else if (stats.isFile()) {
-        const bufferContent = await readFile(filePath);
+        const bufferContent = await fsPromises.readFile(filePath);
         let key = filePath;
         if (!filePath.startsWith('/')) key = `/${filePath}`;
         result[key] = { content: bufferContent.toString('base64') };
@@ -62,11 +62,11 @@ export const copyFilesToLocalEdgeStorage = ({
     const targetPath = prefix ? dir.replace(prefix, '') : dir;
     const fullTargetPath = join(outputPath, targetPath);
 
-    if (!existsSync(fullTargetPath)) {
-      mkdirSync(fullTargetPath, { recursive: true });
+    if (!fs.existsSync(fullTargetPath)) {
+      fs.mkdirSync(fullTargetPath, { recursive: true });
     }
 
-    cpSync(dir, fullTargetPath, { recursive: true });
+    fs.cpSync(dir, fullTargetPath, { recursive: true });
   });
 };
 
@@ -97,4 +97,11 @@ export const injectWorkerPathPrefix = async ({
   const formattedPrefix =
     prefix && typeof prefix === 'string' && prefix !== '' ? prefix : '""';
   return `globalThis.${namespace} = {}; globalThis.${namespace}.${property} = '${formattedPrefix}';`;
+};
+
+export default {
+  injectWorkerMemoryFiles,
+  copyFilesToLocalEdgeStorage,
+  injectWorkerGlobals,
+  injectWorkerPathPrefix,
 };

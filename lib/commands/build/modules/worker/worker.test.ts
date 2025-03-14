@@ -1,23 +1,17 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { setupWorkerCode } from './worker';
-import { createEventHandlerCode } from './utils';
+import util from './utils';
 import { BuildConfiguration, BuildContext } from 'azion/config';
-
-const mockReadFile = jest.fn();
-const mockWriteFile = jest.fn();
-const mockMkdir = jest.fn();
-
-jest.mock('fs/promises', () => ({
-  readFile: mockReadFile,
-  writeFile: mockWriteFile,
-  mkdir: mockMkdir,
-}));
-
-jest.mock('./utils', () => ({
-  createEventHandlerCode: jest.fn(),
-}));
+import fsPromises from 'fs/promises';
 
 describe('setupWorkerCode', () => {
+  let spyReadFile: jest.SpiedFunction<typeof fsPromises.readFile>;
+  let spyWriteFile: jest.SpiedFunction<typeof fsPromises.writeFile>;
+  let spyMkdir: jest.SpiedFunction<typeof fsPromises.mkdir>;
+  let spyCreateEventHandlerCode: jest.SpiedFunction<
+    typeof util.createEventHandlerCode
+  >;
+
   const mockBuildConfig: BuildConfiguration = {
     entry: 'temp/azion-123.temp.js',
     preset: {
@@ -41,9 +35,20 @@ describe('setupWorkerCode', () => {
   const mockWorkerCode = 'addEventListener("fetch", event => {})';
 
   beforeEach(() => {
+    spyReadFile = jest
+      .spyOn(fsPromises, 'readFile')
+      .mockResolvedValue('original code');
+    spyWriteFile = jest.spyOn(fsPromises, 'writeFile').mockResolvedValue();
+    spyMkdir = jest
+      .spyOn(fsPromises, 'mkdir')
+      .mockImplementation(() => Promise.resolve(void 0));
+    spyCreateEventHandlerCode = jest
+      .spyOn(util, 'createEventHandlerCode')
+      .mockReturnValue(mockWorkerCode);
+  });
+
+  afterEach(() => {
     jest.clearAllMocks();
-    mockReadFile.mockImplementation(() => Promise.resolve('original code'));
-    (createEventHandlerCode as jest.Mock).mockReturnValue(mockWorkerCode);
   });
 
   it('should return original code when worker=true', async () => {
@@ -51,19 +56,21 @@ describe('setupWorkerCode', () => {
 
     const result = await setupWorkerCode(configWithWorker, mockContext);
 
-    expect(mockReadFile).toHaveBeenCalledWith(mockContext.entrypoint, 'utf-8');
-    expect(mockWriteFile).not.toHaveBeenCalled();
+    expect(spyReadFile).toHaveBeenCalledWith(mockContext.entrypoint, 'utf-8');
+    expect(spyMkdir).not.toHaveBeenCalled();
     expect(result).toBe('original code');
   });
 
   it('should generate wrapper code when worker=false', async () => {
     const result = await setupWorkerCode(mockBuildConfig, mockContext);
 
-    expect(createEventHandlerCode).toHaveBeenCalledWith(mockContext.entrypoint);
-    expect(mockMkdir).toHaveBeenCalledWith(expect.any(String), {
+    expect(spyCreateEventHandlerCode).toHaveBeenCalledWith(
+      mockContext.entrypoint,
+    );
+    expect(spyMkdir).toHaveBeenCalledWith(expect.any(String), {
       recursive: true,
     });
-    expect(mockWriteFile).toHaveBeenCalledWith(
+    expect(spyWriteFile).toHaveBeenCalledWith(
       mockContext.output,
       mockWorkerCode,
       'utf-8',
@@ -72,8 +79,8 @@ describe('setupWorkerCode', () => {
   });
 
   it('should throw error when worker code setup fails', async () => {
-    mockReadFile.mockImplementation(() =>
-      Promise.reject(new Error('Read error')),
+    spyReadFile.mockImplementation(() =>
+      Promise.reject(new Error('Failed to setup worker code: Read error')),
     );
 
     await expect(

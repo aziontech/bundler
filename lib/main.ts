@@ -163,7 +163,7 @@ function startBundler() {
     .option('--development', 'Build in development mode', false)
     .action(async (options) => {
       const { buildCommand, manifestCommand } = await import('#commands');
-      const { config, ctx } = await buildCommand({
+      const { config } = await buildCommand({
         ...options,
         production: !options.development,
       });

@@ -2,7 +2,7 @@ import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { resolvePreset } from './preset';
 import inferPreset from './infer/infer-preset';
 import { AzionBuildPreset } from 'azion/config';
-import { feedback } from 'azion/utils/node';
+import * as utilsNode from 'azion/utils/node';
 
 // Mock dependencies
 jest.mock('azion/utils/node', () => ({
@@ -67,7 +67,9 @@ describe('resolvePreset', () => {
     const spyInfer = jest
       .spyOn(inferPreset, 'inferPreset')
       .mockResolvedValue('typescript');
-    const spyFeedback = jest.spyOn(feedback.build, 'info');
+    const spyFeedback = jest
+      .spyOn(utilsNode.feedback.build, 'info')
+      .mockReturnValue();
 
     await resolvePreset();
 
