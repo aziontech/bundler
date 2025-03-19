@@ -78,7 +78,10 @@ describe('executeBuild', () => {
     await executeBuild({
       buildConfig: mockBuildConfig,
       prebuildResult: mockPrebuildResult,
-      ctx: mockContext,
+      ctx: {
+        ...mockContext,
+        production: true,
+      },
     });
 
     expect(spyCreateAzionESBuildConfig).toHaveBeenCalledWith(
@@ -88,7 +91,7 @@ describe('executeBuild', () => {
           defineVars: { 'process.env.NODE_ENV': '"production"' },
         },
       }),
-      mockContext,
+      { ...mockContext, production: true },
     );
     expect(spyExecuteESBuildBuild).toHaveBeenCalled();
     expect(spyWriteFile).toHaveBeenCalledWith(
@@ -120,7 +123,10 @@ describe('executeBuild', () => {
     await executeBuild({
       buildConfig: webpackConfig,
       prebuildResult: mockPrebuildResult,
-      ctx: mockContext,
+      ctx: {
+        ...mockContext,
+        production: true,
+      },
     });
 
     expect(spyCreateWebpack).toHaveBeenCalledWith(
@@ -130,7 +136,7 @@ describe('executeBuild', () => {
           defineVars: { 'process.env.NODE_ENV': '"production"' },
         },
       }),
-      mockContext,
+      { ...mockContext, production: true },
     );
     expect(spyExecuteWebpack).toHaveBeenCalled();
     expect(spyWriteFile).toHaveBeenCalledWith(
@@ -144,8 +150,13 @@ describe('executeBuild', () => {
       .spyOn(fsPromises, 'readFile')
       .mockResolvedValue('// Original entry code');
     const writeFile = jest.spyOn(fsPromises, 'writeFile').mockResolvedValue();
+    jest
+      .spyOn(fs, 'readFileSync')
+      .mockReturnValue('/* public/index.js content */');
+
     const prebuildWithEntry = {
       ...mockPrebuildResult,
+      filesToInject: ['public/index.js'],
       injection: {
         ...mockPrebuildResult.injection,
         entry: 'public',
@@ -214,13 +225,18 @@ describe('executeBuild', () => {
     await executeBuild({
       buildConfig: mockBuildConfig,
       prebuildResult: mockPrebuildResult,
-      ctx: mockContext,
+      ctx: {
+        ...mockContext,
+        production: true,
+      },
     });
 
     expect(spyExecuteESBuildBuild).toHaveBeenCalled();
     expect(spyWriteFile).toHaveBeenCalledWith(
       mockContext.output,
-      expect.not.stringContaining('import SRC_NODE_FS from "node:fs";'),
+      expect.not.stringContaining(
+        'import SRC_NODE_FS from "node:fs";// Original entry code',
+      ),
     );
   });
 

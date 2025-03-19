@@ -22,7 +22,7 @@ if (hasFirewallHandler) {
 } else if (isLegacyDefaultFunction) {
   // Legacy case: function exported directly as default
   handler = module.default;
-} else {
+  } else {
   // Normal case: look for fetch handler
   handler = module.fetch || (module.default && module.default.fetch);
 }
@@ -32,7 +32,7 @@ if (!handler) {
 }
 
 addEventListener(eventType, (event) => {
-  if (eventType === 'fetch') {
+  if (eventType === 'fetch' && !hasFirewallHandler) {
     event.respondWith((async function() {
       try {
         return handler(event);
@@ -40,7 +40,8 @@ addEventListener(eventType, (event) => {
         return new Response(\`Error: \${error.message}\`, { status: 500 });
       }
     })());
-  } else {
+  } 
+  else {
     (async function() {
       try {
         return handler(event);

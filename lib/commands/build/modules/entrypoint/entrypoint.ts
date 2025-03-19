@@ -38,9 +38,13 @@ export const resolveEntrypoint = async ({
 
   // Step 2: Check for preset handler
   if (preset.handler) {
+    const rootPathNodeModules =
+      globalThis.bundler.root.includes('node_modules');
+    const presetPath = rootPathNodeModules
+      ? path.resolve(globalThis.bundler.root, '../')
+      : path.resolve(globalThis.bundler.root, 'node_modules');
     const handlerPath = path.resolve(
-      globalThis.bundler.root,
-      'node_modules',
+      presetPath,
       'azion',
       'packages',
       'presets',

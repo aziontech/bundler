@@ -28,7 +28,7 @@
     "test:e2e": "yarn e2e:start && NODE_OPTIONS='--experimental-vm-modules' jest --maxWorkers 1 --config=./jest-e2e.config.js tests/e2e/ --json --outputFile e2e_results.json && yarn e2e:stop; yarn task:reports",
     "test:nodejs-apis": "yarn e2e:start && NODE_OPTIONS='--experimental-vm-modules' jest --maxWorkers 1 --config=./jest-e2e.config.js tests/nodejs-apis/ --json --outputFile nodejs_apis_results.json && yarn e2e:stop && yarn task:reports-nodejs-apis",
     "prepare": "husky install",
-    "submodule:update": "git submodule update --init --recursive && git submodule foreach git pull origin main"
+    "submodule:update": "git submodule update --init --recursive && git submodule foreach git pull origin chore/update-config-azion"
   },
   "author": "aziontech",
   "contributors": [
@@ -50,7 +50,7 @@
     "@edge-runtime/node-utils": "^2.1.1",
     "@edge-runtime/primitives": "^3.0.4",
     "@netlify/framework-info": "^9.9.1",
-    "azion": "~1.17.0-stage.3",
+    "azion": "~1.17.0-stage.4",
     "babel-loader": "^9.2.1",
     "bottleneck": "^2.19.5",
     "chalk": "^5.3.0",

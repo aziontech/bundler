@@ -26,7 +26,9 @@ export const injectWorkerMemoryFiles = async ({
   dirs,
 }: WorkerMemoryFilesConfig) => {
   const result: Record<string, { content: string }> = {};
-
+  if (dirs.length === 0) {
+    return '';
+  }
   for (const dir of dirs) {
     const files = await fsPromises.readdir(dir);
 
@@ -49,7 +51,6 @@ export const injectWorkerMemoryFiles = async ({
       }
     }
   }
-
   return `globalThis.${namespace}.${property}=${JSON.stringify(result)};`;
 };
 
@@ -96,7 +97,7 @@ export const injectWorkerPathPrefix = async ({
 }) => {
   const formattedPrefix =
     prefix && typeof prefix === 'string' && prefix !== '' ? prefix : '""';
-  return `globalThis.${namespace} = {}; globalThis.${namespace}.${property} = '${formattedPrefix}';`;
+  return `globalThis.${namespace} = { ...globalThis.${namespace}, ${property}: '${formattedPrefix}'};`;
 };
 
 export default {

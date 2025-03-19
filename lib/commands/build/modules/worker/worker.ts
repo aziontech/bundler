@@ -22,7 +22,9 @@ export const setupWorkerCode = async (
 
     await fsPromises.mkdir(dirname(ctx.output), { recursive: true });
 
-    await fsPromises.writeFile(ctx.output, wrapperCode, 'utf-8');
+    if (ctx.production !== false) {
+      await fsPromises.writeFile(ctx.output, wrapperCode, 'utf-8');
+    }
 
     return wrapperCode;
   } catch (error: unknown) {

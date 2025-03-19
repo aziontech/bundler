@@ -5,7 +5,7 @@ import {
 } from 'azion/config';
 import utils from './utils';
 
-const EDGE_STORAGE = '.edge/files';
+const EDGE_STORAGE = '.edge/storage';
 const BUNDLER_NAMESPACE = 'bundler';
 
 export interface PrebuildParams {
@@ -54,6 +54,14 @@ export const executePrebuild = async ({
     dirs: buildConfig.memoryFS?.injectionDirs || [],
   });
 
+  if (buildConfig.memoryFS) {
+    utils.copyFilesToLocalEdgeStorage({
+      dirs: buildConfig.memoryFS?.injectionDirs,
+      prefix: buildConfig.memoryFS?.removePathPrefix,
+      outputPath: EDGE_STORAGE,
+    });
+  }
+
   const pathPrefix = await utils.injectWorkerPathPrefix({
     namespace: BUNDLER_NAMESPACE,
     property: 'FS_PATH_PREFIX_TO_REMOVE',
@@ -62,19 +70,11 @@ export const executePrebuild = async ({
 
   const globalThisWithInjections = `${globalThisWithVars}${pathPrefix}\n${memoryFiles}`;
 
-  if (result.filesToInject?.length) {
-    utils.copyFilesToLocalEdgeStorage({
-      dirs: result.filesToInject,
-      prefix: '',
-      outputPath: EDGE_STORAGE,
-    });
-  }
-
   return {
     filesToInject: result.filesToInject || [],
     injection: {
       globals: result.injection?.globals || {},
-      entry: result.filesToInject?.join(' ') || '',
+      entry: '',
       banner: globalThisWithInjections,
     },
     bundler: {

@@ -494,10 +494,10 @@
   resolved "https://registry.npmjs.org/@edge-runtime/primitives/-/primitives-3.1.1.tgz"
   integrity sha512-ROO22py+KdAfzqWZu6CtVMC4qV6mS0W1jPI51jGXE+uenyBUN7cQTWB9ReQc8Bm4cnjqmhajvpqEx3j7Y9iSOg==
 
-"@edge-runtime/primitives@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@edge-runtime/primitives/-/primitives-6.0.0.tgz#7ca59111605d72b6789b55e6d9c264afb656a5b1"
-  integrity sha512-FqoxaBT+prPBHBwE1WXS1ocnu/VLTQyZ6NMUBAdbP7N2hsFTTxMC/jMu2D/8GAlMQfxeuppcPuCUk/HO3fpIvA==
+"@edge-runtime/primitives@^4.0.5":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@edge-runtime/primitives/-/primitives-4.1.0.tgz#43c6e793362f3333acf0955a75b5735b34035494"
+  integrity sha512-Vw0lbJ2lvRUqc7/soqygUX216Xb8T3WBZ987oywz6aJqRxcwSVWwr9e+Nqo2m9bxobA9mdbWNNoRY6S9eko1EQ==
 
 "@edge-runtime/vm@3.1.7":
   version "3.1.7"
@@ -2861,12 +2861,12 @@ axios@^1.6.1:
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
-azion@~1.17.0-stage.3:
-  version "1.17.0-stage.3"
-  resolved "https://registry.yarnpkg.com/azion/-/azion-1.17.0-stage.3.tgz#9484317febb1b35496231cfd14c7e0caaf153337"
-  integrity sha512-iv3K9JnlOpBwHAa+FZ7UiW8PSU+EHEPHzYc+UOYoYt35NqqRM/Fujf1uj7XhKpj9fKgoVELXHVq647Jd2j08Og==
+azion@~1.17.0-stage.4:
+  version "1.17.0-stage.4"
+  resolved "https://registry.yarnpkg.com/azion/-/azion-1.17.0-stage.4.tgz#e028dffb88e72f300001654a650ff4f3097993b9"
+  integrity sha512-gVCABcnHN+kETCRHKw7ZsBJ6MnM/heDv2NZ4JD8Y1VGJp/fL5R++mgq2N+LLMa/HZ2jogPPYLqiEX/yioUxsYw==
   dependencies:
-    "@edge-runtime/primitives" "^6.0.0"
+    "@edge-runtime/primitives" "^4.0.5"
     "@fastly/http-compute-js" "^1.1.5"
     accepts "^1.3.8"
     ajv "^8.17.1"
