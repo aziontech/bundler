@@ -1,3 +1,10 @@
+### [4.8.1-stage.1](https://github.com/aziontech/bundler/compare/v4.8.0...v4.8.1-stage.1) (2025-03-19)
+
+
+### Bug Fixes
+
+* update azion package to version 1.16.0 ([#452](https://github.com/aziontech/bundler/issues/452)) ([dfcc187](https://github.com/aziontech/bundler/commit/dfcc187d658417c91439e5c490b47078d3e2a966))
+
 ## [4.8.0](https://github.com/aziontech/bundler/compare/v4.7.0...v4.8.0) (2025-03-13)
 
 
