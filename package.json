@@ -43,7 +43,7 @@
   "license": "MIT",
   "dependencies": {
     "@netlify/framework-info": "^9.9.1",
-    "azion": "~1.17.0-stage.5",
+    "azion": "~1.17.0-stage.6",
     "chokidar": "^3.5.3",
     "commander": "^10.0.1",
     "edge-runtime": "^2.4.5",
@@ -79,7 +79,7 @@
     "markdown-table": "^3.0.3",
     "mock-fs": "^5.2.0",
     "puppeteer": "^23.3.0",
-    "semantic-release": "^24.2.3",
+    "semantic-release": "^21.0.7",
     "supertest": "^6.3.3",
     "tmp": "^0.2.1",
     "ts-jest": "^29.2.6",
