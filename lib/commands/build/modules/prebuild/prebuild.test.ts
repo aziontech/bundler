@@ -94,11 +94,7 @@ describe('executePrebuild', () => {
       property: '__FILES__',
       dirs: [],
     });
-    expect(utils.copyFilesToLocalEdgeStorage).toHaveBeenCalledWith({
-      dirs: ['public'],
-      prefix: '',
-      outputPath: '.edge/files',
-    });
+
     expect(result).toEqual(
       expect.objectContaining({
         filesToInject: ['public'],

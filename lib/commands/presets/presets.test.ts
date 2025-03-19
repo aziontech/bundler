@@ -25,10 +25,12 @@ describe('getPresetsList utils', () => {
       'qwik',
       'react',
       'rustwasm',
+      'stencil',
       'svelte',
       'typescript',
       'vitepress',
       'vue',
+      'vuepress',
     ];
 
     const result = getKeys();

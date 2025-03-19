@@ -73,6 +73,7 @@ export async function buildCommand(options: BuildCommandOptions) {
     ...userConfig,
     build: {
       ...buildConfig,
+      memoryFS: userConfig?.build?.memoryFS,
     },
   };
 

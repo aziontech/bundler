@@ -33,11 +33,21 @@ const checkAndChangeAddEventListener = (
     `addEventListener\\((['"]?)${eventTarget}\\1,`,
     'g',
   );
+  const firewallFunctionRegex = /firewall:\s*\(event\)\s*=>\s*{/g;
+  const firewallFunction = !!code.match(firewallFunctionRegex);
+  const firewallEventTypeRegex = /eventType\s*=\s*['"]firewall['"];/g;
+
   const matchEvent = !!code.match(eventRegex);
-  if (matchEvent && replaceCode) {
+  if ((replaceCode && matchEvent) || firewallFunction) {
     codeChanged = code.replace(eventRegex, `addEventListener("${newEvent}",`);
+    if (firewallFunction) {
+      codeChanged = codeChanged.replace(
+        firewallEventTypeRegex,
+        "eventType = 'fetch';",
+      );
+    }
   }
-  return { matchEvent, codeChanged };
+  return { matchEvent: matchEvent || firewallFunction, codeChanged };
 };
 
 /**

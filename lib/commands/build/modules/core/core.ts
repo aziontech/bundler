@@ -7,6 +7,7 @@ import {
 import bundlerExecute from './bundler-execute';
 
 import { moveImportsToTopLevel } from './utils';
+import fs from 'fs';
 
 interface CoreParams {
   buildConfig: BuildConfiguration;
@@ -33,13 +34,17 @@ export const executeBuild = async ({
   // let buildEntryTemp: string | undefined;
 
   try {
-    if (prebuildResult.injection.entry) {
+    if (prebuildResult.filesToInject.length > 0) {
       const entryContent = await fsPromises.readFile(
         buildConfig.entry,
         'utf-8',
       );
-
-      const contentWithInjection = `${prebuildResult.injection.entry} ${entryContent}`;
+      const filesContent = prebuildResult.filesToInject.reduce(
+        (accumulator, filePath) =>
+          `${accumulator} ${fs.readFileSync(filePath, 'utf-8')}`,
+        ' ',
+      );
+      const contentWithInjection = `${filesContent} ${entryContent}`;
       const contentWithTopLevelImports =
         moveImportsToTopLevel(contentWithInjection);
       await fsPromises.writeFile(buildConfig.entry, contentWithTopLevelImports);
@@ -80,10 +85,13 @@ export const executeBuild = async ({
       default:
         throw new Error(`Unsupported bundler: ${bundler}`);
     }
+    let bundledCode = '';
+    if (ctx.production === true) {
+      bundledCode = await fsPromises.readFile(ctx.output, 'utf-8');
+      bundledCode = injectHybridFsPolyfill(bundledCode, buildConfig, ctx);
+      await fsPromises.writeFile(ctx.output, bundledCode);
+    }
 
-    let bundledCode = await fsPromises.readFile(ctx.output, 'utf-8');
-    bundledCode = injectHybridFsPolyfill(bundledCode, buildConfig, ctx);
-    await fsPromises.writeFile(ctx.output, bundledCode);
     return bundledCode;
   } catch (error) {
     // TODO: check if this is necessary

@@ -173,7 +173,7 @@ describe('injectWorkerPathPrefix', () => {
     });
 
     expect(result).toBe(
-      "globalThis.bundler = {}; globalThis.bundler.FS_PATH_PREFIX_TO_REMOVE = 'src/';",
+      "globalThis.bundler = { ...globalThis.bundler, FS_PATH_PREFIX_TO_REMOVE: 'src/'};",
     );
   });
 
@@ -185,7 +185,7 @@ describe('injectWorkerPathPrefix', () => {
     });
 
     expect(result).toBe(
-      'globalThis.bundler = {}; globalThis.bundler.FS_PATH_PREFIX_TO_REMOVE = \'""\';',
+      'globalThis.bundler = { ...globalThis.bundler, FS_PATH_PREFIX_TO_REMOVE: \'""\'};',
     );
   });
 });
