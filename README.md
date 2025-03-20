@@ -215,8 +215,6 @@ module.exports = {
 
 ## Docs
 
-- [Overview](docs/overview.md)
-- [Presets](docs/presets.md)
 - [Nextjs](docs/nextjs.md)
 - [Rust/Wasm example](https://github.com/aziontech/vulcan-examples/tree/main/examples/rust-wasm-yew-ssr/)
 - [Emscripten/Wasm example](https://github.com/aziontech/vulcan-examples/tree/main/examples/emscripten-wasm/)
