@@ -26,7 +26,7 @@ describe('E2E - simple-js-firewall-event project', () => {
       serverPort,
       true,
       undefined,
-      true,
+      false,
     );
   }, TIMEOUT);
 

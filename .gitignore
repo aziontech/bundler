@@ -1,6 +1,5 @@
 node_modules
 dist
-worker
 coverage
 .DS_Store
 out
@@ -11,3 +10,4 @@ vulcan.env
 .vulcan
 wrangler.toml
 .initialized.keep
+package-lock.json

@@ -237,6 +237,23 @@ The compatibility between Azion Runtime and Node.js is an ongoing task, but a se
 
 - [Node.js APIs support](docs/nodejs-apis.md)
 
+## Development
+
+To compile the project, run the following command:
+
+```shell
+yarn build
+```
+
+To run the Bundler commands, use the following command:
+
+```shell
+yarn link
+
+azbundler --help
+
+```
+
 ## Contributing
 
 Check the [Contributing doc](CONTRIBUTING.md).

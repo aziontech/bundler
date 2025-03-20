@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect */
 import supertest from 'supertest';
 import puppeteer from 'puppeteer';
 import projectInitializer from '../utils/project-initializer.js';
