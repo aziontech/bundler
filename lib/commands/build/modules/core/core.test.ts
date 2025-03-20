@@ -7,7 +7,7 @@ import {
 } from 'azion/config';
 import fs from 'fs';
 import fsPromises from 'fs/promises';
-import bundlerExecute from './bundler-execute';
+import bundlers from './bundlers';
 
 jest.mock('./utils', () => ({
   moveImportsToTopLevel: jest.fn((code) => code),
@@ -15,7 +15,7 @@ jest.mock('./utils', () => ({
 
 jest.mock('fs');
 jest.mock('fs/promises');
-jest.mock('./bundler-execute');
+jest.mock('./bundlers');
 
 describe('executeBuild', () => {
   const mockBuildConfig: BuildConfiguration = {
@@ -68,11 +68,11 @@ describe('executeBuild', () => {
       .spyOn(fsPromises, 'writeFile')
       .mockResolvedValue();
     const spyCreateAzionESBuildConfig = jest.spyOn(
-      bundlerExecute,
+      bundlers,
       'createAzionESBuildConfigWrapper',
     );
     const spyExecuteESBuildBuild = jest
-      .spyOn(bundlerExecute, 'executeESBuildBuildWrapper')
+      .spyOn(bundlers, 'executeESBuildBuildWrapper')
       .mockResolvedValue();
 
     await executeBuild({
@@ -108,11 +108,11 @@ describe('executeBuild', () => {
       .spyOn(fsPromises, 'writeFile')
       .mockResolvedValue();
     const spyCreateWebpack = jest.spyOn(
-      bundlerExecute,
+      bundlers,
       'createAzionWebpackConfigWrapper',
     );
     const spyExecuteWebpack = jest
-      .spyOn(bundlerExecute, 'executeWebpackBuildWrapper')
+      .spyOn(bundlers, 'executeWebpackBuildWrapper')
       .mockResolvedValue();
 
     const webpackConfig: BuildConfiguration = {
@@ -163,10 +163,8 @@ describe('executeBuild', () => {
       },
     };
 
-    jest.spyOn(bundlerExecute, 'createAzionESBuildConfigWrapper');
-    jest
-      .spyOn(bundlerExecute, 'executeESBuildBuildWrapper')
-      .mockResolvedValue();
+    jest.spyOn(bundlers, 'createAzionESBuildConfigWrapper');
+    jest.spyOn(bundlers, 'executeESBuildBuildWrapper').mockResolvedValue();
 
     await executeBuild({
       buildConfig: mockBuildConfig,
@@ -189,9 +187,9 @@ describe('executeBuild', () => {
     const spyWriteFile = jest
       .spyOn(fsPromises, 'writeFile')
       .mockResolvedValue();
-    jest.spyOn(bundlerExecute, 'createAzionESBuildConfigWrapper');
+    jest.spyOn(bundlers, 'createAzionESBuildConfigWrapper');
     const spyExecuteESBuildBuild = jest
-      .spyOn(bundlerExecute, 'executeESBuildBuildWrapper')
+      .spyOn(bundlers, 'executeESBuildBuildWrapper')
       .mockResolvedValue();
 
     await executeBuild({
@@ -217,9 +215,9 @@ describe('executeBuild', () => {
     const spyWriteFile = jest
       .spyOn(fsPromises, 'writeFile')
       .mockResolvedValue();
-    jest.spyOn(bundlerExecute, 'createAzionESBuildConfigWrapper');
+    jest.spyOn(bundlers, 'createAzionESBuildConfigWrapper');
     const spyExecuteESBuildBuild = jest
-      .spyOn(bundlerExecute, 'executeESBuildBuildWrapper')
+      .spyOn(bundlers, 'executeESBuildBuildWrapper')
       .mockResolvedValue();
 
     await executeBuild({
@@ -257,9 +255,9 @@ describe('executeBuild', () => {
   });
 
   it('should clean up temporary files on error', async () => {
-    jest.spyOn(bundlerExecute, 'createAzionESBuildConfigWrapper');
+    jest.spyOn(bundlers, 'createAzionESBuildConfigWrapper');
     jest
-      .spyOn(bundlerExecute, 'executeESBuildBuildWrapper')
+      .spyOn(bundlers, 'executeESBuildBuildWrapper')
       .mockImplementationOnce(() => {
         throw new Error('Build error');
       });

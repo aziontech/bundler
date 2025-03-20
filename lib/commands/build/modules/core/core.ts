@@ -4,7 +4,7 @@ import {
   BuildContext,
   BuildConfiguration,
 } from 'azion/config';
-import bundlerExecute from './bundler-execute';
+import bundlers from './bundlers';
 
 import { moveImportsToTopLevel } from './utils';
 import fs from 'fs';
@@ -67,19 +67,19 @@ export const executeBuild = async ({
     const bundler = buildConfig.bundler;
     switch (bundler) {
       case 'esbuild': {
-        const esbuildConfig = bundlerExecute.createAzionESBuildConfigWrapper(
+        const esbuildConfig = bundlers.createAzionESBuildConfigWrapper(
           bundlerConfig,
           ctx,
         );
-        await bundlerExecute.executeESBuildBuildWrapper(esbuildConfig);
+        await bundlers.executeESBuildBuildWrapper(esbuildConfig);
         break;
       }
       case 'webpack': {
-        const webpackConfig = bundlerExecute.createAzionWebpackConfigWrapper(
+        const webpackConfig = bundlers.createAzionWebpackConfigWrapper(
           bundlerConfig,
           ctx,
         );
-        await bundlerExecute.executeWebpackBuildWrapper(webpackConfig);
+        await bundlers.executeWebpackBuildWrapper(webpackConfig);
         break;
       }
       default:
