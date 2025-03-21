@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect */
 import puppeteer from 'puppeteer';
 import projectInitializer from '../utils/project-initializer.js';
 import projectStop from '../utils/project-stop.js';

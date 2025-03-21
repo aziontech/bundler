@@ -27,7 +27,7 @@ describe('E2E - simple-js-network-list-with-firewall project', () => {
       serverPort,
       true,
       undefined,
-      true,
+      false,
     );
   }, TIMEOUT);
 

@@ -1,3 +1,14 @@
+## [5.0.0-stage.1](https://github.com/aziontech/bundler/compare/v4.8.1...v5.0.0-stage.1) (2025-03-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* These changes restructure the build process, improve flexibility, and enable future extensions, requiring users to adapt to a more modular and customizable setup.
+
+### Code Refactoring
+
+* improve build process modularity and flexibility with breaking changes ([52fc94e](https://github.com/aziontech/bundler/commit/52fc94e772411bd2b7fb928a69683786867d61ca))
+
 ### [4.8.1](https://github.com/aziontech/bundler/compare/v4.8.0...v4.8.1) (2025-03-19)
 
 
