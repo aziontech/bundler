@@ -21,7 +21,7 @@ Table:
 | Next 13 5 6 Config                   | ✅      |
 | Next 12 3 4 Config                   | ✅      |
 | Next Static                          | ✅      |
-| Gatsby Static                        | ⚠️     |
+| Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ⚠️     |
 | Vue Vite Static                      | ✅      |
 | Next 12 Static                       | ⚠️     |
@@ -47,7 +47,7 @@ Table:
 | Simple Ts Esm                        | ⚠️     |
 | Simple Js Esm                        | ⚠️     |
 
-Last test run date: 03/22/25 03:36:31 AM
+Last test run date: 03/23/25 03:43:54 AM
 ## Quick Installation
 
 For those who just want to use Azion Bundler in their project without contributing to the development, you can install it directly from npm.
