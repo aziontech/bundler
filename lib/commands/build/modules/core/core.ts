@@ -6,8 +6,6 @@ import {
 import bundlers from './bundlers';
 import { moveImportsToTopLevel } from './utils';
 import fsPromises from 'fs/promises';
-import fs from 'fs';
-
 interface CoreParams {
   buildConfig: BuildConfiguration;
   prebuildResult: AzionPrebuildResult;
