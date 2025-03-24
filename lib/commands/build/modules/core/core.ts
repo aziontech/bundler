@@ -11,7 +11,7 @@ import {
 } from './bundlers';
 
 import { moveImportsToTopLevel } from './utils';
-import { readFile, writeFile } from 'fs/promises';
+import fsPromises from 'fs/promises';
 
 interface CoreParams {
   buildConfig: BuildConfiguration;
@@ -37,11 +37,14 @@ export const executeBuild = async ({
 }: CoreParams): Promise<string> => {
   try {
     if (prebuildResult.filesToInject.length > 0) {
-      const entryContent = await readFile(buildConfig.entry, 'utf-8');
+      const entryContent = await fsPromises.readFile(
+        buildConfig.entry,
+        'utf-8',
+      );
       const filesContent = await prebuildResult.filesToInject.reduce(
         async (accumulatorPromise, filePath) => {
           const accumulator = await accumulatorPromise;
-          const fileContent = await readFile(filePath, 'utf-8');
+          const fileContent = await fsPromises.readFile(filePath, 'utf-8');
           return `${accumulator} ${fileContent}`;
         },
         Promise.resolve(' '),
@@ -49,7 +52,7 @@ export const executeBuild = async ({
       const contentWithInjection = `${filesContent} ${entryContent}`;
       const contentWithTopLevelImports =
         moveImportsToTopLevel(contentWithInjection);
-      await writeFile(buildConfig.entry, contentWithTopLevelImports);
+      await fsPromises.writeFile(buildConfig.entry, contentWithTopLevelImports);
     }
 
     const bundlerConfig: BuildConfiguration = {
@@ -88,7 +91,7 @@ export const executeBuild = async ({
         throw new Error(`Unsupported bundler: ${bundler}`);
     }
 
-    const bundledCode = await readFile(ctx.output, 'utf-8');
+    const bundledCode = await fsPromises.readFile(ctx.output, 'utf-8');
 
     if (ctx.production) {
       const bundledCodeWithHybridFsPolyfill = injectHybridFsPolyfill(
@@ -96,7 +99,7 @@ export const executeBuild = async ({
         buildConfig,
         ctx,
       );
-      await writeFile(ctx.output, bundledCodeWithHybridFsPolyfill);
+      await fsPromises.writeFile(ctx.output, bundledCodeWithHybridFsPolyfill);
       return bundledCodeWithHybridFsPolyfill;
     }
     return bundledCode;
