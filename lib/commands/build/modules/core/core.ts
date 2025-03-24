@@ -4,7 +4,12 @@ import {
   BuildContext,
   BuildConfiguration,
 } from 'azion/config';
-import bundlers from './bundlers';
+import {
+  createAzionESBuildConfigWrapper,
+  executeESBuildBuildWrapper,
+  createAzionWebpackConfigWrapper,
+  executeWebpackBuildWrapper,
+} from './bundlers';
 
 import { moveImportsToTopLevel } from './utils';
 import fs from 'fs';
@@ -31,8 +36,6 @@ export const executeBuild = async ({
   prebuildResult,
   ctx,
 }: CoreParams): Promise<string> => {
-  // let buildEntryTemp: string | undefined;
-
   try {
     if (prebuildResult.filesToInject.length > 0) {
       const entryContent = await fsPromises.readFile(
@@ -64,40 +67,41 @@ export const executeBuild = async ({
       },
     };
 
-    const bundler = buildConfig.bundler;
+    const { bundler } = buildConfig;
     switch (bundler) {
       case 'esbuild': {
-        const esbuildConfig = bundlers.createAzionESBuildConfigWrapper(
+        const esbuildConfig = createAzionESBuildConfigWrapper(
           bundlerConfig,
           ctx,
         );
-        await bundlers.executeESBuildBuildWrapper(esbuildConfig);
+        await executeESBuildBuildWrapper(esbuildConfig);
         break;
       }
       case 'webpack': {
-        const webpackConfig = bundlers.createAzionWebpackConfigWrapper(
+        const webpackConfig = createAzionWebpackConfigWrapper(
           bundlerConfig,
           ctx,
         );
-        await bundlers.executeWebpackBuildWrapper(webpackConfig);
+        await executeWebpackBuildWrapper(webpackConfig);
         break;
       }
       default:
         throw new Error(`Unsupported bundler: ${bundler}`);
     }
-    let bundledCode = '';
-    if (ctx.production === true) {
-      bundledCode = await fsPromises.readFile(ctx.output, 'utf-8');
-      bundledCode = injectHybridFsPolyfill(bundledCode, buildConfig, ctx);
-      await fsPromises.writeFile(ctx.output, bundledCode);
-    }
 
+    const bundledCode = await fsPromises.readFile(ctx.output, 'utf-8');
+
+    if (ctx.production) {
+      const bundledCodeWithHybridFsPolyfill = injectHybridFsPolyfill(
+        bundledCode,
+        buildConfig,
+        ctx,
+      );
+      await fsPromises.writeFile(ctx.output, bundledCodeWithHybridFsPolyfill);
+      return bundledCodeWithHybridFsPolyfill;
+    }
     return bundledCode;
   } catch (error) {
-    // TODO: check if this is necessary
-    // if (buildEntryTemp && fs.existsSync(buildEntryTemp)) {
-    //   fs.rmSync(buildEntryTemp);
-    // }
     return Promise.reject(error);
   }
 };

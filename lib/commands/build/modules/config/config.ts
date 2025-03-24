@@ -13,6 +13,8 @@ export const setupBuildConfig = (
   const buildConfigSetup: BuildConfiguration = {
     ...azionConfig.build,
     entry: join(process.cwd(), tempFile),
+    bundler:
+      azionConfig.build?.bundler || preset.config.build?.bundler || 'esbuild',
     preset,
     setup: {
       contentToInject: undefined,
