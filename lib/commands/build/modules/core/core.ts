@@ -83,7 +83,6 @@ export const executeBuild = async ({
         );
         console.log('webpackConfig', webpackConfig);
         await executeWebpackBuildWrapper(webpackConfig);
-        console.log('a  a');
         break;
       }
       default:
