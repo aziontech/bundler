@@ -13,7 +13,6 @@ jest.mock('./utils', () => ({
   moveImportsToTopLevel: jest.fn((code) => code),
 }));
 
-jest.mock('fs');
 jest.mock('fs/promises');
 jest.mock('./bundlers');
 
@@ -151,8 +150,8 @@ describe('executeBuild', () => {
       .mockResolvedValue('// Original entry code');
     const writeFile = jest.spyOn(fsPromises, 'writeFile').mockResolvedValue();
     jest
-      .spyOn(fs, 'readFileSync')
-      .mockReturnValue('/* public/index.js content */');
+      .spyOn(fsPromises, 'readFile')
+      .mockResolvedValue('/* public/index.js content */');
 
     const prebuildWithEntry = {
       ...mockPrebuildResult,
