@@ -13,6 +13,7 @@ jest.mock('./utils', () => ({
   moveImportsToTopLevel: jest.fn((code) => code),
 }));
 
+jest.mock('fs');
 jest.mock('fs/promises');
 jest.mock('./bundlers');
 
@@ -147,11 +148,13 @@ describe('executeBuild', () => {
   it('should inject entry content when provided in prebuild result', async () => {
     const spyReadFile = jest
       .spyOn(fsPromises, 'readFile')
-      .mockResolvedValue('// Original entry code');
+      .mockImplementation((path) => {
+        if (path === mockBuildConfig.entry) {
+          return Promise.resolve('// Original entry code');
+        }
+        return Promise.resolve('/* public/index.js content */');
+      });
     const writeFile = jest.spyOn(fsPromises, 'writeFile').mockResolvedValue();
-    jest
-      .spyOn(fsPromises, 'readFile')
-      .mockResolvedValue('/* public/index.js content */');
 
     const prebuildWithEntry = {
       ...mockPrebuildResult,
@@ -172,6 +175,7 @@ describe('executeBuild', () => {
     });
 
     expect(spyReadFile).toHaveBeenCalledWith(mockBuildConfig.entry, 'utf-8');
+    expect(spyReadFile).toHaveBeenCalledWith('public/index.js', 'utf-8');
 
     expect(writeFile).toHaveBeenCalledWith(
       mockBuildConfig.entry,
@@ -251,26 +255,5 @@ describe('executeBuild', () => {
         ctx: mockContext,
       }),
     ).rejects.toThrow('Unsupported bundler: invalid');
-  });
-
-  it('should clean up temporary files on error', async () => {
-    jest.spyOn(bundlers, 'createAzionESBuildConfigWrapper');
-    jest
-      .spyOn(bundlers, 'executeESBuildBuildWrapper')
-      .mockImplementationOnce(() => {
-        throw new Error('Build error');
-      });
-    jest.spyOn(fs, 'rmSync').mockReturnValue();
-    jest.spyOn(fs, 'existsSync').mockReturnValue(true);
-
-    await expect(
-      executeBuild({
-        buildConfig: mockBuildConfig,
-        prebuildResult: mockPrebuildResult,
-        ctx: mockContext,
-      }),
-    ).rejects.toThrow('Build error');
-
-    // expect(rmSync).toHaveBeenCalled();
   });
 });

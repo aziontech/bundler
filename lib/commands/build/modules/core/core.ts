@@ -3,15 +3,10 @@ import {
   BuildContext,
   BuildConfiguration,
 } from 'azion/config';
-import {
-  createAzionESBuildConfigWrapper,
-  executeESBuildBuildWrapper,
-  createAzionWebpackConfigWrapper,
-  executeWebpackBuildWrapper,
-} from './bundlers';
-
+import bundlers from './bundlers';
 import { moveImportsToTopLevel } from './utils';
 import fsPromises from 'fs/promises';
+import fs from 'fs';
 
 interface CoreParams {
   buildConfig: BuildConfiguration;
@@ -41,14 +36,13 @@ export const executeBuild = async ({
         buildConfig.entry,
         'utf-8',
       );
-      const filesContent = await prebuildResult.filesToInject.reduce(
-        async (accumulatorPromise, filePath) => {
-          const accumulator = await accumulatorPromise;
-          const fileContent = await fsPromises.readFile(filePath, 'utf-8');
-          return `${accumulator} ${fileContent}`;
-        },
-        Promise.resolve(' '),
+
+      const filesContentPromises = prebuildResult.filesToInject.map(
+        (filePath) => fsPromises.readFile(filePath, 'utf-8'),
       );
+      const filesContentArray = await Promise.all(filesContentPromises);
+      const filesContent = filesContentArray.join(' ');
+
       const contentWithInjection = `${filesContent} ${entryContent}`;
       const contentWithTopLevelImports =
         moveImportsToTopLevel(contentWithInjection);
@@ -72,19 +66,19 @@ export const executeBuild = async ({
     const { bundler } = buildConfig;
     switch (bundler) {
       case 'esbuild': {
-        const esbuildConfig = createAzionESBuildConfigWrapper(
+        const esbuildConfig = bundlers.createAzionESBuildConfigWrapper(
           bundlerConfig,
           ctx,
         );
-        await executeESBuildBuildWrapper(esbuildConfig);
+        await bundlers.executeESBuildBuildWrapper(esbuildConfig);
         break;
       }
       case 'webpack': {
-        const webpackConfig = createAzionWebpackConfigWrapper(
+        const webpackConfig = bundlers.createAzionWebpackConfigWrapper(
           bundlerConfig,
           ctx,
         );
-        await executeWebpackBuildWrapper(webpackConfig);
+        await bundlers.executeWebpackBuildWrapper(webpackConfig);
         break;
       }
       default:
