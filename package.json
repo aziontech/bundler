@@ -43,7 +43,7 @@
   "license": "MIT",
   "dependencies": {
     "@netlify/framework-info": "^9.9.1",
-    "azion": "~1.17.0",
+    "azion": "~1.17.1",
     "chokidar": "^3.5.3",
     "commander": "^10.0.1",
     "edge-runtime": "^2.4.5",
