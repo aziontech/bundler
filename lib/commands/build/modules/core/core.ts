@@ -81,7 +81,6 @@ export const executeBuild = async ({
           bundlerConfig,
           ctx,
         );
-        console.log('webpackConfig', webpackConfig);
         await executeWebpackBuildWrapper(webpackConfig);
         break;
       }
