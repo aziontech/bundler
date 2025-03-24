@@ -1,4 +1,3 @@
-import fsPromises from 'fs/promises';
 import {
   AzionPrebuildResult,
   BuildContext,
@@ -12,7 +11,7 @@ import {
 } from './bundlers';
 
 import { moveImportsToTopLevel } from './utils';
-import fs from 'fs';
+import { readFile, writeFile } from 'fs/promises';
 
 interface CoreParams {
   buildConfig: BuildConfiguration;
@@ -38,19 +37,19 @@ export const executeBuild = async ({
 }: CoreParams): Promise<string> => {
   try {
     if (prebuildResult.filesToInject.length > 0) {
-      const entryContent = await fsPromises.readFile(
-        buildConfig.entry,
-        'utf-8',
-      );
-      const filesContent = prebuildResult.filesToInject.reduce(
-        (accumulator, filePath) =>
-          `${accumulator} ${fs.readFileSync(filePath, 'utf-8')}`,
-        ' ',
+      const entryContent = await readFile(buildConfig.entry, 'utf-8');
+      const filesContent = await prebuildResult.filesToInject.reduce(
+        async (accumulatorPromise, filePath) => {
+          const accumulator = await accumulatorPromise;
+          const fileContent = await readFile(filePath, 'utf-8');
+          return `${accumulator} ${fileContent}`;
+        },
+        Promise.resolve(' '),
       );
       const contentWithInjection = `${filesContent} ${entryContent}`;
       const contentWithTopLevelImports =
         moveImportsToTopLevel(contentWithInjection);
-      await fsPromises.writeFile(buildConfig.entry, contentWithTopLevelImports);
+      await writeFile(buildConfig.entry, contentWithTopLevelImports);
     }
 
     const bundlerConfig: BuildConfiguration = {
@@ -82,14 +81,16 @@ export const executeBuild = async ({
           bundlerConfig,
           ctx,
         );
+        console.log('webpackConfig', webpackConfig);
         await executeWebpackBuildWrapper(webpackConfig);
+        console.log('a  a');
         break;
       }
       default:
         throw new Error(`Unsupported bundler: ${bundler}`);
     }
 
-    const bundledCode = await fsPromises.readFile(ctx.output, 'utf-8');
+    const bundledCode = await readFile(ctx.output, 'utf-8');
 
     if (ctx.production) {
       const bundledCodeWithHybridFsPolyfill = injectHybridFsPolyfill(
@@ -97,7 +98,7 @@ export const executeBuild = async ({
         buildConfig,
         ctx,
       );
-      await fsPromises.writeFile(ctx.output, bundledCodeWithHybridFsPolyfill);
+      await writeFile(ctx.output, bundledCodeWithHybridFsPolyfill);
       return bundledCodeWithHybridFsPolyfill;
     }
     return bundledCode;
