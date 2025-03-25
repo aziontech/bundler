@@ -43,7 +43,7 @@
   "license": "MIT",
   "dependencies": {
     "@netlify/framework-info": "^9.9.1",
-    "azion": "~1.17.1",
+    "azion": "~1.17.2",
     "chokidar": "^3.5.3",
     "commander": "^10.0.1",
     "edge-runtime": "^2.4.5",
@@ -72,6 +72,7 @@
     "clean-jsdoc-theme": "^4.2.9",
     "conventional-changelog-conventionalcommits": "^4.6.0",
     "eslint": "^8.57.0",
+    "globals": "^16.0.0",
     "husky": "^8.0.3",
     "jest": "^29.7.0",
     "jest-puppeteer": "^9.0.1",

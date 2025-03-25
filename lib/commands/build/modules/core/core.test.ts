@@ -5,7 +5,6 @@ import {
   BuildContext,
   AzionPrebuildResult,
 } from 'azion/config';
-import fs from 'fs';
 import fsPromises from 'fs/promises';
 import bundlers from './bundlers';
 
