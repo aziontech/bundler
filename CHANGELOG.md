@@ -1,3 +1,10 @@
+## [5.0.0-stage.2](https://github.com/aziontech/bundler/compare/v5.0.0-stage.1...v5.0.0-stage.2) (2025-03-25)
+
+
+### Bug Fixes
+
+* bundler preset callback ([#460](https://github.com/aziontech/bundler/issues/460)) ([3afa7f5](https://github.com/aziontech/bundler/commit/3afa7f55ba21a7f4bf09c7022ed626b5a5ed9bdf))
+
 ## [5.0.0-stage.1](https://github.com/aziontech/bundler/compare/v4.8.1...v5.0.0-stage.1) (2025-03-20)
 
 
