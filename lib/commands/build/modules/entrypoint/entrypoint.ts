@@ -48,12 +48,11 @@ export const resolveEntrypoint = async ({
       'azion',
       'packages',
       'presets',
-      'src',
+      'dist',
       'presets',
       preset.metadata.name,
-      'handler.ts',
+      'handler.js',
     );
-
     utilsNode.feedback.build.info(
       `Using built-in handler from "${preset.metadata.name}" preset.`,
     );
