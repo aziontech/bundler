@@ -290,41 +290,41 @@ E2E tests run daily in the [Bundler Examples](https://github.com/aziontech/bundl
 Table:
 | Test                                 | Status |
 | ------------------------------------ | ------ |
-| Next 14 2 15 Middleware              | ⚠️     |
-| Next 13 5 6 I18n                     | ⚠️     |
-| Next 12 3 4 I18n                     | ⚠️     |
+| Next 14 2 15 Middleware              | ✅      |
+| Next 13 5 6 I18n                     | ✅      |
+| Next 12 3 4 I18n                     | ✅      |
 | Hexo Static                          | ✅      |
-| Next 13 5 6 Middleware               | ⚠️     |
-| Next 12 3 4 Middleware               | ⚠️     |
-| Next Node Pages 12 3 1               | ⚠️     |
-| Next 13 5 6 Config                   | ⚠️     |
-| Next 12 3 4 Config                   | ⚠️     |
-| Next Static                          | ⚠️     |
+| Next 13 5 6 Middleware               | ✅      |
+| Next 12 3 4 Middleware               | ✅      |
+| Next Node Pages 12 3 1               | ✅      |
+| Next 13 5 6 Config                   | ✅      |
+| Next 12 3 4 Config                   | ✅      |
+| Next Static                          | ✅      |
 | Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ⚠️     |
-| Vue Vite Static                      | ✅      |
+| Vue Vite Static                      | ⚠️     |
 | Next 12 Static                       | ⚠️     |
 | Astro Static                         | ✅      |
 | Qwik Static                          | ✅      |
 | Eleventy Static                      | ✅      |
-| Simple Js Env Vars                   | ✅      |
+| Simple Js Env Vars                   | ⚠️     |
 | React Static                         | ✅      |
 | Angular Static                       | ✅      |
 | Svelte Static                        | ✅      |
 | Preact Static                        | ✅      |
 | Stencil Static                       | ✅      |
-| Simple Js Network List               | ✅      |
-| Vitepress Static                     | ✅      |
+| Simple Js Network List               | ⚠️     |
+| Vitepress Static                     | ⚠️     |
 | Nuxt Static                          | ✅      |
 | Vuepress Static                      | ✅      |
 | Docusaurus Static                    | ✅      |
-| Simple Js Firewall Event             | ✅      |
+| Simple Js Firewall Event             | ⚠️     |
 | Jekyll Static                        | ✅      |
-| Simple Js Network List With Firewall | ✅      |
-| Simple Js Esm Worker                 | ✅      |
-| Simple Js Esm Node                   | ✅      |
-| Simple Ts Esm                        | ✅      |
-| Simple Js Esm                        | ✅      |
+| Simple Js Network List With Firewall | ⚠️     |
+| Simple Js Esm Worker                 | ⚠️     |
+| Simple Js Esm Node                   | ⚠️     |
+| Simple Ts Esm                        | ⚠️     |
+| Simple Js Esm                        | ⚠️     |
 
 Last test run date: 03/14/25 03:35:17 AM
 
