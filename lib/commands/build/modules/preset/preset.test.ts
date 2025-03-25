@@ -69,7 +69,7 @@ describe('resolvePreset', () => {
       .mockResolvedValue('typescript');
     const spyFeedback = jest
       .spyOn(utilsNode.feedback.build, 'info')
-      .mockReturnValue();
+      .mockReturnValue(undefined);
 
     await resolvePreset();
 

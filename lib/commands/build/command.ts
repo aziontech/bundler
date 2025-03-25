@@ -51,7 +51,7 @@ export async function buildCommand(options: BuildCommandOptions) {
       inputValue: undefined,
       fileValue: userBuildConfig?.bundler,
       storeValue: bundlerStore?.bundler,
-      defaultValue: 'esbuild',
+      defaultValue: undefined,
     }),
     polyfills: resolveConfigPriority({
       inputValue: userBuildConfig?.polyfills,

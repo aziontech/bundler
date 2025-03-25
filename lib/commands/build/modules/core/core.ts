@@ -1,14 +1,11 @@
-import fsPromises from 'fs/promises';
 import {
   AzionPrebuildResult,
   BuildContext,
   BuildConfiguration,
 } from 'azion/config';
 import bundlers from './bundlers';
-
 import { moveImportsToTopLevel } from './utils';
-import fs from 'fs';
-
+import fsPromises from 'fs/promises';
 interface CoreParams {
   buildConfig: BuildConfiguration;
   prebuildResult: AzionPrebuildResult;
@@ -31,19 +28,19 @@ export const executeBuild = async ({
   prebuildResult,
   ctx,
 }: CoreParams): Promise<string> => {
-  // let buildEntryTemp: string | undefined;
-
   try {
     if (prebuildResult.filesToInject.length > 0) {
       const entryContent = await fsPromises.readFile(
         buildConfig.entry,
         'utf-8',
       );
-      const filesContent = prebuildResult.filesToInject.reduce(
-        (accumulator, filePath) =>
-          `${accumulator} ${fs.readFileSync(filePath, 'utf-8')}`,
-        ' ',
+
+      const filesContentPromises = prebuildResult.filesToInject.map(
+        (filePath) => fsPromises.readFile(filePath, 'utf-8'),
       );
+      const filesContentArray = await Promise.all(filesContentPromises);
+      const filesContent = filesContentArray.join(' ');
+
       const contentWithInjection = `${filesContent} ${entryContent}`;
       const contentWithTopLevelImports =
         moveImportsToTopLevel(contentWithInjection);
@@ -64,7 +61,7 @@ export const executeBuild = async ({
       },
     };
 
-    const bundler = buildConfig.bundler;
+    const { bundler } = buildConfig;
     switch (bundler) {
       case 'esbuild': {
         const esbuildConfig = bundlers.createAzionESBuildConfigWrapper(
@@ -85,19 +82,20 @@ export const executeBuild = async ({
       default:
         throw new Error(`Unsupported bundler: ${bundler}`);
     }
-    let bundledCode = '';
-    if (ctx.production === true) {
-      bundledCode = await fsPromises.readFile(ctx.output, 'utf-8');
-      bundledCode = injectHybridFsPolyfill(bundledCode, buildConfig, ctx);
-      await fsPromises.writeFile(ctx.output, bundledCode);
-    }
 
+    const bundledCode = await fsPromises.readFile(ctx.output, 'utf-8');
+
+    if (ctx.production) {
+      const bundledCodeWithHybridFsPolyfill = injectHybridFsPolyfill(
+        bundledCode,
+        buildConfig,
+        ctx,
+      );
+      await fsPromises.writeFile(ctx.output, bundledCodeWithHybridFsPolyfill);
+      return bundledCodeWithHybridFsPolyfill;
+    }
     return bundledCode;
   } catch (error) {
-    // TODO: check if this is necessary
-    // if (buildEntryTemp && fs.existsSync(buildEntryTemp)) {
-    //   fs.rmSync(buildEntryTemp);
-    // }
     return Promise.reject(error);
   }
 };

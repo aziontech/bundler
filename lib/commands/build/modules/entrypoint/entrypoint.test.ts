@@ -41,7 +41,7 @@ describe('resolveEntrypoint', () => {
     };
     spyFeedbackBuildInfo = jest
       .spyOn(utilsNode.feedback.build, 'info')
-      .mockReturnValue();
+      .mockReturnValue(undefined);
     spyAccess = jest
       .spyOn(fsPromises, 'access')
       .mockImplementation(() => Promise.resolve());
