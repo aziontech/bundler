@@ -1,3 +1,19 @@
+## [5.0.0](https://github.com/aziontech/bundler/compare/v4.8.1...v5.0.0) (2025-03-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* These changes restructure the build process, improve flexibility, and enable future extensions, requiring users to adapt to a more modular and customizable setup.
+
+### Bug Fixes
+
+* bundler preset callback ([#460](https://github.com/aziontech/bundler/issues/460)) ([3afa7f5](https://github.com/aziontech/bundler/commit/3afa7f55ba21a7f4bf09c7022ed626b5a5ed9bdf))
+
+
+### Code Refactoring
+
+* improve build process modularity and flexibility with breaking changes ([52fc94e](https://github.com/aziontech/bundler/commit/52fc94e772411bd2b7fb928a69683786867d61ca))
+
 ## [5.0.0-stage.2](https://github.com/aziontech/bundler/compare/v5.0.0-stage.1...v5.0.0-stage.2) (2025-03-25)
 
 
