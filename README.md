@@ -2,7 +2,7 @@
   <img src="assets/logo.png" alt="Azion Bundler Logo" width="200"/>
 </p>
 
-# Azion Bundler - The Edge Developer's Toolkit
+# Azion Bundler - Built for Builders of the Edge
 
 [![Version](https://img.shields.io/npm/v/edge-functions.svg)](https://www.npmjs.com/package/edge-functions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
@@ -14,7 +14,7 @@ Azion Bundler is a powerful tool designed to build and adapt projects for edge c
 
 ## Table of Contents
 
-- [Azion Bundler - The Edge Developer's Toolkit](#azion-bundler---the-edge-developers-toolkit)
+- [Azion Bundler - Built for Builders of the Edge](#azion-bundler---built-for-builders-of-the-edge)
   - [Table of Contents](#table-of-contents)
   - [Quick Installation](#quick-installation)
   - [Getting Started for Development](#getting-started-for-development)
