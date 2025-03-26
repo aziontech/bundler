@@ -28,7 +28,6 @@ describe('E2E - simple-js-env-vars project', () => {
       `/${EXAMPLE_PATH}`,
     );
 
-    // eslint-disable-next-line jest/no-standalone-expect
     if (expect.getState().currentTestName.includes('200')) {
       await execCommandInContainer(
         `sh -c 'echo "MY_VAR=EdgeComputing" > .env'`,

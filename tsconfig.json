@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "outDir": "./dist",
+    "rootDir": "./",
+    "baseUrl": "./",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "paths": {
+      "#root/*": ["./"],
+      "#lib/*": ["./lib"],
+      "#utils": ["./lib/utils/index.ts"],
+      "#build": ["lib/build/build.ts"],
+      "#env": ["./lib/env/index.ts"],
+      "#constants": ["./lib/constants/index.ts"],
+      "#commands": ["lib/commands/index.ts"]
+    }
+  },
+  "exclude": ["node_modules"]
+}

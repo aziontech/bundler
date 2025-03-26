@@ -1,10 +1,289 @@
-# Azion Bundler - Building Applications for Azion Runtime
+<p align="center">
+  <img src="assets/logo.png" alt="Azion Bundler Logo" width="200"/>
+</p>
 
-Azion Bundler is a powerful tool designed to streamline the development and deployment of JavaScript applications and frameworks. This powerful utility automates polyfills for Azion Runtime, significantly simplifying the process of creating Workers.
+# Azion Bundler - The Edge Developer's Toolkit
 
-One of the key highlights of Azion Bundler is its ability to establish an intuitive and efficient protocol for facilitating the creation of presets. This makes customization and adaptation to specific project needs even more accessible, providing developers with the necessary flexibility to optimize their applications effectively and efficiently.
+[![Version](https://img.shields.io/npm/v/edge-functions.svg)](https://www.npmjs.com/package/edge-functions)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
+[![Downloads](https://img.shields.io/npm/dm/edge-functions.svg)](https://www.npmjs.com/package/edge-functions)
+[![GitHub Stars](https://img.shields.io/github/stars/aziontech/bundler.svg)](https://github.com/aziontech/bundler/stargazers)
+[![Maintainers](https://img.shields.io/badge/maintainers-jotanarciso,%20jcbsfilho-blue.svg)](https://github.com/aziontech/bundler/graphs/contributors)
 
-## Supported
+Azion Bundler is a powerful tool designed to build and adapt projects for edge computing. It handles module resolution and applies necessary polyfills through [unjs/unenv](https://github.com/unjs/unenv) while providing an abstraction layer over popular bundlers like esbuild and webpack. The tool includes a local development environment for testing and debugging, and processes Infrastructure as Code (IaC) through its manifest system.
+
+## Table of Contents
+
+- [Azion Bundler - The Edge Developer's Toolkit](#azion-bundler---the-edge-developers-toolkit)
+  - [Table of Contents](#table-of-contents)
+  - [Quick Installation](#quick-installation)
+  - [Getting Started for Development](#getting-started-for-development)
+  - [Using](#using)
+  - [Commands](#commands)
+    - [`build`](#build)
+    - [`dev`](#dev)
+    - [`store`](#store)
+    - [`presets`](#presets)
+    - [`manifest`](#manifest)
+  - [Configuration](#configuration)
+  - [Build Process Flow](#build-process-flow)
+  - [Documentation](#documentation)
+  - [Supported Features](#supported-features)
+  - [Contributing](#contributing)
+  - [License](#license)
+
+## Quick Installation
+
+For those who just want to use Azion Bundler in their project without contributing to the development, you can install it directly from npm.
+
+```shell
+npm install edge-functions
+```
+
+or if you prefer yarn:
+
+```shell
+yarn add edge-functions
+```
+
+## Getting Started for Development
+
+Follow these steps to start using Azion Bundler:
+
+1. Clone the repository: Clone the Azion Bundler repository from GitHub to your local machine.
+
+   ```shell
+   git clone https://github.com/aziontech/bundler.git
+   ```
+
+2. Installation: Navigate to the cloned Azion Bundler directory and install the required dependencies.
+
+   ```shell
+   cd bundler
+   npm yarn install
+   ```
+
+3. Install the Azion Bundler CLI globally, which allows you to use it as a command-line tool from anywhere in your system.
+
+   ```shell
+   npm install -g
+   ```
+
+   This command sets up the necessary project structure and configuration files for Azion Bundler.
+
+4. Start developing: Once the project is set up, you can start developing your JavaScript applications or frameworks using the power of Bundler.
+
+## Using
+
+See some examples below:
+
+- Build a JavaScript/Node project (back-end)
+
+  ```shell
+  ef build
+  ```
+
+- Build a TypeScript/Node (back-end)
+
+  ```shell
+  ef build --preset typescript
+  ```
+
+- Build a Next.js project
+
+  ```shell
+  ef build --preset next
+  ```
+
+- Build Astro.js project
+
+  ```shell
+  ef build --preset astro
+  ```
+
+- Test your project locally (after build)
+
+  ```shell
+  ef dev
+  ```
+
+## Commands
+
+The Azion Bundler CLI provides several commands to help you manage your edge applications:
+
+### `build`
+Builds your project for edge deployment.
+
+```shell
+ef build [options]
+
+Options:
+  --entry <string>     Code entrypoint (default: ./main.js or ./main.ts)
+  --preset <type>      Preset of build target (e.g., vue, next, javascript)
+  --polyfills          Use node polyfills in build (default: true)
+  --worker            Enable worker mode with addEventListener signature (default: false)
+  --development       Build in development mode (default: false)
+```
+
+### `dev`
+Starts a local development environment.
+
+```shell
+ef dev [entry] [options]
+
+Arguments:
+  entry               Specify the entry file (default: .edge/worker.dev.js)
+
+Options:
+  -p, --port <port>  Specify the port (default: "3333")
+```
+
+### `store`
+Manages store configuration.
+
+```shell
+ef store <command> [options]
+
+Commands:
+  init                Initialize store configuration
+  destroy             Remove store configuration
+
+Options:
+  --scope <scope>     Project scope (default: "global")
+  --preset <string>   Preset name
+  --entry <string>    Code entrypoint
+  --bundler <type>    Bundler type (webpack/esbuild)
+  --polyfills        Use node polyfills in build
+  --worker           Enable worker mode
+```
+
+### `presets`
+Lists available project presets.
+
+```shell
+ef presets <command>
+
+Commands:
+  ls                  List all available presets
+```
+
+### `manifest`
+Manages manifest files for Azion.
+
+```shell
+ef manifest [action] [options]
+
+Arguments:
+  action             Action to perform: "transform" (JSON to JS) or "generate" (config to manifest)
+                    (default: "generate")
+
+Options:
+  --entry <path>     Path to the input file or configuration file
+  --output <path>    Output file/directory path
+
+Examples:
+  $ ef manifest transform --entry=manifest.json --output=azion.config.js
+  $ ef manifest generate --entry=azion.config.js --output=.edge
+  $ ef manifest --entry=azion.config.js --output=.edge
+```
+
+## Configuration
+
+The configuration file (`azion.config.js` or `azion.config.ts`) offers a robust configuration system for Bundler. With Azion Bundler, you can extend configurations and leverage pre-configured framework presets for immediate use. The tool empowers users to create their own automations and extensions, making it highly customizable for specific project needs.
+
+As the JavaScript engine powering the [Azion CLI](https://github.com/aziontech/azion), it seamlessly integrates with [Azion Libraries](https://github.com/aziontech/lib) to read presets and pre-configured bundler settings from `azion/bundler` and framework presets from `azion/presets`. The bundler follows a modular architecture with specialized modules like `@build`, `@prebuild`, and `@postbuild` through the `build` command.
+
+The configuration is divided into two main areas:
+- The `build` property manages all bundler-related settings, including entry points, presets, and build configurations
+- Other properties (like domain, origin, cache, rules) are related to Azion CDN and Edge Computing platform settings
+
+While these hooks are pre-configured in framework presets, you can customize them in your `azion.config.ts` to fit your specific needs. You can either create your own configuration from scratch or extend existing presets. Here's an example of extending the Next.js preset:
+
+```typescript
+import { defineConfig } from 'azion';
+import type { AzionPrebuildResult, AzionConfig } from 'azion/config';
+import { Next } from 'azion/presets';
+
+export default defineConfig({
+  build: {
+    preset: {
+      ...Next,
+      config: {
+        ...Next.config,
+        bundler: 'esbuild',
+        extend: (config) => {
+          config.define = {
+            ...config.define,
+            'global.customFeature': 'JSON.stringify(true)',
+            'process.env.CUSTOM_VAR': 'JSON.stringify("value")'
+          }
+          return config
+        }
+      },
+      prebuild: async (config: AzionConfig, ctx: BuildContext): Promise<AzionPrebuildResult> => {
+        // Your custom prebuild logic here
+        const result = await doSomething();
+        return {
+          ...result,
+          // Additional prebuild configurations
+        }
+      }
+    }
+  }
+});
+```
+
+## Build Process Flow
+
+1. **Preset Resolution** (`@modules/preset`)
+   - Resolves preset from string name or custom module
+   - Loads built-in presets from azion/presets
+   - Validates preset interface
+
+2. **Build Config Setup** (`@modules/config`)
+   - Resolves configuration priorities in the following order:
+     1. CLI arguments (highest priority)
+     2. User config file (`azion.config.js`)
+     3. Local store settings
+     4. Preset defaults (lowest priority)
+   - Sets up bundler configuration
+   - Configures build options and extensions
+
+3. **Entry Resolution** (`@modules/entrypoint`)
+   - Resolves entry point from CLI args, preset, or user config (azion.config.js)
+   - Validates file existence
+
+4. **Worker Setup** (`@modules/worker`)
+   - Converts ESM exports to worker format
+   - Injects worker runtime and globals
+   - Sets up event listeners
+
+5. **Prebuild Phase** (`@modules/prebuild`)
+   - Executes preset's prebuild hooks
+
+6. **Core Build** (`@modules/core`)
+   - Processes bundler configuration (esbuild/webpack)
+   - Handles file imports and dependencies
+   - Applies polyfills and transformations
+
+7. **Postbuild Phase** (`@modules/postbuild`)
+   - Executes preset's postbuild hooks
+
+8. **Environment Setup** (`@modules/environment`)
+   - Creates initial `azion.config.js` from preset if none exists
+   - Merges configurations (user config takes precedence over preset defaults)
+   - Stores build settings locally for development and subsequent builds
+
+## Documentation
+
+- [Nextjs](docs/nextjs.md)
+- [Rust/Wasm example](https://github.com/aziontech/vulcan-examples/tree/main/examples/rust-wasm-yew-ssr/)
+- [Emscripten/Wasm example](https://github.com/aziontech/vulcan-examples/tree/main/examples/emscripten-wasm/)
+- [Env vars example](https://github.com/aziontech/vulcan-examples/tree/main/examples/javascript/simple-js-env-vars)
+- [Storage example](https://github.com/aziontech/vulcan-examples/tree/main/examples/javascript/simple-js-esm-storage)
+- [Firewall example](https://github.com/aziontech/vulcan-examples/tree/main/examples/javascript/simple-js-firewall-event)
+
+## Supported Features
 
 E2E tests run daily in the [Bundler Examples](https://github.com/aziontech/bundler-examples/tree/main/examples) to ensure that the presets and frameworks continue to work correctly.
 
@@ -47,203 +326,11 @@ Table:
 | Simple Ts Esm                        | ⚠️     |
 | Simple Js Esm                        | ⚠️     |
 
-Last test run date: 03/26/25 03:42:35 AM
-## Quick Installation
-
-For those who just want to use Azion Bundler in their project without contributing to the development, you can install it directly from npm.
-
-```shell
-npm install edge-functions
-```
-
-or if you prefer yarn:
-
-```shell
-yarn add edge-functions
-```
-
-## Getting Started for Development
-
-Follow these steps to start using Azion Bundler:
-
-1. Clone the repository: Clone the Azion Bundler repository from GitHub to your local machine.
-
-   ```shell
-   git clone https://github.com/aziontech/bundler.git
-   ```
-
-2. Installation: Navigate to the cloned Azion Bundler directory and install the required dependencies.
-
-   ```shell
-   cd bundler
-   npm yarn install
-   ```
-
-3. Install the Azion Bundler CLI globally, which allows you to use it as a command-line tool from anywhere in your system.
-
-   ```shell
-   npm install -g
-   ```
-
-   This command sets up the necessary project structure and configuration files for Azion Bundler.
-
-4. Start developing: Once the project is set up, you can start developing your JavaScript applications or frameworks using the power of Bundler. Leverage the automated polyfills, Worker creation assistance, and other features provided by Bundler to enhance your development workflow.
-
-## Using Azion Bundler
-
-See some examples below:
-
-- Build a JavaScript/Node project (back-end)
-
-  ```shell
-  azbundler build
-  ```
-
-- Build a TypeScript/Node (back-end)
-
-  ```shell
-  azbundler build --preset typescript
-  ```
-
-- Build a Next.js project
-
-  ```shell
-  azbundler build --preset next
-  ```
-
-- Build Astro.js project
-
-  ```shell
-  azbundler build --preset astro
-  ```
-
-- Test your project locally (after build)
-
-  ```shell
-  azbundler dev
-  ```
-
-## Azion.config.js
-
-The `azion.config.js` file offers a robust configuration system for Bundler. This file is not mandatory but acts as an override mechanism. If you define properties in this file, they will supersede the preset configurations. Properties not defined will rely on the preset.
-
-Here's a detailed breakdown of the configuration properties available in `azion.config.js`:
-
-### Entry
-
-**Type:** String
-
-**Description:**
-This represents the primary entry point for your application, where the building process begins.
-
-**Note:** `Entry` will be ignored for jamstack solutions.
-
-### Builder
-
-**Type:** String ('esbuild' or 'webpack')
-
-**Description:**
-Defines which build tool to use. The available options are `esbuild` and `webpack`.
-
-### Polyfills
-
-**Type:** Boolean
-
-**Description:**
-Determines whether Node.js polyfills should be applied. This is useful for projects that leverage specific Node.js functionality but target environments without these built-in features.
-
-### Worker
-
-**Type:** Boolean
-
-**Description:**
-This flag indicates that the constructed code inserts its own worker expression, such as `addEventListener("fetch")`.
-
-### Preset
-
-**Type:** Object
-
-**Description:**
-Provides preset-specific configurations.
-
-- **Name (Type: String):** Refers to the preset name, e.g., "vue" or "next"..
-
-### MemoryFS
-
-**Type:** Object
-
-**Description:**
-Configurations related to the in-memory filesystem.
-
-- **InjectionDirs (Type: Array of Strings):** Directories to be injected into memory for runtime access via the fs API.
-
-- **RemovePathPrefix (Type: String):** A prefix path to be removed from files before injecting into memory.
-
-### Custom
-
-**Type:** Object
-
-**Description:**
-Allows you to extend the capabilities of the chosen bundler (either `webpack` or `esbuild`) with custom plugins or configurations.
-
-- **Plugins (Type: Object):** Add your custom plugins for your chosen bundler here.
-
-### Example Configuration
-
-For a Next/Faststore-based project:
-
-```javascript
-module.exports = {
-  build: {
-    entry: 'src/index.js',
-    builder: 'webpack',
-    polyfills: true,
-    worker: false,
-    preset: { name: 'next' },
-    memoryFS: {
-     injectionDirs: ['.faststore/@generated/graphql'],
-     removePathPrefix: '.faststore/',
-   },
-    custom: {
-      plugins: {},
-    },
-  }
-};
-```
-
-**Note:** Adapting `azion.config.js` to your setup allows a personalized development experience, catering to the specific needs of your JavaScript applications and frameworks.
-
-## Docs
-
-- [Overview](docs/overview.md)
-- [Presets](docs/presets.md)
-- [Nextjs](docs/nextjs.md)
-- [Rust/Wasm example](https://github.com/aziontech/vulcan-examples/tree/main/examples/rust-wasm-yew-ssr/)
-- [Emscripten/Wasm example](https://github.com/aziontech/vulcan-examples/tree/main/examples/emscripten-wasm/)
-- [Env vars example](https://github.com/aziontech/vulcan-examples/tree/main/examples/javascript/simple-js-env-vars)
-- [Storage example](https://github.com/aziontech/vulcan-examples/tree/main/examples/javascript/simple-js-esm-storage)
-- [Firewall example](https://github.com/aziontech/vulcan-examples/tree/main/examples/javascript/simple-js-firewall-event)
-
-## Wasm Notes
-
-To use wasm presets you need to install the necessary tools to build your code:
-
-- Emscripten: [emsdk](https://emscripten.org/docs/getting_started/downloads.html);
-- Rust/Wasm: [wasm-bindgen-cli](https://crates.io/crates/wasm-bindgen-cli)
-
-## Node.js Support and Report
-
-The compatibility between Azion Runtime and Node.js is an ongoing task, but a set of Node Runtime APIs are listed and compatible with Azion Runtime.
-
-- [Node.js APIs support](docs/nodejs-apis.md)
+Last test run date: 03/14/25 03:35:17 AM
 
 ## Contributing
 
 Check the [Contributing doc](CONTRIBUTING.md).
-
-## Code of Conduct
-
-Check the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## License
 

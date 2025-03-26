@@ -1,6 +1,5 @@
 import fs from 'fs';
-import { feedback } from '#utils';
-// eslint-disable-next-line import/no-extraneous-dependencies
+import { feedback } from 'azion/utils/node';
 import { markdownTable } from 'markdown-table';
 
 /**
