@@ -63,7 +63,7 @@ function processE2EReports() {
     // Write the Markdown table to the README.md file
     const readme = fs.readFileSync('README.md', 'utf8');
     const newReadme = readme.replace(
-      /(Table:\n)(.*?)(\n## Quick Installation)/s,
+      /(Table:\n)(.*?)(\n## Contributing)/s,
       (match, p1, p2, p3) => {
         const dateOptions = {
           day: '2-digit',
