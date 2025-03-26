@@ -302,7 +302,7 @@ Table:
 | Next Static                          | ✅      |
 | Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ⚠️     |
-| Vue Vite Static                      | ⚠️     |
+| Vue Vite Static                      | ✅      |
 | Next 12 Static                       | ⚠️     |
 | Astro Static                         | ✅      |
 | Qwik Static                          | ✅      |
