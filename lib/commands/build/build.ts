@@ -1,7 +1,6 @@
 import { AzionPrebuildResult, AzionConfig, BuildContext } from 'azion/config';
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
-import { writeFile } from 'fs/promises';
 
 import { checkDependencies } from './utils';
 
@@ -57,8 +56,7 @@ export const build = async ({
      *   addEventListener('fetch', (event) => { event.respondWith(...) })
      */
 
-    const worker = await setupWorkerCode(buildConfigSetup, ctx);
-    await writeFile(buildConfigSetup.entry, worker);
+    await setupWorkerCode(buildConfigSetup, ctx);
 
     /* Execute build phases */
 

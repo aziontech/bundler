@@ -9,6 +9,22 @@ interface EntrypointOptions {
   preset: AzionBuildPreset;
 }
 
+const formatEntryPointsMessage = (
+  entry: string | string[] | Record<string, string>,
+): string => {
+  if (typeof entry === 'string') return entry;
+  if (Array.isArray(entry)) return entry.join(', ');
+  return Object.keys(entry).join(', ');
+};
+
+const resolveEntryPaths = (
+  entry: string | string[] | Record<string, string>,
+): string[] => {
+  if (typeof entry === 'string') return [path.resolve(entry)];
+  if (Array.isArray(entry)) return entry.map((e) => path.resolve(e));
+  return Object.values(entry).map((e) => path.resolve(e));
+};
+
 /**
  * Resolves the entrypoint based on priority:
  * 1. Command line entrypoint (ctx.entrypoint)
@@ -20,20 +36,40 @@ interface EntrypointOptions {
 export const resolveHandler = async ({
   ctx,
   preset,
-}: EntrypointOptions): Promise<string> => {
+}: EntrypointOptions): Promise<string | string[]> => {
   // Step 1: Check for user-provided entrypoint
   if (ctx.entrypoint && !preset.handler) {
-    const entrypointPath = path.resolve(ctx.entrypoint);
-    try {
-      await fsPromises.access(entrypointPath);
-      utilsNode.feedback.build.info(`Using ${ctx.entrypoint} as entry point.`);
-      return ctx.entrypoint;
-    } catch (error) {
-      debug.error(error);
-      throw new Error(
-        `Entry point "${ctx.entrypoint}" was not found. Please verify the path and try again.`,
+    const resolveEntrypoint = async (
+      entry: string | string[] | Record<string, string>,
+    ) => {
+      const entries = resolveEntryPaths(entry);
+
+      await Promise.all(
+        entries.map(async (entrypointPath, index) => {
+          try {
+            await fsPromises.access(entrypointPath);
+          } catch (error) {
+            debug.error(error);
+            const originalPath =
+              typeof entry === 'string'
+                ? entry
+                : Array.isArray(entry)
+                  ? entry[index]
+                  : Object.values(entry as Record<string, string>)[index];
+            throw new Error(
+              `Entry point "${originalPath}" was not found. Please verify the path and try again.`,
+            );
+          }
+        }),
       );
-    }
+
+      utilsNode.feedback.build.info(
+        `Using entry point(s): ${formatEntryPointsMessage(entry)}`,
+      );
+      return entries.length === 1 ? entries[0] : entries;
+    };
+
+    return resolveEntrypoint(ctx.entrypoint);
   }
 
   // Step 2: Check for preset handler
@@ -63,8 +99,13 @@ export const resolveHandler = async ({
   // Step 3: Check for preset's default entry
   if (preset.config.build?.entry) {
     const presetEntry = preset.config.build.entry;
-    utilsNode.feedback.build.info(`Using preset default entry: ${presetEntry}`);
-    return path.resolve(presetEntry);
+    utilsNode.feedback.build.info(
+      `Using preset default entry: ${formatEntryPointsMessage(presetEntry)}`,
+    );
+
+    const resolvedEntries = resolveEntryPaths(presetEntry);
+    console.log('resolvedEntries', resolvedEntries);
+    return resolvedEntries.length === 1 ? resolvedEntries[0] : resolvedEntries;
   }
 
   // No valid entrypoint found

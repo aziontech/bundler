@@ -1,7 +1,6 @@
 import { readUserConfig, readStore, writeStore, type BundlerStore } from '#env';
 import { build } from './build';
 import { AzionConfig } from 'azion/config';
-import { resolve } from 'path';
 import type { BuildCommandOptions } from './types';
 import { resolveConfigPriority, resolvePresetPriority } from './utils';
 
@@ -81,8 +80,7 @@ export async function buildCommand(options: BuildCommandOptions) {
     config,
     ctx: {
       production: options.production ?? true,
-      output: resolve('.edge', 'worker.js'),
-      entrypoint: buildConfig.entry ? resolve(buildConfig.entry) : '',
+      entrypoint: buildConfig.entry || '',
     },
   });
 }

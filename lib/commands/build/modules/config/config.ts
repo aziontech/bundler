@@ -1,18 +1,18 @@
-import { join } from 'path';
-import { generateTimestamp } from '#utils';
 import { AzionConfig, AzionBuildPreset } from 'azion/config';
 import { BuildConfiguration } from 'azion/config';
-
+import { getTempEntryPaths } from './utils';
 export const setupBuildConfig = (
   azionConfig: AzionConfig,
   preset: AzionBuildPreset,
 ): BuildConfiguration => {
-  const fileExtension = `${preset.metadata.ext || 'js'}`;
-  const tempFile = `azion-${generateTimestamp()}.temp.${fileExtension}`;
+  const tempFile = getTempEntryPaths(
+    azionConfig.build?.entry,
+    preset.metadata.ext || 'js',
+  );
 
   const buildConfigSetup: BuildConfiguration = {
     ...azionConfig.build,
-    entry: join(process.cwd(), tempFile),
+    entry: tempFile,
     bundler:
       azionConfig.build?.bundler || preset.config.build?.bundler || 'esbuild',
     preset,
