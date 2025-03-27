@@ -17,7 +17,7 @@ interface EntrypointOptions {
  *
  * @throws Error if no valid entrypoint is found or if provided entrypoint doesn't exist
  */
-export const resolveEntrypoint = async ({
+export const resolveHandler = async ({
   ctx,
   preset,
 }: EntrypointOptions): Promise<string> => {

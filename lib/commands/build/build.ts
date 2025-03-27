@@ -13,7 +13,7 @@ import { executeBuild } from './modules/core';
 import { executePostbuild } from './modules/postbuild';
 import { setEnvironment } from './modules/environment';
 import { setupWorkerCode } from './modules/worker';
-import { resolveEntrypoint } from './modules/entrypoint/entrypoint';
+import { resolveHandler } from './modules/handler';
 
 interface BuildParams {
   config: AzionConfig;
@@ -40,7 +40,7 @@ export const build = async ({
     const resolvedPreset = await resolvePreset(config.build?.preset);
     const buildConfigSetup = setupBuildConfig(config, resolvedPreset);
 
-    ctx.entrypoint = await resolveEntrypoint({
+    ctx.entrypoint = await resolveHandler({
       ctx,
       preset: resolvedPreset,
     });

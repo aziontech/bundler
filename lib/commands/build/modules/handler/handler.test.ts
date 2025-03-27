@@ -1,11 +1,11 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
-import { resolveEntrypoint } from './entrypoint';
+import { resolveHandler } from './handler';
 import { AzionBuildPreset, BuildContext } from 'azion/config';
 import * as utilsNode from 'azion/utils/node';
 import fsPromises from 'fs/promises';
 import path from 'path';
 
-describe('resolveEntrypoint', () => {
+describe('resolveHandler', () => {
   let spyFeedbackBuildInfo: jest.SpiedFunction<
     typeof utilsNode.feedback.build.info
   >;
@@ -52,7 +52,7 @@ describe('resolveEntrypoint', () => {
   });
 
   it('should use context entrypoint when available', async () => {
-    const result = await resolveEntrypoint({
+    const result = await resolveHandler({
       ctx: mockContext,
       preset: mockPreset,
     });
@@ -68,7 +68,7 @@ describe('resolveEntrypoint', () => {
 
     const contextWithoutEntrypoint = { ...mockContext, entrypoint: '' };
 
-    await resolveEntrypoint({
+    await resolveHandler({
       ctx: contextWithoutEntrypoint,
       preset: mockPreset,
     });
@@ -85,7 +85,7 @@ describe('resolveEntrypoint', () => {
     );
 
     await expect(
-      resolveEntrypoint({
+      resolveHandler({
         ctx: mockContext,
         preset: mockPreset,
       }),
