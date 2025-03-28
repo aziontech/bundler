@@ -145,7 +145,7 @@ function startBundler() {
   AzionBundler.command('build')
     .description('Build a project for edge deployment')
     .option(
-      '--entry <string>',
+      '--entry <entries...>',
       'Code entrypoint (default: ./main.js or ./main.ts)',
     )
     .option(
@@ -205,9 +205,9 @@ function startBundler() {
       'after',
       `
 Examples:
-  $ az manifest transform --entry=manifest.json --output=azion.config.js
-  $ az manifest generate --entry=azion.config.js --output=.edge
-  $ az manifest --entry=azion.config.js --output=.edge
+  $ ef manifest transform --entry=manifest.json --output=azion.config.js
+  $ ef manifest generate --entry=azion.config.js --output=.edge
+  $ ef manifest --entry=azion.config.js --output=.edge
     `,
     )
     .action(async (action, options) => {
