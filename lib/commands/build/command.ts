@@ -7,6 +7,7 @@ import {
   resolveConfigPriority,
   resolvePresetPriority,
 } from './utils';
+import { BUILD_DEFAULTS, DIRECTORIES, type BundlerType } from '#constants';
 
 /**
  * A command to initiate the build process.
@@ -39,7 +40,7 @@ export async function buildCommand(options: BuildCommandOptions) {
     inputValue: options.preset,
     fileValue: userBuildConfig?.preset,
     storeValue: bundlerStore.preset,
-    defaultValue: undefined,
+    defaultValue: BUILD_DEFAULTS.PRESET,
   });
 
   const buildConfig = {
@@ -48,25 +49,25 @@ export async function buildCommand(options: BuildCommandOptions) {
       inputValue: options.entry,
       fileValue: userBuildConfig?.entry,
       storeValue: bundlerStore?.entry,
-      defaultValue: undefined,
+      defaultValue: BUILD_DEFAULTS.ENTRY,
     }),
-    bundler: resolveConfigPriority<'webpack' | 'esbuild'>({
+    bundler: resolveConfigPriority<BundlerType>({
       inputValue: undefined,
       fileValue: userBuildConfig?.bundler,
       storeValue: bundlerStore?.bundler,
-      defaultValue: undefined,
+      defaultValue: BUILD_DEFAULTS.BUNDLER,
     }),
     polyfills: resolveConfigPriority({
       inputValue: userBuildConfig?.polyfills,
       fileValue: options.polyfills,
       storeValue: bundlerStore?.polyfills,
-      defaultValue: true,
+      defaultValue: BUILD_DEFAULTS.POLYFILLS,
     }),
     worker: resolveConfigPriority({
       inputValue: userBuildConfig?.worker,
       fileValue: options.worker,
       storeValue: bundlerStore?.worker,
-      defaultValue: false,
+      defaultValue: BUILD_DEFAULTS.WORKER,
     }),
   };
 
@@ -81,12 +82,12 @@ export async function buildCommand(options: BuildCommandOptions) {
     },
   };
 
-  await cleanDirectory(['.edge']);
+  await cleanDirectory([DIRECTORIES.OUTPUT_BASE_PATH]);
 
   return build({
     config,
     ctx: {
-      production: options.production ?? true,
+      production: options.production ?? BUILD_DEFAULTS.PRODUCTION,
       entrypoint: buildConfig.entry || '',
     },
   });

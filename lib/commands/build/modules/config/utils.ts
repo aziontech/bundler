@@ -1,16 +1,17 @@
 import { join, basename, dirname, extname } from 'path';
 import { BuildEntryPoint } from 'azion/config';
+import { DIRECTORIES, FILE_PATTERNS, BUILD_DEFAULTS } from '#constants';
 
 type GetTempEntryPathsOptions = {
   entry: BuildEntryPoint | undefined;
-  ext: string;
+  ext?: string;
   basePath?: string;
 };
 
 export const createTempEntryMap = ({
   entry,
-  ext,
-  basePath = join('.edge', 'functions'),
+  ext = BUILD_DEFAULTS.EXTENSION,
+  basePath = DIRECTORIES.OUTPUT_FUNCTIONS_PATH,
 }: GetTempEntryPathsOptions): Record<string, string> => {
   if (!entry) throw new Error('Entrypoint is required');
 
@@ -23,7 +24,7 @@ export const createTempEntryMap = ({
     const base = basename(entryPath, extname(entryPath));
     const dir = dirname(entryPath);
 
-    const tempPath = join(dir, `azion-${base}-${timestamp}.temp.${ext}`);
+    const tempPath = join(dir, FILE_PATTERNS.TEMP_FILE(base, timestamp, ext));
 
     if (outputPath) {
       const outputWithoutExt = outputPath.replace(/\.[^/.]+$/, '');

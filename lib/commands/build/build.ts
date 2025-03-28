@@ -1,8 +1,9 @@
-import { AzionPrebuildResult, AzionConfig, BuildContext } from 'azion/config';
-import { debug } from '#utils';
-import { feedback } from 'azion/utils/node';
 import { dirname } from 'path';
 import fsPromises from 'fs/promises';
+import { AzionPrebuildResult, AzionConfig, BuildContext } from 'azion/config';
+import { debug } from '#utils';
+import { BUILD_MESSAGES } from '#constants';
+import { feedback } from 'azion/utils/node';
 
 import { checkDependencies } from './utils';
 
@@ -63,21 +64,21 @@ export const build = async ({
     /* Execute build phases */
 
     // Phase 1: Prebuild
-    feedback.build.info('Starting prebuild...');
+    feedback.build.info(BUILD_MESSAGES.PREBUILD.START);
     const prebuildResult: AzionPrebuildResult = await executePrebuild({
       buildConfig: buildConfigSetup,
       ctx,
     });
-    feedback.build.info('Prebuild completed successfully');
+    feedback.build.info(BUILD_MESSAGES.PREBUILD.SUCCESS);
 
     // Phase 2: Build
-    feedback.build.info('Starting build...');
+    feedback.build.info(BUILD_MESSAGES.BUILD.START);
     await executeBuild({
       buildConfig: buildConfigSetup,
       prebuildResult,
       ctx,
     });
-    feedback.build.success('Build completed successfully');
+    feedback.build.success(BUILD_MESSAGES.BUILD.SUCCESS);
 
     // Phase 3: Postbuild
     await executePostbuild({ buildConfig: buildConfigSetup, ctx });

@@ -18,7 +18,7 @@
       "#utils": ["./lib/utils/index.ts"],
       "#build": ["lib/build/build.ts"],
       "#env": ["./lib/env/index.ts"],
-      "#constants": ["./lib/constants/index.ts"],
+      "#constants": ["./lib/constants.ts"],
       "#commands": ["lib/commands/index.ts"]
     }
   },

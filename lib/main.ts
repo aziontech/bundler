@@ -1,26 +1,12 @@
 #! /usr/bin/env node
-import { resolve, join } from 'path';
-import { readFileSync, readdirSync, unlinkSync, mkdirSync } from 'fs';
+import { join } from 'path';
+import { readdirSync, unlinkSync, mkdirSync } from 'fs';
 import { Command } from 'commander';
 import { satisfies } from 'semver';
-import os from 'os';
 import crypto from 'crypto';
-
+import { FILE_PATTERNS, BUNDLER } from '#constants';
 import { debug } from '#utils';
-import { feedback, getAbsoluteDirPath } from 'azion/utils/node';
-
-const MIN_NODE_VERSION = '18.0.0';
-
-const BUNDLER_LIB_DIR_ABSOLUTE_PATH = getAbsoluteDirPath(
-  import.meta.url,
-  'bundler',
-);
-const BUNDLER_ROOT_ABSOLUTE_PATH = resolve(BUNDLER_LIB_DIR_ABSOLUTE_PATH, '.');
-const BUNDLER_PACKAGE_JSON = JSON.parse(
-  readFileSync(`${BUNDLER_ROOT_ABSOLUTE_PATH}/package.json`, 'utf8'),
-);
-const BUNDLER_CURRENT_VERSION = BUNDLER_PACKAGE_JSON.version;
-const IS_DEBUG_ENABLED = process.env.DEBUG === 'true';
+import { feedback } from 'azion/utils/node';
 
 const AzionBundler = new Command();
 
@@ -37,7 +23,7 @@ function generateProjectID() {
  */
 function createSessionTempDir() {
   const projectID = generateProjectID();
-  const tempPath = join(os.tmpdir(), '.azion', projectID);
+  const tempPath = BUNDLER.TEMP_DIR(projectID);
   mkdirSync(tempPath, { recursive: true });
   return tempPath;
 }
@@ -46,7 +32,10 @@ function createSessionTempDir() {
  * Validates if user is using the minimum Node version
  */
 function validateNodeMinVersion() {
-  const isAValidVersion = satisfies(process.version, `>= ${MIN_NODE_VERSION}`);
+  const isAValidVersion = satisfies(
+    process.version,
+    `>= ${BUNDLER.MIN_NODE_VERSION}`,
+  );
   return isAValidVersion;
 }
 
@@ -60,26 +49,26 @@ function validateNodeMinVersion() {
  */
 function setBundlerEnvironment() {
   const bundlerContext = {
-    root: BUNDLER_ROOT_ABSOLUTE_PATH,
-    package: BUNDLER_PACKAGE_JSON,
-    debug: IS_DEBUG_ENABLED,
-    version: BUNDLER_CURRENT_VERSION,
+    root: BUNDLER.ROOT_PATH,
+    package: BUNDLER.PACKAGE_JSON,
+    debug: BUNDLER.IS_DEBUG,
+    version: BUNDLER.VERSION,
     tempPath: createSessionTempDir(),
-    argsPath: `azion/args.json`,
+    argsPath: BUNDLER.ARGS_PATH,
   };
 
   globalThis.bundler = bundlerContext;
 }
 
-/**
+/** d x
  * Removes all temporary files starting with 'azion-' and ending with '.temp.js' or '.temp.ts'.
  */
 function cleanUpTempFiles() {
   const directory = process.cwd();
   const tempFiles = readdirSync(directory).filter(
     (file) =>
-      file.startsWith('azion-') &&
-      (file.endsWith('.temp.js') || file.endsWith('.temp.ts')),
+      file.startsWith(FILE_PATTERNS.TEMP_PREFIX) &&
+      file.includes(FILE_PATTERNS.TEMP_SUFFIX),
   );
 
   tempFiles.forEach((file) => {
@@ -127,7 +116,7 @@ function setupBundlerProcessHandlers() {
  *    startBundler();
  */
 function startBundler() {
-  AzionBundler.version(BUNDLER_CURRENT_VERSION);
+  AzionBundler.version(BUNDLER.VERSION);
 
   AzionBundler.command('store <command>')
     .description('Manage store configuration (init/destroy)')
@@ -230,7 +219,7 @@ try {
   }
   if (!validateNodeMinVersion()) {
     feedback.error(
-      `Invalid Node version. Node version must be greater than ${MIN_NODE_VERSION}.`,
+      `Invalid Node version. Node version must be greater than ${BUNDLER.MIN_NODE_VERSION}.`,
     );
     process.exit(1);
   }

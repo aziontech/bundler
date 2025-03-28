@@ -5,9 +5,7 @@ import * as utilsNode from 'azion/utils/node';
 import envBundler from '../../env/bundler';
 import { promises as fsPromises } from 'fs';
 import util from './util';
-
-export const DEFAULT_TRANSFORM_INPUT_PATH = '.edge/manifest.json';
-export const DEFAULT_TRANSFORM_OUTPUT_PATH = 'azion.config';
+import { DIRECTORIES, BUNDLER } from '#constants';
 
 /**
  * Generates or updates the CDN manifest based on a custom configuration.
@@ -59,7 +57,7 @@ export const generateManifest = async (
  */
 export const transformManifest = async (
   input?: string,
-  outputPath = DEFAULT_TRANSFORM_OUTPUT_PATH,
+  outputPath = BUNDLER.CONFIG_FILENAME,
 ): Promise<void> => {
   const readConfigFromPath = async (filePath: string): Promise<AzionConfig> => {
     const resolvedPath = resolve(process.cwd(), filePath);
@@ -73,7 +71,7 @@ export const transformManifest = async (
   };
 
   const config = await readConfigFromPath(
-    input || DEFAULT_TRANSFORM_INPUT_PATH,
+    input || DIRECTORIES.OUTPUT_MANIFEST_PATH,
   );
   await envBundler.writeUserConfig(config);
 
