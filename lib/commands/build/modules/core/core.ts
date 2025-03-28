@@ -6,8 +6,6 @@ import {
 import bundlers from './bundlers';
 import { moveImportsToTopLevel } from './utils';
 import fsPromises from 'fs/promises';
-import { readdirSync, unlinkSync } from 'fs';
-import { join } from 'path';
 
 interface CoreParams {
   buildConfig: BuildConfiguration;
@@ -26,87 +24,57 @@ const injectHybridFsPolyfill = (
   return code;
 };
 
-const cleanUpTempFiles = () => {
-  const directory = process.cwd();
-  const tempFiles = readdirSync(directory).filter(
-    (file) => file.startsWith('azion-') && file.endsWith('.temp.js'),
-  );
-
-  tempFiles.forEach((file) => {
-    const filePath = join(directory, file);
-    unlinkSync(filePath);
-  });
-};
-
 export const executeBuild = async ({
   buildConfig,
   prebuildResult,
   ctx,
 }: CoreParams): Promise<string[]> => {
   try {
-    const entries = Object.keys(buildConfig.entry); // Pegamos os caminhos de saída
-    const results: string[] = [];
+    const entries = Object.keys(buildConfig.entry);
 
     if (prebuildResult.filesToInject.length > 0) {
-      const filesContentPromises = prebuildResult.filesToInject.map(
-        (filePath) => fsPromises.readFile(filePath, 'utf-8'),
+      const filesContent = await Promise.all(
+        prebuildResult.filesToInject.map((filePath) =>
+          fsPromises.readFile(filePath, 'utf-8'),
+        ),
+      ).then((contents) => contents.join(' '));
+
+      await Promise.all(
+        Object.values(buildConfig.entry).map(async (tempPath) => {
+          const entryContent = await fsPromises.readFile(tempPath, 'utf-8');
+          const contentWithInjection = `${filesContent} ${entryContent}`;
+          const contentWithTopLevelImports =
+            moveImportsToTopLevel(contentWithInjection);
+          return fsPromises.writeFile(tempPath, contentWithTopLevelImports);
+        }),
       );
-      const filesContentArray = await Promise.all(filesContentPromises);
-      const filesContent = filesContentArray.join(' ');
-
-      // Processa cada entrada
-      for (const tempPath of Object.values(buildConfig.entry)) {
-        const entryContent = await fsPromises.readFile(tempPath, 'utf-8');
-        const contentWithInjection = `${filesContent} ${entryContent}`;
-        const contentWithTopLevelImports =
-          moveImportsToTopLevel(contentWithInjection);
-        await fsPromises.writeFile(tempPath, contentWithTopLevelImports);
-      }
     }
-
-    const bundlerConfig: BuildConfiguration = {
+    const bundlerConfig = {
       ...buildConfig,
-      preset: buildConfig.preset,
       setup: {
         contentToInject: prebuildResult.injection.banner,
         defineVars: Object.fromEntries(
+          // Get all entries from defineVars
           Object.entries(prebuildResult.bundler.defineVars)
+            // Remove entries with undefined values
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             .filter(([_, v]) => v !== undefined)
+            // Convert remaining values to string type
             .map(([k, v]) => [k, v as string]),
         ),
       },
     };
 
-    const { bundler } = buildConfig;
-    switch (bundler) {
-      case 'esbuild': {
-        const esbuildConfig = bundlers.createAzionESBuildConfigWrapper(
-          bundlerConfig,
-          ctx,
-        );
-        await bundlers.executeESBuildBuildWrapper(esbuildConfig);
-        break;
-      }
-      case 'webpack': {
-        const webpackConfig = bundlers.createAzionWebpackConfigWrapper(
-          bundlerConfig,
-          ctx,
-        );
-        await bundlers.executeWebpackBuildWrapper(webpackConfig);
-        break;
-      }
-      default:
-        throw new Error(`Unsupported bundler: ${bundler}`);
-    }
+    await executeBundler(bundlerConfig, ctx);
 
-    for (const outputPath of entries) {
-      const bundledCode = await fsPromises.readFile(
-        `${outputPath}.js`,
-        'utf-8',
-      );
+    return Promise.all(
+      entries.map(async (outputPath: string) => {
+        const bundledCode = await fsPromises.readFile(
+          `${outputPath}.js`,
+          'utf-8',
+        );
+        if (!ctx.production) return bundledCode;
 
-      if (ctx.production) {
         const bundledCodeWithHybridFsPolyfill = injectHybridFsPolyfill(
           bundledCode,
           buildConfig,
@@ -116,18 +84,34 @@ export const executeBuild = async ({
           `${outputPath}.js`,
           bundledCodeWithHybridFsPolyfill,
         );
-        results.push(bundledCodeWithHybridFsPolyfill);
-      }
-      if (!ctx.production) {
-        results.push(bundledCode);
-      }
-    }
-
-    cleanUpTempFiles();
-
-    return results;
+        return bundledCodeWithHybridFsPolyfill;
+      }),
+    );
   } catch (error) {
-    cleanUpTempFiles();
     return Promise.reject(error);
+  }
+};
+
+const executeBundler = async (
+  bundlerConfig: BuildConfiguration,
+  ctx: BuildContext,
+) => {
+  switch (bundlerConfig.bundler) {
+    case 'esbuild': {
+      const config = bundlers.createAzionESBuildConfigWrapper(
+        bundlerConfig,
+        ctx,
+      );
+      return bundlers.executeESBuildBuildWrapper(config);
+    }
+    case 'webpack': {
+      const config = bundlers.createAzionWebpackConfigWrapper(
+        bundlerConfig,
+        ctx,
+      );
+      return bundlers.executeWebpackBuildWrapper(config);
+    }
+    default:
+      throw new Error(`Unsupported bundler: ${bundlerConfig.bundler}`);
   }
 };

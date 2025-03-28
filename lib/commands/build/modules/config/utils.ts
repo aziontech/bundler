@@ -5,7 +5,7 @@ export const getTempEntryPaths = (
   entry: BuildEntryPoint | undefined,
   fileExtension: string,
 ): Record<string, string> => {
-  if (!entry) throw new Error('Entry point is required');
+  if (!entry) throw new Error('Entrypoint is required');
 
   const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
 

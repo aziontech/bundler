@@ -39,7 +39,6 @@ describe('executePrebuild', () => {
 
   const mockContext: BuildContext = {
     production: true,
-    output: '.edge/worker.js',
     entrypoint: 'src/index.js',
   };
 

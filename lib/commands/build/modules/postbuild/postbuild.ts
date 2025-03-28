@@ -11,11 +11,6 @@ export const executePostbuild = async ({
 }: PostbuildParams): Promise<void> => {
   const { postbuild } = buildConfig.preset;
   if (postbuild) {
-    const outputWorker =
-      ctx.production === false
-        ? ctx.output.replace('.js', '.dev.js')
-        : ctx.output;
-
-    await postbuild(buildConfig, { ...ctx, output: outputWorker });
+    await postbuild(buildConfig, { ...ctx });
   }
 };

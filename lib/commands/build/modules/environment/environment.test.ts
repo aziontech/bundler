@@ -33,7 +33,7 @@ describe('setEnvironment', () => {
 
   const mockContext: BuildContext = {
     production: true,
-    output: '.edge/worker.js',
+
     entrypoint: 'src/index.ts',
   };
 
