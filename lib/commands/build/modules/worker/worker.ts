@@ -38,13 +38,13 @@ export const setupWorkerCode = async (
     };
 
     /** Array of processed contents ready to be written to bundler entry files */
-    const processedContents = await convertEsmToWorkerSignature(handlerPaths);
+    const workers = await convertEsmToWorkerSignature(handlerPaths);
 
     /** Object mapping each bundler path to its processed content */
     return bundlerEntryPaths.reduce(
       (acc, path, index) => ({
         ...acc,
-        [path]: processedContents[index],
+        [path]: workers[index],
       }),
       {},
     );

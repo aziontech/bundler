@@ -4,7 +4,6 @@ import { getPackageManager } from 'azion/utils/node';
 import type { PackageJson } from './types';
 import { ConfigValueOptions, PresetValueOptions } from './types';
 import { PresetInput } from 'azion/config';
-
 export class PackageJsonError extends Error {
   constructor(
     message: string,

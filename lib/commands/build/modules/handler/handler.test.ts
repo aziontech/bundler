@@ -1,6 +1,6 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { resolveHandlers } from './handler';
-import { AzionBuildPreset, BuildContext } from 'azion/config';
+import { AzionBuildPreset, BuildContext, BuildEntryPoint } from 'azion/config';
 import * as utilsNode from 'azion/utils/node';
 import fsPromises from 'fs/promises';
 import path from 'path';
@@ -13,8 +13,10 @@ describe('resolveHandlers', () => {
 
   const mockContext: BuildContext = {
     production: true,
-    output: '.edge/worker.js',
-    entrypoint: 'src/index.js',
+    entrypoint: {
+      main: 'src/index.js',
+      api: 'src/api.js',
+    },
   };
 
   const mockPreset: AzionBuildPreset = {
@@ -30,7 +32,6 @@ describe('resolveHandlers', () => {
   };
 
   beforeEach(() => {
-    // Mock for globalThis.bundler
     globalThis.bundler = {
       root: '/mock/root',
       package: {},
@@ -57,25 +58,42 @@ describe('resolveHandlers', () => {
       preset: mockPreset,
     });
 
-    expect(result).toBe(mockContext.entrypoint);
+    expect(result).toEqual([
+      path.resolve('src/index.js'),
+      path.resolve('src/api.js'),
+    ]);
     expect(spyFeedbackBuildInfo).toHaveBeenCalledWith(
-      expect.stringContaining('Using src/index.js as entry point.'),
+      expect.stringContaining('Using entry point(s):'),
     );
   });
 
   it('should resolve entrypoint from preset when context entrypoint is not available', async () => {
-    const spyPath = jest.spyOn(path, 'resolve');
+    const contextWithoutEntrypoint = {
+      ...mockContext,
+      entrypoint: {} as BuildEntryPoint,
+    };
 
-    const contextWithoutEntrypoint = { ...mockContext, entrypoint: '' };
+    const presetWithHandler = {
+      ...mockPreset,
+      handler: async () => new Response('ok'),
+      metadata: {
+        name: 'test-preset',
+        ext: 'js',
+      },
+    };
 
-    await resolveHandlers({
+    const result = await resolveHandlers({
       ctx: contextWithoutEntrypoint,
-      preset: mockPreset,
+      preset: presetWithHandler,
     });
 
-    expect(spyPath).toHaveBeenCalledWith('src/index.js');
+    expect(result).toEqual([
+      path.resolve(
+        '/mock/root/node_modules/azion/packages/presets/dist/presets/test-preset/handler.js',
+      ),
+    ]);
     expect(spyFeedbackBuildInfo).toHaveBeenCalledWith(
-      expect.stringContaining('Using preset default entry: src/index.js'),
+      expect.stringContaining('Using built-in handler'),
     );
   });
 
@@ -89,8 +107,6 @@ describe('resolveHandlers', () => {
         ctx: mockContext,
         preset: mockPreset,
       }),
-    ).rejects.toThrow(
-      'Entry point "src/index.js" was not found. Please verify the path and try again.',
-    );
+    ).rejects.toThrow('Entry point');
   });
 });
