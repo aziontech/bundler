@@ -163,6 +163,7 @@ function startBundler() {
     .option('--development', 'Build in development mode', false)
     .action(async (options) => {
       const { buildCommand, manifestCommand } = await import('#commands');
+      console.log(options.entry, 'entrieeeess');
       const { config } = await buildCommand({
         ...options,
         production: !options.development,
@@ -212,8 +213,6 @@ Examples:
     )
     .action(async (action, options) => {
       const { manifestCommand } = await import('#commands');
-
-      // Passar todas as opções diretamente com action em vez de command
       await manifestCommand({
         ...options,
         action,

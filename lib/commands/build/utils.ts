@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { readFile, stat } from 'fs/promises';
+import { readFile, stat, rm, mkdir } from 'fs/promises';
 import { getPackageManager } from 'azion/utils/node';
 import type {
   ConfigValueOptions,
@@ -125,4 +125,20 @@ export const normalizeEntryPaths = (entry: BuildEntryPoint): string[] => {
   if (typeof entry === 'string') return [entry];
   if (Array.isArray(entry)) return entry;
   return Object.values(entry);
+};
+
+/**
+ * Cleans and recreates directories
+ */
+export const cleanDirectory = async (dirs: string[]): Promise<void> => {
+  try {
+    await Promise.all(
+      dirs.map(async (dir) => {
+        await rm(dir, { recursive: true, force: true });
+        await mkdir(dir, { recursive: true });
+      }),
+    );
+  } catch (error) {
+    throw new Error(`Failed to clean directories: ${error}`);
+  }
 };

@@ -1,11 +1,11 @@
 import { AzionConfig, AzionBuildPreset } from 'azion/config';
 import { BuildConfiguration } from 'azion/config';
-import { getTempEntryPaths } from './utils';
+import { createTempEntryMap } from './utils';
 export const setupBuildConfig = (
   azionConfig: AzionConfig,
   preset: AzionBuildPreset,
 ): BuildConfiguration => {
-  const entryPathsMap: Record<string, string> = getTempEntryPaths({
+  const entryPathsMap: Record<string, string> = createTempEntryMap({
     entry: azionConfig.build?.entry,
     ext: preset.metadata.ext || 'js',
   });

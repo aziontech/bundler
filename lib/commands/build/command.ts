@@ -2,7 +2,11 @@ import { readUserConfig, readStore, writeStore, type BundlerStore } from '#env';
 import { build } from './build';
 import { AzionConfig } from 'azion/config';
 import type { BuildCommandOptions } from './types';
-import { resolveConfigPriority, resolvePresetPriority } from './utils';
+import {
+  cleanDirectory,
+  resolveConfigPriority,
+  resolvePresetPriority,
+} from './utils';
 
 /**
  * A command to initiate the build process.
@@ -76,6 +80,8 @@ export async function buildCommand(options: BuildCommandOptions) {
       memoryFS: userConfig?.build?.memoryFS,
     },
   };
+
+  await cleanDirectory(['.edge']);
 
   return build({
     config,

@@ -7,7 +7,7 @@ type GetTempEntryPathsOptions = {
   basePath?: string;
 };
 
-export const getTempEntryPaths = ({
+export const createTempEntryMap = ({
   entry,
   ext,
   basePath = join('.edge', 'functions'),
