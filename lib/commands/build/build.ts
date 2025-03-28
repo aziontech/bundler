@@ -1,6 +1,8 @@
 import { AzionPrebuildResult, AzionConfig, BuildContext } from 'azion/config';
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
+import { dirname } from 'path';
+import fsPromises from 'fs/promises';
 
 import { checkDependencies } from './utils';
 
@@ -12,7 +14,7 @@ import { executeBuild } from './modules/core';
 import { executePostbuild } from './modules/postbuild';
 import { setEnvironment } from './modules/environment';
 import { setupWorkerCode } from './modules/worker';
-import { resolveHandler } from './modules/handler';
+import { resolveHandlers } from './modules/handler';
 
 interface BuildParams {
   config: AzionConfig;
@@ -39,24 +41,24 @@ export const build = async ({
     const resolvedPreset = await resolvePreset(config.build?.preset);
     const buildConfigSetup = setupBuildConfig(config, resolvedPreset);
 
-    ctx.entrypoint = await resolveHandler({
+    ctx.entrypoint = await resolveHandlers({
       ctx,
       preset: resolvedPreset,
     });
 
-    /**
-     * Resolves the handler function and converts ESM exports to worker format.
-     * This step is necessary because Azion's runtime currently only supports
-     * the worker format with addEventListener, not ESM modules.
-     *
-     * Example conversion:
-     * From ESM:
-     *   export default { fetch: (event) => new Response("Hello") }
-     * To Worker:
-     *   addEventListener('fetch', (event) => { event.respondWith(...) })
-     */
+    /** Map of resolved worker paths and their transformed contents ready for bundling */
+    const workerEntries: Record<string, string> = await setupWorkerCode(
+      buildConfigSetup,
+      ctx,
+    );
 
-    await setupWorkerCode(buildConfigSetup, ctx);
+    /** Write each transformed worker to its bundler entry path */
+    await Promise.all(
+      Object.entries(workerEntries).map(async ([path, code]) => {
+        await fsPromises.mkdir(dirname(path), { recursive: true });
+        await fsPromises.writeFile(path, code, 'utf-8');
+      }),
+    );
 
     /* Execute build phases */
 

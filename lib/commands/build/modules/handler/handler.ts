@@ -33,7 +33,7 @@ const resolveEntryPaths = (
  *
  * @throws Error if no valid entrypoint is found or if provided entrypoint doesn't exist
  */
-export const resolveHandler = async ({
+export const resolveHandlers = async ({
   ctx,
   preset,
 }: EntrypointOptions): Promise<string | string[]> => {

@@ -1,4 +1,6 @@
-export const createEventHandlerCode = (entrypoint: string): string => {
+import { BuildEntryPoint } from 'azion/config';
+
+export const generateWorkerEventHandler = (entrypoint: string): string => {
   return `
 import moduleOrFunction from '${entrypoint}';
 
@@ -54,4 +56,10 @@ addEventListener(eventType, (event) => {
 `;
 };
 
-export default { createEventHandlerCode };
+export const normalizeEntryPointPaths = (entry: BuildEntryPoint): string[] => {
+  if (typeof entry === 'string') return [entry];
+  if (Array.isArray(entry)) return entry;
+  return Object.values(entry);
+};
+
+export default { generateWorkerEventHandler, normalizeEntryPointPaths };

@@ -1,63 +1,52 @@
 import fsPromises from 'fs/promises';
-import { dirname } from 'path';
-import {
-  BuildConfiguration,
-  BuildContext,
-  BuildEntryPoint,
-} from 'azion/config';
-import util from './utils';
-
-const resolveEntryPoints = (entry: BuildEntryPoint): string[] => {
-  if (typeof entry === 'string') return [entry];
-  if (Array.isArray(entry)) return entry;
-  return Object.values(entry);
-};
+import { BuildConfiguration, BuildContext } from 'azion/config';
+import { normalizeEntryPointPaths, generateWorkerEventHandler } from './utils';
 
 /**
- * Configures the worker code based on user input
+ * Processes handler files and prepares them for bundling
  *
- * @param buildConfig - Build configuration
- * @param ctx - Build context with input/output information
- * @returns The generated or original worker code
+ * @param buildConfig - Build configuration object
+ * @param ctx - Build context with entry points
+ * @returns Object mapping bundler paths to processed contents
+ *
+ * @example
+ * // Returns an object like:
+ * {
+ *   "/tmp/bundler/handler1.js": "addEventListener('fetch', (event) => {...})",
+ * }
  */
 export const setupWorkerCode = async (
   buildConfig: BuildConfiguration,
   ctx: BuildContext,
-): Promise<string[]> => {
+): Promise<Record<string, string>> => {
   try {
-    const entrypoints = resolveEntryPoints(ctx.entrypoint);
-    const tempEntrypoints = resolveEntryPoints(buildConfig.entry);
+    /** Paths to the original handler files that contain the worker logic */
+    const handlerPaths = normalizeEntryPointPaths(ctx.entrypoint);
+    /** Paths where bundler entries should be written */
+    const bundlerEntryPaths = normalizeEntryPointPaths(buildConfig.entry);
 
-    if (buildConfig.worker) {
-      const contents = await Promise.all(
-        entrypoints.map((entry) => fsPromises.readFile(entry, 'utf-8')),
-      );
+    const convertEsmToWorkerSignature = async (
+      handlers: string[],
+    ): Promise<string[]> => {
+      if (buildConfig.worker) {
+        return Promise.all(
+          handlers.map((handler) => fsPromises.readFile(handler, 'utf-8')),
+        );
+      }
 
-      // Write worker files to temp location
-      await Promise.all(
-        tempEntrypoints.map(async (tempEntry, index) => {
-          await fsPromises.mkdir(dirname(tempEntry), { recursive: true });
-          await fsPromises.writeFile(tempEntry, contents[index], 'utf-8');
-        }),
-      );
-
-      return contents;
-    }
-
-    const processEntry = async (entry: string, tempEntry: string) => {
-      const wrapperCode = util.createEventHandlerCode(entry);
-
-      // Write worker file to temp location
-      await fsPromises.mkdir(dirname(tempEntry), { recursive: true });
-      await fsPromises.writeFile(tempEntry, wrapperCode, 'utf-8');
-
-      return wrapperCode;
+      return handlers.map((handler) => generateWorkerEventHandler(handler));
     };
 
-    return Promise.all(
-      entrypoints.map((entry, index) =>
-        processEntry(entry, tempEntrypoints[index]),
-      ),
+    /** Array of processed contents ready to be written to bundler entry files */
+    const processedContents = await convertEsmToWorkerSignature(handlerPaths);
+
+    /** Object mapping each bundler path to its processed content */
+    return bundlerEntryPaths.reduce(
+      (acc, path, index) => ({
+        ...acc,
+        [path]: processedContents[index],
+      }),
+      {},
     );
   } catch (error: unknown) {
     throw new Error(
