@@ -5,14 +5,14 @@ export const setupBuildConfig = (
   azionConfig: AzionConfig,
   preset: AzionBuildPreset,
 ): BuildConfiguration => {
-  const tempFile = getTempEntryPaths(
-    azionConfig.build?.entry,
-    preset.metadata.ext || 'js',
-  );
+  const entryPathsMap: Record<string, string> = getTempEntryPaths({
+    entry: azionConfig.build?.entry,
+    ext: preset.metadata.ext || 'js',
+  });
 
   const buildConfigSetup: BuildConfiguration = {
     ...azionConfig.build,
-    entry: tempFile,
+    entry: entryPathsMap,
     bundler:
       azionConfig.build?.bundler || preset.config.build?.bundler || 'esbuild',
     preset,

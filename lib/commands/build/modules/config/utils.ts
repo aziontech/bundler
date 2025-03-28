@@ -1,10 +1,17 @@
-import path from 'path';
+import { join, basename, dirname, extname } from 'path';
 import { BuildEntryPoint } from 'azion/config';
 
-export const getTempEntryPaths = (
-  entry: BuildEntryPoint | undefined,
-  fileExtension: string,
-): Record<string, string> => {
+type GetTempEntryPathsOptions = {
+  entry: BuildEntryPoint | undefined;
+  ext: string;
+  basePath?: string;
+};
+
+export const getTempEntryPaths = ({
+  entry,
+  ext,
+  basePath = join('.edge', 'functions'),
+}: GetTempEntryPathsOptions): Record<string, string> => {
   if (!entry) throw new Error('Entrypoint is required');
 
   const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
@@ -13,35 +20,28 @@ export const getTempEntryPaths = (
     entryPath: string,
     outputPath?: string,
   ): Record<string, string> => {
-    const base = path.basename(entryPath, path.extname(entryPath));
-    const dir = path.dirname(entryPath);
+    const base = basename(entryPath, extname(entryPath));
+    const dir = dirname(entryPath);
 
-    const tempPath = path.join(
-      dir,
-      `azion-${base}-${timestamp}.temp.${fileExtension}`,
-    );
+    const tempPath = join(dir, `azion-${base}-${timestamp}.temp.${ext}`);
 
     if (outputPath) {
       const outputWithoutExt = outputPath.replace(/\.[^/.]+$/, '');
       return {
-        [path.join('.edge', 'functions', outputWithoutExt)]: tempPath,
+        [join(basePath, outputWithoutExt)]: tempPath,
       };
     }
 
     return {
-      [path.join('.edge', 'functions', dir, base)]: tempPath,
+      [join(basePath, dir, base)]: tempPath,
     };
   };
 
-  if (typeof entry === 'string') {
-    return createEntryRecord(entry);
-  }
+  if (typeof entry === 'string') return createEntryRecord(entry);
 
   if (Array.isArray(entry)) {
     return entry.reduce((acc, e) => ({ ...acc, ...createEntryRecord(e) }), {});
   }
-
-  // Para objetos, usamos a key completa como caminho
   return Object.entries(entry).reduce(
     (acc, [key, value]) => ({ ...acc, ...createEntryRecord(value, key) }),
     {},

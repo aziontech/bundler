@@ -1,5 +1,11 @@
 import { describe, it, expect } from '@jest/globals';
 import { moveImportsToTopLevel, relocateImportsAndRequires } from './utils';
+import { injectHybridFsPolyfill } from './utils';
+import type {
+  BuildConfiguration,
+  BuildContext,
+  AzionBuildPreset,
+} from 'azion/config';
 
 describe('moveImportsToTopLevel', () => {
   it('should move import statements to the top of the file', () => {
@@ -70,5 +76,46 @@ import { foo } from 'foo';`;
     expect(result).toBe(`import { foo } from 'foo';
 const x = 1;
 `);
+  });
+});
+
+describe('injectHybridFsPolyfill', () => {
+  const mockBuildConfig: BuildConfiguration = {
+    polyfills: false,
+    worker: false,
+    bundler: 'esbuild',
+    entry: {},
+    preset: {} as AzionBuildPreset,
+    setup: {
+      contentToInject: undefined,
+      defineVars: {},
+    },
+  };
+
+  const mockContext: BuildContext = {
+    production: false,
+    entrypoint: [],
+  };
+
+  it('should not inject polyfill when polyfills is false', () => {
+    const code = `const x = 1;`;
+    const result = injectHybridFsPolyfill(code, mockBuildConfig, mockContext);
+    expect(result).toBe(code);
+  });
+
+  it('should not inject polyfill when not in production', () => {
+    const code = `const x = 1;`;
+    const config = { ...mockBuildConfig, polyfills: true };
+    const result = injectHybridFsPolyfill(code, config, mockContext);
+    expect(result).toBe(code);
+  });
+
+  it('should inject polyfill when polyfills is true and in production', () => {
+    const code = `const x = 1;`;
+    const config = { ...mockBuildConfig, polyfills: true };
+    const ctx = { production: true, entrypoint: [] };
+
+    const result = injectHybridFsPolyfill(code, config, ctx);
+    expect(result).toBe(`import SRC_NODE_FS from "node:fs";\nconst x = 1;`);
   });
 });

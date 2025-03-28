@@ -4,7 +4,7 @@ import {
   BuildConfiguration,
 } from 'azion/config';
 import bundlers from './bundlers';
-import { moveImportsToTopLevel } from './utils';
+import { moveImportsToTopLevel, injectHybridFsPolyfill } from './utils';
 import fsPromises from 'fs/promises';
 
 interface CoreParams {
@@ -12,17 +12,6 @@ interface CoreParams {
   prebuildResult: AzionPrebuildResult;
   ctx: BuildContext;
 }
-
-const injectHybridFsPolyfill = (
-  code: string,
-  buildConfig: BuildConfiguration,
-  ctx: BuildContext,
-): string => {
-  if (buildConfig.polyfills && ctx.production) {
-    return `import SRC_NODE_FS from "node:fs";\n${code}`;
-  }
-  return code;
-};
 
 export const executeBuild = async ({
   buildConfig,
