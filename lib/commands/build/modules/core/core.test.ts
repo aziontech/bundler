@@ -34,7 +34,6 @@ describe('executeBuild', () => {
 
   const mockContext: BuildContext = {
     production: false,
-    output: '.edge/worker.js',
     entrypoint: 'src/index.js',
   };
 
@@ -60,9 +59,8 @@ describe('executeBuild', () => {
   });
 
   it('should execute build with esbuild bundler', async () => {
-    jest
-      .spyOn(fsPromises, 'readFile')
-      .mockResolvedValue('// Original entry code');
+    const mockContent = '// Original entry code';
+    jest.spyOn(fsPromises, 'readFile').mockResolvedValue(mockContent);
     const spyWriteFile = jest
       .spyOn(fsPromises, 'writeFile')
       .mockResolvedValue();
@@ -93,9 +91,10 @@ describe('executeBuild', () => {
       { ...mockContext, production: true },
     );
     expect(spyExecuteESBuildBuild).toHaveBeenCalled();
+    expect(spyWriteFile).toHaveBeenCalledTimes(1);
     expect(spyWriteFile).toHaveBeenCalledWith(
-      mockContext.output,
-      expect.stringContaining('// Original entry code'),
+      'temp/entry.js',
+      expect.stringContaining(mockContent),
     );
   });
 
@@ -139,7 +138,7 @@ describe('executeBuild', () => {
     );
     expect(spyExecuteWebpack).toHaveBeenCalled();
     expect(spyWriteFile).toHaveBeenCalledWith(
-      mockContext.output,
+      'temp/entry.js',
       expect.stringContaining('// Original entry code'),
     );
   });
@@ -205,7 +204,7 @@ describe('executeBuild', () => {
 
     expect(spyExecuteESBuildBuild).toHaveBeenCalled();
     expect(spyWriteFile).toHaveBeenCalledWith(
-      mockContext.output,
+      'temp/entry.js',
       'import SRC_NODE_FS from "node:fs";\n// Original entry code',
     );
   });
@@ -233,7 +232,7 @@ describe('executeBuild', () => {
 
     expect(spyExecuteESBuildBuild).toHaveBeenCalled();
     expect(spyWriteFile).toHaveBeenCalledWith(
-      mockContext.output,
+      'temp/entry.js',
       expect.not.stringContaining(
         'import SRC_NODE_FS from "node:fs";// Original entry code',
       ),

@@ -30,7 +30,12 @@ export const executeBuild = async ({
   ctx,
 }: CoreParams): Promise<string[]> => {
   try {
-    const entries = Object.keys(buildConfig.entry);
+    const entry =
+      typeof buildConfig.entry === 'string'
+        ? [buildConfig.entry]
+        : Array.isArray(buildConfig.entry)
+          ? buildConfig.entry
+          : Object.values(buildConfig.entry);
 
     if (prebuildResult.filesToInject.length > 0) {
       const filesContent = await Promise.all(
@@ -40,7 +45,7 @@ export const executeBuild = async ({
       ).then((contents) => contents.join(' '));
 
       await Promise.all(
-        Object.values(buildConfig.entry).map(async (tempPath) => {
+        entry.map(async (tempPath) => {
           const entryContent = await fsPromises.readFile(tempPath, 'utf-8');
           const contentWithInjection = `${filesContent} ${entryContent}`;
           const contentWithTopLevelImports =
@@ -68,11 +73,8 @@ export const executeBuild = async ({
     await executeBundler(bundlerConfig, ctx);
 
     return Promise.all(
-      entries.map(async (outputPath: string) => {
-        const bundledCode = await fsPromises.readFile(
-          `${outputPath}.js`,
-          'utf-8',
-        );
+      entry.map(async (outputPath: string) => {
+        const bundledCode = await fsPromises.readFile(outputPath, 'utf-8');
         if (!ctx.production) return bundledCode;
 
         const bundledCodeWithHybridFsPolyfill = injectHybridFsPolyfill(
@@ -80,10 +82,7 @@ export const executeBuild = async ({
           buildConfig,
           ctx,
         );
-        await fsPromises.writeFile(
-          `${outputPath}.js`,
-          bundledCodeWithHybridFsPolyfill,
-        );
+        await fsPromises.writeFile(outputPath, bundledCodeWithHybridFsPolyfill);
         return bundledCodeWithHybridFsPolyfill;
       }),
     );
