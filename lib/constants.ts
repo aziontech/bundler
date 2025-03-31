@@ -1,13 +1,7 @@
 import { join, resolve } from 'path';
 import { readFileSync } from 'fs';
 import { getAbsoluteDirPath } from 'azion/utils/node';
-import os from 'os';
-
-/** Namespace for bundler configuration */
-export const BUNDLER_NAMESPACE = 'bundler';
-
-export const DEFAULT_CONFIG_FILENAME = 'azion.config';
-export const DEFAULT_DEV_WORKER_FILENAME = 'index.dev.js';
+import { tmpdir } from 'os';
 
 /** Build phases feedback messages */
 export const BUILD_MESSAGES = {
@@ -18,6 +12,10 @@ export const BUILD_MESSAGES = {
   BUILD: {
     START: 'Starting build...',
     SUCCESS: 'Build completed successfully',
+  },
+  POSTBUILD: {
+    START: 'Starting postbuild...',
+    SUCCESS: 'Postbuild completed successfully',
   },
 } as const;
 
@@ -41,7 +39,7 @@ export const BUILD_DEFAULTS = {
 } as const;
 
 /** Supported bundlers */
-export const BUNDLERS = {
+export const SUPPORTED_BUNDLERS = {
   DEFAULT: 'esbuild',
   WEBPACK: 'webpack',
   ESBUILD: 'esbuild',
@@ -52,28 +50,30 @@ export const FILE_PATTERNS = {
   TEMP_FILE: (base: string, timestamp: string, ext: string) =>
     `azion-${base}-${timestamp}.temp.${ext}`,
   TEMP_PREFIX: 'azion-',
-  TEMP_SUFFIX: '.temp.',
+  TEMP_SUFFIX: '.temp',
 } as const;
 
-export type BundlerType = (typeof BUNDLERS)[keyof typeof BUNDLERS];
+export type BundlerType =
+  (typeof SUPPORTED_BUNDLERS)[keyof typeof SUPPORTED_BUNDLERS];
 
-/** Bundler configuration and paths */
 export const BUNDLER = {
   NAMESPACE: 'bundler',
   MIN_NODE_VERSION: '18.0.0',
   CONFIG_FILENAME: 'azion.config',
-  DEV_WORKER_FILENAME: 'index.dev.js',
+  DEFAULT_DEV_WORKER_FILENAME: 'index.dev.js',
   LIB_DIR: getAbsoluteDirPath(import.meta.url, 'bundler'),
   ARGS_PATH: 'azion/args.json',
   IS_DEBUG: process.env.DEBUG === 'true',
-  TEMP_DIR: (projectID: string) => join(os.tmpdir(), '.azion', projectID),
+  TEMP_DIR: (projectID: string) => join(tmpdir(), '.azion', projectID),
   get ROOT_PATH() {
-    return resolve(this.LIB_DIR, '.');
+    return resolve(BUNDLER.LIB_DIR, '.');
   },
   get PACKAGE_JSON() {
-    return JSON.parse(readFileSync(`${this.ROOT_PATH}/package.json`, 'utf8'));
+    return JSON.parse(
+      readFileSync(`${BUNDLER.ROOT_PATH}/package.json`, 'utf8'),
+    );
   },
   get VERSION() {
-    return this.PACKAGE_JSON.version;
+    return BUNDLER.PACKAGE_JSON.version;
   },
 } as const;

@@ -1,5 +1,4 @@
-import { BUNDLERS } from '#constants';
-
+import { SUPPORTED_BUNDLERS } from '#constants';
 import { AzionConfig, AzionBuildPreset } from 'azion/config';
 import { BuildConfiguration } from 'azion/config';
 import { createTempEntryMap } from './utils';
@@ -19,7 +18,7 @@ export const setupBuildConfig = (
     bundler:
       azionConfig.build?.bundler ||
       preset.config.build?.bundler ||
-      BUNDLERS.DEFAULT,
+      SUPPORTED_BUNDLERS.DEFAULT,
     preset,
     setup: {
       contentToInject: undefined,

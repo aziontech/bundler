@@ -82,7 +82,7 @@ export async function buildCommand(options: BuildCommandOptions) {
     },
   };
 
-  await cleanDirectory([DIRECTORIES.OUTPUT_BASE_PATH]);
+  if (options.production) await cleanDirectory([DIRECTORIES.OUTPUT_BASE_PATH]);
 
   return build({
     config,

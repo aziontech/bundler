@@ -7,7 +7,7 @@ export interface BuildCommandOptions {
    * Build entry point path. Where the build process starts
    * @default './main.js' or './main.ts'
    */
-  entry?: string;
+  entry?: string | string[];
 
   /**
    * Either a preset name from azion/presets or a custom module with edge-compatibility routines

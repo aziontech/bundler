@@ -21,7 +21,7 @@ export async function devCommand({
 
   const devWorkerPath = join(
     DIRECTORIES.OUTPUT_FUNCTIONS_PATH,
-    BUNDLER.DEV_WORKER_FILENAME,
+    BUNDLER.DEFAULT_DEV_WORKER_FILENAME,
   );
 
   const entryPoint = entry || devWorkerPath;

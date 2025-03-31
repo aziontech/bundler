@@ -1,27 +1,31 @@
 #! /usr/bin/env node
 import { join } from 'path';
+import { readdirSync, unlinkSync } from 'fs';
+import { mkdir } from 'fs/promises';
 import { Command } from 'commander';
 import { satisfies } from 'semver';
-import crypto from 'crypto';
+import { createHash } from 'crypto';
+
 import { FILE_PATTERNS, BUNDLER } from '#constants';
+import type { BundlerGlobals } from '#types';
 import { debug } from '#utils';
+
 import { feedback } from 'azion/utils/node';
-import { readdir, unlink, mkdir } from 'fs/promises';
 
 const AzionBundler = new Command();
 
 /**
  * Generates a unique hash for the current project
  */
-function generateProjectID() {
+function generateProjectID(): string {
   const projectPath = process.cwd();
-  return crypto.createHash('md5').update(projectPath).digest('hex');
+  return createHash('md5').update(projectPath).digest('hex');
 }
 
 /**
  * Creates and returns the path to the project's temporary folder
  */
-async function createSessionTempDir() {
+async function createSessionTempDir(): Promise<string> {
   const projectID = generateProjectID();
   const tempPath = BUNDLER.TEMP_DIR(projectID);
   await mkdir(tempPath, { recursive: true });
@@ -31,7 +35,7 @@ async function createSessionTempDir() {
 /**
  * Validates if user is using the minimum Node version
  */
-function validateNodeMinVersion() {
+function validateNodeMinVersion(): boolean {
   const isAValidVersion = satisfies(
     process.version,
     `>= ${BUNDLER.MIN_NODE_VERSION}`,
@@ -47,8 +51,8 @@ function validateNodeMinVersion() {
  * @example
  *    setBundlerEnvironment();
  */
-async function setBundlerEnvironment() {
-  const bundlerContext = {
+async function getBundlerEnvironment(): Promise<BundlerGlobals> {
+  const bundlerContext: BundlerGlobals = {
     root: BUNDLER.ROOT_PATH,
     package: BUNDLER.PACKAGE_JSON,
     debug: BUNDLER.IS_DEBUG,
@@ -57,27 +61,25 @@ async function setBundlerEnvironment() {
     argsPath: BUNDLER.ARGS_PATH,
   };
 
-  globalThis.bundler = bundlerContext;
+  return bundlerContext;
 }
 
 /**
  * Removes all temporary files starting with 'azion-' and ending with '.temp.js' or '.temp.ts'.
  */
-async function cleanUpTempFiles() {
+function cleanUpTempFiles() {
   const directory = process.cwd();
-  const tempFiles = await readdir(directory);
+  const tempFiles = readdirSync(directory);
   const filteredFiles = tempFiles.filter(
     (file) =>
       file.startsWith(FILE_PATTERNS.TEMP_PREFIX) &&
       file.includes(FILE_PATTERNS.TEMP_SUFFIX),
   );
 
-  await Promise.all(
-    filteredFiles.map(async (file) => {
-      const filePath = join(directory, file);
-      await unlink(filePath);
-    }),
-  );
+  for (const file of filteredFiles) {
+    const filePath = join(directory, file);
+    unlinkSync(filePath);
+  }
 }
 
 /**
@@ -152,13 +154,13 @@ function startBundler() {
       '--worker [boolean]',
       'Indicates that the constructed code inserts its own worker expression. Use --worker or --worker=true to enable, --worker=false to disable',
     )
-    .option('--development', 'Build in development mode', false)
+    .option('--dev', 'Build in development mode', false)
     .action(async (options) => {
       const { buildCommand, manifestCommand } = await import('#commands');
-      console.log(options.entry, 'entrieeeess');
+      const { dev, ...buildOptions } = options;
       const { config } = await buildCommand({
-        ...options,
-        production: !options.development,
+        ...buildOptions,
+        production: !dev,
       });
 
       await manifestCommand({ action: 'generate', config });
@@ -216,7 +218,7 @@ Examples:
 
 try {
   if (validateNodeMinVersion()) {
-    await setBundlerEnvironment();
+    globalThis.bundler = await getBundlerEnvironment();
     startBundler();
     setupBundlerProcessHandlers();
   }
