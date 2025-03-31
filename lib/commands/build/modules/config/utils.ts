@@ -13,7 +13,7 @@ export const createTempEntryMap = ({
   ext = BUILD_DEFAULTS.EXTENSION,
   basePath = DIRECTORIES.OUTPUT_FUNCTIONS_PATH,
 }: GetTempEntryPathsOptions): Record<string, string> => {
-  if (!entry) throw new Error('Entrypoint is required');
+  if (!entry) return {};
 
   const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
 
