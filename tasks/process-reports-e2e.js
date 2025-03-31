@@ -15,6 +15,14 @@ function processE2EReports() {
 
     // Process the test results
     results.testResults = results.testResults.map((test) => {
+      if (!test || !test.name) {
+        console.log('Invalid test found:', test);
+        return {
+          name: 'Unknown Test',
+          passed: false,
+        };
+      }
+
       // Remove the path from the test name
       const testName = test.name
         .split('/')
@@ -28,10 +36,21 @@ function processE2EReports() {
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 
-      // Check if all tests in the suite passed
-      const suitePassed = test.assertionResults.every(
-        (result) => result.status === 'passed',
-      );
+      // Check if all tests in the suite passed - with safety checks
+      let suitePassed = false;
+      try {
+        if (
+          test.assertionResults &&
+          Array.isArray(test.assertionResults) &&
+          test.assertionResults.length > 0
+        ) {
+          suitePassed = test.assertionResults.every(
+            (result) => result && result.status === 'passed',
+          );
+        }
+      } catch (error) {
+        console.log('Error processing test results:', test.name, error);
+      }
 
       return {
         name: readableTestName,
@@ -62,9 +81,22 @@ function processE2EReports() {
 
     // Write the Markdown table to the README.md file
     const readme = fs.readFileSync('README.md', 'utf8');
+    console.log('Reading README.md...');
+
+    // Simplified regular expression
+    const pattern = /(## Supported Features[\s\S]*?)(## Contributing)/;
+    const hasMatch = pattern.test(readme);
+    console.log('Pattern found in README:', hasMatch);
+
+    if (!hasMatch) {
+      console.error('Could not find the correct section in README.');
+      return;
+    }
+
     const newReadme = readme.replace(
-      /(Table:\n)(.*?)(\n## Contributing)/s,
-      (match, p1, p2, p3) => {
+      pattern,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (match, supportedFeatures, contributing) => {
         const dateOptions = {
           day: '2-digit',
           month: '2-digit',
@@ -79,11 +111,16 @@ function processE2EReports() {
           'en-US',
           dateOptions,
         )} ${new Date().toLocaleTimeString('en-US', timeOptions)}`;
-        return `${p1}${markdownTable(
-          table,
-        )}\n\nLast test run date: ${newDate}${p3}`;
+
+        return `## Supported Features\n\nE2E tests run daily in the [Bundler Examples](https://github.com/aziontech/bundler-examples/tree/main/examples) to ensure that the presets and frameworks continue to work correctly.\n\nTable:\n${markdownTable(table)}\n\nLast test run date: ${newDate}\n\n## Contributing`;
       },
     );
+
+    if (readme === newReadme) {
+      console.error('No changes were made to the content.');
+      return;
+    }
+
     fs.writeFileSync('README.md', newReadme);
 
     feedback.interactive.success('Report processed successfully.');
