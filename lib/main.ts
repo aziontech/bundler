@@ -1,12 +1,12 @@
 #! /usr/bin/env node
 import { join } from 'path';
-import { readdirSync, unlinkSync, mkdirSync } from 'fs';
 import { Command } from 'commander';
 import { satisfies } from 'semver';
 import crypto from 'crypto';
 import { FILE_PATTERNS, BUNDLER } from '#constants';
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
+import { readdir, unlink, mkdir } from 'fs/promises';
 
 const AzionBundler = new Command();
 
@@ -21,10 +21,10 @@ function generateProjectID() {
 /**
  * Creates and returns the path to the project's temporary folder
  */
-function createSessionTempDir() {
+async function createSessionTempDir() {
   const projectID = generateProjectID();
   const tempPath = BUNDLER.TEMP_DIR(projectID);
-  mkdirSync(tempPath, { recursive: true });
+  await mkdir(tempPath, { recursive: true });
   return tempPath;
 }
 
@@ -47,34 +47,37 @@ function validateNodeMinVersion() {
  * @example
  *    setBundlerEnvironment();
  */
-function setBundlerEnvironment() {
+async function setBundlerEnvironment() {
   const bundlerContext = {
     root: BUNDLER.ROOT_PATH,
     package: BUNDLER.PACKAGE_JSON,
     debug: BUNDLER.IS_DEBUG,
     version: BUNDLER.VERSION,
-    tempPath: createSessionTempDir(),
+    tempPath: await createSessionTempDir(),
     argsPath: BUNDLER.ARGS_PATH,
   };
 
   globalThis.bundler = bundlerContext;
 }
 
-/** d x
+/**
  * Removes all temporary files starting with 'azion-' and ending with '.temp.js' or '.temp.ts'.
  */
-function cleanUpTempFiles() {
+async function cleanUpTempFiles() {
   const directory = process.cwd();
-  const tempFiles = readdirSync(directory).filter(
+  const tempFiles = await readdir(directory);
+  const filteredFiles = tempFiles.filter(
     (file) =>
       file.startsWith(FILE_PATTERNS.TEMP_PREFIX) &&
       file.includes(FILE_PATTERNS.TEMP_SUFFIX),
   );
 
-  tempFiles.forEach((file) => {
-    const filePath = join(directory, file);
-    unlinkSync(filePath);
-  });
+  await Promise.all(
+    filteredFiles.map(async (file) => {
+      const filePath = join(directory, file);
+      await unlink(filePath);
+    }),
+  );
 }
 
 /**
@@ -213,7 +216,7 @@ Examples:
 
 try {
   if (validateNodeMinVersion()) {
-    setBundlerEnvironment();
+    await setBundlerEnvironment();
     startBundler();
     setupBundlerProcessHandlers();
   }

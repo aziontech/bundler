@@ -1,9 +1,8 @@
 import { type AzionConfig, convertJsonConfigToObject } from 'azion/config';
-import fs from 'fs';
+import { promises as fs } from 'fs';
 import { join, resolve, extname } from 'path';
 import * as utilsNode from 'azion/utils/node';
 import envBundler from '../../env/bundler';
-import { promises as fsPromises } from 'fs';
 import util from './util';
 import { DIRECTORIES, BUNDLER } from '#constants';
 
@@ -19,7 +18,11 @@ export const generateManifest = async (
   outputPath = join(process.cwd(), '.edge'),
 ): Promise<void> => {
   // Ensure output directory exists
-  if (!fs.existsSync(outputPath)) fs.mkdirSync(outputPath, { recursive: true });
+  try {
+    await fs.access(outputPath);
+  } catch {
+    await fs.mkdir(outputPath, { recursive: true });
+  }
 
   // Determine config source
   let config: AzionConfig;
@@ -41,7 +44,7 @@ export const generateManifest = async (
   const manifest = util.processConfigWrapper(config);
   // Write manifest to file
   const manifestPath = join(outputPath, 'manifest.json');
-  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+  await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2));
 
   utilsNode.feedback.success(
     `Manifest generated successfully at ${manifestPath}`,
@@ -66,7 +69,7 @@ export const transformManifest = async (
       throw new Error('Input file must be .json');
     }
 
-    const jsonString = await fsPromises.readFile(resolvedPath, 'utf8');
+    const jsonString = await fs.readFile(resolvedPath, 'utf8');
     return convertJsonConfigToObject(jsonString);
   };
 

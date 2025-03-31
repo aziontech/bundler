@@ -67,7 +67,7 @@ describe('executePrebuild', () => {
       .mockResolvedValue('');
     spycopyFilesToLocalEdgeStorage = jest
       .spyOn(utils, 'copyFilesToLocalEdgeStorage')
-      .mockReturnValue();
+      .mockResolvedValue();
   });
 
   afterEach(() => {
