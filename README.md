@@ -301,33 +301,32 @@ Table:
 | Next 12 3 4 Config                   | ✅      |
 | Next Static                          | ✅      |
 | Gatsby Static                        | ✅      |
-| Next Node Pages 12 3 1 Fs            | ⚠️     |
+| Next Node Pages 12 3 1 Fs            | ✅      |
 | Vue Vite Static                      | ✅      |
-| Next 12 Static                       | ⚠️     |
+| Next 12 Static                       | ✅      |
 | Astro Static                         | ✅      |
 | Qwik Static                          | ✅      |
 | Eleventy Static                      | ✅      |
-| Simple Js Env Vars                   | ⚠️     |
+| Simple Js Env Vars                   | ✅      |
 | React Static                         | ✅      |
 | Angular Static                       | ✅      |
 | Svelte Static                        | ✅      |
 | Preact Static                        | ✅      |
 | Stencil Static                       | ✅      |
-| Simple Js Network List               | ⚠️     |
-| Vitepress Static                     | ⚠️     |
-| Nuxt Static                          | ✅      |
+| Simple Js Network List               | ✅      |
+| Vitepress Static                     | ✅      |
 | Vuepress Static                      | ✅      |
+| Nuxt Static                          | ✅      |
 | Docusaurus Static                    | ✅      |
-| Simple Js Firewall Event             | ⚠️     |
+| Simple Js Firewall Event             | ✅      |
 | Jekyll Static                        | ✅      |
-| Simple Js Network List With Firewall | ⚠️     |
-| Simple Js Esm Worker                 | ⚠️     |
-| Simple Js Esm Node                   | ⚠️     |
-| Simple Ts Esm                        | ⚠️     |
-| Simple Js Esm                        | ⚠️     |
+| Simple Js Network List With Firewall | ✅      |
+| Simple Js Esm Worker                 | ✅      |
+| Simple Js Esm Node                   | ✅      |
+| Simple Ts Esm                        | ✅      |
+| Simple Js Esm                        | ✅      |
 
-Last test run date: 03/14/25 03:35:17 AM
-
+Last test run date: 03/31/25 04:03:54 PM
 ## Contributing
 
 Check the [Contributing doc](CONTRIBUTING.md).
