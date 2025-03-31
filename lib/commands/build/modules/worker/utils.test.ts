@@ -6,7 +6,7 @@ describe('generateWorkerEventHandler', () => {
     const entrypoint = 'src/index.js';
     const result = generateWorkerEventHandler(entrypoint);
 
-    expect(result).toContain(`import moduleOrFunction from '${entrypoint}'`);
+    expect(result).toContain(`import entrypoint from '${entrypoint}'`);
     expect(result).toContain('addEventListener(eventType, (event)');
     expect(result).toContain('event.respondWith');
   });

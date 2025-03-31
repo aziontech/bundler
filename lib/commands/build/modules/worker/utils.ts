@@ -1,13 +1,13 @@
 import { BuildEntryPoint } from 'azion/config';
 
-export const generateWorkerEventHandler = (entrypoint: string): string => {
+export const generateWorkerEventHandler = (entrypointPath: string): string => {
   return `
-import moduleOrFunction from '${entrypoint}';
+import entrypoint from '${entrypointPath}';
 
 // Handle the case where import returns a function directly
-const module = typeof moduleOrFunction === 'function' 
-  ? { default: moduleOrFunction } 
-  : moduleOrFunction;
+const module = typeof entrypoint === 'function' 
+  ? { default: entrypoint } 
+  : entrypoint;
 
 // Check standard handlers first
 const hasFirewallHandler = module.firewall || (module.default && module.default.firewall);
