@@ -2,11 +2,7 @@ import { readUserConfig, readStore, writeStore, type BundlerStore } from '#env';
 import { build } from './build';
 import { AzionConfig } from 'azion/config';
 import type { BuildCommandOptions } from './types';
-import {
-  cleanDirectory,
-  resolveConfigPriority,
-  resolvePresetPriority,
-} from './utils';
+import { cleanDirectory, resolveConfigPriority, resolvePresetPriority } from './utils';
 import { BUILD_DEFAULTS, DIRECTORIES, type BundlerType } from '#constants';
 
 /**
@@ -77,7 +73,7 @@ export async function buildCommand(options: BuildCommandOptions) {
     ...userConfig,
     build: {
       ...buildConfig,
-      entry: buildConfig.entry || '',
+      entry: buildConfig.entry,
       memoryFS: userConfig?.build?.memoryFS,
     },
   };
@@ -86,9 +82,8 @@ export async function buildCommand(options: BuildCommandOptions) {
 
   return build({
     config,
-    ctx: {
-      production: options.production ?? BUILD_DEFAULTS.PRODUCTION,
-      entrypoint: buildConfig.entry || '',
+    options: {
+      production: options.production,
     },
   });
 }

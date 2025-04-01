@@ -1,34 +1,43 @@
 import { SUPPORTED_BUNDLERS } from '#constants';
 import { AzionConfig, AzionBuildPreset } from 'azion/config';
-import { BuildConfiguration } from 'azion/config';
-import { createTempEntryMap } from './utils';
+import type { BuildConfiguration, BuildEntryPoint } from 'azion/config';
+import { createPathEntriesMap, validateEntryPoints } from './utils';
 
-export const setupBuildConfig = (
+export const setupBuildConfig = async (
   azionConfig: AzionConfig,
   preset: AzionBuildPreset,
-): BuildConfiguration => {
-  const entryPathsMap: Record<string, string> = createTempEntryMap({
-    entry: azionConfig.build?.entry,
-    ext: preset.metadata.ext || 'js',
-  });
+): Promise<BuildConfiguration> => {
+  // Get user entry path from config if provided
+  let resolvedEntryPathsMap: Record<string, string> = {};
 
-  const buildConfigSetup: BuildConfiguration = {
+  const userEntryPath: BuildEntryPoint | [] = azionConfig.build?.entry ?? [];
+  await validateEntryPoints(userEntryPath);
+
+  if (userEntryPath) {
+    resolvedEntryPathsMap = await createPathEntriesMap({
+      entry: userEntryPath,
+      ext: preset.metadata.ext ?? 'js',
+    });
+  }
+
+  if (!userEntryPath) {
+    resolvedEntryPathsMap = await createPathEntriesMap({
+      entry: '.edge/handler.js',
+      ext: preset.metadata.ext ?? 'js',
+    });
+  }
+
+  return {
     ...azionConfig.build,
-    entry: entryPathsMap,
+    entry: resolvedEntryPathsMap,
     bundler:
-      azionConfig.build?.bundler ||
-      preset.config.build?.bundler ||
-      SUPPORTED_BUNDLERS.DEFAULT,
+      azionConfig.build?.bundler ?? preset.config.build?.bundler ?? SUPPORTED_BUNDLERS.DEFAULT,
     preset,
     setup: {
       contentToInject: undefined,
       defineVars: {},
     },
+    polyfills: Boolean(azionConfig.build?.polyfills),
+    worker: Boolean(azionConfig.build?.worker),
   };
-
-  // Ensure polyfills and worker are always boolean values
-  buildConfigSetup.polyfills = Boolean(azionConfig.build?.polyfills);
-  buildConfigSetup.worker = Boolean(azionConfig.build?.worker);
-
-  return buildConfigSetup;
 };

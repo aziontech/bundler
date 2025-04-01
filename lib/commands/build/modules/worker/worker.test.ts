@@ -1,6 +1,6 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { setupWorkerCode } from './worker';
-import { BuildConfiguration, BuildContext } from 'azion/config';
+import { BuildConfiguration } from 'azion/config';
 import fsPromises from 'fs/promises';
 import { generateWorkerEventHandler } from './utils';
 
@@ -24,21 +24,11 @@ describe('setupWorkerCode', () => {
     },
   };
 
-  const mockContext: BuildContext = {
-    production: true,
-    entrypoint: {
-      main: 'src/worker.js',
-      api: 'src/api.js',
-    },
-  };
-
   beforeEach(() => {
     spyReadFile = jest
       .spyOn(fsPromises, 'readFile')
       .mockImplementation((path: unknown) =>
-        Promise.resolve(
-          String(path).includes('api') ? 'api code' : 'worker code',
-        ),
+        Promise.resolve(String(path).includes('api') ? 'api code' : 'worker code'),
       );
   });
 
@@ -49,30 +39,30 @@ describe('setupWorkerCode', () => {
   it('should return mapped entries with original code when worker=true', async () => {
     const configWithWorker = { ...mockBuildConfig, worker: true };
 
-    const result = await setupWorkerCode(configWithWorker, mockContext);
+    const result = await setupWorkerCode(configWithWorker);
 
     expect(result).toEqual({
       '/tmp/worker.js': 'worker code',
       '/tmp/api.js': 'api code',
     });
-    expect(spyReadFile).toHaveBeenCalledWith('src/worker.js', 'utf-8');
-    expect(spyReadFile).toHaveBeenCalledWith('src/api.js', 'utf-8');
+    expect(spyReadFile).toHaveBeenCalledWith('/tmp/worker.js', 'utf-8');
+    expect(spyReadFile).toHaveBeenCalledWith('/tmp/api.js', 'utf-8');
   });
 
   it('should return mapped entries with generated code when worker=false', async () => {
-    const result = await setupWorkerCode(mockBuildConfig, mockContext);
+    const result = await setupWorkerCode(mockBuildConfig);
 
     expect(result).toEqual({
-      '/tmp/worker.js': generateWorkerEventHandler('src/worker.js'),
-      '/tmp/api.js': generateWorkerEventHandler('src/api.js'),
+      '/tmp/worker.js': generateWorkerEventHandler('/tmp/worker.js'),
+      '/tmp/api.js': generateWorkerEventHandler('/tmp/api.js'),
     });
   });
 
   it('should throw error when setup fails', async () => {
     spyReadFile.mockRejectedValue(new Error('Read error'));
 
-    await expect(
-      setupWorkerCode({ ...mockBuildConfig, worker: true }, mockContext),
-    ).rejects.toThrow('Failed to setup worker code: Read error');
+    await expect(setupWorkerCode({ ...mockBuildConfig, worker: true })).rejects.toThrow(
+      'Failed to setup worker code: Read error',
+    );
   });
 });

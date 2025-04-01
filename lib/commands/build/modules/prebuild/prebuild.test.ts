@@ -1,23 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { executePrebuild } from './prebuild';
-import {
-  BuildConfiguration,
-  BuildContext,
-  AzionPrebuildResult,
-} from 'azion/config';
+import { BuildConfiguration, BuildContext, AzionPrebuildResult } from 'azion/config';
 import utils from './utils';
 
 describe('executePrebuild', () => {
-  let spyinjectWorkerGlobals: jest.SpiedFunction<
-    typeof utils.injectWorkerGlobals
-  >;
-  let spyinjectWorkerMemoryFiles: jest.SpiedFunction<
-    typeof utils.injectWorkerMemoryFiles
-  >;
-  let spycopyFilesToLocalEdgeStorage: jest.SpiedFunction<
-    typeof utils.copyFilesToLocalEdgeStorage
-  >;
+  let spyinjectWorkerGlobals: jest.SpiedFunction<typeof utils.injectWorkerGlobals>;
+  let spyinjectWorkerMemoryFiles: jest.SpiedFunction<typeof utils.injectWorkerMemoryFiles>;
+  let spycopyFilesToLocalEdgeStorage: jest.SpiedFunction<typeof utils.copyFilesToLocalEdgeStorage>;
 
   const mockBuildConfig: BuildConfiguration = {
     entry: 'src/index.js',
@@ -39,7 +29,6 @@ describe('executePrebuild', () => {
 
   const mockContext: BuildContext = {
     production: true,
-    entrypoint: 'src/index.js',
   };
 
   const mockPrebuildResult: AzionPrebuildResult = {
@@ -59,12 +48,8 @@ describe('executePrebuild', () => {
     (mockBuildConfig.preset.prebuild as jest.Mock).mockImplementation(() =>
       Promise.resolve(mockPrebuildResult),
     );
-    spyinjectWorkerGlobals = jest
-      .spyOn(utils, 'injectWorkerGlobals')
-      .mockReturnValue('');
-    spyinjectWorkerMemoryFiles = jest
-      .spyOn(utils, 'injectWorkerMemoryFiles')
-      .mockResolvedValue('');
+    spyinjectWorkerGlobals = jest.spyOn(utils, 'injectWorkerGlobals').mockReturnValue('');
+    spyinjectWorkerMemoryFiles = jest.spyOn(utils, 'injectWorkerMemoryFiles').mockResolvedValue('');
     spycopyFilesToLocalEdgeStorage = jest
       .spyOn(utils, 'copyFilesToLocalEdgeStorage')
       .mockResolvedValue();
@@ -80,10 +65,7 @@ describe('executePrebuild', () => {
       ctx: mockContext,
     });
 
-    expect(mockBuildConfig.preset.prebuild).toHaveBeenCalledWith(
-      mockBuildConfig,
-      mockContext,
-    );
+    expect(mockBuildConfig.preset.prebuild).toHaveBeenCalledWith(mockBuildConfig, mockContext);
     expect(utils.injectWorkerGlobals).toHaveBeenCalledWith({
       namespace: 'bundler',
       vars: { API_KEY: '"test-key"' },

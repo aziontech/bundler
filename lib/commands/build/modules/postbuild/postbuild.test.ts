@@ -5,7 +5,6 @@ import { BuildConfiguration, BuildContext } from 'azion/config';
 describe('executePostbuild', () => {
   const mockContext: BuildContext = {
     production: true,
-    entrypoint: 'src/index.js',
   };
 
   beforeEach(() => {
@@ -13,9 +12,7 @@ describe('executePostbuild', () => {
   });
 
   it('should execute preset postbuild function when available', async () => {
-    const mockPostbuild = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve()) as jest.Mock;
+    const mockPostbuild = jest.fn().mockImplementation(() => Promise.resolve()) as jest.Mock;
     const mockBuildConfig: BuildConfiguration = {
       entry: 'src/index.js',
       preset: {

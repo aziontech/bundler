@@ -1,4 +1,4 @@
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
 import { setupBuildConfig } from './config';
 
 describe('setupBuildConfig', () => {
@@ -22,8 +22,23 @@ describe('setupBuildConfig', () => {
     },
   };
 
-  it('should create build configuration with correct defaults', () => {
-    const result = setupBuildConfig(mockConfig, mockPreset);
+  beforeEach(() => {
+    globalThis.bundler = {
+      root: '/mock/root',
+      package: {},
+      debug: false,
+      version: '1.0.0',
+      tempPath: '/mock/temp',
+      argsPath: '/mock/args',
+    };
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should create build configuration with correct defaults', async () => {
+    const result = await setupBuildConfig(mockConfig, mockPreset);
 
     expect(result).toMatchObject({
       polyfills: true,
@@ -40,12 +55,12 @@ describe('setupBuildConfig', () => {
     });
   });
 
-  it('should use js extension when preset.metadata.ext is not provided', () => {
+  it('should use js extension when preset.metadata.ext is not provided', async () => {
     const presetWithoutExt = {
       metadata: { name: 'test' },
       config: { build: {} },
     };
-    const result = setupBuildConfig(mockConfig, presetWithoutExt);
+    const result = await setupBuildConfig(mockConfig, presetWithoutExt);
 
     expect(Object.values(result.entry)[0]).toMatch(/\.temp\.js$/);
   });

@@ -1,6 +1,6 @@
 import fsPromises from 'fs/promises';
-import { BuildConfiguration, BuildContext } from 'azion/config';
-import { normalizeEntryPointPaths, generateWorkerEventHandler } from './utils';
+import type { BuildConfiguration, BuildContext } from 'azion/config';
+import { generateWorkerEventHandler, normalizeEntryPointPaths } from './utils';
 
 /**
  * Processes handler files and prepares them for bundling
@@ -20,34 +20,24 @@ export const setupWorkerCode = async (
   ctx: BuildContext,
 ): Promise<Record<string, string>> => {
   try {
-    /** Paths to the original handler files that contain the worker logic */
-    const handlerPaths = normalizeEntryPointPaths(ctx.entrypoint);
-    /** Paths where bundler entries should be written */
-    const bundlerEntryPaths = normalizeEntryPointPaths(buildConfig.entry);
+    const tempPaths = Object.values(buildConfig.entry);
 
-    const convertEsmToWorkerSignature = async (
-      handlers: string[],
-    ): Promise<string[]> => {
-      if (buildConfig.worker) {
-        return Promise.all(
-          handlers.map((handler) => fsPromises.readFile(handler, 'utf-8')),
-        );
-      }
+    const handlersPaths = normalizeEntryPointPaths(ctx.handler);
 
-      return handlers.map((handler) => generateWorkerEventHandler(handler));
-    };
+    const workersEntries: Record<string, string> = {};
 
-    /** Array of processed contents ready to be written to bundler entry files */
-    const workers = await convertEsmToWorkerSignature(handlerPaths);
+    for (let i = 0; i < handlersPaths.length; i++) {
+      const handlerPath = handlersPaths[i];
+      const tempPath = tempPaths[i];
 
-    /** Object mapping each bundler path to its processed content */
-    return bundlerEntryPaths.reduce(
-      (acc, path, index) => ({
-        ...acc,
-        [path]: workers[index],
-      }),
-      {},
-    );
+      const codeRaw = buildConfig.worker
+        ? await fsPromises.readFile(handlerPath, 'utf-8')
+        : generateWorkerEventHandler(handlerPath);
+
+      workersEntries[tempPath] = codeRaw;
+    }
+
+    return workersEntries;
   } catch (error: unknown) {
     throw new Error(
       `Failed to setup worker code: ${error instanceof Error ? error.message : String(error)}`,

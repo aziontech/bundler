@@ -26,6 +26,7 @@ describe('setEnvironment', () => {
 
   const mockConfig: AzionConfig = {
     build: {
+      entry: 'src/index.ts',
       polyfills: true,
       worker: false,
     },
@@ -33,14 +34,10 @@ describe('setEnvironment', () => {
 
   const mockContext: BuildContext = {
     production: true,
-
-    entrypoint: 'src/index.ts',
   };
 
   beforeEach(() => {
-    spyWriteUserConfig = jest
-      .spyOn(envDefault, 'writeUserConfig')
-      .mockResolvedValue();
+    spyWriteUserConfig = jest.spyOn(envDefault, 'writeUserConfig').mockResolvedValue();
     spyWriteStore = jest.spyOn(envDefault, 'writeStore').mockResolvedValue();
     spyMergeConfigWithUserOverrides = jest
       .spyOn(utilsDefault, 'mergeConfigWithUserOverrides')
@@ -66,10 +63,7 @@ describe('setEnvironment', () => {
       ctx: mockContext,
     });
 
-    expect(spyMergeConfigWithUserOverrides).toHaveBeenCalledWith(
-      mockPreset.config,
-      mockConfig,
-    );
+    expect(spyMergeConfigWithUserOverrides).toHaveBeenCalledWith(mockPreset.config, mockConfig);
     expect(spyWriteUserConfig).toHaveBeenCalled();
     expect(spyWriteStore).toHaveBeenCalled();
   });
@@ -83,10 +77,7 @@ describe('setEnvironment', () => {
       ctx: mockContext,
     });
 
-    expect(spyMergeConfigWithUserOverrides).toHaveBeenCalledWith(
-      mockPreset.config,
-      mockConfig,
-    );
+    expect(spyMergeConfigWithUserOverrides).toHaveBeenCalledWith(mockPreset.config, mockConfig);
     expect(spyWriteUserConfig).not.toHaveBeenCalled();
     expect(spyWriteStore).toHaveBeenCalled();
   });
@@ -116,9 +107,7 @@ describe('setEnvironment', () => {
   });
 
   it('should throw error when environment setup fails', async () => {
-    jest
-      .spyOn(envDefault, 'readUserConfig')
-      .mockRejectedValueOnce(new Error('Test error'));
+    jest.spyOn(envDefault, 'readUserConfig').mockRejectedValueOnce(new Error('Test error'));
     await expect(
       setEnvironment({
         config: mockConfig,

@@ -1,31 +1,31 @@
 import path from 'path';
 import fsPromises from 'fs/promises';
-import { AzionBuildPreset, BuildContext } from 'azion/config';
+import { AzionBuildPreset, BuildEntryPoint } from 'azion/config';
 import * as utilsNode from 'azion/utils/node';
 import { debug } from '#utils';
 import { relative } from 'path';
 import { normalizeEntryPaths } from './utils';
 
 interface EntrypointOptions {
-  ctx: BuildContext;
+  entrypoint: BuildEntryPoint | undefined;
   preset: AzionBuildPreset;
 }
 
 /**
  * Resolves the entrypoint based on priority:
- * 1. Command line entrypoint (ctx.entrypoint)
+ * 1. Command line entrypoint (ctx.handler)
  * 2. Preset handler (if preset.handler is true)
  * 3. Preset default entry config (preset.config.build.entry)
  *
  * @throws Error if no valid entrypoint is found or if provided entrypoint doesn't exist
  */
 export const resolveHandlers = async ({
-  ctx,
+  entrypoint,
   preset,
 }: EntrypointOptions): Promise<string[]> => {
   // Normalize entrypoint first
-  if (ctx.entrypoint && !preset.handler) {
-    const entries = normalizeEntryPaths(ctx.entrypoint);
+  if (entrypoint && !preset.handler) {
+    const entries = normalizeEntryPaths(entrypoint);
     const resolvedEntries = entries.map((e) => path.resolve(e));
 
     await Promise.all(
@@ -60,21 +60,15 @@ export const resolveHandlers = async ({
       'handler.js',
     );
 
-    utilsNode.feedback.build.info(
-      `Using built-in handler from "${preset.metadata.name}" preset.`,
-    );
+    utilsNode.feedback.build.info(`Using built-in handler from "${preset.metadata.name}" preset.`);
     return [handlerPath];
   }
 
   // Preset's default entry is last priority
   if (preset.config.build?.entry) {
-    const entries = normalizeEntryPaths(preset.config.build.entry).map((e) =>
-      path.resolve(e),
-    );
+    const entries = normalizeEntryPaths(preset.config.build.entry).map((e) => path.resolve(e));
 
-    utilsNode.feedback.build.info(
-      `Using preset default entry: ${entries.join(', ')}`,
-    );
+    utilsNode.feedback.build.info(`Using preset default entry: ${entries.join(', ')}`);
     return entries;
   }
 
