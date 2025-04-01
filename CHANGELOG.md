@@ -1,3 +1,18 @@
+### [5.0.1-stage.2](https://github.com/aziontech/bundler/compare/v5.0.1-stage.1...v5.0.1-stage.2) (2025-04-01)
+
+
+### Bug Fixes
+
+* enhance build command with user-configurable extend option and streamline user config writing ([#466](https://github.com/aziontech/bundler/issues/466)) ([edb4f45](https://github.com/aziontech/bundler/commit/edb4f45ec3a0c3752bab53b8bb494dc2ab7b7d63))
+
+### [5.0.1-stage.1](https://github.com/aziontech/bundler/compare/v5.0.0...v5.0.1-stage.1) (2025-04-01)
+
+
+### Bug Fixes
+
+* resolve CLEAN_OUTPUT_MODE env var ([ee7d388](https://github.com/aziontech/bundler/commit/ee7d388bbc761b2bb800f2032417504d5cd298c8))
+* resolve CLEAN_OUTPUT_MODE env var ([#465](https://github.com/aziontech/bundler/issues/465)) ([d931f67](https://github.com/aziontech/bundler/commit/d931f679dd520d6d63dd617d9f346f39d010b83f))
+
 ## [5.0.0](https://github.com/aziontech/bundler/compare/v4.8.1...v5.0.0) (2025-03-26)
 
 
