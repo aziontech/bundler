@@ -26,7 +26,7 @@ export const setEnvironment = async ({
   preset,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ctx,
-}: EnvironmentParams): Promise<void> => {
+}: EnvironmentParams): Promise<AzionConfig> => {
   try {
     const { config: presetConfig } = preset;
 
@@ -56,7 +56,10 @@ export const setEnvironment = async ({
       };
     }
 
-    await envDefault.writeUserConfig(mergedConfig);
+    const hasUserConfig = await envDefault.readUserConfig();
+
+    // Create initial config file if none exists
+    if (!hasUserConfig) await envDefault.writeUserConfig(mergedConfig);
 
     /**
      * Setup environment store with the following rules:
@@ -75,6 +78,7 @@ export const setEnvironment = async ({
     };
 
     await envDefault.writeStore(storeConfig);
+    return mergedConfig;
   } catch (error) {
     throw new Error(`Failed to set environment: ${(error as Error).message}`);
   }
