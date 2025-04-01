@@ -83,10 +83,15 @@ export const build = async ({
     await executePostbuild({ buildConfig: buildConfigSetup, ctx });
 
     // Phase 4: Set Environment
-    await setEnvironment({ config, preset: resolvedPreset, ctx });
+    // TODO: rafactor this to use the same function
+    const mergedConfig = await setEnvironment({
+      config,
+      preset: resolvedPreset,
+      ctx,
+    });
 
     return {
-      config,
+      config: mergedConfig,
       ctx,
     };
   } catch (error: unknown) {
