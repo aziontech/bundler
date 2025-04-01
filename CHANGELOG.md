@@ -1,3 +1,10 @@
+### [5.0.2](https://github.com/aziontech/bundler/compare/v5.0.1...v5.0.2) (2025-04-01)
+
+
+### Bug Fixes
+
+* update setEnvironment to return merged configuration ([#468](https://github.com/aziontech/bundler/issues/468)) ([491f1f6](https://github.com/aziontech/bundler/commit/491f1f617d3ade28ff51b8c93211211202339a6d))
+
 ### [5.0.2-stage.1](https://github.com/aziontech/bundler/compare/v5.0.1...v5.0.2-stage.1) (2025-04-01)
 
 
