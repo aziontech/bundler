@@ -1,3 +1,10 @@
+### [5.0.1-stage.2](https://github.com/aziontech/bundler/compare/v5.0.1-stage.1...v5.0.1-stage.2) (2025-04-01)
+
+
+### Bug Fixes
+
+* enhance build command with user-configurable extend option and streamline user config writing ([#466](https://github.com/aziontech/bundler/issues/466)) ([edb4f45](https://github.com/aziontech/bundler/commit/edb4f45ec3a0c3752bab53b8bb494dc2ab7b7d63))
+
 ### [5.0.1-stage.1](https://github.com/aziontech/bundler/compare/v5.0.0...v5.0.1-stage.1) (2025-04-01)
 
 
