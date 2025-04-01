@@ -326,7 +326,7 @@ Table:
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 03/31/25 04:03:54 PM
+Last test run date: 04/01/25 04:07:24 AM
 ## Contributing
 
 Check the [Contributing doc](CONTRIBUTING.md).
