@@ -20,24 +20,22 @@ export const setupWorkerCode = async (
   ctx: BuildContext,
 ): Promise<Record<string, string>> => {
   try {
-    const tempPaths = Object.values(buildConfig.entry);
-
     const handlersPaths = normalizeEntryPointPaths(ctx.handler);
+    const entriesPath = buildConfig.entry || {};
 
-    const workersEntries: Record<string, string> = {};
+    const entriesPathMap: Record<string, string> = {};
+    await Promise.all(
+      handlersPaths.map(async (handlerPath, index) => {
+        const tempPath = Object.values(entriesPath)[index];
 
-    for (let i = 0; i < handlersPaths.length; i++) {
-      const handlerPath = handlersPaths[i];
-      const tempPath = tempPaths[i];
+        const codeRaw = buildConfig.worker
+          ? await fsPromises.readFile(handlerPath, 'utf-8')
+          : generateWorkerEventHandler(handlerPath);
+        entriesPathMap[tempPath] = codeRaw;
+      }),
+    );
 
-      const codeRaw = buildConfig.worker
-        ? await fsPromises.readFile(handlerPath, 'utf-8')
-        : generateWorkerEventHandler(handlerPath);
-
-      workersEntries[tempPath] = codeRaw;
-    }
-
-    return workersEntries;
+    return entriesPathMap;
   } catch (error: unknown) {
     throw new Error(
       `Failed to setup worker code: ${error instanceof Error ? error.message : String(error)}`,

@@ -3,7 +3,7 @@ import { build } from './build';
 import { AzionConfig } from 'azion/config';
 import type { BuildCommandOptions } from './types';
 import { cleanDirectory, resolveConfigPriority, resolvePresetPriority } from './utils';
-import { BUILD_DEFAULTS, DIRECTORIES, type BundlerType } from '#constants';
+import { BUILD_CONFIG_DEFAULTS, DIRECTORIES, type BundlerType } from '#constants';
 
 /**
  * A command to initiate the build process.
@@ -36,7 +36,7 @@ export async function buildCommand(options: BuildCommandOptions) {
     inputValue: options.preset,
     fileValue: userBuildConfig?.preset,
     storeValue: bundlerStore.preset,
-    defaultValue: BUILD_DEFAULTS.PRESET,
+    defaultValue: BUILD_CONFIG_DEFAULTS.PRESET,
   });
 
   const buildConfig = {
@@ -45,25 +45,25 @@ export async function buildCommand(options: BuildCommandOptions) {
       inputValue: options.entry,
       fileValue: userBuildConfig?.entry,
       storeValue: bundlerStore?.entry,
-      defaultValue: BUILD_DEFAULTS.ENTRY,
+      defaultValue: BUILD_CONFIG_DEFAULTS.ENTRY,
     }),
     bundler: resolveConfigPriority<BundlerType>({
       inputValue: undefined,
       fileValue: userBuildConfig?.bundler,
       storeValue: bundlerStore?.bundler,
-      defaultValue: BUILD_DEFAULTS.BUNDLER,
+      defaultValue: BUILD_CONFIG_DEFAULTS.BUNDLER,
     }),
     polyfills: resolveConfigPriority({
       inputValue: userBuildConfig?.polyfills,
       fileValue: options.polyfills,
       storeValue: bundlerStore?.polyfills,
-      defaultValue: BUILD_DEFAULTS.POLYFILLS,
+      defaultValue: BUILD_CONFIG_DEFAULTS.POLYFILLS,
     }),
     worker: resolveConfigPriority({
       inputValue: userBuildConfig?.worker,
       fileValue: options.worker,
       storeValue: bundlerStore?.worker,
-      defaultValue: BUILD_DEFAULTS.WORKER,
+      defaultValue: BUILD_CONFIG_DEFAULTS.WORKER,
     }),
   };
 

@@ -2,7 +2,7 @@ import { dirname } from 'path';
 import { mkdir, writeFile } from 'fs/promises';
 import { AzionPrebuildResult, AzionConfig, BuildContext } from 'azion/config';
 import { debug } from '#utils';
-import { BUILD_MESSAGES, BUILD_DEFAULTS } from '#constants';
+import { BUILD_MESSAGES, BUILD_CONFIG_DEFAULTS } from '#constants';
 import { feedback } from 'azion/utils/node';
 
 import { checkDependencies } from './utils';
@@ -32,17 +32,15 @@ interface BuildParams {
 }
 
 export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
-  // Desestruturação dentro da função para facilitar o acesso
-  const { config, options } = buildParams;
-
   try {
-    await checkDependencies();
+    const { config, options } = buildParams;
 
+    await checkDependencies();
     const resolvedPreset = await resolvePreset(config.build?.preset);
     const buildConfigSetup = await setupBuildConfig(config, resolvedPreset);
 
     const ctx: BuildContext = {
-      production: options.production ?? BUILD_DEFAULTS.PRODUCTION,
+      production: options.production ?? BUILD_CONFIG_DEFAULTS.PRODUCTION,
       handler: await resolveHandlers({
         entrypoint: config.build?.entry,
         preset: resolvedPreset,
@@ -51,9 +49,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
 
     /** Map of resolved worker paths and their transformed contents ready for bundling */
     const workerEntries: Record<string, string> = await setupWorkerCode(buildConfigSetup, ctx);
-    console.log(workerEntries, ctx, buildConfigSetup);
     /** Write each transformed worker to its bundler entry path */
-
     await Promise.all(
       Object.entries(workerEntries).map(async ([path, code]) => {
         await mkdir(dirname(path), { recursive: true });

@@ -28,7 +28,7 @@ export const DIRECTORIES = {
 } as const;
 
 /** Default build configuration values */
-export const BUILD_DEFAULTS = {
+export const BUILD_CONFIG_DEFAULTS = {
   POLYFILLS: true,
   WORKER: false,
   PRODUCTION: true,
@@ -53,14 +53,15 @@ export const FILE_PATTERNS = {
   TEMP_SUFFIX: '.temp',
 } as const;
 
-export type BundlerType =
-  (typeof SUPPORTED_BUNDLERS)[keyof typeof SUPPORTED_BUNDLERS];
+export type BundlerType = (typeof SUPPORTED_BUNDLERS)[keyof typeof SUPPORTED_BUNDLERS];
 
 export const BUNDLER = {
   NAMESPACE: 'bundler',
   MIN_NODE_VERSION: '18.0.0',
   CONFIG_FILENAME: 'azion.config',
-  DEFAULT_DEV_WORKER_FILENAME: 'index.dev.js',
+  DEFAULT_HANDLER_FILENAME: 'handler.js',
+  DEFAULT_DEV_WORKER_FILENAME: 'handler.dev.js',
+  DEFAULT_OUTPUT_EXTENSION: 'js',
   LIB_DIR: getAbsoluteDirPath(import.meta.url, 'bundler'),
   ARGS_PATH: 'azion/args.json',
   IS_DEBUG: process.env.DEBUG === 'true',
@@ -69,9 +70,7 @@ export const BUNDLER = {
     return resolve(BUNDLER.LIB_DIR, '.');
   },
   get PACKAGE_JSON() {
-    return JSON.parse(
-      readFileSync(`${BUNDLER.ROOT_PATH}/package.json`, 'utf8'),
-    );
+    return JSON.parse(readFileSync(`${BUNDLER.ROOT_PATH}/package.json`, 'utf8'));
   },
   get VERSION() {
     return BUNDLER.PACKAGE_JSON.version;

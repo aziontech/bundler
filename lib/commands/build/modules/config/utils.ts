@@ -1,6 +1,6 @@
 import { join, basename, dirname, extname } from 'path';
 import { BuildEntryPoint } from 'azion/config';
-import { DIRECTORIES, FILE_PATTERNS, BUILD_DEFAULTS } from '#constants';
+import { DIRECTORIES, FILE_PATTERNS, BUILD_CONFIG_DEFAULTS } from '#constants';
 import { access } from 'fs/promises';
 type GetTempEntryPathsOptions = {
   entry: BuildEntryPoint | string;
@@ -34,7 +34,7 @@ export const validateEntryPoints = async (entry: BuildEntryPoint): Promise<void>
 
 export const createPathEntriesMap = async ({
   entry,
-  ext = BUILD_DEFAULTS.EXTENSION,
+  ext = BUILD_CONFIG_DEFAULTS.EXTENSION,
   basePath = DIRECTORIES.OUTPUT_FUNCTIONS_PATH,
 }: GetTempEntryPathsOptions): Promise<Record<string, string>> => {
   const timestamp = generateTimestamp();
@@ -58,16 +58,13 @@ export const createPathEntriesMap = async ({
   };
 
   if (typeof entry === 'string') {
-    await validateEntryPoints(entry);
     return createEntryRecord(entry);
   }
 
   if (Array.isArray(entry)) {
-    await validateEntryPoints(entry);
     return entry.reduce((acc, e) => ({ ...acc, ...createEntryRecord(e) }), {});
   }
 
-  await validateEntryPoints(Object.values(entry));
   return Object.entries(entry).reduce(
     (acc, [key, value]) => ({ ...acc, ...createEntryRecord(value, key) }),
     {},
