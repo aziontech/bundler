@@ -36,10 +36,7 @@ async function createSessionTempDir(): Promise<string> {
  * Validates if user is using the minimum Node version
  */
 function validateNodeMinVersion(): boolean {
-  const isAValidVersion = satisfies(
-    process.version,
-    `>= ${BUNDLER.MIN_NODE_VERSION}`,
-  );
+  const isAValidVersion = satisfies(process.version, `>= ${BUNDLER.MIN_NODE_VERSION}`);
   return isAValidVersion;
 }
 
@@ -72,8 +69,7 @@ function cleanUpTempFiles() {
   const tempFiles = readdirSync(directory);
   const filteredFiles = tempFiles.filter(
     (file) =>
-      file.startsWith(FILE_PATTERNS.TEMP_PREFIX) &&
-      file.includes(FILE_PATTERNS.TEMP_SUFFIX),
+      file.startsWith(FILE_PATTERNS.TEMP_PREFIX) && file.includes(FILE_PATTERNS.TEMP_SUFFIX),
   );
 
   for (const file of filteredFiles) {
@@ -138,14 +134,8 @@ function startBundler() {
 
   AzionBundler.command('build')
     .description('Build a project for edge deployment')
-    .option(
-      '--entry <entries...>',
-      'Code entrypoint (default: ./main.js or ./main.ts)',
-    )
-    .option(
-      '--preset <type>',
-      'Preset of build target (e.g., vue, next, javascript)',
-    )
+    .option('--entry <entries...>', 'Code entrypoint (default: ./main.js or ./main.ts)')
+    .option('--preset <type>', 'Preset of build target (e.g., vue, next, javascript)')
     .option(
       '--polyfills [boolean]',
       'Use node polyfills in build. Use --polyfills or --polyfills=true to enable, --polyfills=false to disable',
@@ -168,10 +158,7 @@ function startBundler() {
 
   AzionBundler.command('dev')
     .description('Start local environment')
-    .argument(
-      '[entry]',
-      'Specify the entry file (default: .edge/worker.dev.js)',
-    )
+    .argument('[entry]', 'Specify the entry file (default: .edge/worker.dev.js)')
     .option('-p, --port <port>', 'Specify the port', '3333')
     .action(async (entry, options) => {
       const { devCommand } = await import('#commands');
@@ -186,9 +173,7 @@ function startBundler() {
     });
 
   AzionBundler.command('manifest [action]')
-    .description(
-      'Manage manifest files for Azion. Available actions: transform, generate',
-    )
+    .description('Manage manifest files for Azion. Available actions: transform, generate')
     .argument(
       '[action]',
       'Action to perform: "transform" (JSON to JS) or "generate" (config to manifest)',

@@ -1,10 +1,13 @@
 import { type AzionConfig, convertJsonConfigToObject } from 'azion/config';
-import { promises as fs } from 'fs';
+import fs from 'fs';
 import { join, resolve, extname } from 'path';
 import * as utilsNode from 'azion/utils/node';
 import envBundler from '../../env/bundler';
+import { promises as fsPromises } from 'fs';
 import util from './util';
-import { DIRECTORIES, BUNDLER } from '#constants';
+
+export const DEFAULT_TRANSFORM_INPUT_PATH = '.edge/manifest.json';
+export const DEFAULT_TRANSFORM_OUTPUT_PATH = 'azion.config';
 
 /**
  * Generates or updates the CDN manifest based on a custom configuration.
@@ -18,11 +21,7 @@ export const generateManifest = async (
   outputPath = join(process.cwd(), '.edge'),
 ): Promise<void> => {
   // Ensure output directory exists
-  try {
-    await fs.access(outputPath);
-  } catch {
-    await fs.mkdir(outputPath, { recursive: true });
-  }
+  if (!fs.existsSync(outputPath)) fs.mkdirSync(outputPath, { recursive: true });
 
   // Determine config source
   let config: AzionConfig;
@@ -44,11 +43,9 @@ export const generateManifest = async (
   const manifest = util.processConfigWrapper(config);
   // Write manifest to file
   const manifestPath = join(outputPath, 'manifest.json');
-  await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2));
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
 
-  utilsNode.feedback.success(
-    `Manifest generated successfully at ${manifestPath}`,
-  );
+  utilsNode.feedback.success(`Manifest generated successfully at ${manifestPath}`);
 };
 
 /**
@@ -60,7 +57,7 @@ export const generateManifest = async (
  */
 export const transformManifest = async (
   input?: string,
-  outputPath = BUNDLER.CONFIG_FILENAME,
+  outputPath = DEFAULT_TRANSFORM_OUTPUT_PATH,
 ): Promise<void> => {
   const readConfigFromPath = async (filePath: string): Promise<AzionConfig> => {
     const resolvedPath = resolve(process.cwd(), filePath);
@@ -69,18 +66,14 @@ export const transformManifest = async (
       throw new Error('Input file must be .json');
     }
 
-    const jsonString = await fs.readFile(resolvedPath, 'utf8');
+    const jsonString = await fsPromises.readFile(resolvedPath, 'utf8');
     return convertJsonConfigToObject(jsonString);
   };
 
-  const config = await readConfigFromPath(
-    input || DIRECTORIES.OUTPUT_MANIFEST_PATH,
-  );
+  const config = await readConfigFromPath(input || DEFAULT_TRANSFORM_INPUT_PATH);
   await envBundler.writeUserConfig(config);
 
-  utilsNode.feedback.success(
-    `Config file generated successfully at ${outputPath}`,
-  );
+  utilsNode.feedback.success(`Config file generated successfully at ${outputPath}`);
 };
 
 export default generateManifest;
