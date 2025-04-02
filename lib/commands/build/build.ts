@@ -34,13 +34,14 @@ interface BuildParams {
 export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
   try {
     const { config, options } = buildParams;
+    const isProduction = options?.production ?? true;
 
     await checkDependencies();
     const resolvedPreset = await resolvePreset(config.build?.preset);
-    const buildConfigSetup = await setupBuildConfig(config, resolvedPreset);
+    const buildConfigSetup = await setupBuildConfig(config, resolvedPreset, isProduction);
 
     const ctx: BuildContext = {
-      production: options.production ?? BUILD_CONFIG_DEFAULTS.PRODUCTION,
+      production: isProduction ?? BUILD_CONFIG_DEFAULTS.PRODUCTION,
       handler: await resolveHandlers({
         entrypoint: config.build?.entry,
         preset: resolvedPreset,

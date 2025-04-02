@@ -6,6 +6,7 @@ import { createPathEntriesMap, validateEntryPoints } from './utils';
 export const setupBuildConfig = async (
   azionConfig: AzionConfig,
   preset: AzionBuildPreset,
+  production: boolean,
 ): Promise<BuildConfiguration> => {
   // Get user entry path from config if provided
   let resolvedEntryPathsMap: Record<string, string> = {};
@@ -17,6 +18,7 @@ export const setupBuildConfig = async (
     resolvedEntryPathsMap = await createPathEntriesMap({
       entry: userEntryPath,
       ext: preset.metadata.ext ?? BUNDLER.DEFAULT_OUTPUT_EXTENSION,
+      production,
     });
   }
 
@@ -24,6 +26,7 @@ export const setupBuildConfig = async (
     resolvedEntryPathsMap = await createPathEntriesMap({
       entry: BUNDLER.DEFAULT_HANDLER_FILENAME,
       ext: preset.metadata.ext ?? BUNDLER.DEFAULT_OUTPUT_EXTENSION,
+      production,
     });
   }
 
@@ -31,6 +34,7 @@ export const setupBuildConfig = async (
     resolvedEntryPathsMap = await createPathEntriesMap({
       entry: preset.config.build.entry,
       ext: preset.metadata.ext ?? BUNDLER.DEFAULT_OUTPUT_EXTENSION,
+      production,
     });
   }
 

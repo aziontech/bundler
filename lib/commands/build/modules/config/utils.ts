@@ -6,6 +6,7 @@ type GetTempEntryPathsOptions = {
   entry: BuildEntryPoint | string;
   ext?: string;
   basePath?: string;
+  production?: boolean;
 };
 
 export const generateTimestamp = (): string => {
@@ -36,6 +37,7 @@ export const createPathEntriesMap = async ({
   entry,
   ext = BUILD_CONFIG_DEFAULTS.EXTENSION,
   basePath = DIRECTORIES.OUTPUT_FUNCTIONS_PATH,
+  production = true,
 }: GetTempEntryPathsOptions): Promise<Record<string, string>> => {
   const timestamp = generateTimestamp();
 
@@ -47,13 +49,19 @@ export const createPathEntriesMap = async ({
 
     if (outputPath) {
       const outputWithoutExt = outputPath.replace(/\.[^/.]+$/, '');
+      const finalPath = production
+        ? join(basePath, outputWithoutExt)
+        : join(basePath, `${outputWithoutExt}.dev`);
+
       return {
-        [join(basePath, outputWithoutExt)]: tempPath,
+        [finalPath]: tempPath,
       };
     }
 
+    const finalPath = production ? join(basePath, dir, base) : join(basePath, dir, `${base}.dev`);
+
     return {
-      [join(basePath, dir, base)]: tempPath,
+      [finalPath]: tempPath,
     };
   };
 
