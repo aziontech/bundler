@@ -48,7 +48,6 @@ export const setupBuildConfig = async (
     throw new Error('No entry point provided. ');
   }
 
-  console.log(resolvedEntryPathsMap);
   return {
     ...azionConfig.build,
     entry: resolvedEntryPathsMap,
