@@ -9,19 +9,13 @@ import { DIRECTORIES, BUNDLER } from '#constants';
  *
  * devCommand({ entry: './path/to/entry.js', port: '3000' });
  */
-export async function devCommand({
-  entry,
-  port,
-}: {
-  entry?: string;
-  port: string;
-}) {
+export async function devCommand({ entry, port }: { entry?: string; port: string }) {
   const parsedPort = parseInt(port, 10);
   const { server } = await import('#env');
 
   const devWorkerPath = join(
     DIRECTORIES.OUTPUT_FUNCTIONS_PATH,
-    BUNDLER.DEFAULT_DEV_WORKER_FILENAME,
+    `${BUNDLER.DEFAULT_DEV_WORKER_FILENAME}.${BUNDLER.DEFAULT_OUTPUT_EXTENSION}`,
   );
 
   const entryPoint = entry || devWorkerPath;
