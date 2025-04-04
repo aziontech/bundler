@@ -45,9 +45,7 @@ export const generateManifest = async (
   const manifestPath = join(outputPath, 'manifest.json');
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
 
-  utilsNode.feedback.success(
-    `Manifest generated successfully at ${manifestPath}`,
-  );
+  utilsNode.feedback.success(`Manifest generated successfully at ${manifestPath}`);
 };
 
 /**
@@ -72,14 +70,10 @@ export const transformManifest = async (
     return convertJsonConfigToObject(jsonString);
   };
 
-  const config = await readConfigFromPath(
-    input || DEFAULT_TRANSFORM_INPUT_PATH,
-  );
+  const config = await readConfigFromPath(input || DEFAULT_TRANSFORM_INPUT_PATH);
   await envBundler.writeUserConfig(config);
 
-  utilsNode.feedback.success(
-    `Config file generated successfully at ${outputPath}`,
-  );
+  utilsNode.feedback.success(`Config file generated successfully at ${outputPath}`);
 };
 
 export default generateManifest;

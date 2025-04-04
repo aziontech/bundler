@@ -1,4 +1,3 @@
-import fs from 'fs';
 import fsPromises from 'fs/promises';
 import { join } from 'path';
 
@@ -54,21 +53,28 @@ export const injectWorkerMemoryFiles = async ({
   return `globalThis.${namespace}.${property}=${JSON.stringify(result)};`;
 };
 
-export const copyFilesToLocalEdgeStorage = ({
+export const copyFilesToLocalEdgeStorage = async ({
   dirs,
   prefix,
   outputPath,
 }: StorageConfig) => {
-  dirs.forEach((dir) => {
-    const targetPath = prefix ? dir.replace(prefix, '') : dir;
-    const fullTargetPath = join(outputPath, targetPath);
+  await Promise.all(
+    dirs.map(async (dir) => {
+      const targetPath = prefix ? dir.replace(prefix, '') : dir;
+      const fullTargetPath = join(outputPath, targetPath);
 
-    if (!fs.existsSync(fullTargetPath)) {
-      fs.mkdirSync(fullTargetPath, { recursive: true });
-    }
+      const exists = await fsPromises
+        .access(fullTargetPath)
+        .then(() => true)
+        .catch(() => false);
 
-    fs.cpSync(dir, fullTargetPath, { recursive: true });
-  });
+      if (!exists) {
+        await fsPromises.mkdir(fullTargetPath, { recursive: true });
+      }
+
+      await fsPromises.cp(dir, fullTargetPath, { recursive: true });
+    }),
+  );
 };
 
 export const injectWorkerGlobals = ({

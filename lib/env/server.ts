@@ -15,7 +15,7 @@ import bundler from './bundler';
 import { buildCommand } from '../commands/build';
 import { runServer } from 'edge-runtime';
 import fs from 'fs/promises';
-
+import { basename } from 'path';
 let currentServer: Awaited<ReturnType<typeof runServer>>;
 let isChangeHandlerRunning = false;
 
@@ -29,10 +29,7 @@ const checkAndChangeAddEventListener = (
   replaceCode = true,
 ) => {
   let codeChanged = code;
-  const eventRegex = new RegExp(
-    `addEventListener\\((['"]?)${eventTarget}\\1,`,
-    'g',
-  );
+  const eventRegex = new RegExp(`addEventListener\\((['"]?)${eventTarget}\\1,`, 'g');
   const firewallFunctionRegex = /firewall:\s*\(event\)\s*=>\s*{/g;
   const firewallFunction = !!code.match(firewallFunctionRegex);
   const firewallEventTypeRegex = /eventType\s*=\s*['"]firewall['"];/g;
@@ -41,10 +38,7 @@ const checkAndChangeAddEventListener = (
   if ((replaceCode && matchEvent) || firewallFunction) {
     codeChanged = code.replace(eventRegex, `addEventListener("${newEvent}",`);
     if (firewallFunction) {
-      codeChanged = codeChanged.replace(
-        firewallEventTypeRegex,
-        "eventType = 'fetch';",
-      );
+      codeChanged = codeChanged.replace(firewallEventTypeRegex, "eventType = 'fetch';");
     }
   }
   return { matchEvent: matchEvent || firewallFunction, codeChanged };
@@ -89,10 +83,13 @@ async function readWorkerFile(filePath: string): Promise<string> {
     await fs.access(filePath);
     return await fs.readFile(filePath, 'utf8');
   } catch (error) {
-    const errorMessage = (error as Error).message.includes('ENOENT')
-      ? 'File does not exist.'
-      : `An error occurred while reading the ${filePath} file.`;
-    throw new Error(errorMessage);
+    if ((error as Error).message.includes('ENOENT')) {
+      const defaultWorkerName = basename(filePath);
+      throw new Error(
+        `Default worker file "${defaultWorkerName}" not found. Please specify your entry point using "azion dev <path>" or create the default file.`,
+      );
+    }
+    throw new Error(`Error reading file ${filePath}: ${(error as Error).message}`);
   }
 }
 
@@ -138,7 +135,15 @@ async function manageServer(workerPath: string, port: number) {
 
     await buildToLocalServer();
 
-    const workerCode = await readWorkerFile(workerPath);
+    let workerCode;
+    try {
+      workerCode = await readWorkerFile(workerPath);
+    } catch (error) {
+      feedback.server.error((error as Error).message);
+      debug.error(`Error reading worker file: ${error}`);
+      process.exit(1);
+      return; // Adicionado para clareza, embora o process.exit() já interrompa a execução
+    }
 
     try {
       currentServer = await initializeServer(port, workerCode);
@@ -154,8 +159,8 @@ async function manageServer(workerPath: string, port: number) {
       }
     }
   } catch (error) {
-    feedback.server.error(error);
-    console.log(error);
+    feedback.server.error((error as Error).message);
+    debug.error(`Server management error: ${error}`);
     process.exit(1);
   } finally {
     isChangeHandlerRunning = false;
@@ -165,11 +170,7 @@ async function manageServer(workerPath: string, port: number) {
 /**
  * Handle file changes and prevent concurrent execution.
  */
-async function handleFileChange(
-  path: string,
-  workerPath: string,
-  port: number,
-) {
+async function handleFileChange(path: string, workerPath: string, port: number) {
   if (isChangeHandlerRunning) return;
 
   if (
@@ -201,9 +202,7 @@ async function handleFileChange(
 async function startServer(workerPath: string, port: number) {
   const IsPortInUse = await checkPortAvailability(port);
   if (IsPortInUse) {
-    feedback.server.error(
-      `Port ${port} is in use. Please choose another port.`,
-    );
+    feedback.server.error(`Port ${port} is in use. Please choose another port.`);
     process.exit(1);
   }
   await manageServer(workerPath, port);
@@ -227,9 +226,7 @@ async function startServer(workerPath: string, port: number) {
     .on('unlinkDir', handleUserFileChange)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .on('error', (error) => (debug as any).error(`Watcher error: ${error}`))
-    .on('ready', () =>
-      feedback.server.info('Initial scan complete. Ready for changes.'),
-    );
+    .on('ready', () => feedback.server.info('Initial scan complete. Ready for changes.'));
 }
 
 export default startServer;

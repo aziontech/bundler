@@ -1,4 +1,5 @@
 import { join } from 'path';
+import { DIRECTORIES, BUNDLER } from '#constants';
 
 /**
  * @function
@@ -8,18 +9,14 @@ import { join } from 'path';
  *
  * devCommand({ entry: './path/to/entry.js', port: '3000' });
  */
-export async function devCommand({
-  entry,
-  port,
-}: {
-  entry?: string;
-  port: string;
-}) {
+export async function devCommand({ entry, port }: { entry?: string; port: string }) {
   const parsedPort = parseInt(port, 10);
   const { server } = await import('#env');
 
-  const edgeDir = join(process.cwd(), '.edge');
-  const devWorkerPath = join(edgeDir, 'worker.dev.js');
+  const devWorkerPath = join(
+    DIRECTORIES.OUTPUT_FUNCTIONS_PATH,
+    `${BUNDLER.DEFAULT_DEV_WORKER_FILENAME}.${BUNDLER.DEFAULT_OUTPUT_EXTENSION}`,
+  );
 
   const entryPoint = entry || devWorkerPath;
 

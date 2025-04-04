@@ -1,9 +1,9 @@
 import { readUserConfig, readStore, writeStore, type BundlerStore } from '#env';
 import { build } from './build';
 import { AzionConfig } from 'azion/config';
-import { resolve } from 'path';
 import type { BuildCommandOptions } from './types';
-import { resolveConfigPriority, resolvePresetPriority } from './utils';
+import { cleanDirectory, resolveConfigPriority, resolvePresetPriority } from './utils';
+import { BUILD_CONFIG_DEFAULTS, DIRECTORIES, type BundlerType } from '#constants';
 
 /**
  * A command to initiate the build process.
@@ -36,7 +36,7 @@ export async function buildCommand(options: BuildCommandOptions) {
     inputValue: options.preset,
     fileValue: userBuildConfig?.preset,
     storeValue: bundlerStore.preset,
-    defaultValue: undefined,
+    defaultValue: BUILD_CONFIG_DEFAULTS.PRESET,
   });
 
   const buildConfig = {
@@ -45,25 +45,25 @@ export async function buildCommand(options: BuildCommandOptions) {
       inputValue: options.entry,
       fileValue: userBuildConfig?.entry,
       storeValue: bundlerStore?.entry,
-      defaultValue: undefined,
+      defaultValue: BUILD_CONFIG_DEFAULTS.ENTRY,
     }),
-    bundler: resolveConfigPriority<'webpack' | 'esbuild'>({
+    bundler: resolveConfigPriority<BundlerType>({
       inputValue: undefined,
       fileValue: userBuildConfig?.bundler,
       storeValue: bundlerStore?.bundler,
-      defaultValue: undefined,
+      defaultValue: BUILD_CONFIG_DEFAULTS.BUNDLER,
     }),
     polyfills: resolveConfigPriority({
       inputValue: userBuildConfig?.polyfills,
       fileValue: options.polyfills,
       storeValue: bundlerStore?.polyfills,
-      defaultValue: true,
+      defaultValue: BUILD_CONFIG_DEFAULTS.POLYFILLS,
     }),
     worker: resolveConfigPriority({
       inputValue: userBuildConfig?.worker,
       fileValue: options.worker,
       storeValue: bundlerStore?.worker,
-      defaultValue: false,
+      defaultValue: BUILD_CONFIG_DEFAULTS.WORKER,
     }),
   };
 
@@ -73,17 +73,18 @@ export async function buildCommand(options: BuildCommandOptions) {
     ...userConfig,
     build: {
       ...buildConfig,
+      entry: buildConfig.entry,
       memoryFS: userConfig?.build?.memoryFS,
       extend: userConfig?.build?.extend,
     },
   };
 
+  if (options.production) await cleanDirectory([DIRECTORIES.OUTPUT_BASE_PATH]);
+
   return build({
     config,
-    ctx: {
-      production: options.production ?? true,
-      output: resolve('.edge', 'worker.js'),
-      entrypoint: buildConfig.entry ? resolve(buildConfig.entry) : '',
+    options: {
+      production: options.production,
     },
   });
 }

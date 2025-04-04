@@ -1,52 +1,42 @@
 #! /usr/bin/env node
-import { resolve, join } from 'path';
-import { readFileSync, readdirSync, unlinkSync, mkdirSync } from 'fs';
+import { join } from 'path';
+import { readdirSync, unlinkSync } from 'fs';
+import { mkdir } from 'fs/promises';
 import { Command } from 'commander';
 import { satisfies } from 'semver';
-import os from 'os';
-import crypto from 'crypto';
+import { createHash } from 'crypto';
 
+import { FILE_PATTERNS, BUNDLER } from '#constants';
+import type { BundlerGlobals } from '#types';
 import { debug } from '#utils';
-import { feedback, getAbsoluteDirPath } from 'azion/utils/node';
 
-const MIN_NODE_VERSION = '18.0.0';
-
-const BUNDLER_LIB_DIR_ABSOLUTE_PATH = getAbsoluteDirPath(
-  import.meta.url,
-  'bundler',
-);
-const BUNDLER_ROOT_ABSOLUTE_PATH = resolve(BUNDLER_LIB_DIR_ABSOLUTE_PATH, '.');
-const BUNDLER_PACKAGE_JSON = JSON.parse(
-  readFileSync(`${BUNDLER_ROOT_ABSOLUTE_PATH}/package.json`, 'utf8'),
-);
-const BUNDLER_CURRENT_VERSION = BUNDLER_PACKAGE_JSON.version;
-const IS_DEBUG_ENABLED = process.env.DEBUG === 'true';
+import { feedback } from 'azion/utils/node';
 
 const AzionBundler = new Command();
 
 /**
  * Generates a unique hash for the current project
  */
-function generateProjectID() {
+function generateProjectID(): string {
   const projectPath = process.cwd();
-  return crypto.createHash('md5').update(projectPath).digest('hex');
+  return createHash('md5').update(projectPath).digest('hex');
 }
 
 /**
  * Creates and returns the path to the project's temporary folder
  */
-function createSessionTempDir() {
+async function createSessionTempDir(): Promise<string> {
   const projectID = generateProjectID();
-  const tempPath = join(os.tmpdir(), '.azion', projectID);
-  mkdirSync(tempPath, { recursive: true });
+  const tempPath = BUNDLER.TEMP_DIR(projectID);
+  await mkdir(tempPath, { recursive: true });
   return tempPath;
 }
 
 /**
  * Validates if user is using the minimum Node version
  */
-function validateNodeMinVersion() {
-  const isAValidVersion = satisfies(process.version, `>= ${MIN_NODE_VERSION}`);
+function validateNodeMinVersion(): boolean {
+  const isAValidVersion = satisfies(process.version, `>= ${BUNDLER.MIN_NODE_VERSION}`);
   return isAValidVersion;
 }
 
@@ -58,17 +48,17 @@ function validateNodeMinVersion() {
  * @example
  *    setBundlerEnvironment();
  */
-function setBundlerEnvironment() {
-  const bundlerContext = {
-    root: BUNDLER_ROOT_ABSOLUTE_PATH,
-    package: BUNDLER_PACKAGE_JSON,
-    debug: IS_DEBUG_ENABLED,
-    version: BUNDLER_CURRENT_VERSION,
-    tempPath: createSessionTempDir(),
-    argsPath: `azion/args.json`,
+async function getBundlerEnvironment(): Promise<BundlerGlobals> {
+  const bundlerContext: BundlerGlobals = {
+    root: BUNDLER.ROOT_PATH,
+    package: BUNDLER.PACKAGE_JSON,
+    debug: BUNDLER.IS_DEBUG,
+    version: BUNDLER.VERSION,
+    tempPath: await createSessionTempDir(),
+    argsPath: BUNDLER.ARGS_PATH,
   };
 
-  globalThis.bundler = bundlerContext;
+  return bundlerContext;
 }
 
 /**
@@ -76,16 +66,16 @@ function setBundlerEnvironment() {
  */
 function cleanUpTempFiles() {
   const directory = process.cwd();
-  const tempFiles = readdirSync(directory).filter(
+  const tempFiles = readdirSync(directory);
+  const filteredFiles = tempFiles.filter(
     (file) =>
-      file.startsWith('azion-') &&
-      (file.endsWith('.temp.js') || file.endsWith('.temp.ts')),
+      file.startsWith(FILE_PATTERNS.TEMP_PREFIX) && file.includes(FILE_PATTERNS.TEMP_SUFFIX),
   );
 
-  tempFiles.forEach((file) => {
+  for (const file of filteredFiles) {
     const filePath = join(directory, file);
     unlinkSync(filePath);
-  });
+  }
 }
 
 /**
@@ -127,7 +117,7 @@ function setupBundlerProcessHandlers() {
  *    startBundler();
  */
 function startBundler() {
-  AzionBundler.version(BUNDLER_CURRENT_VERSION);
+  AzionBundler.version(BUNDLER.VERSION);
 
   AzionBundler.command('store <command>')
     .description('Manage store configuration (init/destroy)')
@@ -144,14 +134,8 @@ function startBundler() {
 
   AzionBundler.command('build')
     .description('Build a project for edge deployment')
-    .option(
-      '--entry <string>',
-      'Code entrypoint (default: ./main.js or ./main.ts)',
-    )
-    .option(
-      '--preset <type>',
-      'Preset of build target (e.g., vue, next, javascript)',
-    )
+    .option('--entry <entries...>', 'Code entrypoint (default: ./main.js or ./main.ts)')
+    .option('--preset <type>', 'Preset of build target (e.g., vue, next, javascript)')
     .option(
       '--polyfills [boolean]',
       'Use node polyfills in build. Use --polyfills or --polyfills=true to enable, --polyfills=false to disable',
@@ -160,12 +144,13 @@ function startBundler() {
       '--worker [boolean]',
       'Indicates that the constructed code inserts its own worker expression. Use --worker or --worker=true to enable, --worker=false to disable',
     )
-    .option('--development', 'Build in development mode', false)
+    .option('--dev', 'Build in development mode', false)
     .action(async (options) => {
       const { buildCommand, manifestCommand } = await import('#commands');
+      const { dev, ...buildOptions } = options;
       const { config } = await buildCommand({
-        ...options,
-        production: !options.development,
+        ...buildOptions,
+        production: !dev,
       });
 
       await manifestCommand({ action: 'generate', config });
@@ -173,10 +158,7 @@ function startBundler() {
 
   AzionBundler.command('dev')
     .description('Start local environment')
-    .argument(
-      '[entry]',
-      'Specify the entry file (default: .edge/worker.dev.js)',
-    )
+    .argument('[entry]', 'Specify the entry file (default: .edge/worker.dev.js)')
     .option('-p, --port <port>', 'Specify the port', '3333')
     .action(async (entry, options) => {
       const { devCommand } = await import('#commands');
@@ -191,9 +173,7 @@ function startBundler() {
     });
 
   AzionBundler.command('manifest [action]')
-    .description(
-      'Manage manifest files for Azion. Available actions: transform, generate',
-    )
+    .description('Manage manifest files for Azion. Available actions: transform, generate')
     .argument(
       '[action]',
       'Action to perform: "transform" (JSON to JS) or "generate" (config to manifest)',
@@ -205,15 +185,13 @@ function startBundler() {
       'after',
       `
 Examples:
-  $ az manifest transform --entry=manifest.json --output=azion.config.js
-  $ az manifest generate --entry=azion.config.js --output=.edge
-  $ az manifest --entry=azion.config.js --output=.edge
+  $ ef manifest transform --entry=manifest.json --output=azion.config.js
+  $ ef manifest generate --entry=azion.config.js --output=.edge
+  $ ef manifest --entry=azion.config.js --output=.edge
     `,
     )
     .action(async (action, options) => {
       const { manifestCommand } = await import('#commands');
-
-      // Passar todas as opções diretamente com action em vez de command
       await manifestCommand({
         ...options,
         action,
@@ -225,13 +203,13 @@ Examples:
 
 try {
   if (validateNodeMinVersion()) {
-    setBundlerEnvironment();
+    globalThis.bundler = await getBundlerEnvironment();
     startBundler();
     setupBundlerProcessHandlers();
   }
   if (!validateNodeMinVersion()) {
     feedback.error(
-      `Invalid Node version. Node version must be greater than ${MIN_NODE_VERSION}.`,
+      `Invalid Node version. Node version must be greater than ${BUNDLER.MIN_NODE_VERSION}.`,
     );
     process.exit(1);
   }

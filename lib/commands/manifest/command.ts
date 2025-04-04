@@ -27,13 +27,10 @@ export interface ManifestCommandOptions {
  * az manifest --entry=<input.config.js> --output=<output.dir>
  * ```
  */
-export async function manifestCommand(
-  options: ManifestCommandOptions,
-): Promise<void> {
+export async function manifestCommand(options: ManifestCommandOptions): Promise<void> {
   try {
     const action =
-      options.action ||
-      (options.config ? ManifestAction.GENERATE : ManifestAction.TRANSFORM);
+      options.action || (options.config ? ManifestAction.GENERATE : ManifestAction.TRANSFORM);
 
     const actionHandlers = {
       [ManifestAction.GENERATE]: async () => {

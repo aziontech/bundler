@@ -18,7 +18,7 @@ import {
 } from 'typescript';
 import prettier from 'prettier';
 import { createRequire } from 'module';
-import { AzionConfig } from 'azion/config';
+import type { AzionConfig, BuildEntryPoint } from 'azion/config';
 
 /**
  * The store uses the local disk to save configurations,
@@ -27,7 +27,7 @@ import { AzionConfig } from 'azion/config';
  */
 export interface BundlerStore {
   preset?: PresetInput;
-  entry?: string;
+  entry?: BuildEntryPoint;
   bundler?: 'webpack' | 'esbuild';
   polyfills?: boolean;
   worker?: boolean;

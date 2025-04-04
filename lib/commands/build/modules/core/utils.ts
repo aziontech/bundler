@@ -1,3 +1,5 @@
+import type { BuildConfiguration, BuildContext } from 'azion/config';
+
 /**
  * Move requires and imports to file init while preserving comments.
  */
@@ -68,4 +70,15 @@ export const moveImportsToTopLevel = (code: string): string => {
   }
 
   return newCode;
+};
+
+export const injectHybridFsPolyfill = (
+  code: string,
+  buildConfig: BuildConfiguration,
+  ctx: BuildContext,
+): string => {
+  if (buildConfig.polyfills && ctx.production) {
+    return `import SRC_NODE_FS from "node:fs";\n${code}`;
+  }
+  return code;
 };

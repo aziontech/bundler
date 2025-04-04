@@ -1,7 +1,9 @@
+import { dirname } from 'path';
+import { mkdir, writeFile } from 'fs/promises';
 import { AzionPrebuildResult, AzionConfig, BuildContext } from 'azion/config';
 import { debug } from '#utils';
+import { BUILD_CONFIG_DEFAULTS } from '#constants';
 import { feedback } from 'azion/utils/node';
-import { writeFile } from 'fs/promises';
 
 import { checkDependencies } from './utils';
 
@@ -13,61 +15,58 @@ import { executeBuild } from './modules/core';
 import { executePostbuild } from './modules/postbuild';
 import { setEnvironment } from './modules/environment';
 import { setupWorkerCode } from './modules/worker';
-import { resolveEntrypoint } from './modules/entrypoint/entrypoint';
+import { resolveHandlers } from './modules/handler';
 
-interface BuildParams {
+interface BuildOptions {
+  production?: boolean;
+}
+
+interface BuildResult {
   config: AzionConfig;
   ctx: BuildContext;
 }
 
-export const build = async ({
-  config,
-  ctx,
-}: BuildParams): Promise<{ config: AzionConfig; ctx: BuildContext }> => {
+interface BuildParams {
+  config: AzionConfig;
+  options: BuildOptions;
+}
+
+export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
   try {
+    const { config, options } = buildParams;
+    const isProduction = options?.production ?? true;
+
     await checkDependencies();
-
-    /**
-     * Users can provide either:
-     * 1. A preset name (string) that will be resolved from the library's built-in presets (azion/presets)
-     * 2. A preset module that follows the AzionBuildPreset interface
-     *
-     * Example:
-     * - Using built-in preset: config.build.preset = "javascript"
-     * - Using custom preset: config.build.preset = customPresetModule
-     */
-
     const resolvedPreset = await resolvePreset(config.build?.preset);
-    const buildConfigSetup = setupBuildConfig(config, resolvedPreset);
+    const buildConfigSetup = await setupBuildConfig(config, resolvedPreset, isProduction);
 
-    ctx.entrypoint = await resolveEntrypoint({
-      ctx,
-      preset: resolvedPreset,
-    });
+    const ctx: BuildContext = {
+      production: isProduction ?? BUILD_CONFIG_DEFAULTS.PRODUCTION,
+      handler: await resolveHandlers({
+        entrypoint: config.build?.entry,
+        preset: resolvedPreset,
+      }),
+    };
 
-    /**
-     * Resolves the handler function and converts ESM exports to worker format.
-     * This step is necessary because Azion's runtime currently only supports
-     * the worker format with addEventListener, not ESM modules.
-     *
-     * Example conversion:
-     * From ESM:
-     *   export default { fetch: (event) => new Response("Hello") }
-     * To Worker:
-     *   addEventListener('fetch', (event) => { event.respondWith(...) })
-     */
-
-    const worker = await setupWorkerCode(buildConfigSetup, ctx);
-    await writeFile(buildConfigSetup.entry, worker);
+    /** Map of resolved worker paths and their transformed contents ready for bundling */
+    const workerEntries: Record<string, string> = await setupWorkerCode(buildConfigSetup, ctx);
+    /** Write each transformed worker to its bundler entry path */
+    await Promise.all(
+      Object.entries(workerEntries).map(async ([path, code]) => {
+        await mkdir(dirname(path), { recursive: true });
+        await writeFile(path, code, 'utf-8');
+      }),
+    );
 
     /* Execute build phases */
-
     // Phase 1: Prebuild
     feedback.build.info('Starting prebuild...');
+
     const prebuildResult: AzionPrebuildResult = await executePrebuild({
       buildConfig: buildConfigSetup,
       ctx,
     });
+
     feedback.build.info('Prebuild completed successfully');
 
     // Phase 2: Build
@@ -80,7 +79,9 @@ export const build = async ({
     feedback.build.success('Build completed successfully');
 
     // Phase 3: Postbuild
+    feedback.build.info('Starting postbuild...');
     await executePostbuild({ buildConfig: buildConfigSetup, ctx });
+    feedback.build.success('Postbuild completed successfully');
 
     // Phase 4: Set Environment
     // TODO: rafactor this to use the same function
@@ -95,10 +96,8 @@ export const build = async ({
       ctx,
     };
   } catch (error: unknown) {
-    debug.error(error);
-    feedback.build.error(
-      error instanceof Error ? error.message : String(error),
-    );
+    debug.error('Build process failed:', error);
+    feedback.build.error(error instanceof Error ? error.message : String(error));
     process.exit(1);
   }
 };

@@ -1,12 +1,11 @@
 import { jest } from '@jest/globals';
-import fs from 'fs';
-import fsPromises from 'fs/promises';
+import { promises as fs } from 'fs';
 import type { AzionConfig } from 'azion/config';
 import { generateManifest } from './manifest';
 import util from './util';
 import * as utilNode from 'azion/utils/node';
 
-jest.mock('fs');
+jest.mock('fs/promises');
 
 const mockManifest = {
   name: 'test-app',
@@ -24,11 +23,10 @@ describe('generateManifest', () => {
   beforeEach(() => {
     jest.spyOn(utilNode.feedback, 'success').mockReturnValue(void 0);
     jest.spyOn(process, 'cwd').mockReturnValue('./');
-    jest.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
-    jest.spyOn(fs, 'mkdirSync').mockImplementation(() => void 0);
-    jest
-      .spyOn(fsPromises, 'readFile')
-      .mockResolvedValue(JSON.stringify(mockConfig));
+    jest.spyOn(fs, 'writeFile').mockResolvedValue(undefined);
+    jest.spyOn(fs, 'mkdir').mockResolvedValue(undefined);
+    jest.spyOn(fs, 'readFile').mockResolvedValue(JSON.stringify(mockConfig));
+    jest.spyOn(fs, 'access').mockRejectedValue(new Error('File not found'));
   });
 
   afterEach(() => {
@@ -36,25 +34,26 @@ describe('generateManifest', () => {
   });
 
   it('should create output directory if it does not exist', async () => {
-    const spyExistsSync = jest.spyOn(fs, 'existsSync').mockReturnValue(false);
-    const spyMkdirSync = jest.spyOn(fs, 'mkdirSync');
+    const spyAccess = jest.spyOn(fs, 'access');
+    const spyMkdir = jest.spyOn(fs, 'mkdir');
 
     await generateManifest(mockConfig);
-    expect(spyExistsSync).toHaveBeenCalledWith('.edge');
-    expect(spyMkdirSync).toHaveBeenCalledWith('.edge', { recursive: true });
+
+    expect(spyAccess).toHaveBeenCalledWith('.edge');
+    expect(spyMkdir).toHaveBeenCalledWith('.edge', { recursive: true });
   });
 
   it('should not create output directory if it already exists', async () => {
-    jest.spyOn(fs, 'existsSync').mockReturnValue(true);
-    const spyMkdirSync = jest.spyOn(fs, 'mkdirSync');
+    jest.spyOn(fs, 'access').mockResolvedValue(undefined);
+    const spyMkdir = jest.spyOn(fs, 'mkdir');
 
     await generateManifest(mockConfig);
 
-    expect(spyMkdirSync).not.toHaveBeenCalled();
+    expect(spyMkdir).not.toHaveBeenCalled();
   });
 
   it('should process config and write manifest file', async () => {
-    const spyWriteFileSync = jest.spyOn(fs, 'writeFileSync');
+    const spyWriteFile = jest.spyOn(fs, 'writeFile');
     const spyProcessConfigWrapper = jest
       .spyOn(util, 'processConfigWrapper')
       .mockReturnValue(mockManifest);
@@ -62,21 +61,21 @@ describe('generateManifest', () => {
     await generateManifest(mockConfig);
 
     expect(spyProcessConfigWrapper).toHaveBeenCalled();
-    expect(spyWriteFileSync).toHaveBeenCalledWith(
+    expect(spyWriteFile).toHaveBeenCalledWith(
       '.edge/manifest.json',
       JSON.stringify(mockManifest, null, 2),
     );
   });
 
   it('should use custom output path when provided', async () => {
-    const spyExistsSync = jest.spyOn(fs, 'existsSync');
+    const spyAccess = jest.spyOn(fs, 'access');
     jest.spyOn(util, 'processConfigWrapper').mockReturnValue(mockManifest);
-    const spyWriteFileSync = jest.spyOn(fs, 'writeFileSync');
+    const spyWriteFile = jest.spyOn(fs, 'writeFile');
 
     await generateManifest(mockConfig, '/custom/path');
 
-    expect(spyExistsSync).toHaveBeenCalledWith('/custom/path');
-    expect(spyWriteFileSync).toHaveBeenCalledWith(
+    expect(spyAccess).toHaveBeenCalledWith('/custom/path');
+    expect(spyWriteFile).toHaveBeenCalledWith(
       '/custom/path/manifest.json',
       JSON.stringify(mockManifest, null, 2),
     );
