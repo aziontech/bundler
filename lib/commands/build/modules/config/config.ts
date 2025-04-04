@@ -19,6 +19,8 @@ export const setupBuildConfig = async (
       entry: userEntryPath,
       ext: preset.metadata.ext ?? BUNDLER.DEFAULT_OUTPUT_EXTENSION,
       production,
+      bundler:
+        azionConfig.build?.bundler ?? preset.config.build?.bundler ?? SUPPORTED_BUNDLERS.DEFAULT,
     });
   }
 
@@ -27,6 +29,8 @@ export const setupBuildConfig = async (
       entry: BUNDLER.DEFAULT_HANDLER_FILENAME,
       ext: preset.metadata.ext ?? BUNDLER.DEFAULT_OUTPUT_EXTENSION,
       production,
+      bundler:
+        azionConfig.build?.bundler ?? preset.config.build?.bundler ?? SUPPORTED_BUNDLERS.DEFAULT,
     });
   }
 
@@ -35,6 +39,8 @@ export const setupBuildConfig = async (
       entry: preset.config.build.entry,
       ext: preset.metadata.ext ?? BUNDLER.DEFAULT_OUTPUT_EXTENSION,
       production,
+      bundler:
+        azionConfig.build?.bundler ?? preset.config.build?.bundler ?? SUPPORTED_BUNDLERS.DEFAULT,
     });
   }
 
@@ -42,6 +48,7 @@ export const setupBuildConfig = async (
     throw new Error('No entry point provided. ');
   }
 
+  console.log(resolvedEntryPathsMap);
   return {
     ...azionConfig.build,
     entry: resolvedEntryPathsMap,

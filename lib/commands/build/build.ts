@@ -2,7 +2,7 @@ import { dirname } from 'path';
 import { mkdir, writeFile } from 'fs/promises';
 import { AzionPrebuildResult, AzionConfig, BuildContext } from 'azion/config';
 import { debug } from '#utils';
-import { BUILD_MESSAGES, BUILD_CONFIG_DEFAULTS } from '#constants';
+import { BUILD_CONFIG_DEFAULTS } from '#constants';
 import { feedback } from 'azion/utils/node';
 
 import { checkDependencies } from './utils';
@@ -60,28 +60,28 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
 
     /* Execute build phases */
     // Phase 1: Prebuild
-    feedback.build.info(BUILD_MESSAGES.PREBUILD.START);
+    feedback.build.info('Starting prebuild...');
 
     const prebuildResult: AzionPrebuildResult = await executePrebuild({
       buildConfig: buildConfigSetup,
       ctx,
     });
 
-    feedback.build.info(BUILD_MESSAGES.PREBUILD.SUCCESS);
+    feedback.build.info('Prebuild completed successfully');
 
     // Phase 2: Build
-    feedback.build.info(BUILD_MESSAGES.BUILD.START);
+    feedback.build.info('Starting build...');
     await executeBuild({
       buildConfig: buildConfigSetup,
       prebuildResult,
       ctx,
     });
-    feedback.build.success(BUILD_MESSAGES.BUILD.SUCCESS);
+    feedback.build.success('Build completed successfully');
 
     // Phase 3: Postbuild
-    feedback.build.info(BUILD_MESSAGES.POSTBUILD.START);
+    feedback.build.info('Starting postbuild...');
     await executePostbuild({ buildConfig: buildConfigSetup, ctx });
-    feedback.build.success(BUILD_MESSAGES.POSTBUILD.SUCCESS);
+    feedback.build.success('Postbuild completed successfully');
 
     // Phase 4: Set Environment
     await setEnvironment({ config, preset: resolvedPreset, ctx });

@@ -3,22 +3,6 @@ import { readFileSync } from 'fs';
 import { getAbsoluteDirPath } from 'azion/utils/node';
 import { tmpdir } from 'os';
 
-/** Build phases feedback messages */
-export const BUILD_MESSAGES = {
-  PREBUILD: {
-    START: 'Starting prebuild...',
-    SUCCESS: 'Prebuild completed successfully',
-  },
-  BUILD: {
-    START: 'Starting build...',
-    SUCCESS: 'Build completed successfully',
-  },
-  POSTBUILD: {
-    START: 'Starting postbuild...',
-    SUCCESS: 'Postbuild completed successfully',
-  },
-} as const;
-
 /** Default directories */
 export const DIRECTORIES = {
   OUTPUT_BASE_PATH: '.edge',
@@ -59,8 +43,8 @@ export const BUNDLER = {
   NAMESPACE: 'bundler',
   MIN_NODE_VERSION: '18.0.0',
   CONFIG_FILENAME: 'azion.config',
-  DEFAULT_HANDLER_FILENAME: 'handler.js',
-  DEFAULT_DEV_WORKER_FILENAME: 'handler.dev.js',
+  DEFAULT_HANDLER_FILENAME: 'handler',
+  DEFAULT_DEV_WORKER_FILENAME: 'handler.dev',
   DEFAULT_OUTPUT_EXTENSION: 'js',
   LIB_DIR: getAbsoluteDirPath(import.meta.url, 'bundler'),
   ARGS_PATH: 'azion/args.json',

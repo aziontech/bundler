@@ -1,18 +1,26 @@
-import { join, basename, dirname, extname } from 'path';
+import { join, basename, dirname, extname, resolve } from 'path';
 import { BuildEntryPoint } from 'azion/config';
-import { DIRECTORIES, FILE_PATTERNS, BUILD_CONFIG_DEFAULTS } from '#constants';
 import { access } from 'fs/promises';
+
+// Well-defined types
 type GetTempEntryPathsOptions = {
   entry: BuildEntryPoint | string;
   ext?: string;
   basePath?: string;
   production?: boolean;
+  bundler?: string;
 };
 
+/**
+ * Generates a timestamp in YYYYMMDD format
+ */
 export const generateTimestamp = (): string => {
   return new Date().toISOString().slice(0, 10).replace(/-/g, '');
 };
 
+/**
+ * Validates that all entry points exist in the file system
+ */
 export const validateEntryPoints = async (entry: BuildEntryPoint): Promise<void> => {
   const entries = Array.isArray(entry)
     ? entry
@@ -21,58 +29,69 @@ export const validateEntryPoints = async (entry: BuildEntryPoint): Promise<void>
       : Object.values(entry);
 
   await Promise.all(
-    entries.map(async (entry) => {
+    entries.map(async (entryPath) => {
       try {
-        await access(entry);
+        await access(entryPath);
       } catch (error) {
         throw new Error(
-          `Entry point "${entry}" was not found. Please verify the path and try again.`,
+          `Entry point "${entryPath}" was not found. Please verify the path and try again.`,
         );
       }
     }),
   );
 };
 
+/**
+ * Creates a map of entry paths to output paths
+ */
 export const createPathEntriesMap = async ({
   entry,
-  ext = BUILD_CONFIG_DEFAULTS.EXTENSION,
-  basePath = DIRECTORIES.OUTPUT_FUNCTIONS_PATH,
+  ext = 'js',
+  basePath = '.edge/functions',
   production = true,
+  bundler,
 }: GetTempEntryPathsOptions): Promise<Record<string, string>> => {
   const timestamp = generateTimestamp();
 
+  /**
+   * Creates an entry record with temporary and final paths
+   */
   const createEntryRecord = (entryPath: string, outputPath?: string): Record<string, string> => {
     const base = basename(entryPath, extname(entryPath));
     const dir = dirname(entryPath);
 
-    const tempPath = join(dir, FILE_PATTERNS.TEMP_FILE(base, timestamp, ext));
+    // Temporary file
+    const tempFileName = `azion-${base}-${timestamp}.temp.${ext}`;
+    const tempPath = resolve(process.cwd(), tempFileName);
 
+    // When using webpack as bundler, we need to explicitly add .js extension
+    const finalExt = bundler === 'webpack' ? '.js' : '';
+    const devSuffix = production ? '' : '.dev';
+
+    // Determine the final path
+    let finalPath: string;
     if (outputPath) {
       const outputWithoutExt = outputPath.replace(/\.[^/.]+$/, '');
-      const finalPath = production
-        ? join(basePath, outputWithoutExt)
-        : join(basePath, `${outputWithoutExt}.dev`);
-
-      return {
-        [finalPath]: tempPath,
-      };
+      finalPath = join(basePath, `${outputWithoutExt}${devSuffix}${finalExt}`);
+    } else {
+      finalPath = join(basePath, dir, `${base}${devSuffix}${finalExt}`);
     }
 
-    const finalPath = production ? join(basePath, dir, base) : join(basePath, dir, `${base}.dev`);
-
-    return {
-      [finalPath]: tempPath,
-    };
+    return { [finalPath]: tempPath };
   };
 
+  // Process entry based on type
   if (typeof entry === 'string') {
-    return createEntryRecord(entry);
+    const base = basename(entry, extname(entry));
+    const outputKey = `${base}${production ? '' : '.dev'}`;
+    return { ...createEntryRecord(entry, outputKey) };
   }
 
   if (Array.isArray(entry)) {
     return entry.reduce((acc, e) => ({ ...acc, ...createEntryRecord(e) }), {});
   }
 
+  // Entry is an object
   return Object.entries(entry).reduce(
     (acc, [key, value]) => ({ ...acc, ...createEntryRecord(value, key) }),
     {},
