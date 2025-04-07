@@ -10,7 +10,7 @@ describe('executePrebuild', () => {
   let spycopyFilesToLocalEdgeStorage: jest.SpiedFunction<typeof utils.copyFilesToLocalEdgeStorage>;
 
   const mockBuildConfig: BuildConfiguration = {
-    entry: 'src/index.js',
+    entry: { 'handler.js': 'src/index.js' },
     preset: {
       metadata: { name: 'test-preset' },
       config: { build: {} },
@@ -29,6 +29,7 @@ describe('executePrebuild', () => {
 
   const mockContext: BuildContext = {
     production: true,
+    handler: 'handler.js',
   };
 
   const mockPrebuildResult: AzionPrebuildResult = {

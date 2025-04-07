@@ -14,7 +14,9 @@ jest.mock('./bundlers');
 
 describe('executeBuild', () => {
   const mockBuildConfig: BuildConfiguration = {
-    entry: 'src/index.js',
+    entry: {
+      'handler.js': 'src/index.js',
+    },
     preset: {
       metadata: { name: 'test-preset' },
       config: { build: {} },
@@ -30,6 +32,7 @@ describe('executeBuild', () => {
 
   const mockContext: BuildContext = {
     production: false,
+    handler: 'handler.js',
   };
 
   const mockPrebuildResult: AzionPrebuildResult = {
@@ -125,7 +128,7 @@ describe('executeBuild', () => {
 
   it('should inject entry content when provided in prebuild result', async () => {
     const spyReadFile = jest.spyOn(fsPromises, 'readFile').mockImplementation((path) => {
-      if (path === mockBuildConfig.entry) {
+      if (path === mockBuildConfig.entry['handler.js']) {
         return Promise.resolve('// Original entry code');
       }
       return Promise.resolve('/* public/index.js content */');
@@ -150,11 +153,11 @@ describe('executeBuild', () => {
       ctx: mockContext,
     });
 
-    expect(spyReadFile).toHaveBeenCalledWith(mockBuildConfig.entry, 'utf-8');
+    expect(spyReadFile).toHaveBeenCalledWith(mockBuildConfig.entry['handler.js'], 'utf-8');
     expect(spyReadFile).toHaveBeenCalledWith('public/index.js', 'utf-8');
 
     expect(writeFile).toHaveBeenCalledWith(
-      mockBuildConfig.entry,
+      mockBuildConfig.entry['handler.js'],
       expect.stringContaining('// Original entry code'),
     );
   });

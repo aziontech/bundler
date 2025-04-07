@@ -34,6 +34,7 @@ describe('setEnvironment', () => {
 
   const mockContext: BuildContext = {
     production: true,
+    handler: 'handler.js',
   };
 
   beforeEach(() => {

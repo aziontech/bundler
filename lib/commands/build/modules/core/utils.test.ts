@@ -90,6 +90,7 @@ describe('injectHybridFsPolyfill', () => {
 
   const mockContext: BuildContext = {
     production: false,
+    handler: 'handler.js',
   };
 
   it('should not inject polyfill when polyfills is false', () => {
@@ -108,7 +109,7 @@ describe('injectHybridFsPolyfill', () => {
   it('should inject polyfill when polyfills is true and in production', () => {
     const code = `const x = 1;`;
     const config = { ...mockBuildConfig, polyfills: true };
-    const ctx = { production: true, entrypoint: [] };
+    const ctx = { production: true, entrypoint: [], handler: 'handler.js' };
 
     const result = injectHybridFsPolyfill(code, config, ctx);
     expect(result).toBe(`import SRC_NODE_FS from "node:fs";\nconst x = 1;`);

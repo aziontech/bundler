@@ -3,7 +3,7 @@ import { BuildEntryPoint } from 'azion/config';
 import { access } from 'fs/promises';
 
 // Well-defined types
-type GetTempEntryPathsOptions = {
+export type GetTempEntryPathsOptions = {
   entry: BuildEntryPoint | string;
   ext?: string;
   basePath?: string;
