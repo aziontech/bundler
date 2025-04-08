@@ -19,14 +19,14 @@ describe('E2E - simple-js-firewall-event project', () => {
     localhostBaseUrl = `http://0.0.0.0:${serverPort}`;
 
     request = supertest(localhostBaseUrl);
-
     await projectInitializer(
       EXAMPLE_PATH,
       'javascript',
       serverPort,
       true,
+      'http://0.0.0.0',
       undefined,
-      false,
+      'index.js',
     );
   }, TIMEOUT);
 

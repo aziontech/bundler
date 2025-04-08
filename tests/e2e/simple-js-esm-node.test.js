@@ -19,7 +19,15 @@ describe('E2E - simple-js-esm-node project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'javascript', serverPort, true);
+    await projectInitializer(
+      EXAMPLE_PATH,
+      'javascript',
+      serverPort,
+      true,
+      'http://0.0.0.0',
+      false,
+      'index.js',
+    );
   }, TIMEOUT);
 
   afterAll(async () => {
@@ -27,10 +35,7 @@ describe('E2E - simple-js-esm-node project', () => {
   }, TIMEOUT);
 
   test('Should return messages in "/" route', async () => {
-    const response = await request
-      .get('/')
-      .expect(200)
-      .expect('Content-Type', /json/);
+    const response = await request.get('/').expect(200).expect('Content-Type', /json/);
 
     expect(response.body.message).toBe('Hello!\u0000\u0000\u0000\u0000');
     expect(response.body.fullMessage).toBe('Hello, world!');
