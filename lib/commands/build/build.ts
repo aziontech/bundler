@@ -1,6 +1,6 @@
 import { dirname } from 'path';
 import { mkdir, writeFile } from 'fs/promises';
-import { AzionPrebuildResult, AzionConfig, BuildContext } from 'azion/config';
+import { AzionPrebuildResult, AzionConfig, BuildContext, BuildConfiguration } from 'azion/config';
 import { debug } from '#utils';
 import { BUILD_CONFIG_DEFAULTS } from '#constants';
 import { feedback } from 'azion/utils/node';
@@ -24,6 +24,7 @@ interface BuildOptions {
 interface BuildResult {
   config: AzionConfig;
   ctx: BuildContext;
+  setup: BuildConfiguration;
 }
 
 interface BuildParams {
@@ -34,7 +35,7 @@ interface BuildParams {
 export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
   try {
     const { config, options } = buildParams;
-    const isProduction = options?.production ?? true;
+    const isProduction = Boolean(options.production);
 
     await checkDependencies();
     const resolvedPreset = await resolvePreset(config.build?.preset);
@@ -89,6 +90,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     return {
       config,
       ctx,
+      setup: buildConfigSetup,
     };
   } catch (error: unknown) {
     debug.error('Build process failed:', error);

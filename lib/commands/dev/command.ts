@@ -1,6 +1,3 @@
-import { join } from 'path';
-import { DIRECTORIES, BUNDLER } from '#constants';
-
 /**
  * @function
  * @description A command to start the development server.
@@ -13,12 +10,7 @@ export async function devCommand({ entry, port }: { entry?: string; port: string
   const parsedPort = parseInt(port, 10);
   const { server } = await import('#env');
 
-  const devWorkerPath = join(
-    DIRECTORIES.OUTPUT_FUNCTIONS_PATH,
-    `${BUNDLER.DEFAULT_DEV_WORKER_FILENAME}.${BUNDLER.DEFAULT_OUTPUT_EXTENSION}`,
-  );
-
-  const entryPoint = entry || devWorkerPath;
+  const entryPoint = entry || null;
 
   server(entryPoint, parsedPort);
 }

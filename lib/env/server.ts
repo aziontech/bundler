@@ -10,12 +10,12 @@ import { feedback } from 'azion/utils/node';
 
 import chokidar from 'chokidar';
 import runtime from './runtime';
-import bundler from './bundler';
 
 import { buildCommand } from '../commands/build';
 import { runServer } from 'edge-runtime';
 import fs from 'fs/promises';
 import { basename } from 'path';
+
 let currentServer: Awaited<ReturnType<typeof runServer>>;
 let isChangeHandlerRunning = false;
 
@@ -111,38 +111,30 @@ async function initializeServer(port: number, workerCode: string) {
 }
 
 /**
- * Build to Local Server with polyfill external
- */
-async function buildToLocalServer() {
-  const vulcanEnv = await bundler.readStore('global');
-
-  if (!vulcanEnv) {
-    const msg = 'Run the build command before running your project.';
-    feedback.server.error(msg);
-    throw new Error(msg);
-  }
-  await buildCommand({ production: false });
-}
-
-/**
  * Handle server operations: start, restart.
  */
-async function manageServer(workerPath: string, port: number) {
+async function manageServer(workerPath: string | null, port: number) {
   try {
     if (currentServer) {
       await currentServer.close();
     }
 
-    await buildToLocalServer();
+    const {
+      setup: { entry },
+    } = await buildCommand({ production: false });
 
     let workerCode;
     try {
-      workerCode = await readWorkerFile(workerPath);
+      // FIXME: Temporary solution to maintain compatibility.
+      // Will be refactored along with the legacy module for better
+      // handling of file extensions.
+      const entryPath = Object.keys(entry)[0];
+      const finalPath = entryPath.endsWith('.js') ? entryPath : `${entryPath}.js`;
+      workerCode = await readWorkerFile(workerPath || finalPath);
     } catch (error) {
       feedback.server.error((error as Error).message);
       debug.error(`Error reading worker file: ${error}`);
       process.exit(1);
-      return; // Adicionado para clareza, embora o process.exit() já interrompa a execução
     }
 
     try {
@@ -170,7 +162,7 @@ async function manageServer(workerPath: string, port: number) {
 /**
  * Handle file changes and prevent concurrent execution.
  */
-async function handleFileChange(path: string, workerPath: string, port: number) {
+async function handleFileChange(path: string, workerPath: string | null, port: number) {
   if (isChangeHandlerRunning) return;
 
   if (
@@ -199,7 +191,7 @@ async function handleFileChange(path: string, workerPath: string, port: number) 
 /**
  * Entry point function to start the server and watch for file changes.
  */
-async function startServer(workerPath: string, port: number) {
+async function startServer(workerPath: string | null, port: number) {
   const IsPortInUse = await checkPortAvailability(port);
   if (IsPortInUse) {
     feedback.server.error(`Port ${port} is in use. Please choose another port.`);
