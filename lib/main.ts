@@ -1,12 +1,11 @@
 #! /usr/bin/env node
 import { resolve, join } from 'path';
-import { readFileSync, readdirSync, unlinkSync, mkdirSync } from 'fs';
+import { readFileSync, mkdirSync } from 'fs';
 import { Command } from 'commander';
 import { satisfies } from 'semver';
 import os from 'os';
 import crypto from 'crypto';
-
-import { debug } from '#utils';
+import { removeAzionTempFiles, debug } from '#utils';
 import { feedback, getAbsoluteDirPath } from 'azion/utils/node';
 
 const MIN_NODE_VERSION = '18.0.0';
@@ -72,51 +71,34 @@ function setBundlerEnvironment() {
 }
 
 /**
- * Removes all temporary files starting with 'azion-' and ending with '.temp.js' or '.temp.ts'.
- */
-function cleanUpTempFiles() {
-  const directory = process.cwd();
-  const tempFiles = readdirSync(directory).filter(
-    (file) =>
-      file.startsWith('azion-') &&
-      (file.endsWith('.temp.js') || file.endsWith('.temp.ts')),
-  );
-
-  tempFiles.forEach((file) => {
-    const filePath = join(directory, file);
-    unlinkSync(filePath);
-  });
-}
-
-/**
  * Sets up event handlers for cleanup and error handling.
  */
 function setupBundlerProcessHandlers() {
-  process.on('exit', cleanUpTempFiles);
+  process.on('exit', removeAzionTempFiles);
   process.on('SIGINT', () => {
-    cleanUpTempFiles();
+    removeAzionTempFiles();
     process.exit(0);
   });
   process.on('SIGTERM', () => {
-    cleanUpTempFiles();
+    removeAzionTempFiles();
     process.exit(0);
   });
   process.on('SIGHUP', () => {
-    cleanUpTempFiles();
+    removeAzionTempFiles();
     process.exit(0);
   });
   process.on('SIGBREAK', () => {
-    cleanUpTempFiles();
+    removeAzionTempFiles();
     process.exit(0);
   });
   process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
-    cleanUpTempFiles();
+    removeAzionTempFiles();
     process.exit(1);
   });
   process.on('unhandledRejection', (reason) => {
     console.error('Unhandled Promise Rejection:', reason);
-    cleanUpTempFiles();
+    removeAzionTempFiles();
     process.exit(1);
   });
 }
