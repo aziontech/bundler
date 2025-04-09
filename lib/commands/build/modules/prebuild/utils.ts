@@ -53,11 +53,7 @@ export const injectWorkerMemoryFiles = async ({
   return `globalThis.${namespace}.${property}=${JSON.stringify(result)};`;
 };
 
-export const copyFilesToLocalEdgeStorage = async ({
-  dirs,
-  prefix,
-  outputPath,
-}: StorageConfig) => {
+export const copyFilesToLocalEdgeStorage = async ({ dirs, prefix, outputPath }: StorageConfig) => {
   await Promise.all(
     dirs.map(async (dir) => {
       const targetPath = prefix ? dir.replace(prefix, '') : dir;
@@ -77,19 +73,13 @@ export const copyFilesToLocalEdgeStorage = async ({
   );
 };
 
-export const injectWorkerGlobals = ({
-  namespace,
-  property,
-  vars,
-}: WorkerGlobalsConfig) =>
+export const injectWorkerGlobals = ({ namespace, property, vars }: WorkerGlobalsConfig) =>
   Object.entries(vars).reduce(
     (acc, [key, value]) => {
       const propPath = property ? `${namespace}.${property}` : namespace;
       return `${acc} globalThis.${propPath}.${key}=${value};`;
     },
-    property
-      ? `globalThis.${namespace}.${property}={};`
-      : `globalThis.${namespace}={};`,
+    property ? `globalThis.${namespace}.${property}={};` : `globalThis.${namespace}={};`,
   );
 
 export const injectWorkerPathPrefix = async ({
@@ -101,8 +91,7 @@ export const injectWorkerPathPrefix = async ({
   property: string;
   prefix: string;
 }) => {
-  const formattedPrefix =
-    prefix && typeof prefix === 'string' && prefix !== '' ? prefix : '""';
+  const formattedPrefix = prefix && typeof prefix === 'string' && prefix !== '' ? prefix : '""';
   return `globalThis.${namespace} = { ...globalThis.${namespace}, ${property}: '${formattedPrefix}'};`;
 };
 

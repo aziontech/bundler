@@ -10,12 +10,7 @@ import { PresetInput } from 'azion/config';
 import fs from 'fs';
 import fsPromises from 'fs/promises';
 import path from 'path';
-import {
-  ModuleKind,
-  ModuleResolutionKind,
-  ScriptTarget,
-  transpileModule,
-} from 'typescript';
+import { ModuleKind, ModuleResolutionKind, ScriptTarget, transpileModule } from 'typescript';
 import prettier from 'prettier';
 import { createRequire } from 'module';
 import type { AzionConfig, BuildEntryPoint } from 'azion/config';
@@ -68,16 +63,11 @@ export async function writeStore(values: BundlerStore, scope = 'global') {
   }
 
   try {
-    await fsPromises.writeFile(
-      bundlerSesssionStorePath,
-      JSON.stringify(values, null, 2),
-    );
+    await fsPromises.writeFile(bundlerSesssionStorePath, JSON.stringify(values, null, 2));
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (debug as any).error(error);
-    feedback.build.error(
-      `An error occurred while writing the ${bundlerSesssionStorePath} file.`,
-    );
+    feedback.build.error(`An error occurred while writing the ${bundlerSesssionStorePath} file.`);
     throw error;
   }
 }
@@ -108,10 +98,7 @@ export async function readStore(
 
   try {
     await fsPromises.access(bundlerStoreFilePath);
-    const fileContents = await fsPromises.readFile(
-      bundlerStoreFilePath,
-      'utf8',
-    );
+    const fileContents = await fsPromises.readFile(bundlerStoreFilePath, 'utf8');
     return JSON.parse(fileContents);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
@@ -135,9 +122,7 @@ function handleDependencyError(error: Error, configPath: string) {
       );
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (debug as any).error(
-      `Failed to load configuration from ${configPath}. ${error.message}`,
-    );
+    (debug as any).error(`Failed to load configuration from ${configPath}. ${error.message}`);
   } else {
     throw error;
   }
@@ -186,10 +171,7 @@ export async function readUserConfig(configPath?: string) {
     switch (extension) {
       case '.ts':
         // eslint-disable-next-line no-case-declarations
-        const tsContent = await fsPromises.readFile(
-          resolvedConfigPath,
-          'utf-8',
-        );
+        const tsContent = await fsPromises.readFile(resolvedConfigPath, 'utf-8');
         // eslint-disable-next-line no-case-declarations
         const jsContent = transpileModule(tsContent, {
           compilerOptions: {
@@ -292,8 +274,7 @@ export async function writeUserConfig(config: AzionConfig): Promise<void> {
   };
 
   const formattedContent = await prettier.format(
-    configComment +
-      `${moduleExportStyle} ${JSON.stringify(config, replacer, 2)};`,
+    configComment + `${moduleExportStyle} ${JSON.stringify(config, replacer, 2)};`,
     {
       parser: 'babel',
       semi: false,

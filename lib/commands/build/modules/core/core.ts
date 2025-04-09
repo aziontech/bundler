@@ -1,8 +1,4 @@
-import {
-  AzionPrebuildResult,
-  BuildContext,
-  BuildConfiguration,
-} from 'azion/config';
+import { AzionPrebuildResult, BuildContext, BuildConfiguration } from 'azion/config';
 import bundlers from './bundlers';
 import { moveImportsToTopLevel, injectHybridFsPolyfill } from './utils';
 import fsPromises from 'fs/promises';
@@ -28,17 +24,14 @@ export const executeBuild = async ({
 
     if (prebuildResult.filesToInject.length > 0) {
       const filesContent = await Promise.all(
-        prebuildResult.filesToInject.map((filePath) =>
-          fsPromises.readFile(filePath, 'utf-8'),
-        ),
+        prebuildResult.filesToInject.map((filePath) => fsPromises.readFile(filePath, 'utf-8')),
       ).then((contents) => contents.join(' '));
 
       await Promise.all(
         entry.map(async (tempPath) => {
           const entryContent = await fsPromises.readFile(tempPath, 'utf-8');
           const contentWithInjection = `${filesContent} ${entryContent}`;
-          const contentWithTopLevelImports =
-            moveImportsToTopLevel(contentWithInjection);
+          const contentWithTopLevelImports = moveImportsToTopLevel(contentWithInjection);
           return fsPromises.writeFile(tempPath, contentWithTopLevelImports);
         }),
       );
@@ -80,23 +73,14 @@ export const executeBuild = async ({
   }
 };
 
-const executeBundler = async (
-  bundlerConfig: BuildConfiguration,
-  ctx: BuildContext,
-) => {
+const executeBundler = async (bundlerConfig: BuildConfiguration, ctx: BuildContext) => {
   switch (bundlerConfig.bundler) {
     case 'esbuild': {
-      const config = bundlers.createAzionESBuildConfigWrapper(
-        bundlerConfig,
-        ctx,
-      );
+      const config = bundlers.createAzionESBuildConfigWrapper(bundlerConfig, ctx);
       return bundlers.executeESBuildBuildWrapper(config);
     }
     case 'webpack': {
-      const config = bundlers.createAzionWebpackConfigWrapper(
-        bundlerConfig,
-        ctx,
-      );
+      const config = bundlers.createAzionWebpackConfigWrapper(bundlerConfig, ctx);
       return bundlers.executeWebpackBuildWrapper(config);
     }
     default:

@@ -1,8 +1,4 @@
-import {
-  AzionPrebuildResult,
-  BuildContext,
-  BuildConfiguration,
-} from 'azion/config';
+import { AzionPrebuildResult, BuildContext, BuildConfiguration } from 'azion/config';
 import utils from './utils';
 import { DIRECTORIES, BUNDLER } from '#constants';
 
@@ -28,9 +24,7 @@ export const executePrebuild = async ({
   buildConfig,
   ctx,
 }: PrebuildParams): Promise<AzionPrebuildResult> => {
-  const result =
-    (await buildConfig.preset.prebuild?.(buildConfig, ctx)) ||
-    DEFAULT_PREBUILD_RESULT;
+  const result = (await buildConfig.preset.prebuild?.(buildConfig, ctx)) || DEFAULT_PREBUILD_RESULT;
 
   const globalThisWithVars = utils.injectWorkerGlobals({
     namespace: BUNDLER.NAMESPACE,

@@ -1,11 +1,7 @@
 import { join } from 'path';
 import { readFile, stat, rm, mkdir } from 'fs/promises';
 import { getPackageManager } from 'azion/utils/node';
-import type {
-  ConfigValueOptions,
-  PresetValueOptions,
-  PackageJson,
-} from './types';
+import type { ConfigValueOptions, PresetValueOptions, PackageJson } from './types';
 import type { PresetInput, BuildEntryPoint } from 'azion/config';
 
 export class PackageJsonError extends Error {
@@ -31,10 +27,7 @@ export const readPackageJson = async (): Promise<PackageJson> => {
     const content = await readFile(packageJsonPath, 'utf8');
     return JSON.parse(content);
   } catch (error: unknown) {
-    throw new PackageJsonError(
-      'Failed to read package.json',
-      (error as { code?: string }).code,
-    );
+    throw new PackageJsonError('Failed to read package.json', (error as { code?: string }).code);
   }
 };
 
@@ -60,10 +53,7 @@ export const checkDependencies = async (): Promise<void> => {
     throw error;
   }
 
-  if (
-    projectJson &&
-    (projectJson.dependencies || projectJson.devDependencies)
-  ) {
+  if (projectJson && (projectJson.dependencies || projectJson.devDependencies)) {
     const pkgManager = await getPackageManager();
     const nodeModulesExists = await hasNodeModulesDirectory();
 

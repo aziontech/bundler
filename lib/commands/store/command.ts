@@ -18,10 +18,7 @@ interface StoreCommandParams {
   options?: StoreCommandOptions;
 }
 
-export async function storeCommand({
-  command,
-  options = {},
-}: StoreCommandParams) {
+export async function storeCommand({ command, options = {} }: StoreCommandParams) {
   const scope = options.scope || 'global';
 
   try {

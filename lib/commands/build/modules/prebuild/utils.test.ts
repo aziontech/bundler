@@ -29,9 +29,7 @@ describe('injectWorkerGlobals', () => {
       vars: { API_KEY: '"test-key"' },
     });
 
-    expect(result).toBe(
-      'globalThis.bundler.env={}; globalThis.bundler.env.API_KEY="test-key";',
-    );
+    expect(result).toBe('globalThis.bundler.env={}; globalThis.bundler.env.API_KEY="test-key";');
   });
 
   it('should handle empty vars', () => {
@@ -74,8 +72,7 @@ describe('injectWorkerMemoryFiles', () => {
     spyStat.mockImplementation((path) =>
       Promise.resolve({
         isDirectory: () => path === 'subdir',
-        isFile: () =>
-          path === 'public/file.txt' || path === 'public/subdir/nested.txt',
+        isFile: () => path === 'public/file.txt' || path === 'public/subdir/nested.txt',
       } as any),
     );
 
@@ -91,9 +88,7 @@ describe('injectWorkerMemoryFiles', () => {
     expect(spyStat).toHaveBeenCalledWith('public/subdir/nested.txt');
     expect(spyReadFile).toHaveBeenCalledWith('public/file.txt');
     expect(spyReadFile).toHaveBeenCalledWith('public/subdir/nested.txt');
-    expect(result).toStrictEqual(
-      expect.stringContaining('globalThis.bundler.__FILES__='),
-    );
+    expect(result).toStrictEqual(expect.stringContaining('globalThis.bundler.__FILES__='));
   });
 });
 
@@ -101,9 +96,7 @@ describe('copyFilesToLocalEdgeStorage', () => {
   beforeEach(() => {
     spyMkdir = jest.spyOn(fsPromises, 'mkdir').mockResolvedValue(undefined);
     spyCp = jest.spyOn(fsPromises, 'cp').mockResolvedValue(undefined);
-    spyAccess = jest
-      .spyOn(fsPromises, 'access')
-      .mockRejectedValue(new Error('File not found'));
+    spyAccess = jest.spyOn(fsPromises, 'access').mockRejectedValue(new Error('File not found'));
   });
 
   afterEach(() => {

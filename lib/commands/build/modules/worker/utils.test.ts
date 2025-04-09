@@ -36,10 +36,7 @@ describe('normalizeEntryPointPaths', () => {
 
   it('should handle array entry points', () => {
     const entry = ['src/index.js', 'src/worker.js'];
-    expect(normalizeEntryPointPaths(entry)).toEqual([
-      'src/index.js',
-      'src/worker.js',
-    ]);
+    expect(normalizeEntryPointPaths(entry)).toEqual(['src/index.js', 'src/worker.js']);
   });
 
   it('should handle object entry points', () => {
@@ -47,10 +44,7 @@ describe('normalizeEntryPointPaths', () => {
       'dist/main': 'src/index.js',
       'dist/worker': 'src/worker.js',
     };
-    expect(normalizeEntryPointPaths(entry)).toEqual([
-      'src/index.js',
-      'src/worker.js',
-    ]);
+    expect(normalizeEntryPointPaths(entry)).toEqual(['src/index.js', 'src/worker.js']);
   });
 
   it('should handle empty object', () => {

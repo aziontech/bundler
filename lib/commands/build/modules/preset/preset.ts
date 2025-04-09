@@ -26,21 +26,15 @@ const validatePreset = (preset: AzionBuildPreset): boolean => {
  */
 const loadPreset = async (presetName: string): Promise<AzionBuildPreset> => {
   const normalizedName = presetName.toLowerCase();
-  return presets[
-    normalizedName as keyof typeof presets
-  ] as unknown as AzionBuildPreset;
+  return presets[normalizedName as keyof typeof presets] as unknown as AzionBuildPreset;
 };
 
 /**
  * Loads and validates preset from input
  */
-export const resolvePreset = async (
-  input?: PresetInput,
-): Promise<AzionBuildPreset> => {
+export const resolvePreset = async (input?: PresetInput): Promise<AzionBuildPreset> => {
   if (!input) {
-    utilsNode.feedback.build.info(
-      'No preset specified, using automatic detection...',
-    );
+    utilsNode.feedback.build.info('No preset specified, using automatic detection...');
     input = await inferPreset.inferPreset();
   }
 
