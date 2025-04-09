@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals';
+import { debug, generateTimestamp } from './utils';
 
 describe('debug utils', () => {
   let originalDebugValue: string | undefined;
@@ -12,10 +13,8 @@ describe('debug utils', () => {
     jest.restoreAllMocks();
   });
 
-  test('Should log if debug flag is enabled', async () => {
+  test('Should log if debug flag is enabled', () => {
     process.env.DEBUG = 'true';
-
-    const { debug } = await import('./debug');
 
     const consoleSpy = jest
       .spyOn(console, 'error')
@@ -29,11 +28,9 @@ describe('debug utils', () => {
     consoleSpy.mockRestore();
   });
 
-  test('Should NOT log if debug flag is disabled', async () => {
+  test('Should NOT log if debug flag is disabled', () => {
     process.env.DEBUG = 'false';
     jest.resetModules();
-
-    const { debug } = await import('./debug');
 
     const consoleSpy = jest
       .spyOn(console, 'error')
@@ -44,5 +41,14 @@ describe('debug utils', () => {
     expect(consoleSpy).not.toHaveBeenCalled();
 
     consoleSpy.mockRestore();
+  });
+});
+
+describe('generateTimestamp utils', () => {
+  test('Should generate a timestamp string in the format "YYYYMMDDHHmmss"', () => {
+    const timestamp = generateTimestamp();
+    const regex = /^\d{14}$/;
+
+    expect(timestamp).toMatch(regex);
   });
 });
