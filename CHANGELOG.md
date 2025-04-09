@@ -1,3 +1,10 @@
+### [5.0.3-stage.1](https://github.com/aziontech/bundler/compare/v5.0.2...v5.0.3-stage.1) (2025-04-09)
+
+
+### Bug Fixes
+
+* remove temporary files after build ([#470](https://github.com/aziontech/bundler/issues/470)) ([aab2f2f](https://github.com/aziontech/bundler/commit/aab2f2fd657d73eaa8fe184ed0f60bc9c17a692b))
+
 ### [5.0.2](https://github.com/aziontech/bundler/compare/v5.0.1...v5.0.2) (2025-04-01)
 
 
