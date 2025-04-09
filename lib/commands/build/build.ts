@@ -1,7 +1,7 @@
 import { dirname } from 'path';
 import { mkdir, writeFile } from 'fs/promises';
 import { AzionPrebuildResult, AzionConfig, BuildContext, BuildConfiguration } from 'azion/config';
-import { debug } from '#utils';
+import { debug, removeAzionTempFiles } from '#utils';
 import { BUILD_CONFIG_DEFAULTS } from '#constants';
 import { feedback } from 'azion/utils/node';
 
@@ -85,10 +85,17 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     feedback.build.success('Postbuild completed successfully');
 
     // Phase 4: Set Environment
-    await setEnvironment({ config, preset: resolvedPreset, ctx });
+    // TODO: rafactor this to use the same function
+    const mergedConfig = await setEnvironment({
+      config,
+      preset: resolvedPreset,
+      ctx,
+    });
+
+    removeAzionTempFiles();
 
     return {
-      config,
+      config: mergedConfig,
       ctx,
       setup: buildConfigSetup,
     };

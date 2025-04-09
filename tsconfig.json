@@ -15,8 +15,8 @@
     "paths": {
       "#root/*": ["./"],
       "#lib/*": ["./lib"],
-      "#utils": ["./lib/utils/index.ts"],
       "#types": ["./lib/types.ts"],
+      "#utils": ["./lib/utils.ts"],
       "#build": ["lib/build/build.ts"],
       "#env": ["./lib/env/index.ts"],
       "#constants": ["./lib/constants.ts"],

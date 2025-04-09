@@ -1,16 +1,12 @@
 #! /usr/bin/env node
-import { join } from 'path';
-import { readdirSync, unlinkSync } from 'fs';
-import { mkdir } from 'fs/promises';
 import { Command } from 'commander';
 import { satisfies } from 'semver';
-import { createHash } from 'crypto';
-
-import { FILE_PATTERNS, BUNDLER } from '#constants';
-import type { BundlerGlobals } from '#types';
-import { debug } from '#utils';
-
+import { removeAzionTempFiles, debug } from '#utils';
 import { feedback } from 'azion/utils/node';
+import { BUNDLER } from '#constants';
+import { createHash } from 'crypto';
+import { mkdir } from 'fs/promises';
+import type { BundlerGlobals } from '#types';
 
 const AzionBundler = new Command();
 
@@ -62,51 +58,34 @@ async function getBundlerEnvironment(): Promise<BundlerGlobals> {
 }
 
 /**
- * Removes all temporary files starting with 'azion-' and ending with '.temp.js' or '.temp.ts'.
- */
-function cleanUpTempFiles() {
-  const directory = process.cwd();
-  const tempFiles = readdirSync(directory);
-  const filteredFiles = tempFiles.filter(
-    (file) =>
-      file.startsWith(FILE_PATTERNS.TEMP_PREFIX) && file.includes(FILE_PATTERNS.TEMP_SUFFIX),
-  );
-
-  for (const file of filteredFiles) {
-    const filePath = join(directory, file);
-    unlinkSync(filePath);
-  }
-}
-
-/**
  * Sets up event handlers for cleanup and error handling.
  */
 function setupBundlerProcessHandlers() {
-  process.on('exit', cleanUpTempFiles);
+  process.on('exit', removeAzionTempFiles);
   process.on('SIGINT', () => {
-    cleanUpTempFiles();
+    removeAzionTempFiles();
     process.exit(0);
   });
   process.on('SIGTERM', () => {
-    cleanUpTempFiles();
+    removeAzionTempFiles();
     process.exit(0);
   });
   process.on('SIGHUP', () => {
-    cleanUpTempFiles();
+    removeAzionTempFiles();
     process.exit(0);
   });
   process.on('SIGBREAK', () => {
-    cleanUpTempFiles();
+    removeAzionTempFiles();
     process.exit(0);
   });
   process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
-    cleanUpTempFiles();
+    removeAzionTempFiles();
     process.exit(1);
   });
   process.on('unhandledRejection', (reason) => {
     console.error('Unhandled Promise Rejection:', reason);
-    cleanUpTempFiles();
+    removeAzionTempFiles();
     process.exit(1);
   });
 }

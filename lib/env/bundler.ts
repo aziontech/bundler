@@ -302,9 +302,7 @@ export async function writeUserConfig(config: AzionConfig): Promise<void> {
     },
   );
 
-  if (!fs.existsSync(configPath)) {
-    await fsPromises.writeFile(configPath, formattedContent);
-  }
+  await fsPromises.writeFile(configPath, formattedContent);
 }
 
 export default {
