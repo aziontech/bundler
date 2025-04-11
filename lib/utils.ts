@@ -14,9 +14,7 @@ import { join } from 'path';
 function removeAzionTempFiles() {
   const directory = process.cwd();
   const tempFiles = readdirSync(directory).filter(
-    (file) =>
-      file.startsWith('azion-') &&
-      (file.endsWith('.temp.js') || file.endsWith('.temp.ts')),
+    (file) => file.startsWith('azion-') && (file.endsWith('.temp.js') || file.endsWith('.temp.ts')),
   );
 
   tempFiles.forEach((file) => {

@@ -50,13 +50,10 @@ import {
 function runtime(code: string, isFirewallEvent = false) {
   const extend = (context: EdgeContext) => {
     context.RESERVED_FETCH = context.fetch.bind(context);
-    context.fetch = async (resource, options) =>
-      fetchContext(context, resource, options);
+    context.fetch = async (resource, options) => fetchContext(context, resource, options);
 
     // Set the context for the FetchEvent if it's a Firewall event or a Fetch event
-    context.FetchEvent = isFirewallEvent
-      ? FirewallEventContext
-      : FetchEventContext;
+    context.FetchEvent = isFirewallEvent ? FirewallEventContext : FetchEventContext;
     context.Response = isFirewallEvent ? Response : context.Response;
 
     /*

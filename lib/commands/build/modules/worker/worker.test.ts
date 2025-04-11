@@ -1,19 +1,24 @@
-import { describe, it, expect, jest, beforeEach } from '@jest/globals';
+import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
 import { setupWorkerCode } from './worker';
-import util from './utils';
-import { BuildConfiguration, BuildContext } from 'azion/config';
+import { BuildConfiguration } from 'azion/config';
 import fsPromises from 'fs/promises';
+
+jest.mock('./utils', () => {
+  const original = jest.requireActual<typeof import('./utils')>('./utils');
+  return {
+    generateWorkerEventHandler: original.generateWorkerEventHandler,
+    normalizeEntryPointPaths: jest.fn((handler) => (Array.isArray(handler) ? handler : [handler])),
+  };
+});
 
 describe('setupWorkerCode', () => {
   let spyReadFile: jest.SpiedFunction<typeof fsPromises.readFile>;
-  let spyWriteFile: jest.SpiedFunction<typeof fsPromises.writeFile>;
-  let spyMkdir: jest.SpiedFunction<typeof fsPromises.mkdir>;
-  let spyCreateEventHandlerCode: jest.SpiedFunction<
-    typeof util.createEventHandlerCode
-  >;
 
   const mockBuildConfig: BuildConfiguration = {
-    entry: 'temp/azion-123.temp.js',
+    entry: {
+      'azion-worker-123.temp.js': '/tmp/worker.js',
+      'azion-api-123.temp.js': '/tmp/api.js',
+    },
     preset: {
       metadata: { name: 'test-preset' },
       config: { build: {} },
@@ -26,62 +31,53 @@ describe('setupWorkerCode', () => {
     },
   };
 
-  const mockContext: BuildContext = {
+  const mockContext = {
     production: true,
-    output: '.edge/worker.js',
-    entrypoint: 'src/index.js',
+    handler: ['/tmp/worker.js', '/tmp/api.js'],
   };
-
-  const mockWorkerCode = 'addEventListener("fetch", event => {})';
 
   beforeEach(() => {
     spyReadFile = jest
       .spyOn(fsPromises, 'readFile')
-      .mockResolvedValue('original code');
-    spyWriteFile = jest.spyOn(fsPromises, 'writeFile').mockResolvedValue();
-    spyMkdir = jest
-      .spyOn(fsPromises, 'mkdir')
-      .mockImplementation(() => Promise.resolve(void 0));
-    spyCreateEventHandlerCode = jest
-      .spyOn(util, 'createEventHandlerCode')
-      .mockReturnValue(mockWorkerCode);
+      .mockImplementation((path: unknown) =>
+        Promise.resolve(String(path).includes('api') ? 'api code' : 'worker code'),
+      );
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return original code when worker=true', async () => {
+  it('should return mapped entries with original code when worker=true', async () => {
     const configWithWorker = { ...mockBuildConfig, worker: true };
 
     const result = await setupWorkerCode(configWithWorker, mockContext);
 
-    expect(spyReadFile).toHaveBeenCalledWith(mockContext.entrypoint, 'utf-8');
-    expect(spyMkdir).not.toHaveBeenCalled();
-    expect(result).toBe('original code');
+    expect(result).toEqual({
+      '/tmp/worker.js': 'worker code',
+      '/tmp/api.js': 'api code',
+    });
+    expect(spyReadFile).toHaveBeenCalledWith('/tmp/worker.js', 'utf-8');
+    expect(spyReadFile).toHaveBeenCalledWith('/tmp/api.js', 'utf-8');
   });
 
-  it('should generate wrapper code when worker=false', async () => {
+  it('should return mapped entries with generated code when worker=false', async () => {
     const result = await setupWorkerCode(mockBuildConfig, mockContext);
 
-    expect(spyCreateEventHandlerCode).toHaveBeenCalledWith(
-      mockContext.entrypoint,
-    );
-    expect(spyMkdir).toHaveBeenCalledWith(expect.any(String), {
-      recursive: true,
-    });
-    expect(spyWriteFile).toHaveBeenCalledWith(
-      mockContext.output,
-      mockWorkerCode,
-      'utf-8',
-    );
-    expect(result).toBe(mockWorkerCode);
+    // Verificar apenas que as chaves estão corretas
+    expect(Object.keys(result).sort()).toEqual(['/tmp/worker.js', '/tmp/api.js'].sort());
+
+    // Verificar que o conteúdo contém o import correto
+    expect(result['/tmp/worker.js']).toContain(`import entrypoint from '/tmp/worker.js'`);
+    expect(result['/tmp/api.js']).toContain(`import entrypoint from '/tmp/api.js'`);
+
+    // Verificar que o conteúdo contém outros elementos esperados
+    expect(result['/tmp/worker.js']).toContain('addEventListener(eventType, (event)');
+    expect(result['/tmp/api.js']).toContain('addEventListener(eventType, (event)');
   });
 
-  it('should throw error when worker code setup fails', async () => {
-    spyReadFile.mockImplementation(() =>
-      Promise.reject(new Error('Failed to setup worker code: Read error')),
-    );
+  it('should throw error when setup fails', async () => {
+    spyReadFile.mockRejectedValue(new Error('Read error'));
 
     await expect(
       setupWorkerCode({ ...mockBuildConfig, worker: true }, mockContext),

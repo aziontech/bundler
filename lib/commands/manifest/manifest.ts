@@ -1,5 +1,4 @@
 import { type AzionConfig, convertJsonConfigToObject } from 'azion/config';
-import fs from 'fs';
 import { join, resolve, extname } from 'path';
 import * as utilsNode from 'azion/utils/node';
 import envBundler from '../../env/bundler';
@@ -20,10 +19,12 @@ export const generateManifest = async (
   input?: AzionConfig | string,
   outputPath = join(process.cwd(), '.edge'),
 ): Promise<void> => {
-  // Ensure output directory exists
-  if (!fs.existsSync(outputPath)) fs.mkdirSync(outputPath, { recursive: true });
+  try {
+    await fsPromises.access(outputPath);
+  } catch (error) {
+    await fsPromises.mkdir(outputPath, { recursive: true });
+  }
 
-  // Determine config source
   let config: AzionConfig;
 
   if (typeof input === 'object') {
@@ -43,11 +44,9 @@ export const generateManifest = async (
   const manifest = util.processConfigWrapper(config);
   // Write manifest to file
   const manifestPath = join(outputPath, 'manifest.json');
-  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+  await fsPromises.writeFile(manifestPath, JSON.stringify(manifest, null, 2));
 
-  utilsNode.feedback.success(
-    `Manifest generated successfully at ${manifestPath}`,
-  );
+  utilsNode.feedback.success(`Manifest generated successfully at ${manifestPath}`);
 };
 
 /**
@@ -72,14 +71,10 @@ export const transformManifest = async (
     return convertJsonConfigToObject(jsonString);
   };
 
-  const config = await readConfigFromPath(
-    input || DEFAULT_TRANSFORM_INPUT_PATH,
-  );
+  const config = await readConfigFromPath(input || DEFAULT_TRANSFORM_INPUT_PATH);
   await envBundler.writeUserConfig(config);
 
-  utilsNode.feedback.success(
-    `Config file generated successfully at ${outputPath}`,
-  );
+  utilsNode.feedback.success(`Config file generated successfully at ${outputPath}`);
 };
 
 export default generateManifest;

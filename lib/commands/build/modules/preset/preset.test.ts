@@ -64,19 +64,13 @@ describe('resolvePreset', () => {
   });
 
   it('should infer preset when none is provided', async () => {
-    const spyInfer = jest
-      .spyOn(inferPreset, 'inferPreset')
-      .mockResolvedValue('typescript');
-    const spyFeedback = jest
-      .spyOn(utilsNode.feedback.build, 'info')
-      .mockReturnValue(undefined);
+    const spyInfer = jest.spyOn(inferPreset, 'inferPreset').mockResolvedValue('typescript');
+    const spyFeedback = jest.spyOn(utilsNode.feedback.build, 'info').mockReturnValue(undefined);
 
     await resolvePreset();
 
     expect(spyInfer).toHaveBeenCalled();
-    expect(spyFeedback).toHaveBeenCalledWith(
-      'No preset specified, using automatic detection...',
-    );
+    expect(spyFeedback).toHaveBeenCalledWith('No preset specified, using automatic detection...');
   });
 
   it('should throw error for invalid preset', async () => {

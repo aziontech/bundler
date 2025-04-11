@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import utils from './utils';
-import fs from 'fs';
 import fsPromises from 'fs/promises';
 
 let spyReaddir: jest.SpiedFunction<typeof fsPromises.readdir>;
 let spyStat: jest.SpiedFunction<typeof fsPromises.stat>;
 let spyReadFile: jest.SpiedFunction<typeof fsPromises.readFile>;
-let spyMkdirSync: jest.SpiedFunction<typeof fs.mkdirSync>;
-let spyCpSync: jest.SpiedFunction<typeof fs.cpSync>;
+let spyMkdir: jest.SpiedFunction<typeof fsPromises.mkdir>;
+let spyCp: jest.SpiedFunction<typeof fsPromises.cp>;
+let spyAccess: jest.SpiedFunction<typeof fsPromises.access>;
 
 describe('injectWorkerGlobals', () => {
   it('should create globals with namespace only', () => {
@@ -29,9 +29,7 @@ describe('injectWorkerGlobals', () => {
       vars: { API_KEY: '"test-key"' },
     });
 
-    expect(result).toBe(
-      'globalThis.bundler.env={}; globalThis.bundler.env.API_KEY="test-key";',
-    );
+    expect(result).toBe('globalThis.bundler.env={}; globalThis.bundler.env.API_KEY="test-key";');
   });
 
   it('should handle empty vars', () => {
@@ -58,8 +56,8 @@ describe('injectWorkerMemoryFiles', () => {
     spyReadFile = jest
       .spyOn(fsPromises, 'readFile')
       .mockImplementation(() => Promise.resolve(Buffer.from('test content')));
-    spyMkdirSync = jest.spyOn(fs, 'mkdirSync').mockImplementation(() => void 0);
-    spyCpSync = jest.spyOn(fs, 'cpSync').mockReturnValue();
+    spyMkdir = jest.spyOn(fsPromises, 'mkdir').mockResolvedValue(undefined);
+    spyCp = jest.spyOn(fsPromises, 'cp').mockResolvedValue(undefined);
   });
 
   afterEach(() => {
@@ -74,8 +72,7 @@ describe('injectWorkerMemoryFiles', () => {
     spyStat.mockImplementation((path) =>
       Promise.resolve({
         isDirectory: () => path === 'subdir',
-        isFile: () =>
-          path === 'public/file.txt' || path === 'public/subdir/nested.txt',
+        isFile: () => path === 'public/file.txt' || path === 'public/subdir/nested.txt',
       } as any),
     );
 
@@ -91,76 +88,74 @@ describe('injectWorkerMemoryFiles', () => {
     expect(spyStat).toHaveBeenCalledWith('public/subdir/nested.txt');
     expect(spyReadFile).toHaveBeenCalledWith('public/file.txt');
     expect(spyReadFile).toHaveBeenCalledWith('public/subdir/nested.txt');
-    expect(result).toStrictEqual(
-      expect.stringContaining('globalThis.bundler.__FILES__='),
-    );
+    expect(result).toStrictEqual(expect.stringContaining('globalThis.bundler.__FILES__='));
   });
 });
 
 describe('copyFilesToLocalEdgeStorage', () => {
-  let spyExistsSync: jest.SpiedFunction<typeof fs.existsSync>;
   beforeEach(() => {
-    spyMkdirSync = jest.spyOn(fs, 'mkdirSync').mockImplementation(() => void 0);
-    spyCpSync = jest.spyOn(fs, 'cpSync').mockReturnValue();
-    spyExistsSync = jest.spyOn(fs, 'existsSync').mockReturnValue(false);
+    spyMkdir = jest.spyOn(fsPromises, 'mkdir').mockResolvedValue(undefined);
+    spyCp = jest.spyOn(fsPromises, 'cp').mockResolvedValue(undefined);
+    spyAccess = jest.spyOn(fsPromises, 'access').mockRejectedValue(new Error('File not found'));
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should copy files to target directory', () => {
-    utils.copyFilesToLocalEdgeStorage({
+  it('should copy files to target directory', async () => {
+    await utils.copyFilesToLocalEdgeStorage({
       dirs: ['public', 'assets'],
       prefix: '',
       outputPath: '.edge/files',
     });
 
-    expect(spyMkdirSync).toHaveBeenCalledWith('.edge/files/public', {
+    expect(spyMkdir).toHaveBeenCalledWith('.edge/files/public', {
       recursive: true,
     });
-    expect(spyMkdirSync).toHaveBeenCalledWith('.edge/files/assets', {
+    expect(spyMkdir).toHaveBeenCalledWith('.edge/files/assets', {
       recursive: true,
     });
-    expect(spyCpSync).toHaveBeenCalledWith('public', '.edge/files/public', {
+    expect(spyCp).toHaveBeenCalledWith('public', '.edge/files/public', {
       recursive: true,
     });
-    expect(spyCpSync).toHaveBeenCalledWith('assets', '.edge/files/assets', {
+    expect(spyCp).toHaveBeenCalledWith('assets', '.edge/files/assets', {
       recursive: true,
     });
   });
 
-  it('should handle prefix replacement', () => {
-    utils.copyFilesToLocalEdgeStorage({
+  it('should handle prefix replacement', async () => {
+    await utils.copyFilesToLocalEdgeStorage({
       dirs: ['src/public', 'src/assets'],
       prefix: 'src/',
       outputPath: '.edge/files',
     });
 
-    expect(spyMkdirSync).toHaveBeenCalledWith('.edge/files/public', {
+    expect(spyMkdir).toHaveBeenCalledWith('.edge/files/public', {
       recursive: true,
     });
-    expect(spyMkdirSync).toHaveBeenCalledWith('.edge/files/assets', {
+    expect(spyMkdir).toHaveBeenCalledWith('.edge/files/assets', {
       recursive: true,
     });
-    expect(spyCpSync).toHaveBeenCalledWith('src/public', '.edge/files/public', {
+    expect(spyCp).toHaveBeenCalledWith('src/public', '.edge/files/public', {
       recursive: true,
     });
-    expect(spyCpSync).toHaveBeenCalledWith('src/assets', '.edge/files/assets', {
+    expect(spyCp).toHaveBeenCalledWith('src/assets', '.edge/files/assets', {
       recursive: true,
     });
   });
 
-  it('should not create directory if it already exists', () => {
-    spyExistsSync.mockReturnValue(true);
-    utils.copyFilesToLocalEdgeStorage({
+  it('should not create directory if it already exists', async () => {
+    spyAccess.mockResolvedValue(undefined); // Simula que o diretório existe
+
+    await utils.copyFilesToLocalEdgeStorage({
       dirs: ['public'],
       prefix: '',
       outputPath: '.edge/files',
     });
 
-    expect(spyMkdirSync).not.toHaveBeenCalled();
-    expect(spyCpSync).toHaveBeenCalled();
+    expect(spyMkdir).not.toHaveBeenCalled();
+    expect(spyCp).toHaveBeenCalled();
   });
 });
 

@@ -1,8 +1,5 @@
 import { feedback } from 'azion/utils/node';
-import {
-  waitForVulcanServer,
-  execCommandInContainer,
-} from './docker-env-actions.js';
+import { waitForVulcanServer, execCommandInContainer } from './docker-env-actions.js';
 
 /**
  * Run actions to build and run project in docker container
@@ -12,6 +9,7 @@ import {
  * @param {boolean} installPkgs - dependencies need to be installed?
  * @param {string} url - url test container
  * @param {boolean} isFirewall - is firewall project
+ * @param {string} entryPoint - entry point file (optional)
  */
 async function projectInitializer(
   examplePath,
@@ -20,10 +18,10 @@ async function projectInitializer(
   installPkgs = true,
   url = 'http://localhost',
   isFirewall = false,
+  entryPoint = null,
 ) {
   const example = examplePath.replace('/examples/', '');
-  const bundlerCmd =
-    'npx --yes --registry=http://verdaccio:4873 edge-functions@latest';
+  const bundlerCmd = 'npx --yes --registry=http://verdaccio:4873 edge-functions@latest';
 
   if (installPkgs) {
     feedback.info(`[${example}] Installing project dependencies ...`);
@@ -32,7 +30,9 @@ async function projectInitializer(
 
   feedback.info(`[${example}] Building the project ...`);
   await execCommandInContainer(
-    `${bundlerCmd} build --preset ${preset} ${isFirewall ? '--firewall' : ''}`,
+    `${bundlerCmd} build --preset ${preset} ${isFirewall ? '--firewall' : ''} ${
+      entryPoint ? `--entry ${entryPoint}` : ''
+    }`,
     examplePath,
   );
 
