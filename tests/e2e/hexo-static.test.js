@@ -63,9 +63,7 @@ describe('E2E - hexo-static project', () => {
     const pageTitle = await page.title();
 
     expect(pageTitle).toBe('Archives | Hexo');
-    expect(pageContent).toContain(
-      `<a href="/archives/2013" class="archive-year">2013</a>`,
-    );
+    expect(pageContent).toContain(`<a href="/archives/2013" class="archive-year">2013</a>`);
     expect(pageContent).toContain('<div class="archives">');
     expect(pageContent).toContain('Other page');
     expect(pageContent).toContain('Hello World');
@@ -96,9 +94,6 @@ describe('E2E - hexo-static project', () => {
   });
 
   test('Should return correct asset', async () => {
-    await request
-      .get('/css/images/banner.jpg')
-      .expect(200)
-      .expect('Content-Type', /image/);
+    await request.get('/css/images/banner.jpg').expect(200).expect('Content-Type', /image/);
   });
 });

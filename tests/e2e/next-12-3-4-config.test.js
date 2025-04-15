@@ -65,10 +65,7 @@ describe('E2E - next-12-3-4-configs project', () => {
   test('Should redirect after click on simple Redirect route', async () => {
     await page.goto(`${localhostBaseUrl}`);
 
-    await Promise.all([
-      page.waitForNavigation(),
-      page.click('a[href="/run-simple-redirect"]'),
-    ]);
+    await Promise.all([page.waitForNavigation(), page.click('a[href="/run-simple-redirect"]')]);
 
     const pageContent = await page.content();
     const pageTitle = await page.title();
@@ -79,10 +76,7 @@ describe('E2E - next-12-3-4-configs project', () => {
 
   test('Should redirect after click on permanet Redirect route', async () => {
     await page.goto(`${localhostBaseUrl}`);
-    await Promise.all([
-      page.waitForNavigation(),
-      page.click('a[href="/run-redirect-permanent"]'),
-    ]);
+    await Promise.all([page.waitForNavigation(), page.click('a[href="/run-redirect-permanent"]')]);
 
     const pageContent = await page.content();
     const pageTitle = await page.title();

@@ -97,9 +97,7 @@ describe('E2E - next-12-3-4-middleware project', () => {
     });
 
     const headers = response.headers();
-    expect(headers['set-cookie']).toMatch(
-      'x-cookie-from-middleware=hello-cookie',
-    );
+    expect(headers['set-cookie']).toMatch('x-cookie-from-middleware=hello-cookie');
     expect(headers['x-header-from-middleware']).toMatch('hello-header');
   });
 });

@@ -57,9 +57,6 @@ describe('E2E - eleventy-static project', () => {
   });
 
   test('Should return correct asset', async () => {
-    await request
-      .get('/img/IdthKOzqFA-350.avif')
-      .expect(200)
-      .expect('Content-Type', 'image/avif');
+    await request.get('/img/IdthKOzqFA-350.avif').expect(200).expect('Content-Type', 'image/avif');
   });
 });

@@ -40,17 +40,14 @@ describe('E2E - next-12-3-4-i18n project', () => {
       { route: '/fr', assertion: 'fr' },
       { route: '/ar', assertion: 'ar' },
     ];
-    test.each(routes)(
-      'Should render correct language for route',
-      async ({ route, assertion }) => {
-        await page.goto(`${localhostBaseUrl}${route}`);
+    test.each(routes)('Should render correct language for route', async ({ route, assertion }) => {
+      await page.goto(`${localhostBaseUrl}${route}`);
 
-        const pageContent = await page.content();
+      const pageContent = await page.content();
 
-        expect(pageContent).toContain(assertion);
-        expect(pageContent).toContain('Index page');
-      },
-    );
+      expect(pageContent).toContain(assertion);
+      expect(pageContent).toContain('Index page');
+    });
   });
 
   describe('Should test i18n on dynamic get static props', () => {
@@ -100,16 +97,13 @@ describe('E2E - next-12-3-4-i18n project', () => {
         assertion: 'مرحبًا بك في البرنامج التعليمي Next.js i18n',
       },
     ];
-    test.each(routes)(
-      'Should render correct language for route',
-      async ({ route, assertion }) => {
-        await page.goto(`${localhostBaseUrl}${route}`);
+    test.each(routes)('Should render correct language for route', async ({ route, assertion }) => {
+      await page.goto(`${localhostBaseUrl}${route}`);
 
-        const pageContent = await page.content();
+      const pageContent = await page.content();
 
-        expect(pageContent).toContain(assertion);
-        expect(pageContent).toContain('getServerSideProps page');
-      },
-    );
+      expect(pageContent).toContain(assertion);
+      expect(pageContent).toContain('getServerSideProps page');
+    });
   });
 });

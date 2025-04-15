@@ -33,9 +33,7 @@ describe('Node.js APIs - zlib', () => {
     expect(response.status).toEqual(200);
     expect(response.headers['content-type']).toMatch(/octet-stream/);
     expect(response.headers['transfer-encoding']).toEqual('chunked');
-    expect(response.body.toString()).toEqual(
-      'H4sIAAAAAAAAA/NIzcnJ11EIzy/KSVEEANDDSuwNAAAA',
-    );
+    expect(response.body.toString()).toEqual('H4sIAAAAAAAAA/NIzcnJ11EIzy/KSVEEANDDSuwNAAAA');
     // decompressed
     const decodeBase64 = Buffer.from(response.body.toString(), 'base64');
     const decompressedBody = zlib.gunzipSync(decodeBase64).toString();

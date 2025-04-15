@@ -58,9 +58,6 @@ describe('E2E - qwik-static project', () => {
   });
 
   test('Should return correct asset', async () => {
-    await request
-      .get('/favicon.svg')
-      .expect(200)
-      .expect('Content-Type', 'image/svg+xml');
+    await request.get('/favicon.svg').expect(200).expect('Content-Type', 'image/svg+xml');
   });
 });

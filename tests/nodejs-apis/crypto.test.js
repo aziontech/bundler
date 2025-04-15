@@ -13,8 +13,7 @@ const EXAMPLE_PATH = '/examples/runtime-apis/nodejs/crypto';
 
 describe('Node.js APIs - crypto', () => {
   let request;
-  const uuidRegex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
   beforeAll(async () => {
     serverPort = getContainerPort();

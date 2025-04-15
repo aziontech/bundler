@@ -44,9 +44,7 @@ describe('E2E - next-static project', () => {
     const pageTitle = await page.title();
 
     expect(pageContent).toContain('Get started by editing');
-    expect(pageContent).toContain(
-      'Find in-depth information about Next.js features and API.',
-    );
+    expect(pageContent).toContain('Find in-depth information about Next.js features and API.');
     expect(pageTitle).toBe('Create Next App');
   });
 
@@ -70,9 +68,6 @@ describe('E2E - next-static project', () => {
   });
 
   test('Should return correct asset', async () => {
-    await request
-      .get('/favicon.ico')
-      .expect(200)
-      .expect('Content-Type', /image/);
+    await request.get('/favicon.ico').expect(200).expect('Content-Type', /image/);
   });
 });
