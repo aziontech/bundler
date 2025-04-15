@@ -1,3 +1,27 @@
+## [5.1.0-stage.1](https://github.com/aziontech/bundler/compare/v5.0.3...v5.1.0-stage.1) (2025-04-15)
+
+
+### Features
+
+*  accept multiple entrypoints for build  ([#464](https://github.com/aziontech/bundler/issues/464)) ([334aeac](https://github.com/aziontech/bundler/commit/334aeac0e8cc9f7302a148a10331f28fa84cdabc))
+* accept multiple entries ([ff79f05](https://github.com/aziontech/bundler/commit/ff79f05e6b2603934a61055da3d590c4a6342673))
+* multiple entries command option ([abc5745](https://github.com/aziontech/bundler/commit/abc57454db57a16a175195fc936bade9a6cc2881))
+* multiple entries command option ([05180d3](https://github.com/aziontech/bundler/commit/05180d330a62936f8a66e79d0f78e76c1ad17722))
+
+
+### Bug Fixes
+
+* entriesPathMap ([93b8132](https://github.com/aziontech/bundler/commit/93b81324076a2b5bbb028e8f216a36c3049850ec))
+* env dev default handler path ([b1f5a38](https://github.com/aziontech/bundler/commit/b1f5a388c75c930b35848380918deb025dc25d33))
+* error when not using entrypoint ([132b0aa](https://github.com/aziontech/bundler/commit/132b0aac0296d333008fbde5e20f03379cb1941c))
+* resolve default entry of dev environment ([8e93ac1](https://github.com/aziontech/bundler/commit/8e93ac1d6a2866f089f987b58110abfe8d86e1bb))
+* webpack entry ext ([31415fa](https://github.com/aziontech/bundler/commit/31415fa8c6c3a2fd46e644f5dc79c30c5106df90))
+
+
+### Reverts
+
+* manifest constants ([f877a09](https://github.com/aziontech/bundler/commit/f877a093a483cc4461520474780928bf03c6b5af))
+
 ### [5.0.3](https://github.com/aziontech/bundler/compare/v5.0.2...v5.0.3) (2025-04-09)
 
 
