@@ -36,6 +36,7 @@ export const resolvePreset = async (input?: PresetInput): Promise<AzionBuildPres
   if (!input) {
     utilsNode.feedback.build.info('No preset specified, using automatic detection...');
     input = await inferPreset.inferPreset();
+    utilsNode.feedback.build.info(`Detected preset: ${input}`);
   }
 
   const preset = typeof input === 'string' ? await loadPreset(input) : input;
