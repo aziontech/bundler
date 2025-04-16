@@ -118,7 +118,7 @@ Builds your project for edge deployment.
 ef build [options]
 
 Options:
-  --entry <string>     Code entrypoint (default: ./main.js or ./main.ts)
+  --entry <string>     Code entrypoint (default: ./handler.js or ./handler.ts)
   --preset <type>      Preset of build target (e.g., vue, next, javascript)
   --polyfills          Use node polyfills in build (default: true)
   --worker            Enable worker mode with addEventListener signature (default: false)
@@ -132,7 +132,7 @@ Starts a local development environment.
 ef dev [entry] [options]
 
 Arguments:
-  entry               Specify the entry file (default: .edge/worker.dev.js)
+  entry               Specify the entry file (default: .edge/functions/handler.dev.js)
 
 Options:
   -p, --port <port>  Specify the port (default: "3333")
@@ -249,8 +249,8 @@ export default defineConfig({
    - Sets up bundler configuration
    - Configures build options and extensions
 
-3. **Entry Resolution** (`@modules/entrypoint`)
-   - Resolves entry point from CLI args, preset, or user config (azion.config.js)
+3. **Handler Resolution** (`@modules/handler`)
+   - Resolves entry point/handler from CLI args, preset, or user config (azion.config.js)
    - Validates file existence
 
 4. **Worker Setup** (`@modules/worker`)
@@ -277,11 +277,11 @@ export default defineConfig({
 ## Documentation
 
 - [Nextjs](docs/nextjs.md)
-- [Rust/Wasm example](https://github.com/aziontech/vulcan-examples/tree/main/examples/rust-wasm-yew-ssr/)
-- [Emscripten/Wasm example](https://github.com/aziontech/vulcan-examples/tree/main/examples/emscripten-wasm/)
-- [Env vars example](https://github.com/aziontech/vulcan-examples/tree/main/examples/javascript/simple-js-env-vars)
-- [Storage example](https://github.com/aziontech/vulcan-examples/tree/main/examples/javascript/simple-js-esm-storage)
-- [Firewall example](https://github.com/aziontech/vulcan-examples/tree/main/examples/javascript/simple-js-firewall-event)
+- [Rust/Wasm example](https://github.com/aziontech/bundler-examples/tree/main/examples/rust-wasm-yew-ssr/)
+- [Emscripten/Wasm example](https://github.com/aziontech/bundler-examples/tree/main/examples/emscripten-wasm/)
+- [Env vars example](https://github.com/aziontech/bundler-examples/tree/main/examples/javascript/simple-js-env-vars)
+- [Storage example](https://github.com/aziontech/bundler-examples/tree/main/examples/javascript/simple-js-esm-storage)
+- [Firewall example](https://github.com/aziontech/bundler-examples/tree/main/examples/javascript/simple-js-firewall-event)
 
 ## Supported Features
 
