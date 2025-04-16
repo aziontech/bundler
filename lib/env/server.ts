@@ -15,7 +15,7 @@ import { buildCommand } from '../commands/build';
 import { runServer } from 'edge-runtime';
 import fs from 'fs/promises';
 import { basename } from 'path';
-
+import { DOCS_MESSAGE } from '#constants';
 let currentServer: Awaited<ReturnType<typeof runServer>>;
 let isChangeHandlerRunning = false;
 
@@ -86,10 +86,10 @@ async function readWorkerFile(filePath: string): Promise<string> {
     if ((error as Error).message.includes('ENOENT')) {
       const defaultWorkerName = basename(filePath);
       throw new Error(
-        `Default worker file "${defaultWorkerName}" not found. Please specify your entry point using "azion dev <path>" or create the default file.`,
+        `Server entry file "${defaultWorkerName}" not found. Please specify your entry point using "azion dev <path>" or create the default handler file.${DOCS_MESSAGE}`,
       );
     }
-    throw new Error(`Error reading file ${filePath}: ${(error as Error).message}`);
+    throw new Error(`Error reading file ${filePath}: ${(error as Error).message}${DOCS_MESSAGE}`);
   }
 }
 
@@ -151,7 +151,9 @@ async function manageServer(workerPath: string | null, port: number) {
       }
     }
   } catch (error) {
-    feedback.server.error((error as Error).message);
+    feedback.server.error(
+      `${error instanceof Error ? error.message : String(error)}${DOCS_MESSAGE}`,
+    );
     debug.error(`Server management error: ${error}`);
     process.exit(1);
   } finally {

@@ -1,7 +1,7 @@
 import { writeStore, BundlerStore } from '#env';
 import { feedback } from 'azion/utils/node';
 import { rm } from 'fs/promises';
-
+import { DOCS_MESSAGE } from '#constants';
 type StoreCommandAction = 'init' | 'destroy';
 
 interface StoreCommandOptions {
@@ -48,7 +48,7 @@ export async function storeCommand({ command, options = {} }: StoreCommandParams
         throw new Error(`Invalid command: ${command}`);
     }
   } catch (error) {
-    feedback.error(`Store command failed: ${(error as Error).message}`);
+    feedback.error(`${error instanceof Error ? error.message : String(error)}${DOCS_MESSAGE}`);
     process.exit(1);
   }
 }
