@@ -60,16 +60,40 @@ export const resolveHandlers = async ({
       'handler.js',
     );
 
+    try {
+      await fsPromises.access(handlerPath);
+    } catch (error) {
+      debug.error(error);
+      throw new Error(
+        `Missing handler "${handlerPath}" (default for "${preset.metadata.name}" preset). Either create this file or specify a custom entry point using --entry.`,
+      );
+    }
+
     utilsNode.feedback.build.info(`Using built-in handler from "${preset.metadata.name}" preset.`);
     return [handlerPath];
   }
 
   // Preset's default entry is last priority
   if (preset.config.build?.entry) {
-    const entries = normalizeEntryPaths(preset.config.build.entry).map((e) => path.resolve(e));
+    const entries = normalizeEntryPaths(preset.config.build.entry);
+    const resolvedEntries = entries.map((e) => path.resolve(e));
+
+    // Validar a existência dos arquivos
+    await Promise.all(
+      resolvedEntries.map(async (entry) => {
+        try {
+          await fsPromises.access(entry);
+        } catch (error) {
+          debug.error(error);
+          throw new Error(
+            `Missing default entry point "${entry}" for "${preset.metadata.name}" preset. Either create this file or specify a custom entry point using --entry.`,
+          );
+        }
+      }),
+    );
 
     utilsNode.feedback.build.info(`Using preset default entry: ${entries.join(', ')}`);
-    return entries;
+    return resolvedEntries;
   }
 
   throw new Error(

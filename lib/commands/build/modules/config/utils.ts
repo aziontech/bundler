@@ -1,6 +1,5 @@
 import { join, basename, dirname, extname, resolve } from 'path';
 import { BuildEntryPoint } from 'azion/config';
-import { access } from 'fs/promises';
 
 // Well-defined types
 export type GetTempEntryPathsOptions = {
@@ -16,29 +15,6 @@ export type GetTempEntryPathsOptions = {
  */
 export const generateTimestamp = (): string => {
   return new Date().toISOString().slice(0, 10).replace(/-/g, '');
-};
-
-/**
- * Validates that all entry points exist in the file system
- */
-export const validateEntryPoints = async (entry: BuildEntryPoint): Promise<void> => {
-  const entries = Array.isArray(entry)
-    ? entry
-    : typeof entry === 'string'
-      ? [entry]
-      : Object.values(entry);
-
-  await Promise.all(
-    entries.map(async (entryPath) => {
-      try {
-        await access(entryPath);
-      } catch (error) {
-        throw new Error(
-          `Entry point "${entryPath}" was not found. Please verify the path and try again.`,
-        );
-      }
-    }),
-  );
 };
 
 /**
