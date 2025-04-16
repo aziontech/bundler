@@ -1,3 +1,10 @@
+## [5.1.0-stage.2](https://github.com/aziontech/bundler/compare/v5.1.0-stage.1...v5.1.0-stage.2) (2025-04-16)
+
+
+### Bug Fixes
+
+* entrypoint resolution ([#475](https://github.com/aziontech/bundler/issues/475)) ([47e636b](https://github.com/aziontech/bundler/commit/47e636bdf4ddc6058482691ab42a0ab876d8a682))
+
 ## [5.1.0-stage.1](https://github.com/aziontech/bundler/compare/v5.0.3...v5.1.0-stage.1) (2025-04-15)
 
 
