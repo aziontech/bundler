@@ -50,7 +50,7 @@ export async function manifestCommand(options: ManifestCommandOptions): Promise<
       await handler();
     }
     if (!handler) {
-      feedback.error(
+      feedback.manifest.error(
         `Only ${ManifestAction.TRANSFORM} and ${ManifestAction.GENERATE} actions are supported`,
       );
       process.exit(1);
@@ -58,7 +58,7 @@ export async function manifestCommand(options: ManifestCommandOptions): Promise<
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (debug as any).error(error);
-    feedback.error(error instanceof Error ? error.message : String(error));
+    feedback.manifest.error(error instanceof Error ? error.message : String(error));
     process.exit(1);
   }
 }

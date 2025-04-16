@@ -2,7 +2,7 @@ import { dirname } from 'path';
 import { mkdir, writeFile } from 'fs/promises';
 import { AzionPrebuildResult, AzionConfig, BuildContext, BuildConfiguration } from 'azion/config';
 import { debug, removeAzionTempFiles } from '#utils';
-import { BUILD_CONFIG_DEFAULTS } from '#constants';
+import { BUILD_CONFIG_DEFAULTS, DOCS_MESSAGE } from '#constants';
 import { feedback } from 'azion/utils/node';
 
 import { checkDependencies } from './utils';
@@ -101,7 +101,9 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     };
   } catch (error: unknown) {
     debug.error('Build process failed:', error);
-    feedback.build.error(error instanceof Error ? error.message : String(error));
+    feedback.build.error(
+      `${error instanceof Error ? error.message : String(error)}${DOCS_MESSAGE}`,
+    );
     process.exit(1);
   }
 };

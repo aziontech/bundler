@@ -1,7 +1,7 @@
 import { SUPPORTED_BUNDLERS, BUNDLER } from '#constants';
 import { AzionConfig, AzionBuildPreset } from 'azion/config';
 import type { BuildConfiguration, BuildEntryPoint } from 'azion/config';
-import { createPathEntriesMap, validateEntryPoints } from './utils';
+import { createPathEntriesMap } from './utils';
 
 export const setupBuildConfig = async (
   azionConfig: AzionConfig,
@@ -13,39 +13,32 @@ export const setupBuildConfig = async (
 
   const userEntryPath: BuildEntryPoint | undefined = azionConfig.build?.entry;
 
+  const resolveEntryPaths = async (entry: BuildEntryPoint) => {
+    return createPathEntriesMap({
+      entry,
+      ext: preset.metadata.ext ?? BUNDLER.DEFAULT_OUTPUT_EXTENSION,
+      production,
+      bundler:
+        azionConfig.build?.bundler ?? preset.config.build?.bundler ?? SUPPORTED_BUNDLERS.DEFAULT,
+    });
+  };
+
   if (userEntryPath) {
-    await validateEntryPoints(userEntryPath);
-    resolvedEntryPathsMap = await createPathEntriesMap({
-      entry: userEntryPath,
-      ext: preset.metadata.ext ?? BUNDLER.DEFAULT_OUTPUT_EXTENSION,
-      production,
-      bundler:
-        azionConfig.build?.bundler ?? preset.config.build?.bundler ?? SUPPORTED_BUNDLERS.DEFAULT,
-    });
+    resolvedEntryPathsMap = await resolveEntryPaths(userEntryPath);
+  } else if (preset.config.build?.entry) {
+    resolvedEntryPathsMap = await resolveEntryPaths(preset.config.build.entry);
+  } else if (preset.handler) {
+    resolvedEntryPathsMap = await resolveEntryPaths(BUNDLER.DEFAULT_HANDLER_FILENAME);
   }
 
-  if (!userEntryPath && preset.handler) {
-    resolvedEntryPathsMap = await createPathEntriesMap({
-      entry: BUNDLER.DEFAULT_HANDLER_FILENAME,
-      ext: preset.metadata.ext ?? BUNDLER.DEFAULT_OUTPUT_EXTENSION,
-      production,
-      bundler:
-        azionConfig.build?.bundler ?? preset.config.build?.bundler ?? SUPPORTED_BUNDLERS.DEFAULT,
-    });
-  }
+  if (Object.keys(resolvedEntryPathsMap).length === 0) {
+    const defaultEntry = preset.config.build?.entry
+      ? `(default is "${preset.config.build.entry}")`
+      : '';
 
-  if (!userEntryPath && !preset.handler && preset.config.build?.entry) {
-    resolvedEntryPathsMap = await createPathEntriesMap({
-      entry: preset.config.build.entry,
-      ext: preset.metadata.ext ?? BUNDLER.DEFAULT_OUTPUT_EXTENSION,
-      production,
-      bundler:
-        azionConfig.build?.bundler ?? preset.config.build?.bundler ?? SUPPORTED_BUNDLERS.DEFAULT,
-    });
-  }
-
-  if (!userEntryPath && !preset.handler && !azionConfig.build?.entry) {
-    throw new Error('No entry point provided. ');
+    throw new Error(
+      `No entry point found ${defaultEntry}. Please specify one using --entry or create a default entry file in your project.`,
+    );
   }
 
   return {

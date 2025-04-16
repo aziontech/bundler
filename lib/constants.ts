@@ -60,3 +60,9 @@ export const BUNDLER = {
     return BUNDLER.PACKAGE_JSON.version;
   },
 } as const;
+
+export const DOCS_MESSAGE = `
+
+📚 Need help? Check out our documentation:
+   - Azion CLI Documentation: https://www.azion.com/en/documentation/devtools/cli/build/
+   - Azion Bundler on GitHub: https://github.com/aziontech/bundler\n`;
