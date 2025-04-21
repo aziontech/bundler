@@ -30,14 +30,15 @@ export const generateManifest = async (
   if (typeof input === 'object') {
     config = input;
   } else {
-    config = await envBundler.readUserConfig(input);
-    if (!config) {
+    const configResult = await envBundler.readUserConfig(input);
+    if (!configResult) {
       throw new Error(
         input
           ? `Failed to load config from ${input}`
           : 'No configuration found. Please provide a config file or object.',
       );
     }
+    config = configResult;
   }
 
   // Process and transform config into manifest
@@ -46,7 +47,7 @@ export const generateManifest = async (
   const manifestPath = join(outputPath, 'manifest.json');
   await fsPromises.writeFile(manifestPath, JSON.stringify(manifest, null, 2));
 
-  utilsNode.feedback.success(`Manifest generated successfully at ${manifestPath}`);
+  utilsNode.feedback.manifest.success(`Manifest generated successfully at ${manifestPath}`);
 };
 
 /**
@@ -74,7 +75,7 @@ export const transformManifest = async (
   const config = await readConfigFromPath(input || DEFAULT_TRANSFORM_INPUT_PATH);
   await envBundler.writeUserConfig(config);
 
-  utilsNode.feedback.success(`Config file generated successfully at ${outputPath}`);
+  utilsNode.feedback.manifest.success(`Config file generated successfully at ${outputPath}`);
 };
 
 export default generateManifest;
