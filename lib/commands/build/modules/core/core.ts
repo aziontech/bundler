@@ -54,9 +54,13 @@ export const executeBuild = async ({
 
     await executeBundler(bundlerConfig, ctx);
 
+    // Process the final build output to inject Node.js polyfills for the Azion production runtime
+    // This ensures compatibility with Node.js fs module in the Azion Edge environment
     return Promise.all(
-      entry.map(async (outputPath: string) => {
-        const bundledCode = await fsPromises.readFile(outputPath, 'utf-8');
+      Object.entries(bundlerConfig.entry).map(async ([outputPath]) => {
+        const finalOutputPath = outputPath.endsWith('.js') ? outputPath : `${outputPath}.js`;
+
+        const bundledCode = await fsPromises.readFile(finalOutputPath, 'utf-8');
         if (!ctx.production) return bundledCode;
 
         const bundledCodeWithHybridFsPolyfill = injectHybridFsPolyfill(
@@ -64,7 +68,8 @@ export const executeBuild = async ({
           buildConfig,
           ctx,
         );
-        await fsPromises.writeFile(outputPath, bundledCodeWithHybridFsPolyfill);
+
+        await fsPromises.writeFile(finalOutputPath, bundledCodeWithHybridFsPolyfill);
         return bundledCodeWithHybridFsPolyfill;
       }),
     );

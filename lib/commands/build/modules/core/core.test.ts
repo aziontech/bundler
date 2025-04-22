@@ -85,7 +85,7 @@ describe('executeBuild', () => {
     );
     expect(spyExecuteESBuildBuild).toHaveBeenCalled();
     expect(spyWriteFile).toHaveBeenCalledTimes(1);
-    expect(spyWriteFile).toHaveBeenCalledWith('src/index.js', expect.stringContaining(mockContent));
+    expect(spyWriteFile).toHaveBeenCalledWith('handler.js', expect.stringContaining(mockContent));
   });
 
   it('should execute build with webpack bundler', async () => {
@@ -121,7 +121,7 @@ describe('executeBuild', () => {
     );
     expect(spyExecuteWebpack).toHaveBeenCalled();
     expect(spyWriteFile).toHaveBeenCalledWith(
-      'src/index.js',
+      'handler.js',
       expect.stringContaining('// Original entry code'),
     );
   });
@@ -181,7 +181,7 @@ describe('executeBuild', () => {
 
     expect(spyExecuteESBuildBuild).toHaveBeenCalled();
     expect(spyWriteFile).toHaveBeenCalledWith(
-      'src/index.js',
+      'handler.js',
       'import SRC_NODE_FS from "node:fs";\n// Original entry code',
     );
   });
@@ -205,7 +205,7 @@ describe('executeBuild', () => {
 
     expect(spyExecuteESBuildBuild).toHaveBeenCalled();
     expect(spyWriteFile).toHaveBeenCalledWith(
-      'src/index.js',
+      'handler.js',
       expect.not.stringContaining('import SRC_NODE_FS from "node:fs";// Original entry code'),
     );
   });
