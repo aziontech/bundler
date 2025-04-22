@@ -61,14 +61,14 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
 
     /* Execute build phases */
     // Phase 1: Prebuild
-    feedback.build.info('Starting prebuild...');
+    feedback.prebuild.info('Starting pre-build...');
 
     const prebuildResult: AzionPrebuildResult = await executePrebuild({
       buildConfig: buildConfigSetup,
       ctx,
     });
 
-    feedback.build.info('Prebuild completed successfully');
+    feedback.prebuild.info('Pre-build completed successfully');
 
     // Phase 2: Build
     feedback.build.info('Starting build...');
@@ -80,9 +80,9 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     feedback.build.success('Build completed successfully');
 
     // Phase 3: Postbuild
-    feedback.build.info('Starting postbuild...');
+    feedback.postbuild.info('Starting post-build...');
     await executePostbuild({ buildConfig: buildConfigSetup, ctx });
-    feedback.build.success('Postbuild completed successfully');
+    feedback.postbuild.success('Post-build completed successfully');
 
     // Phase 4: Set Environment
     // TODO: rafactor this to use the same function

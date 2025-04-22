@@ -56,7 +56,7 @@ describe('setEnvironment', () => {
   });
 
   it('should create initial configuration when user config does not exist', async () => {
-    jest.spyOn(envDefault, 'readUserConfig').mockResolvedValueOnce(false);
+    jest.spyOn(envDefault, 'readUserConfig').mockResolvedValueOnce(null);
 
     await setEnvironment({
       config: mockConfig,
@@ -70,7 +70,7 @@ describe('setEnvironment', () => {
   });
 
   it('should not create configuration when user config already exists', async () => {
-    jest.spyOn(envDefault, 'readUserConfig').mockResolvedValueOnce(true);
+    jest.spyOn(envDefault, 'readUserConfig').mockResolvedValueOnce({});
 
     await setEnvironment({
       config: mockConfig,
@@ -84,7 +84,7 @@ describe('setEnvironment', () => {
   });
 
   it('should add preset name to configuration when not defined', async () => {
-    jest.spyOn(envDefault, 'readUserConfig').mockResolvedValueOnce(false);
+    jest.spyOn(envDefault, 'readUserConfig').mockResolvedValueOnce(null);
     spyMergeConfigWithUserOverrides.mockReturnValue({
       build: {
         polyfills: true,

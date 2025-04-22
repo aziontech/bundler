@@ -98,6 +98,9 @@ function setupBundlerProcessHandlers() {
 function startBundler() {
   AzionBundler.version(BUNDLER.VERSION);
 
+  // Default to 'build' command when no command is provided
+  if (process.argv.length === 2) process.argv.push('build');
+
   AzionBundler.command('store <command>')
     .description('Manage store configuration (init/destroy)')
     .option('--scope <scope>', 'Project scope', 'global')

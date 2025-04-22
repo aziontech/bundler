@@ -50,8 +50,8 @@ export const setEnvironment = async ({
         ...mergedConfig.build,
         preset: preset.metadata.name,
         ...(!preset.handler &&
-          preset.config.build?.entry && {
-            entry: preset.config.build.entry,
+          userConfig.build?.entry && {
+            entry: userConfig.build?.entry,
           }),
       };
     }
