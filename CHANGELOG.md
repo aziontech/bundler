@@ -1,3 +1,10 @@
+## [5.1.0-stage.3](https://github.com/aziontech/bundler/compare/v5.1.0-stage.2...v5.1.0-stage.3) (2025-04-22)
+
+
+### Bug Fixes
+
+* azion.config.ts module resolution ([#476](https://github.com/aziontech/bundler/issues/476)) ([9904bd9](https://github.com/aziontech/bundler/commit/9904bd94c3e73265988293c4cd584781949d9925))
+
 ## [5.1.0-stage.2](https://github.com/aziontech/bundler/compare/v5.1.0-stage.1...v5.1.0-stage.2) (2025-04-16)
 
 
