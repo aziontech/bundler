@@ -14,9 +14,11 @@ import { BUILD_CONFIG_DEFAULTS, DIRECTORIES, type BundlerType } from '#constants
  * @example
  *
  * buildCommand({
- *   entry: './src/index.js',
- *   preset: { name: 'javascript' },
- *   polyfills: false
+ *   entry: './src/index.ts',
+ *   preset: 'typescript',
+ *   polyfills: false,
+ *   worker: true,
+ *   bundler: 'webpack',
  * });
  */
 export async function buildCommand(options: BuildCommandOptions) {

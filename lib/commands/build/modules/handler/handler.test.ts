@@ -30,6 +30,7 @@ describe('resolveHandlers', () => {
       version: '1.0.0',
       tempPath: '/mock/temp',
       argsPath: '/mock/args',
+      experimental: true,
     };
     spyFeedbackBuildInfo = jest.spyOn(utilsNode.feedback.build, 'info').mockReturnValue(undefined);
     spyAccess = jest.spyOn(fsPromises, 'access').mockImplementation(() => Promise.resolve());

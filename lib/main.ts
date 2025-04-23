@@ -52,6 +52,7 @@ async function getBundlerEnvironment(): Promise<BundlerGlobals> {
     version: BUNDLER.VERSION,
     tempPath: await createSessionTempDir(),
     argsPath: BUNDLER.ARGS_PATH,
+    experimental: BUNDLER.EXPERIMENTAL,
   };
 
   return bundlerContext;
@@ -96,7 +97,7 @@ function setupBundlerProcessHandlers() {
  *    startBundler();
  */
 function startBundler() {
-  AzionBundler.version(BUNDLER.VERSION);
+  AzionBundler.version(globalThis.bundler.version);
 
   // Default to 'build' command when no command is provided
   if (process.argv.length === 2) process.argv.push('build');
@@ -127,9 +128,13 @@ function startBundler() {
       'Indicates that the constructed code inserts its own worker expression. Use --worker or --worker=true to enable, --worker=false to disable',
     )
     .option('--dev', 'Build in development mode', false)
+    .option('--experimental [boolean]', 'Enable experimental features', false)
     .action(async (options) => {
       const { buildCommand, manifestCommand } = await import('#commands');
-      const { dev, ...buildOptions } = options;
+      const { dev, experimental, ...buildOptions } = options;
+
+      if (experimental) globalThis.bundler.experimental = true;
+
       const { config } = await buildCommand({
         ...buildOptions,
         production: !dev,
@@ -142,8 +147,14 @@ function startBundler() {
     .description('Start local environment')
     .argument('[entry]', 'Specify the entry file (default: .edge/worker.dev.js)')
     .option('-p, --port <port>', 'Specify the port', '3333')
+    .option('--experimental [boolean]', 'Enable experimental features', false)
     .action(async (entry, options) => {
       const { devCommand } = await import('#commands');
+
+      const { experimental } = options;
+
+      if (experimental) globalThis.bundler.experimental = true;
+
       await devCommand({ entry, ...options });
     });
 
