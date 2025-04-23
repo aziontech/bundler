@@ -1,3 +1,10 @@
+## [5.1.0-stage.4](https://github.com/aziontech/bundler/compare/v5.1.0-stage.3...v5.1.0-stage.4) (2025-04-23)
+
+
+### Features
+
+* add temporary single entry point limitation ([#477](https://github.com/aziontech/bundler/issues/477)) ([48ec5c0](https://github.com/aziontech/bundler/commit/48ec5c06606388801ad34ff3298c152c9b40e0f5))
+
 ## [5.1.0-stage.3](https://github.com/aziontech/bundler/compare/v5.1.0-stage.2...v5.1.0-stage.3) (2025-04-22)
 
 
