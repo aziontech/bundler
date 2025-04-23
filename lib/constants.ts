@@ -41,6 +41,7 @@ export type BundlerType = (typeof SUPPORTED_BUNDLERS)[keyof typeof SUPPORTED_BUN
 
 export const BUNDLER = {
   NAMESPACE: 'bundler',
+  EXPERIMENTAL: false,
   MIN_NODE_VERSION: '18.0.0',
   CONFIG_FILENAME: 'azion.config',
   DEFAULT_HANDLER_FILENAME: 'handler',

@@ -38,6 +38,7 @@ describe('setupBuildConfig', () => {
       version: '1.0.0',
       tempPath: path.join(tmpDir.name, 'temp'),
       argsPath: path.join(tmpDir.name, 'args'),
+      experimental: true,
     };
   });
 

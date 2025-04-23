@@ -1,6 +1,11 @@
 import { dirname } from 'path';
 import { mkdir, writeFile } from 'fs/promises';
-import { AzionPrebuildResult, AzionConfig, BuildContext, BuildConfiguration } from 'azion/config';
+import type {
+  AzionPrebuildResult,
+  AzionConfig,
+  BuildContext,
+  BuildConfiguration,
+} from 'azion/config';
 import { debug, removeAzionTempFiles } from '#utils';
 import { BUILD_CONFIG_DEFAULTS, DOCS_MESSAGE } from '#constants';
 import { feedback } from 'azion/utils/node';
