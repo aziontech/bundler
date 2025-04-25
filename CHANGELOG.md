@@ -1,3 +1,10 @@
+## [5.1.0-stage.5](https://github.com/aziontech/bundler/compare/v5.1.0-stage.4...v5.1.0-stage.5) (2025-04-25)
+
+
+### Bug Fixes
+
+* temporary workaround to set azion.config environment ([#478](https://github.com/aziontech/bundler/issues/478)) ([84f2bea](https://github.com/aziontech/bundler/commit/84f2beab9b12a6d18c05802e4a62156129f62c36))
+
 ## [5.1.0-stage.4](https://github.com/aziontech/bundler/compare/v5.1.0-stage.3...v5.1.0-stage.4) (2025-04-23)
 
 
