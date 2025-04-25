@@ -1,32 +1,41 @@
 import fsPromises from 'fs/promises';
-import { dirname } from 'path';
-import { BuildConfiguration, BuildContext } from 'azion/config';
-import util from './utils';
+import type { BuildConfiguration, BuildContext } from 'azion/config';
+import { generateWorkerEventHandler, normalizeEntryPointPaths } from './utils';
 
 /**
- * Configures the worker code based on user input
+ * Processes handler files and prepares them for bundling
  *
- * @param buildConfig - Build configuration
- * @param ctx - Build context with input/output information
- * @returns The generated or original worker code
+ * @param buildConfig - Build configuration object
+ * @param ctx - Build context with entry points
+ * @returns Object mapping bundler paths to processed contents
+ *
+ * @example
+ * // Returns an object like:
+ * {
+ *   "/tmp/bundler/handler1.js": "addEventListener('fetch', (event) => {...})",
+ * }
  */
 export const setupWorkerCode = async (
   buildConfig: BuildConfiguration,
   ctx: BuildContext,
-): Promise<string> => {
+): Promise<Record<string, string>> => {
   try {
-    if (buildConfig.worker) {
-      return fsPromises.readFile(ctx.entrypoint, 'utf-8');
-    }
-    const wrapperCode = util.createEventHandlerCode(ctx.entrypoint);
+    const handlersPaths = normalizeEntryPointPaths(ctx.handler);
+    const entriesPath = buildConfig.entry || {};
 
-    await fsPromises.mkdir(dirname(ctx.output), { recursive: true });
+    const entriesPathMap: Record<string, string> = {};
+    await Promise.all(
+      handlersPaths.map(async (handlerPath, index) => {
+        const tempPath = Object.values(entriesPath)[index];
 
-    if (ctx.production !== false) {
-      await fsPromises.writeFile(ctx.output, wrapperCode, 'utf-8');
-    }
+        const codeRaw = buildConfig.worker
+          ? await fsPromises.readFile(handlerPath, 'utf-8')
+          : generateWorkerEventHandler(handlerPath);
+        entriesPathMap[tempPath] = codeRaw;
+      }),
+    );
 
-    return wrapperCode;
+    return entriesPathMap;
   } catch (error: unknown) {
     throw new Error(
       `Failed to setup worker code: ${error instanceof Error ? error.message : String(error)}`,

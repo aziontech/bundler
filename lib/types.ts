@@ -5,6 +5,7 @@ export interface BundlerGlobals {
   version: string;
   tempPath: string;
   argsPath: string;
+  experimental: boolean;
 }
 
 declare global {

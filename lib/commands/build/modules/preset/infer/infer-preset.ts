@@ -1,4 +1,3 @@
-import type { AzionBuildPreset } from 'azion/config';
 import * as presets from 'azion/presets';
 import { join } from 'path';
 import fs from 'fs';
@@ -24,8 +23,7 @@ export async function inferPreset(): Promise<string> {
 
     if (detectedFramework[0]?.id) {
       const hasPreset = Object.values(presets).some(
-        (preset: AzionBuildPreset) =>
-          preset.metadata?.name === detectedFramework[0].id,
+        (preset) => preset.metadata?.name === detectedFramework[0].id,
       );
       if (hasPreset) return detectedFramework[0].id;
     }
@@ -38,9 +36,7 @@ export async function inferPreset(): Promise<string> {
 
     const files = fs.readdirSync(process.cwd());
 
-    const hasTypeScriptFiles = files.some((file) =>
-      ['.ts', '.tsx'].includes(extname(file)),
-    );
+    const hasTypeScriptFiles = files.some((file) => ['.ts', '.tsx'].includes(extname(file)));
     if (hasTypeScriptFiles) return 'typescript';
 
     return 'javascript';

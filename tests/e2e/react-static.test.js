@@ -44,16 +44,11 @@ describe('E2E - react-static project', () => {
     const pageTitle = await page.title();
 
     expect(pageContent).toContain('Learn React');
-    expect(pageContent).toContain(
-      '<p>Edit <code>src/App.js</code> and save to reload.</p>',
-    );
+    expect(pageContent).toContain('<p>Edit <code>src/App.js</code> and save to reload.</p>');
     expect(pageTitle).toBe('React App');
   });
 
   test('Should return correct asset', async () => {
-    await request
-      .get('/favicon.ico')
-      .expect(200)
-      .expect('Content-Type', /image/);
+    await request.get('/favicon.ico').expect(200).expect('Content-Type', /image/);
   });
 });

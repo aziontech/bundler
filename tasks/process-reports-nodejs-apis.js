@@ -16,11 +16,7 @@ function processReports() {
     // Process the test results
     results.testResults = results.testResults.map((test) => {
       // Remove the path from the test name
-      const testName = test.name
-        .split('/')
-        .pop()
-        .replace('.test.js', '')
-        .replace(/-/g, ' ');
+      const testName = test.name.split('/').pop().replace('.test.js', '').replace(/-/g, ' ');
 
       // Transform the test name into a more readable format
       const readableTestName = testName
@@ -29,9 +25,7 @@ function processReports() {
         .join(' ');
 
       // Check if all tests in the suite passed
-      const suitePassed = test.assertionResults.every(
-        (result) => result.status === 'passed',
-      );
+      const suitePassed = test.assertionResults.every((result) => result.status === 'passed');
 
       return {
         name: readableTestName,
@@ -49,18 +43,12 @@ function processReports() {
     };
 
     // Write the new object back to the JSON file
-    fs.writeFileSync(
-      'nodejs_apis_results.json',
-      JSON.stringify(newResults, null, 2),
-    );
+    fs.writeFileSync('nodejs_apis_results.json', JSON.stringify(newResults, null, 2));
 
     // Create the Markdown table
     const table = [
       ['Test', 'Status'],
-      ...newResults.testResults.map((test) => [
-        test.name,
-        test.passed ? '✅' : '⚠️',
-      ]),
+      ...newResults.testResults.map((test) => [test.name, test.passed ? '✅' : '⚠️']),
     ];
 
     // Write the Markdown table to the README.md file
@@ -82,9 +70,7 @@ function processReports() {
           'en-US',
           dateOptions,
         )} ${new Date().toLocaleTimeString('en-US', timeOptions)}`;
-        return `${p1}${markdownTable(
-          table,
-        )}\n\nLast test run date: ${newDate}${p3}`;
+        return `${p1}${markdownTable(table)}\n\nLast test run date: ${newDate}${p3}`;
       },
     );
     fs.writeFileSync('./docs/nodejs-apis.md', newReadme);

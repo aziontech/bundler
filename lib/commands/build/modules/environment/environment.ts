@@ -50,11 +50,29 @@ export const setEnvironment = async ({
         ...mergedConfig.build,
         preset: preset.metadata.name,
         ...(!preset.handler &&
-          preset.config.build?.entry && {
-            entry: preset.config.build.entry,
+          userConfig.build?.entry && {
+            entry: userConfig.build?.entry,
           }),
       };
     }
+
+    // ===== TEMPORARY SOLUTION START =====
+    // In non-experimental mode, we need to set a fixed path for the function
+    // This will be removed once multi-entry point support is fully implemented
+    if (!globalThis.bundler?.experimental) {
+      mergedConfig.functions = [];
+      const bundlerType = mergedConfig.build?.bundler || 'webpack';
+      const finalExt = bundlerType === 'webpack' ? '.js' : '';
+      const outputFileName = ctx.production ? 'worker' : 'worker.dev';
+      const singleOutputPath = `.edge/${outputFileName}${finalExt}`;
+
+      // Add a single function with the fixed path
+      mergedConfig.functions.push({
+        name: userConfig?.functions?.[0]?.name || preset.config?.functions?.[0]?.name || 'handler',
+        path: singleOutputPath,
+      });
+    }
+    // ===== TEMPORARY SOLUTION END =====
 
     const hasUserConfig = await envDefault.readUserConfig();
 

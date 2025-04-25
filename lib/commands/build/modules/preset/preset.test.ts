@@ -1,7 +1,7 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { resolvePreset } from './preset';
 import inferPreset from './infer/infer-preset';
-import { AzionBuildPreset } from 'azion/config';
+import { AzionBuildPreset, PresetInput } from 'azion/config';
 import * as utilsNode from 'azion/utils/node';
 
 // Mock dependencies
@@ -64,39 +64,20 @@ describe('resolvePreset', () => {
   });
 
   it('should infer preset when none is provided', async () => {
-    const spyInfer = jest
-      .spyOn(inferPreset, 'inferPreset')
-      .mockResolvedValue('typescript');
-    const spyFeedback = jest
-      .spyOn(utilsNode.feedback.build, 'info')
-      .mockReturnValue(undefined);
+    const spyInfer = jest.spyOn(inferPreset, 'inferPreset').mockResolvedValue('typescript');
+    const spyFeedback = jest.spyOn(utilsNode.feedback.build, 'info').mockReturnValue(undefined);
 
     await resolvePreset();
 
     expect(spyInfer).toHaveBeenCalled();
-    expect(spyFeedback).toHaveBeenCalledWith(
-      'No preset specified, using automatic detection...',
-    );
+    expect(spyFeedback).toHaveBeenCalledWith('No preset specified, using automatic detection...');
   });
 
   it('should throw error for invalid preset', async () => {
-    const invalidPreset: AzionBuildPreset = {
-      metadata: { name: 'invalid' },
-      config: { build: {} },
-    };
+    const invalidPreset: PresetInput = 'invalid';
 
     await expect(resolvePreset(invalidPreset)).rejects.toThrow(
       "Invalid build preset name: 'invalid'",
-    );
-  });
-
-  it('should throw error for preset without required properties', async () => {
-    const incompletePreset = {
-      metadata: { name: 'javascript' },
-    } as AzionBuildPreset;
-
-    await expect(resolvePreset(incompletePreset)).rejects.toThrow(
-      'Preset must have name and config.',
     );
   });
 });

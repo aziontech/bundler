@@ -59,9 +59,7 @@ describe('inferPreset', () => {
   });
 
   it('should default to JavaScript on error', async () => {
-    jest
-      .spyOn(frameworks, 'listFrameworks')
-      .mockRejectedValue(new Error('Test error'));
+    jest.spyOn(frameworks, 'listFrameworks').mockRejectedValue(new Error('Test error'));
 
     const result = await inferPreset.inferPreset();
 

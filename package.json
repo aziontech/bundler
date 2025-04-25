@@ -1,6 +1,6 @@
 {
   "name": "edge-functions",
-  "version": "5.0.3",
+  "version": "5.1.0-stage.5",
   "description": "Tool to launch and build JavaScript/Frameworks. This tool automates polyfills for Edge Computing and assists in creating Workers, notably for the Azion platform.",
   "main": "dist/main.js",
   "module": "dist/main.ts",
@@ -43,9 +43,11 @@
   "license": "MIT",
   "dependencies": {
     "@netlify/framework-info": "^9.9.1",
-    "azion": "~1.17.3",
+    "azion": "1.19.1",
     "chokidar": "^3.5.3",
     "commander": "^10.0.1",
+    "cosmiconfig": "^9.0.0",
+    "cosmiconfig-typescript-loader": "^6.1.0",
     "edge-runtime": "^2.4.5",
     "lodash": "^4.17.21",
     "prettier": "^3.3.2",

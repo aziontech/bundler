@@ -16,9 +16,7 @@ describe('debug utils', () => {
   test('Should log if debug flag is enabled', () => {
     process.env.DEBUG = 'true';
 
-    const consoleSpy = jest
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     debug.error('test');
 
@@ -32,9 +30,7 @@ describe('debug utils', () => {
     process.env.DEBUG = 'false';
     jest.resetModules();
 
-    const consoleSpy = jest
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     debug.error('test');
 

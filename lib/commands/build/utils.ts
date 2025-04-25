@@ -1,9 +1,8 @@
 import { join } from 'path';
-import fs from 'fs';
+import { readFile, stat, rm, mkdir } from 'fs/promises';
 import { getPackageManager } from 'azion/utils/node';
-import type { PackageJson } from './types';
-import { ConfigValueOptions, PresetValueOptions } from './types';
-import { PresetInput } from 'azion/config';
+import type { ConfigValueOptions, PresetValueOptions, PackageJson } from './types';
+import type { PresetInput, BuildEntryPoint } from 'azion/config';
 
 export class PackageJsonError extends Error {
   constructor(
@@ -22,25 +21,21 @@ export class DependenciesError extends Error {
   }
 }
 
-export const readPackageJson = (): PackageJson => {
+export const readPackageJson = async (): Promise<PackageJson> => {
   const packageJsonPath = join(process.cwd(), 'package.json');
   try {
-    const content = fs.readFileSync(packageJsonPath, 'utf8');
+    const content = await readFile(packageJsonPath, 'utf8');
     return JSON.parse(content);
   } catch (error: unknown) {
-    throw new PackageJsonError(
-      'Failed to read package.json',
-      (error as { code?: string }).code,
-    );
+    throw new PackageJsonError('Failed to read package.json', (error as { code?: string }).code);
   }
 };
 
 export const hasNodeModulesDirectory = async (): Promise<boolean> => {
   const nodeModulesPath = join(process.cwd(), 'node_modules');
   try {
-    const stats = await fs.promises.stat(nodeModulesPath);
+    const stats = await stat(nodeModulesPath);
     return stats.isDirectory();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return false;
   }
@@ -50,7 +45,7 @@ export const checkDependencies = async (): Promise<void> => {
   let projectJson: PackageJson;
 
   try {
-    projectJson = readPackageJson();
+    projectJson = await readPackageJson();
   } catch (error) {
     if (error instanceof PackageJsonError && error.code === 'ENOENT') {
       return;
@@ -58,10 +53,7 @@ export const checkDependencies = async (): Promise<void> => {
     throw error;
   }
 
-  if (
-    projectJson &&
-    (projectJson.dependencies || projectJson.devDependencies)
-  ) {
+  if (projectJson && (projectJson.dependencies || projectJson.devDependencies)) {
     const pkgManager = await getPackageManager();
     const nodeModulesExists = await hasNodeModulesDirectory();
 
@@ -114,3 +106,35 @@ export function resolvePresetPriority({
     defaultValue,
   });
 }
+
+/**
+ * Normalizes entry points to a consistent array format
+ */
+export const normalizeEntryPaths = (entry: BuildEntryPoint): string[] => {
+  if (!entry) return [];
+  if (typeof entry === 'string') return [entry];
+  if (Array.isArray(entry)) return entry;
+  return Object.values(entry);
+};
+
+/**
+ * Cleans and recreates directories
+ */
+export const cleanDirectory = async (dirs: string[]): Promise<void> => {
+  try {
+    await Promise.all(
+      dirs.map(async (dir) => {
+        try {
+          await rm(dir, { recursive: true, force: true });
+        } catch (err) {
+          if ((err as NodeJS.ErrnoException).code !== 'ENOENT') {
+            throw err;
+          }
+        }
+        await mkdir(dir, { recursive: true });
+      }),
+    );
+  } catch (error) {
+    throw new Error(`Failed to clean directories: ${error}`);
+  }
+};

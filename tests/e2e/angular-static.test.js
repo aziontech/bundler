@@ -49,9 +49,6 @@ describe('E2E - angular-static project', () => {
   });
 
   test('Should return correct asset', async () => {
-    await request
-      .get('/favicon.ico')
-      .expect(200)
-      .expect('Content-Type', /image/);
+    await request.get('/favicon.ico').expect(200).expect('Content-Type', /image/);
   });
 });

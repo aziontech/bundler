@@ -27,13 +27,10 @@ export interface ManifestCommandOptions {
  * az manifest --entry=<input.config.js> --output=<output.dir>
  * ```
  */
-export async function manifestCommand(
-  options: ManifestCommandOptions,
-): Promise<void> {
+export async function manifestCommand(options: ManifestCommandOptions): Promise<void> {
   try {
     const action =
-      options.action ||
-      (options.config ? ManifestAction.GENERATE : ManifestAction.TRANSFORM);
+      options.action || (options.config ? ManifestAction.GENERATE : ManifestAction.TRANSFORM);
 
     const actionHandlers = {
       [ManifestAction.GENERATE]: async () => {
@@ -53,7 +50,7 @@ export async function manifestCommand(
       await handler();
     }
     if (!handler) {
-      feedback.error(
+      feedback.manifest.error(
         `Only ${ManifestAction.TRANSFORM} and ${ManifestAction.GENERATE} actions are supported`,
       );
       process.exit(1);
@@ -61,7 +58,7 @@ export async function manifestCommand(
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (debug as any).error(error);
-    feedback.error(error instanceof Error ? error.message : String(error));
+    feedback.manifest.error(error instanceof Error ? error.message : String(error));
     process.exit(1);
   }
 }

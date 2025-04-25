@@ -43,9 +43,7 @@ describe('E2E - gatsby-static project', () => {
     const pageContent = await page.content();
     const pageTitle = await page.title();
 
-    expect(pageContent).toContain(
-      'who lives and works in San Francisco building useful things.',
-    );
+    expect(pageContent).toContain('who lives and works in San Francisco building useful things.');
     expect(pageContent).toContain(
       'This is a custom description for SEO and Open Graph purposes, rather than the default generated excerpt. Simply add a description field to the frontmatter.',
     );
@@ -59,9 +57,7 @@ describe('E2E - gatsby-static project', () => {
 
       const pageContent = await page.content();
 
-      expect(pageContent).toContain(
-        'This is my first post on my new fake blog! How exciting!',
-      );
+      expect(pageContent).toContain('This is my first post on my new fake blog! How exciting!');
     },
     TIMEOUT,
   );

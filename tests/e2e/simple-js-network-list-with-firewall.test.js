@@ -9,8 +9,7 @@ const TIMEOUT = 1 * 60 * 3000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH =
-  '/examples/javascript/simple-js-network-list-with-firewall';
+const EXAMPLE_PATH = '/examples/javascript/simple-js-network-list-with-firewall';
 
 describe('E2E - simple-js-network-list-with-firewall project', () => {
   let request;
@@ -28,6 +27,7 @@ describe('E2E - simple-js-network-list-with-firewall project', () => {
       true,
       undefined,
       false,
+      'main.js',
     );
   }, TIMEOUT);
 

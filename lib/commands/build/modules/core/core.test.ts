@@ -1,10 +1,6 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { executeBuild } from './core';
-import {
-  BuildConfiguration,
-  BuildContext,
-  AzionPrebuildResult,
-} from 'azion/config';
+import { BuildConfiguration, BuildContext, AzionPrebuildResult } from 'azion/config';
 import fsPromises from 'fs/promises';
 import bundlers from './bundlers';
 
@@ -18,7 +14,9 @@ jest.mock('./bundlers');
 
 describe('executeBuild', () => {
   const mockBuildConfig: BuildConfiguration = {
-    entry: 'temp/entry.js',
+    entry: {
+      'handler.js': 'src/index.js',
+    },
     preset: {
       metadata: { name: 'test-preset' },
       config: { build: {} },
@@ -34,8 +32,7 @@ describe('executeBuild', () => {
 
   const mockContext: BuildContext = {
     production: false,
-    output: '.edge/worker.js',
-    entrypoint: 'src/index.js',
+    handler: 'handler.js',
   };
 
   const mockPrebuildResult: AzionPrebuildResult = {
@@ -60,16 +57,10 @@ describe('executeBuild', () => {
   });
 
   it('should execute build with esbuild bundler', async () => {
-    jest
-      .spyOn(fsPromises, 'readFile')
-      .mockResolvedValue('// Original entry code');
-    const spyWriteFile = jest
-      .spyOn(fsPromises, 'writeFile')
-      .mockResolvedValue();
-    const spyCreateAzionESBuildConfig = jest.spyOn(
-      bundlers,
-      'createAzionESBuildConfigWrapper',
-    );
+    const mockContent = '// Original entry code';
+    jest.spyOn(fsPromises, 'readFile').mockResolvedValue(mockContent);
+    const spyWriteFile = jest.spyOn(fsPromises, 'writeFile').mockResolvedValue();
+    const spyCreateAzionESBuildConfig = jest.spyOn(bundlers, 'createAzionESBuildConfigWrapper');
     const spyExecuteESBuildBuild = jest
       .spyOn(bundlers, 'executeESBuildBuildWrapper')
       .mockResolvedValue();
@@ -93,23 +84,14 @@ describe('executeBuild', () => {
       { ...mockContext, production: true },
     );
     expect(spyExecuteESBuildBuild).toHaveBeenCalled();
-    expect(spyWriteFile).toHaveBeenCalledWith(
-      mockContext.output,
-      expect.stringContaining('// Original entry code'),
-    );
+    expect(spyWriteFile).toHaveBeenCalledTimes(1);
+    expect(spyWriteFile).toHaveBeenCalledWith('handler.js', expect.stringContaining(mockContent));
   });
 
   it('should execute build with webpack bundler', async () => {
-    jest
-      .spyOn(fsPromises, 'readFile')
-      .mockResolvedValue('// Original entry code');
-    const spyWriteFile = jest
-      .spyOn(fsPromises, 'writeFile')
-      .mockResolvedValue();
-    const spyCreateWebpack = jest.spyOn(
-      bundlers,
-      'createAzionWebpackConfigWrapper',
-    );
+    jest.spyOn(fsPromises, 'readFile').mockResolvedValue('// Original entry code');
+    const spyWriteFile = jest.spyOn(fsPromises, 'writeFile').mockResolvedValue();
+    const spyCreateWebpack = jest.spyOn(bundlers, 'createAzionWebpackConfigWrapper');
     const spyExecuteWebpack = jest
       .spyOn(bundlers, 'executeWebpackBuildWrapper')
       .mockResolvedValue();
@@ -139,20 +121,18 @@ describe('executeBuild', () => {
     );
     expect(spyExecuteWebpack).toHaveBeenCalled();
     expect(spyWriteFile).toHaveBeenCalledWith(
-      mockContext.output,
+      'handler.js',
       expect.stringContaining('// Original entry code'),
     );
   });
 
   it('should inject entry content when provided in prebuild result', async () => {
-    const spyReadFile = jest
-      .spyOn(fsPromises, 'readFile')
-      .mockImplementation((path) => {
-        if (path === mockBuildConfig.entry) {
-          return Promise.resolve('// Original entry code');
-        }
-        return Promise.resolve('/* public/index.js content */');
-      });
+    const spyReadFile = jest.spyOn(fsPromises, 'readFile').mockImplementation((path) => {
+      if (path === mockBuildConfig.entry['handler.js']) {
+        return Promise.resolve('// Original entry code');
+      }
+      return Promise.resolve('/* public/index.js content */');
+    });
     const writeFile = jest.spyOn(fsPromises, 'writeFile').mockResolvedValue();
 
     const prebuildWithEntry = {
@@ -173,22 +153,18 @@ describe('executeBuild', () => {
       ctx: mockContext,
     });
 
-    expect(spyReadFile).toHaveBeenCalledWith(mockBuildConfig.entry, 'utf-8');
+    expect(spyReadFile).toHaveBeenCalledWith(mockBuildConfig.entry['handler.js'], 'utf-8');
     expect(spyReadFile).toHaveBeenCalledWith('public/index.js', 'utf-8');
 
     expect(writeFile).toHaveBeenCalledWith(
-      mockBuildConfig.entry,
+      mockBuildConfig.entry['handler.js'],
       expect.stringContaining('// Original entry code'),
     );
   });
 
   it('should inject node:fs polyfill in production mode when polyfills is true', async () => {
-    jest
-      .spyOn(fsPromises, 'readFile')
-      .mockResolvedValue('// Original entry code');
-    const spyWriteFile = jest
-      .spyOn(fsPromises, 'writeFile')
-      .mockResolvedValue();
+    jest.spyOn(fsPromises, 'readFile').mockResolvedValue('// Original entry code');
+    const spyWriteFile = jest.spyOn(fsPromises, 'writeFile').mockResolvedValue();
     jest.spyOn(bundlers, 'createAzionESBuildConfigWrapper');
     const spyExecuteESBuildBuild = jest
       .spyOn(bundlers, 'executeESBuildBuildWrapper')
@@ -205,18 +181,14 @@ describe('executeBuild', () => {
 
     expect(spyExecuteESBuildBuild).toHaveBeenCalled();
     expect(spyWriteFile).toHaveBeenCalledWith(
-      mockContext.output,
+      'handler.js',
       'import SRC_NODE_FS from "node:fs";\n// Original entry code',
     );
   });
 
   it('should inject node:fs polyfill in production mode when polyfills is false', async () => {
-    jest
-      .spyOn(fsPromises, 'readFile')
-      .mockResolvedValue('// Original entry code');
-    const spyWriteFile = jest
-      .spyOn(fsPromises, 'writeFile')
-      .mockResolvedValue();
+    jest.spyOn(fsPromises, 'readFile').mockResolvedValue('// Original entry code');
+    const spyWriteFile = jest.spyOn(fsPromises, 'writeFile').mockResolvedValue();
     jest.spyOn(bundlers, 'createAzionESBuildConfigWrapper');
     const spyExecuteESBuildBuild = jest
       .spyOn(bundlers, 'executeESBuildBuildWrapper')
@@ -233,10 +205,8 @@ describe('executeBuild', () => {
 
     expect(spyExecuteESBuildBuild).toHaveBeenCalled();
     expect(spyWriteFile).toHaveBeenCalledWith(
-      mockContext.output,
-      expect.not.stringContaining(
-        'import SRC_NODE_FS from "node:fs";// Original entry code',
-      ),
+      'handler.js',
+      expect.not.stringContaining('import SRC_NODE_FS from "node:fs";// Original entry code'),
     );
   });
 

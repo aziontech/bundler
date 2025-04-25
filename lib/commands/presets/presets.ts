@@ -13,9 +13,7 @@ import * as azionPresets from 'azion/presets';
  * // Output might be: ['Angular', 'React', 'Vue']
  */
 export function getBeautify() {
-  const presets = Object.values(azionPresets).map(
-    (preset) => preset.metadata.name,
-  );
+  const presets = Object.values(azionPresets).map((preset) => preset.metadata.name);
   return presets;
 }
 

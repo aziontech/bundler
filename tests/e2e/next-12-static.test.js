@@ -60,9 +60,6 @@ describe('E2E - next-12-static project', () => {
   });
 
   test('Should return correct asset', async () => {
-    await request
-      .get('/favicon.ico')
-      .expect(200)
-      .expect('Content-Type', /image/);
+    await request.get('/favicon.ico').expect(200).expect('Content-Type', /image/);
   });
 });

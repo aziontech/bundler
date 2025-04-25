@@ -44,9 +44,7 @@ describe('E2E - astro-static project', () => {
     const pageTitle = await page.title();
 
     expect(pageContent).toContain('To get started, open the directory');
-    expect(pageContent).toContain(
-      'Learn how Astro works and explore the official API docs.',
-    );
+    expect(pageContent).toContain('Learn how Astro works and explore the official API docs.');
     expect(pageTitle).toBe('Welcome to Astro.');
   });
 

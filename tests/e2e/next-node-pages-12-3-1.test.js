@@ -46,9 +46,7 @@ describe('E2E - next-node-pages-12-3-1 project', () => {
 
     expect(pageContent).toContain('Welcome to');
     expect(pageContent).toContain('Next.js!');
-    expect(pageContent).toContain(
-      'Learn about Next.js in an interactive course with quizzes!',
-    );
+    expect(pageContent).toContain('Learn about Next.js in an interactive course with quizzes!');
     expect(pageTitle).toBe('Create Next App');
   });
 
@@ -78,17 +76,11 @@ describe('E2E - next-node-pages-12-3-1 project', () => {
   });
 
   test('Should return correct asset', async () => {
-    await request
-      .get('/favicon.ico')
-      .expect(200)
-      .expect('Content-Type', /image/);
+    await request.get('/favicon.ico').expect(200).expect('Content-Type', /image/);
   });
 
   test('Should return correct data in "/api/hello" API Route', async () => {
-    const response = await request
-      .get('/api/hello')
-      .expect(200)
-      .expect('Content-Type', /json/);
+    const response = await request.get('/api/hello').expect(200).expect('Content-Type', /json/);
 
     const expected = { name: 'John Doe' };
     expect(response.body).toStrictEqual(expected);

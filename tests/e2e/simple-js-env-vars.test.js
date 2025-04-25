@@ -2,10 +2,7 @@ import { expect } from '@jest/globals';
 import supertest from 'supertest';
 import projectInitializer from '../utils/project-initializer.js';
 import projectStop from '../utils/project-stop.js';
-import {
-  execCommandInContainer,
-  getContainerPort,
-} from '../utils/docker-env-actions.js';
+import { execCommandInContainer, getContainerPort } from '../utils/docker-env-actions.js';
 
 // timeout in minutes
 const TIMEOUT = 1 * 60 * 3000;
@@ -23,10 +20,7 @@ describe('E2E - simple-js-env-vars project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await execCommandInContainer(
-      `sh -c 'rm -rf .edge && rm -rf .env'`,
-      `/${EXAMPLE_PATH}`,
-    );
+    await execCommandInContainer(`sh -c 'rm -rf .edge && rm -rf .env'`, `/${EXAMPLE_PATH}`);
 
     if (expect.getState().currentTestName.includes('200')) {
       await execCommandInContainer(
@@ -35,7 +29,15 @@ describe('E2E - simple-js-env-vars project', () => {
       );
     }
 
-    await projectInitializer(EXAMPLE_PATH, 'javascript', serverPort, true);
+    await projectInitializer(
+      EXAMPLE_PATH,
+      'javascript',
+      serverPort,
+      true,
+      'http://0.0.0.0',
+      false,
+      'index.js',
+    );
   }, TIMEOUT);
 
   afterEach(async () => {

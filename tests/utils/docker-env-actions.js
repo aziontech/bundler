@@ -78,10 +78,7 @@ async function execCommandInContainer(
   const dockerCmd = `docker exec -w ${path} ${container}`;
   const dockerBkgCmd = dockerCmd.replace('-w', '-d -w');
 
-  await exec(
-    `${inBackground ? dockerBkgCmd : dockerCmd} ${command}`,
-    logPrefix,
-  );
+  await exec(`${inBackground ? dockerBkgCmd : dockerCmd} ${command}`, logPrefix);
 }
 
 export { waitForVulcanServer, execCommandInContainer, getContainerPort };

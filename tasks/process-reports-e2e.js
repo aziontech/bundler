@@ -24,11 +24,7 @@ function processE2EReports() {
       }
 
       // Remove the path from the test name
-      const testName = test.name
-        .split('/')
-        .pop()
-        .replace('.test.js', '')
-        .replace(/-/g, ' ');
+      const testName = test.name.split('/').pop().replace('.test.js', '').replace(/-/g, ' ');
 
       // Transform the test name into a more readable format
       const readableTestName = testName
@@ -73,10 +69,7 @@ function processE2EReports() {
     // Create the Markdown table
     const table = [
       ['Test', 'Status'],
-      ...newResults.testResults.map((test) => [
-        test.name,
-        test.passed ? '✅' : '⚠️',
-      ]),
+      ...newResults.testResults.map((test) => [test.name, test.passed ? '✅' : '⚠️']),
     ];
 
     // Write the Markdown table to the README.md file
