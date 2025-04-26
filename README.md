@@ -297,36 +297,36 @@ Table:
 | Next 13 5 6 Middleware               | ✅      |
 | Next 12 3 4 Middleware               | ✅      |
 | Next Node Pages 12 3 1               | ✅      |
-| Next 13 5 6 Config                   | ✅      |
+| Next 13 5 6 Config                   | ⚠️     |
 | Next 12 3 4 Config                   | ✅      |
 | Next Static                          | ✅      |
 | Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ✅      |
-| Vue Vite Static                      | ⚠️     |
+| Vue Vite Static                      | ✅      |
 | Next 12 Static                       | ✅      |
 | Astro Static                         | ✅      |
 | Qwik Static                          | ✅      |
-| Eleventy Static                      | ✅      |
 | Simple Js Env Vars                   | ✅      |
-| React Static                         | ✅      |
-| Angular Static                       | ✅      |
-| Svelte Static                        | ✅      |
-| Preact Static                        | ✅      |
-| Stencil Static                       | ✅      |
+| Eleventy Static                      | ✅      |
 | Simple Js Network List               | ✅      |
+| Angular Static                       | ✅      |
+| React Static                         | ✅      |
+| Svelte Static                        | ✅      |
+| Stencil Static                       | ✅      |
 | Vitepress Static                     | ✅      |
+| Preact Static                        | ✅      |
 | Vuepress Static                      | ✅      |
 | Nuxt Static                          | ✅      |
 | Docusaurus Static                    | ✅      |
-| Simple Js Firewall Event             | ✅      |
-| Jekyll Static                        | ✅      |
+| Simple Js Firewall Event             | ⚠️     |
 | Simple Js Network List With Firewall | ✅      |
+| Jekyll Static                        | ✅      |
 | Simple Js Esm Worker                 | ✅      |
 | Simple Js Esm Node                   | ✅      |
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 04/20/25 04:04:26 AM
+Last test run date: 04/26/25 03:47:55 AM
 
 ## Contributing
 
