@@ -297,12 +297,12 @@ Table:
 | Next 13 5 6 Middleware               | ✅      |
 | Next 12 3 4 Middleware               | ✅      |
 | Next Node Pages 12 3 1               | ✅      |
-| Next 13 5 6 Config                   | ⚠️     |
+| Next 13 5 6 Config                   | ✅      |
 | Next 12 3 4 Config                   | ✅      |
 | Next Static                          | ✅      |
 | Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ✅      |
-| Vue Vite Static                      | ⚠️     |
+| Vue Vite Static                      | ✅      |
 | Next 12 Static                       | ✅      |
 | Astro Static                         | ✅      |
 | Qwik Static                          | ✅      |
@@ -326,7 +326,7 @@ Table:
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 04/30/25 03:52:44 AM
+Last test run date: 05/01/25 03:59:23 AM
 
 ## Contributing
 
