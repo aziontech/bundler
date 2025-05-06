@@ -1,3 +1,10 @@
+## [5.2.0-stage.1](https://github.com/aziontech/bundler/compare/v5.1.0...v5.2.0-stage.1) (2025-05-06)
+
+
+### Features
+
+* updating azion lib with unenv 2.x and also env dev polyfills ([#479](https://github.com/aziontech/bundler/issues/479)) ([13e5b78](https://github.com/aziontech/bundler/commit/13e5b788441f3152122638424579642106bb0348))
+
 ## [5.1.0](https://github.com/aziontech/bundler/compare/v5.0.3...v5.1.0) (2025-04-25)
 
 
