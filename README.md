@@ -111,6 +111,9 @@ See some examples below:
 
 The Azion Bundler CLI provides several commands to help you manage your edge applications:
 
+> ⚠️ \*Deprecation Notice:
+> Support for the webpack bundler will be discontinued in future releases. While it is still available for now, new features, fixes, and improvements will be focused exclusively on esbuild. We recommend migrating to esbuild as soon as possible to ensure compatibility and better performance in upcoming versions.
+
 ### `build`
 Builds your project for edge deployment.
 
