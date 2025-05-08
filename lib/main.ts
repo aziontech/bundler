@@ -99,8 +99,8 @@ function setupBundlerProcessHandlers() {
 function startBundler() {
   AzionBundler.version(globalThis.bundler.version);
 
-  // Default to 'build' command when no command is provided
-  if (process.argv.length === 2) process.argv.push('build');
+  // // Default to 'build' command when no command is provided
+  // if (process.argv.length === 2) process.argv.push('build');
 
   AzionBundler.command('store <command>')
     .description('Manage store configuration (init/destroy)')
@@ -190,9 +190,9 @@ Examples:
         action,
       });
     });
-
-  AzionBundler.parse(process.argv);
 }
+
+AzionBundler.parse(process.argv);
 
 try {
   if (validateNodeMinVersion()) {
