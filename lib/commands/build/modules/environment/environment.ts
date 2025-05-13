@@ -60,15 +60,18 @@ export const setEnvironment = async ({
     // In non-experimental mode, we need to set a fixed path for the function
     // This will be removed once multi-entry point support is fully implemented
     if (!globalThis.bundler?.experimental) {
-      mergedConfig.functions = [];
+      mergedConfig.edgeFunctions = [];
       const bundlerType = mergedConfig.build?.bundler || 'webpack';
       const finalExt = bundlerType === 'webpack' ? '.js' : '';
       const outputFileName = ctx.production ? 'worker' : 'worker.dev';
       const singleOutputPath = `.edge/${outputFileName}${finalExt}`;
 
       // Add a single function with the fixed path
-      mergedConfig.functions.push({
-        name: userConfig?.functions?.[0]?.name || preset.config?.functions?.[0]?.name || 'handler',
+      mergedConfig.edgeFunctions.push({
+        name:
+          userConfig?.edgeFunctions?.[0]?.name ||
+          preset.config?.edgeFunctions?.[0]?.name ||
+          'handler',
         path: singleOutputPath,
       });
     }
