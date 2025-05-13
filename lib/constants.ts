@@ -9,6 +9,7 @@ export const DIRECTORIES = {
   OUTPUT_FUNCTIONS_PATH: join('.edge', 'functions'),
   OUTPUT_STORAGE_PATH: join('.edge', 'storage'),
   OUTPUT_MANIFEST_PATH: join('.edge', 'manifest.json'),
+  OUTPUT_ENV_VARS_PATH: join('.edge', '.env'),
 } as const;
 
 /** Default build configuration values */

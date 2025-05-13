@@ -69,6 +69,7 @@ export const transformManifest = async (
     }
 
     const jsonString = await fsPromises.readFile(resolvedPath, 'utf8');
+
     return convertJsonConfigToObject(jsonString);
   };
 

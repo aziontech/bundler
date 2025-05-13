@@ -1,5 +1,8 @@
 import { readdirSync, unlinkSync } from 'fs';
 import { join } from 'path';
+import { readFile, writeFile, access } from 'fs/promises';
+import { constants } from 'fs';
+import { DIRECTORIES } from '#constants';
 
 /**
  * @function
@@ -48,11 +51,6 @@ function generateTimestamp() {
 /**
  * @function
  
- * @description Generates a timestamp string in the format "YYYYMMDDHHmmss".
- * @example
- /**
- * @function
- 
  * @description Debug method that conditionally logs based on process.env.DEBUG.
  * Inherits all methods from console.log.
  * @description By default, process.env.DEBUG is set to false.
@@ -83,4 +81,34 @@ Object.keys(console).forEach((method: string) => {
   }
 });
 
-export { removeAzionTempFiles, generateTimestamp, debug };
+/**
+ * @function
+ * @description Copies the .env file from the project root to the .edge directory.
+ * Following Node.js native .env support pattern.
+ * @example
+ *
+ * // Example usage:
+ * await copyEnvToEdge();
+ * // Copies .env to .edge/.env if it exists
+ */
+async function copyEnvVars(): Promise<void> {
+  const cwd = process.cwd();
+  const envPath = join(cwd, '.env');
+  const edgeEnvPath = DIRECTORIES.OUTPUT_ENV_VARS_PATH;
+
+  try {
+    const exists = await access(envPath, constants.F_OK)
+      .then(() => true)
+      .catch(() => false);
+
+    if (exists) {
+      const envContent = await readFile(envPath, 'utf-8');
+      await writeFile(edgeEnvPath, envContent, 'utf-8');
+      debug.info(`Environment file copied to ${edgeEnvPath}`);
+    }
+  } catch (error) {
+    debug.warn('No .env file found or error copying environment file');
+  }
+}
+
+export { removeAzionTempFiles, generateTimestamp, debug, copyEnvVars };
