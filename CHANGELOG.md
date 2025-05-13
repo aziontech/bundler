@@ -1,3 +1,10 @@
+## [5.2.0-stage.2](https://github.com/aziontech/bundler/compare/v5.2.0-stage.1...v5.2.0-stage.2) (2025-05-13)
+
+
+### Bug Fixes
+
+* update azion dependency to version 1.20.0-stage.2 ([#480](https://github.com/aziontech/bundler/issues/480)) ([36352a7](https://github.com/aziontech/bundler/commit/36352a7b7caa00510dc7f19a12a324e888f1005b))
+
 ## [5.2.0-stage.1](https://github.com/aziontech/bundler/compare/v5.1.0...v5.2.0-stage.1) (2025-05-06)
 
 
