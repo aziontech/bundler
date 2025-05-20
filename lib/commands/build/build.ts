@@ -6,7 +6,7 @@ import type {
   BuildContext,
   BuildConfiguration,
 } from 'azion/config';
-import { debug, removeAzionTempFiles } from '#utils';
+import { debug, removeAzionTempFiles, copyEnvVars } from '#utils';
 import { BUILD_CONFIG_DEFAULTS, DOCS_MESSAGE } from '#constants';
 import { feedback } from 'azion/utils/node';
 
@@ -98,6 +98,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     });
 
     removeAzionTempFiles();
+    await copyEnvVars();
 
     return {
       config: mergedConfig,
