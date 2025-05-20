@@ -1,3 +1,10 @@
+## [5.2.0-stage.3](https://github.com/aziontech/bundler/compare/v5.2.0-stage.2...v5.2.0-stage.3) (2025-05-20)
+
+
+### Features
+
+* copy .env vars ([#481](https://github.com/aziontech/bundler/issues/481)) ([1af42bc](https://github.com/aziontech/bundler/commit/1af42bcd2cb631ba865ebedcda5fa7381fb18e02))
+
 ## [5.2.0-stage.2](https://github.com/aziontech/bundler/compare/v5.2.0-stage.1...v5.2.0-stage.2) (2025-05-13)
 
 
