@@ -70,6 +70,7 @@ export const setEnvironment = async ({
       mergedConfig.functions.push({
         name: userConfig?.functions?.[0]?.name || preset.config?.functions?.[0]?.name || 'handler',
         path: singleOutputPath,
+        bindings: userConfig?.functions?.[0]?.bindings || preset.config?.functions?.[0]?.bindings,
       });
     }
     // ===== TEMPORARY SOLUTION END =====
@@ -88,11 +89,14 @@ export const setEnvironment = async ({
      *   2. Preset doesn't have a built-in handler
      */
     const storeConfig: BundlerStore = {
-      preset: mergedConfig.build.preset,
-      bundler: mergedConfig.build?.bundler,
-      polyfills: mergedConfig.build?.polyfills,
-      worker: mergedConfig.build?.worker,
-      entry: mergedConfig.build.entry,
+      build: {
+        preset: mergedConfig.build.preset,
+        bundler: mergedConfig.build?.bundler,
+        polyfills: mergedConfig.build?.polyfills,
+        worker: mergedConfig.build?.worker,
+        entry: mergedConfig.build.entry,
+      },
+      storage: mergedConfig.storage,
       functions: mergedConfig.functions,
     };
 

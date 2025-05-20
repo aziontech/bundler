@@ -16,19 +16,22 @@ import prettier from 'prettier';
 import { cosmiconfig } from 'cosmiconfig';
 import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
 import { DOCS_MESSAGE } from '../constants';
-import type { AzionFunction } from 'azion/config';
+import type { AzionFunction, AzionBucket } from 'azion/config';
 /**
  * The store uses the local disk to save configurations,
  * allowing the development environment to run according to
  * the settings defined in the build without having to pass arguments
  */
 export interface BundlerStore {
-  preset?: PresetInput;
-  entry?: BuildEntryPoint;
-  bundler?: 'webpack' | 'esbuild';
-  polyfills?: boolean;
-  worker?: boolean;
+  build?: {
+    preset?: PresetInput;
+    entry?: BuildEntryPoint;
+    bundler?: 'webpack' | 'esbuild';
+    polyfills?: boolean;
+    worker?: boolean;
+  };
   functions?: AzionFunction[];
+  storage?: AzionBucket[];
 }
 
 /**

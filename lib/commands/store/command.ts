@@ -15,11 +15,14 @@ export async function storeCommand({ command, options }: StoreCommandParams) {
       case 'init':
         // eslint-disable-next-line no-case-declarations
         const store: BundlerStore = {
-          preset: config.preset,
-          entry: config.entry,
-          bundler: config.bundler,
-          polyfills: config.polyfills,
-          worker: config.worker,
+          build: {
+            preset: config.preset,
+            entry: config.entry,
+            bundler: config.bundler,
+            polyfills: config.polyfills,
+            worker: config.worker,
+          },
+          storage: config.storage,
           functions: config.functions,
         };
 

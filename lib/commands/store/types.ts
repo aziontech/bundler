@@ -1,4 +1,4 @@
-import type { AzionFunction } from 'azion/config';
+import type { AzionFunction, AzionBucket } from 'azion/config';
 
 export type StoreCommandAction = 'init' | 'destroy';
 
@@ -10,6 +10,7 @@ export interface StoreCommandConfig {
   worker?: boolean;
   scope?: string;
   functions?: AzionFunction[];
+  storage?: AzionBucket[];
 }
 
 export interface StoreCommandParams {

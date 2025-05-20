@@ -23,7 +23,7 @@ import { BUILD_CONFIG_DEFAULTS, DIRECTORIES, type BundlerType } from '#constants
  */
 export async function buildCommand(options: BuildCommandOptions) {
   const userConfig: AzionConfig = (await readUserConfig()) || {};
-  const { build: userBuildConfig, functions: userFunctions } = userConfig;
+  const { build: userBuildConfig, functions: userFunctions, storage: userStorage } = userConfig;
 
   /**
    * The store uses the local disk to save configurations,
@@ -37,7 +37,7 @@ export async function buildCommand(options: BuildCommandOptions) {
   const presetInput = resolvePresetPriority({
     inputValue: options.preset,
     fileValue: userBuildConfig?.preset,
-    storeValue: bundlerStore.preset,
+    storeValue: bundlerStore.build?.preset,
     defaultValue: BUILD_CONFIG_DEFAULTS.PRESET,
   });
 
@@ -46,33 +46,35 @@ export async function buildCommand(options: BuildCommandOptions) {
     entry: resolveConfigPriority({
       inputValue: options.entry,
       fileValue: userBuildConfig?.entry,
-      storeValue: bundlerStore?.entry,
+      storeValue: bundlerStore?.build?.entry,
       defaultValue: BUILD_CONFIG_DEFAULTS.ENTRY,
     }),
     bundler: resolveConfigPriority<BundlerType>({
       inputValue: undefined,
       fileValue: userBuildConfig?.bundler,
-      storeValue: bundlerStore?.bundler,
+      storeValue: bundlerStore?.build?.bundler,
       defaultValue: BUILD_CONFIG_DEFAULTS.BUNDLER,
     }),
     polyfills: resolveConfigPriority({
       inputValue: userBuildConfig?.polyfills,
       fileValue: options.polyfills,
-      storeValue: bundlerStore?.polyfills,
+      storeValue: bundlerStore?.build?.polyfills,
       defaultValue: BUILD_CONFIG_DEFAULTS.POLYFILLS,
     }),
     worker: resolveConfigPriority({
       inputValue: userBuildConfig?.worker,
       fileValue: options.worker,
-      storeValue: bundlerStore?.worker,
+      storeValue: bundlerStore?.build?.worker,
       defaultValue: BUILD_CONFIG_DEFAULTS.WORKER,
     }),
   };
 
   const resolvedFunctionsConfig = userFunctions || bundlerStore.functions;
+  const resolvedStorageConfig = userStorage || bundlerStore.storage;
 
-  const storeObject = {
+  const storeObject: BundlerStore = {
     build: resolvedBuildConfig,
+    storage: resolvedStorageConfig,
     functions: resolvedFunctionsConfig,
   };
 
@@ -85,11 +87,11 @@ export async function buildCommand(options: BuildCommandOptions) {
       memoryFS: userConfig?.build?.memoryFS,
       extend: userConfig?.build?.extend,
     },
+    storage: resolvedStorageConfig,
     functions: resolvedFunctionsConfig,
   };
 
   if (options.production) await cleanDirectory([DIRECTORIES.OUTPUT_BASE_PATH]);
-
   return build({
     config,
     options: {
