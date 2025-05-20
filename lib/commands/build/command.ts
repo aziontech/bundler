@@ -23,7 +23,7 @@ import { BUILD_CONFIG_DEFAULTS, DIRECTORIES, type BundlerType } from '#constants
  */
 export async function buildCommand(options: BuildCommandOptions) {
   const userConfig: AzionConfig = (await readUserConfig()) || {};
-  const { build: userBuildConfig } = userConfig;
+  const { build: userBuildConfig, functions: userFunctions } = userConfig;
 
   /**
    * The store uses the local disk to save configurations,
@@ -41,7 +41,7 @@ export async function buildCommand(options: BuildCommandOptions) {
     defaultValue: BUILD_CONFIG_DEFAULTS.PRESET,
   });
 
-  const buildConfig = {
+  const resolvedBuildConfig = {
     preset: presetInput,
     entry: resolveConfigPriority({
       inputValue: options.entry,
@@ -69,16 +69,23 @@ export async function buildCommand(options: BuildCommandOptions) {
     }),
   };
 
-  await writeStore(buildConfig);
+  const resolvedFunctionsConfig = userFunctions || bundlerStore.functions;
+
+  const storeObject = {
+    build: resolvedBuildConfig,
+    functions: resolvedFunctionsConfig,
+  };
+
+  await writeStore(storeObject);
 
   const config: AzionConfig = {
     ...userConfig,
     build: {
-      ...buildConfig,
-      entry: buildConfig.entry,
+      ...resolvedBuildConfig,
       memoryFS: userConfig?.build?.memoryFS,
       extend: userConfig?.build?.extend,
     },
+    functions: resolvedFunctionsConfig,
   };
 
   if (options.production) await cleanDirectory([DIRECTORIES.OUTPUT_BASE_PATH]);

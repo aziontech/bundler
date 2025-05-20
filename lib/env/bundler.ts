@@ -16,7 +16,7 @@ import prettier from 'prettier';
 import { cosmiconfig } from 'cosmiconfig';
 import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
 import { DOCS_MESSAGE } from '../constants';
-
+import type { AzionFunction } from 'azion/config';
 /**
  * The store uses the local disk to save configurations,
  * allowing the development environment to run according to
@@ -28,6 +28,7 @@ export interface BundlerStore {
   bundler?: 'webpack' | 'esbuild';
   polyfills?: boolean;
   worker?: boolean;
+  functions?: AzionFunction[];
 }
 
 /**

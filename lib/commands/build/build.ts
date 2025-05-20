@@ -21,6 +21,7 @@ import { executePostbuild } from './modules/postbuild';
 import { setEnvironment } from './modules/environment';
 import { setupWorkerCode } from './modules/worker';
 import { resolveHandlers } from './modules/handler';
+import { setupBindings } from './modules/bindings';
 
 interface BuildOptions {
   production?: boolean;
@@ -89,7 +90,10 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     await executePostbuild({ buildConfig: buildConfigSetup, ctx });
     feedback.postbuild.success('Post-build completed successfully');
 
-    // Phase 4: Set Environment
+    // Phase 4: Set Bindings
+    await setupBindings({ config });
+
+    // Phase 5: Set Environment
     // TODO: rafactor this to use the same function
     const mergedConfig = await setEnvironment({
       config,
