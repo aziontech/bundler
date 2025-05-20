@@ -104,15 +104,17 @@ function startBundler() {
 
   AzionBundler.command('store <command>')
     .description('Manage store configuration (init/destroy)')
-    .option('--scope <scope>', 'Project scope', 'global')
-    .option('--preset <string>', 'Preset name')
-    .option('--entry <string>', 'Code entrypoint')
-    .option('--bundler <type>', 'Bundler type (webpack/esbuild)')
-    .option('--polyfills [boolean]', 'Use node polyfills in build')
-    .option('--worker [boolean]', 'Indicates worker expression')
+    .option(
+      '--config <json>',
+      'Configuration in JSON format (e.g., \'{"scope": "global", "preset": "next"}\')',
+    )
+    .option('--scope <scope>', 'Scope of the store (default: global)')
     .action(async (command, options) => {
       const { storeCommand } = await import('#commands');
-      await storeCommand({ command, options });
+      await storeCommand({
+        command,
+        options,
+      });
     });
 
   AzionBundler.command('build')
