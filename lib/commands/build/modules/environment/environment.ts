@@ -20,11 +20,16 @@ interface EnvironmentParams {
  * This establishes the preset's default rules as a starting point, which users
  * can then override in their own configuration. This ensures a consistent base
  * configuration while maintaining flexibility for customization.
+ *
+ * Note: The current implementation uses a temporary solution for edge applications rules.
+ * Instead of a proper merge strategy, we check if rules exist and if not, we use the preset's rules.
+ * This is a workaround to ensure backward compatibility while we work on a more robust solution
+ * for handling edge application configurations. The goal is to make this more flexible and
+ * maintainable in future versions.
  */
 export const setEnvironment = async ({
   config: userConfig,
   preset,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ctx,
 }: EnvironmentParams): Promise<AzionConfig> => {
   try {
@@ -56,24 +61,58 @@ export const setEnvironment = async ({
       };
     }
 
-    // ===== TEMPORARY SOLUTION START =====
+    // ===== TEMPORARY 1 SOLUTION START =====
+    /**
+     * Defines edge application rules based on presets configuration.
+     * This block handles the dynamic replacement of variables in the preset configuration:
+     * - Replaces $EDGE_APPLICATION_NAME with actual edge application names from store
+     * - Replaces $BUCKET_NAME with corresponding edge storage bucket names
+     * Where X is the index of the application in the store.
+     * This allows for dynamic configuration of multiple edge applications and their storage buckets.
+     */
+    if (!mergedConfig.edgeApplications?.[0]?.rules) {
+      const store = await envDefault.readStore();
+      const configString = JSON.stringify(preset.config?.edgeApplications);
+      // Get first values from store
+      const edgeAppName =
+        store.edgeApplications?.[0]?.name || preset.config?.edgeApplications?.[0]?.name || '';
+      const bucketName =
+        store.edgeStorage?.[0]?.name || preset.config?.edgeStorage?.[0]?.name || '';
+      const functionName =
+        store.edgeFunctions?.[0]?.name || preset.config?.edgeFunctions?.[0]?.name || '';
+
+      // Defines application rules based on presets, replacing variables with store values
+      const replacedConfig = configString
+        .replace(/\$EDGE_APPLICATION_NAME/g, edgeAppName)
+        .replace(/\$BUCKET_NAME/g, bucketName)
+        .replace(/\$EDGE_FUNCTION_NAME/g, functionName);
+
+      mergedConfig.edgeApplications = JSON.parse(replacedConfig);
+    }
+    // ===== TEMPORARY 1 SOLUTION END =====
+
+    // ===== TEMPORARY 2 SOLUTION START =====
     // In non-experimental mode, we need to set a fixed path for the function
     // This will be removed once multi-entry point support is fully implemented
     if (!globalThis.bundler?.experimental) {
-      mergedConfig.functions = [];
+      mergedConfig.edgeFunctions = [];
       const bundlerType = mergedConfig.build?.bundler || 'webpack';
       const finalExt = bundlerType === 'webpack' ? '.js' : '';
       const outputFileName = ctx.production ? 'worker' : 'worker.dev';
       const singleOutputPath = `.edge/${outputFileName}${finalExt}`;
 
       // Add a single function with the fixed path
-      mergedConfig.functions.push({
-        name: userConfig?.functions?.[0]?.name || preset.config?.functions?.[0]?.name || 'handler',
+      mergedConfig.edgeFunctions.push({
+        name:
+          userConfig?.edgeFunctions?.[0]?.name ||
+          preset.config?.edgeFunctions?.[0]?.name ||
+          'handler',
         path: singleOutputPath,
-        bindings: userConfig?.functions?.[0]?.bindings || preset.config?.functions?.[0]?.bindings,
+        bindings:
+          userConfig?.edgeFunctions?.[0]?.bindings || preset.config?.edgeFunctions?.[0]?.bindings,
       });
     }
-    // ===== TEMPORARY SOLUTION END =====
+    // ===== TEMPORARY 2 SOLUTION END =====
 
     const hasUserConfig = await envDefault.readUserConfig();
 
@@ -88,17 +127,7 @@ export const setEnvironment = async ({
      *   1. User provided an entrypoint AND
      *   2. Preset doesn't have a built-in handler
      */
-    const storeConfig: BundlerStore = {
-      build: {
-        preset: mergedConfig.build.preset,
-        bundler: mergedConfig.build?.bundler,
-        polyfills: mergedConfig.build?.polyfills,
-        worker: mergedConfig.build?.worker,
-        entry: mergedConfig.build.entry,
-      },
-      storage: mergedConfig.storage,
-      functions: mergedConfig.functions,
-    };
+    const storeConfig: BundlerStore = { ...mergedConfig };
 
     await envDefault.writeStore(storeConfig);
     return mergedConfig;

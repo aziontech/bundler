@@ -1,7 +1,7 @@
 import { debug } from '#utils';
 import fsPromises from 'fs/promises';
 import path from 'path';
-import { AzionConfig, AzionFunction } from 'azion/config';
+import { AzionConfig, AzionEdgeFunction } from 'azion/config';
 
 /**
  * Creates a storage binding template string to be injected at the top of function files
@@ -36,7 +36,7 @@ const fileExists = async (filePath: string): Promise<boolean> => {
 /**
  * Injects bindings into a single function file
  */
-const injectBindingsIntoFile = async (func: AzionFunction): Promise<void> => {
+const injectBindingsIntoFile = async (func: AzionEdgeFunction): Promise<void> => {
   if (!func.path) {
     debug.warn(`Function ${func.name} does not have a defined path`);
     return;
@@ -80,7 +80,7 @@ const injectBindingsIntoFile = async (func: AzionFunction): Promise<void> => {
  */
 export const setupBindings = async ({ config }: { config: AzionConfig }): Promise<void> => {
   try {
-    const functions = config.functions || [];
+    const functions = config.edgeFunctions || [];
 
     if (functions.length === 0) {
       debug.info('No functions found to inject bindings');

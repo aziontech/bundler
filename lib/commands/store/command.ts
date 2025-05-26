@@ -2,33 +2,23 @@ import { writeStore, BundlerStore } from '#env';
 import { feedback } from 'azion/utils/node';
 import { rm } from 'fs/promises';
 import { DOCS_MESSAGE } from '#constants';
-import type { StoreCommandParams, StoreCommandConfig } from './types';
+import type { StoreCommandParams } from './types';
 
 export async function storeCommand({ command, options }: StoreCommandParams) {
-  const config: StoreCommandConfig = JSON.parse(
+  const config: BundlerStore = JSON.parse(
     typeof options.config === 'string' ? options.config : '{}',
   );
-  const scope = config.scope || 'global';
+  const scope = options.scope || 'global';
 
   try {
     switch (command) {
       case 'init':
         // eslint-disable-next-line no-case-declarations
-        const store: BundlerStore = {
-          build: {
-            preset: config.preset,
-            entry: config.entry,
-            bundler: config.bundler,
-            polyfills: config.polyfills,
-            worker: config.worker,
-          },
-          storage: config.storage,
-          functions: config.functions,
-        };
+        const store: BundlerStore = { ...config };
 
         await writeStore(store, scope);
         feedback.info(
-          `Store file ${config.preset ? 'created' : 'initialized'} with scope: ${scope}`,
+          `Store file ${config.build?.preset ? 'created' : 'initialized'} with scope: ${scope}`,
         );
         break;
 

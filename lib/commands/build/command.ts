@@ -23,7 +23,7 @@ import { BUILD_CONFIG_DEFAULTS, DIRECTORIES, type BundlerType } from '#constants
  */
 export async function buildCommand(options: BuildCommandOptions) {
   const userConfig: AzionConfig = (await readUserConfig()) || {};
-  const { build: userBuildConfig, functions: userFunctions, storage: userStorage } = userConfig;
+  const { build: userBuildConfig } = userConfig;
 
   /**
    * The store uses the local disk to save configurations,
@@ -69,13 +69,22 @@ export async function buildCommand(options: BuildCommandOptions) {
     }),
   };
 
-  const resolvedFunctionsConfig = userFunctions || bundlerStore.functions;
-  const resolvedStorageConfig = userStorage || bundlerStore.storage;
+  const resolveBundlerStore = (
+    userConfig: Partial<AzionConfig>,
+    bundlerStore: BundlerStore,
+  ): BundlerStore => ({
+    edgeStorage: userConfig.edgeStorage || bundlerStore.edgeStorage,
+    edgeFunctions: userConfig.edgeFunctions || bundlerStore.edgeFunctions,
+    edgeConnectors: userConfig.edgeConnectors || bundlerStore.edgeConnectors,
+    workloads: userConfig.workloads || bundlerStore.workloads,
+    edgeApplications: userConfig.edgeApplications || bundlerStore.edgeApplications,
+  });
+
+  const resolvedStore = resolveBundlerStore(userConfig, bundlerStore);
 
   const storeObject: BundlerStore = {
     build: resolvedBuildConfig,
-    storage: resolvedStorageConfig,
-    functions: resolvedFunctionsConfig,
+    ...resolvedStore,
   };
 
   await writeStore(storeObject);
@@ -87,8 +96,7 @@ export async function buildCommand(options: BuildCommandOptions) {
       memoryFS: userConfig?.build?.memoryFS,
       extend: userConfig?.build?.extend,
     },
-    storage: resolvedStorageConfig,
-    functions: resolvedFunctionsConfig,
+    ...resolvedStore,
   };
 
   if (options.production) await cleanDirectory([DIRECTORIES.OUTPUT_BASE_PATH]);
