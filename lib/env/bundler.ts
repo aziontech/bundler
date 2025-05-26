@@ -221,8 +221,13 @@ export async function writeUserConfig(config: AzionConfig): Promise<void> {
  * 2. Use defineConfig:
  *    import { defineConfig } from 'azion'
  * 
+ * 3. Replace the configuration with defineConfig:
+ *    export default defineConfig({
+ *      // Your configuration here
+ *    })
+ * 
  * For more configuration options, visit:
- * https://github.com/aziontech/azion
+ * https://github.com/aziontech/lib/tree/main/packages/config
  */\n\n`;
 
   const replacer = (key: string, value: unknown) => {
