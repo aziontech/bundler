@@ -73,21 +73,24 @@ export const setEnvironment = async ({
     if (!mergedConfig.edgeApplications?.[0]?.rules) {
       const store = await envDefault.readStore();
       const configString = JSON.stringify(preset.config?.edgeApplications);
-      // Get first values from store
-      const edgeAppName =
-        store.edgeApplications?.[0]?.name || preset.config?.edgeApplications?.[0]?.name || '';
-      const bucketName =
-        store.edgeStorage?.[0]?.name || preset.config?.edgeStorage?.[0]?.name || '';
-      const functionName =
-        store.edgeFunctions?.[0]?.name || preset.config?.edgeFunctions?.[0]?.name || '';
 
-      // Defines application rules based on presets, replacing variables with store values
-      const replacedConfig = configString
-        .replace(/\$EDGE_APPLICATION_NAME/g, edgeAppName)
-        .replace(/\$BUCKET_NAME/g, bucketName)
-        .replace(/\$EDGE_FUNCTION_NAME/g, functionName);
+      if (configString) {
+        // Get first values from store
+        const edgeAppName =
+          store.edgeApplications?.[0]?.name || preset.config?.edgeApplications?.[0]?.name || '';
+        const bucketName =
+          store.edgeStorage?.[0]?.name || preset.config?.edgeStorage?.[0]?.name || '';
+        const functionName =
+          store.edgeFunctions?.[0]?.name || preset.config?.edgeFunctions?.[0]?.name || '';
 
-      mergedConfig.edgeApplications = JSON.parse(replacedConfig);
+        // Defines application rules based on presets, replacing variables with store values
+        const replacedConfig = configString
+          .replace(/\$EDGE_APPLICATION_NAME/g, edgeAppName)
+          .replace(/\$BUCKET_NAME/g, bucketName)
+          .replace(/\$EDGE_FUNCTION_NAME/g, functionName);
+
+        mergedConfig.edgeApplications = JSON.parse(replacedConfig);
+      }
     }
     // ===== TEMPORARY 1 SOLUTION END =====
 
