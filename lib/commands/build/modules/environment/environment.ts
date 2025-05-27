@@ -45,6 +45,9 @@ export const setEnvironment = async ({
       userConfig,
     );
 
+    console.log(userConfig);
+    console.log(presetConfig);
+
     /**
      * Include preset name in the config file for user reference.
      * This helps users identify which preset is being used and
@@ -97,7 +100,7 @@ export const setEnvironment = async ({
     // ===== TEMPORARY 2 SOLUTION START =====
     // In non-experimental mode, we need to set a fixed path for the function
     // This will be removed once multi-entry point support is fully implemented
-    if (!globalThis.bundler?.experimental) {
+    if (!globalThis.bundler?.experimental && mergedConfig.edgeFunctions) {
       mergedConfig.edgeFunctions = [];
       const bundlerType = mergedConfig.build?.bundler || 'webpack';
       const finalExt = bundlerType === 'webpack' ? '.js' : '';
