@@ -22,6 +22,7 @@ import { setEnvironment } from './modules/environment';
 import { setupWorkerCode } from './modules/worker';
 import { resolveHandlers } from './modules/handler';
 import { setupBindings } from './modules/bindings';
+// import { setupStorage } from './modules/storage';
 
 interface BuildOptions {
   production?: boolean;
@@ -93,7 +94,11 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     // Phase 4: Set Bindings
     await setupBindings({ config });
 
-    // Phase 5: Set Environment
+    // Phase 5: Setup Storage
+    // TODO: Uncomment after migrating presets to the new storage system
+    // await setupStorage({ config });
+
+    // Phase 6: Set Environment
     // TODO: rafactor this to use the same function
     const mergedConfig = await setEnvironment({
       config,

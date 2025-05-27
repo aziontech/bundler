@@ -45,9 +45,6 @@ export const setEnvironment = async ({
       userConfig,
     );
 
-    console.log(userConfig);
-    console.log(presetConfig);
-
     /**
      * Include preset name in the config file for user reference.
      * This helps users identify which preset is being used and
