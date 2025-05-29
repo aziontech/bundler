@@ -1,3 +1,10 @@
+## [5.2.0-stage.4](https://github.com/aziontech/bundler/compare/v5.2.0-stage.3...v5.2.0-stage.4) (2025-05-29)
+
+
+### Features
+
+* bindings ([#482](https://github.com/aziontech/bundler/issues/482)) ([20dfddd](https://github.com/aziontech/bundler/commit/20dfddd79ea4661597e3932673854abb33576132))
+
 ## [5.2.0-stage.3](https://github.com/aziontech/bundler/compare/v5.2.0-stage.2...v5.2.0-stage.3) (2025-05-20)
 
 
