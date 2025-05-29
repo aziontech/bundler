@@ -4,11 +4,12 @@ import * as utilsNode from 'azion/utils/node';
 import inferPreset from './infer/infer-preset';
 
 /**
- * Loads preset files by name
+ * Loads preset by metadata name
  */
-const loadPreset = async (presetName: string): Promise<AzionBuildPreset> => {
-  const normalizedName = presetName.toLowerCase();
-  return presets[normalizedName as keyof typeof presets] as unknown as AzionBuildPreset;
+const loadPresetByMetadata = (name: string): AzionBuildPreset | undefined => {
+  return Object.values(presets).find((preset) => preset.metadata?.name === name) as
+    | AzionBuildPreset
+    | undefined;
 };
 
 /**
@@ -16,9 +17,8 @@ const loadPreset = async (presetName: string): Promise<AzionBuildPreset> => {
  */
 export const resolvePreset = async (input?: PresetInput): Promise<AzionBuildPreset> => {
   if (input) {
-    utilsNode.feedback.build.info(
-      `Using preset: ${typeof input === 'string' ? input : input.metadata?.name || 'custom'}`,
-    );
+    const presetName = typeof input === 'string' ? input : input.metadata?.name;
+    utilsNode.feedback.build.info(`Using preset: ${presetName}`);
   }
   if (!input) {
     utilsNode.feedback.build.info('No preset specified, using automatic detection...');
@@ -26,14 +26,11 @@ export const resolvePreset = async (input?: PresetInput): Promise<AzionBuildPres
     utilsNode.feedback.build.info(`Detected preset: ${input}`);
   }
 
-  const validPresets = Object.keys(presets);
-
   if (typeof input === 'string') {
-    if (!validPresets.includes(input)) {
+    const preset = loadPresetByMetadata(input);
+    if (!preset) {
       throw new Error(`Invalid build preset name: '${input}'`);
     }
-
-    const preset = await loadPreset(input);
     return preset;
   }
 

@@ -65,6 +65,7 @@ export const BUNDLER = {
 
 export const DOCS_MESSAGE = `
 
-📚 Need help? Check out our documentation:
+📚  Need help? Check out our documentation:
    - Azion CLI Documentation: https://www.azion.com/en/documentation/devtools/cli/build/
+   - Azion Library on Github: https://github.com/aziontech/lib/tree/main/packages/config/
    - Azion Bundler on GitHub: https://github.com/aziontech/bundler\n`;

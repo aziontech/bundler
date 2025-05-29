@@ -5,8 +5,7 @@
  */
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
-import { PresetInput } from 'azion/config';
-import type { AzionConfig, BuildEntryPoint } from 'azion/config';
+import type { AzionConfig } from 'azion/config';
 
 import fs from 'fs';
 import fsPromises from 'fs/promises';
@@ -16,19 +15,12 @@ import prettier from 'prettier';
 import { cosmiconfig } from 'cosmiconfig';
 import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
 import { DOCS_MESSAGE } from '../constants';
-
 /**
  * The store uses the local disk to save configurations,
  * allowing the development environment to run according to
  * the settings defined in the build without having to pass arguments
  */
-export interface BundlerStore {
-  preset?: PresetInput;
-  entry?: BuildEntryPoint;
-  bundler?: 'webpack' | 'esbuild';
-  polyfills?: boolean;
-  worker?: boolean;
-}
+export interface BundlerStore extends AzionConfig {}
 
 /**
  * Creates or updates Bundler environment variables.
@@ -229,8 +221,13 @@ export async function writeUserConfig(config: AzionConfig): Promise<void> {
  * 2. Use defineConfig:
  *    import { defineConfig } from 'azion'
  * 
+ * 3. Replace the configuration with defineConfig:
+ *    export default defineConfig({
+ *      // Your configuration here
+ *    })
+ * 
  * For more configuration options, visit:
- * https://github.com/aziontech/azion
+ * https://github.com/aziontech/lib/tree/main/packages/config
  */\n\n`;
 
   const replacer = (key: string, value: unknown) => {

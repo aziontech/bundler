@@ -37,52 +37,69 @@ export async function buildCommand(options: BuildCommandOptions) {
   const presetInput = resolvePresetPriority({
     inputValue: options.preset,
     fileValue: userBuildConfig?.preset,
-    storeValue: bundlerStore.preset,
+    storeValue: bundlerStore.build?.preset,
     defaultValue: BUILD_CONFIG_DEFAULTS.PRESET,
   });
 
-  const buildConfig = {
+  const resolvedBuildConfig = {
     preset: presetInput,
     entry: resolveConfigPriority({
       inputValue: options.entry,
       fileValue: userBuildConfig?.entry,
-      storeValue: bundlerStore?.entry,
+      storeValue: bundlerStore?.build?.entry,
       defaultValue: BUILD_CONFIG_DEFAULTS.ENTRY,
     }),
     bundler: resolveConfigPriority<BundlerType>({
       inputValue: undefined,
       fileValue: userBuildConfig?.bundler,
-      storeValue: bundlerStore?.bundler,
+      storeValue: bundlerStore?.build?.bundler,
       defaultValue: BUILD_CONFIG_DEFAULTS.BUNDLER,
     }),
     polyfills: resolveConfigPriority({
       inputValue: userBuildConfig?.polyfills,
       fileValue: options.polyfills,
-      storeValue: bundlerStore?.polyfills,
+      storeValue: bundlerStore?.build?.polyfills,
       defaultValue: BUILD_CONFIG_DEFAULTS.POLYFILLS,
     }),
     worker: resolveConfigPriority({
       inputValue: userBuildConfig?.worker,
       fileValue: options.worker,
-      storeValue: bundlerStore?.worker,
+      storeValue: bundlerStore?.build?.worker,
       defaultValue: BUILD_CONFIG_DEFAULTS.WORKER,
     }),
   };
 
-  await writeStore(buildConfig);
+  const resolveBundlerStore = (
+    userConfig: Partial<AzionConfig>,
+    bundlerStore: BundlerStore,
+  ): BundlerStore => ({
+    edgeStorage: userConfig.edgeStorage || bundlerStore.edgeStorage,
+    edgeFunctions: userConfig.edgeFunctions || bundlerStore.edgeFunctions,
+    edgeConnectors: userConfig.edgeConnectors || bundlerStore.edgeConnectors,
+    workloads: userConfig.workloads || bundlerStore.workloads,
+    edgeApplications: userConfig.edgeApplications || bundlerStore.edgeApplications,
+  });
+
+  const resolvedStore = resolveBundlerStore(userConfig, bundlerStore);
+
+  const storeObject: BundlerStore = {
+    build: resolvedBuildConfig,
+    ...resolvedStore,
+  };
+
+  await writeStore(storeObject);
 
   const config: AzionConfig = {
     ...userConfig,
     build: {
-      ...buildConfig,
-      entry: buildConfig.entry,
+      ...resolvedBuildConfig,
       memoryFS: userConfig?.build?.memoryFS,
       extend: userConfig?.build?.extend,
     },
+    ...resolvedStore,
   };
 
   if (options.production) await cleanDirectory([DIRECTORIES.OUTPUT_BASE_PATH]);
-
   return build({
     config,
     options: {

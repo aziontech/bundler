@@ -38,6 +38,12 @@ describe('setEnvironment', () => {
   };
 
   beforeEach(() => {
+    globalThis.bundler = {
+      tempPath: '/tmp/azion',
+      experimental: false,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any;
+
     spyWriteUserConfig = jest.spyOn(envDefault, 'writeUserConfig').mockResolvedValue();
     spyWriteStore = jest.spyOn(envDefault, 'writeStore').mockResolvedValue();
     spyMergeConfigWithUserOverrides = jest
@@ -53,6 +59,9 @@ describe('setEnvironment', () => {
 
   afterEach(() => {
     jest.restoreAllMocks();
+    // Clean up globalThis.bundler
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    globalThis.bundler = {} as any;
   });
 
   it('should create initial configuration when user config does not exist', async () => {
