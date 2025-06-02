@@ -1,6 +1,6 @@
 import { BundlerStore } from '#env';
 
-export type StoreCommandAction = 'init' | 'destroy';
+export type StoreCommandAction = 'init' | 'destroy' | 'update';
 
 export interface StoreCommandParams {
   command: StoreCommandAction;

@@ -103,10 +103,15 @@ function startBundler() {
   if (process.argv.length === 2) process.argv.push('build');
 
   AzionBundler.command('store <command>')
-    .description('Manage store configuration (init/destroy)')
+    .description(
+      'Manage local store. Commands:\n' +
+        '  init    - Initialize or create a new store configuration\n' +
+        '  update  - Update existing resources by name or add new ones if not found\n' +
+        '  destroy - Remove the store configuration',
+    )
     .option(
       '--config <json>',
-      'Configuration in JSON format (e.g., \'{"scope": "global", "preset": "next"}\')',
+      'Configuration in JSON format (e.g., \'{"edgeFunctions": [{"name": "my-function", "path": "/path"}]}\')',
     )
     .option('--scope <scope>', 'Scope of the store (default: global)')
     .action(async (command, options) => {
