@@ -3364,7 +3364,6 @@ axios@^1.6.1:
     follow-redirects "^1.15.0"
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
-
 azion@1.20.0-stage.8:
   version "1.20.0-stage.8"
   resolved "https://registry.yarnpkg.com/azion/-/azion-1.20.0-stage.8.tgz#a2d7e60695e01a20fe66b1dc303d1d10babbdeba"
