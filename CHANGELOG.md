@@ -1,3 +1,10 @@
+## [5.2.0-stage.6](https://github.com/aziontech/bundler/compare/v5.2.0-stage.5...v5.2.0-stage.6) (2025-06-03)
+
+
+### Features
+
+* update local store item by name ([#484](https://github.com/aziontech/bundler/issues/484)) ([bcf479f](https://github.com/aziontech/bundler/commit/bcf479fcdb628afd3f02781375cead2698d9759d))
+
 ## [5.2.0-stage.5](https://github.com/aziontech/bundler/compare/v5.2.0-stage.4...v5.2.0-stage.5) (2025-06-02)
 
 
