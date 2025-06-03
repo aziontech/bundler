@@ -1,8 +1,9 @@
-import { writeStore, BundlerStore } from '#env';
+import { writeStore, BundlerStore, readStore } from '#env';
 import { feedback } from 'azion/utils/node';
 import { rm } from 'fs/promises';
 import { DOCS_MESSAGE } from '#constants';
 import type { StoreCommandParams } from './types';
+import { updateConfigByNames } from './update';
 
 export async function storeCommand({ command, options }: StoreCommandParams) {
   const config: BundlerStore = JSON.parse(
@@ -12,8 +13,7 @@ export async function storeCommand({ command, options }: StoreCommandParams) {
 
   try {
     switch (command) {
-      case 'init':
-        // eslint-disable-next-line no-case-declarations
+      case 'init': {
         const store: BundlerStore = { ...config };
 
         await writeStore(store, scope);
@@ -21,6 +21,15 @@ export async function storeCommand({ command, options }: StoreCommandParams) {
           `Store file ${config.build?.preset ? 'created' : 'initialized'} with scope: ${scope}`,
         );
         break;
+      }
+
+      case 'update': {
+        const currentConfig = await readStore(scope);
+        const updatedConfig = updateConfigByNames(currentConfig, config);
+        await writeStore(updatedConfig, scope);
+        feedback.info(`Store file updated with scope: ${scope}`);
+        break;
+      }
 
       case 'destroy':
         await rm(globalThis.bundler.tempPath, { recursive: true, force: true });
