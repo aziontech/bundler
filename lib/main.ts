@@ -179,15 +179,15 @@ function startBundler() {
       'Action to perform: "transform" (JSON to JS) or "generate" (config to manifest)',
       'generate',
     )
-    .option('--entry <path>', 'Path to the input file or configuration file')
-    .option('--output <path>', 'Output file/directory path')
+    .option('-e, --entry <path>', 'Path to the input file or configuration file')
+    .option('-o, --output <path>', 'Output file/directory path')
     .addHelpText(
       'after',
       `
 Examples:
-  $ ef manifest transform --entry=manifest.json --output=azion.config.js
-  $ ef manifest generate --entry=azion.config.js --output=.edge
-  $ ef manifest --entry=azion.config.js --output=.edge
+  $ ef manifest transform -e manifest.json -o azion.config.js
+  $ ef manifest generate -e azion.config.js -o .edge
+  $ ef manifest -e azion.config.js -o .edge
     `,
     )
     .action(async (action, options) => {
@@ -195,6 +195,18 @@ Examples:
       await manifestCommand({
         ...options,
         action,
+      });
+    });
+
+  AzionBundler.command('config <command>')
+    .description('Manage azion.config settings')
+    .option('-k, --key <key>', 'Property key (e.g., build.preset or edgeApplications[0].name)')
+    .option('-v, --value <value>', 'Value to be set')
+    .action(async (command, options) => {
+      const { configCommand } = await import('#commands');
+      await configCommand({
+        command,
+        options,
       });
     });
 

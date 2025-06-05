@@ -30,7 +30,7 @@ export const generateManifest = async (
   if (typeof input === 'object') {
     config = input;
   } else {
-    const configResult = await envBundler.readUserConfig(input);
+    const configResult = await envBundler.readAzionConfig(input);
     if (!configResult) {
       throw new Error(
         input
