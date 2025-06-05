@@ -142,12 +142,12 @@ import type { AzionConfig } from 'azion/config';
  */
 
 export async function configCommand({ command, options }: ConfigCommandOptions) {
-  const userConfig: AzionConfig = (await readAzionConfig()) || {};
+  const userConfig: AzionConfig | null = await readAzionConfig();
 
   if (options.all) {
     switch (command) {
       case 'read':
-        return userConfig;
+        return userConfig || {};
       case 'delete':
         await writeUserConfig({});
         return {};
