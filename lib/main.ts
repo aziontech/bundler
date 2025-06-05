@@ -106,13 +106,9 @@ function startBundler() {
     .description(
       'Manage local store. Commands:\n' +
         '  init    - Initialize or create a new store configuration\n' +
-        '  update  - Update existing resources by name or add new ones if not found\n' +
         '  destroy - Remove the store configuration',
     )
-    .option(
-      '--config <json>',
-      'Configuration in JSON format (e.g., \'{"edgeFunctions": [{"name": "my-function", "path": "/path"}]}\')',
-    )
+    .option('--config <json>', 'Configuration in JSON format (e.g., \'{"key": "value"}\')')
     .option('--scope <scope>', 'Scope of the store (default: global)')
     .action(async (command, options) => {
       const { storeCommand } = await import('#commands');
@@ -166,10 +162,15 @@ function startBundler() {
     });
 
   AzionBundler.command('presets <command>')
-    .description('List <ls> defined project presets for Azion')
-    .action(async (command) => {
+    .description(
+      'Manage presets for Azion. Commands:\n' +
+        '  ls     - List all available presets\n' +
+        '  config - Get Azion configuration file for a specific preset',
+    )
+    .argument('[preset]', 'Preset name (required for config command)')
+    .action(async (command, preset) => {
       const { presetsCommand } = await import('#commands');
-      await presetsCommand(command);
+      await presetsCommand(command, { preset });
     });
 
   AzionBundler.command('manifest [action]')

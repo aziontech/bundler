@@ -10,12 +10,11 @@
  * - local: stored in project root
  * - custom: stored in specified path
  */
-import { writeStore, BundlerStore, readStore } from '#env';
+import { writeStore, BundlerStore } from '#env';
 import { feedback } from 'azion/utils/node';
 import { rm } from 'fs/promises';
 import { DOCS_MESSAGE } from '#constants';
 import type { StoreCommandParams } from './types';
-import { updateConfigByNames } from './update';
 
 export async function storeCommand({ command, options }: StoreCommandParams) {
   const config: BundlerStore = JSON.parse(
@@ -30,14 +29,6 @@ export async function storeCommand({ command, options }: StoreCommandParams) {
 
         await writeStore(store, scope);
         feedback.info(`Store file initialized with scope: ${scope}`);
-        break;
-      }
-
-      case 'update': {
-        const currentConfig = await readStore(scope);
-        const updatedConfig = updateConfigByNames(currentConfig, config);
-        await writeStore(updatedConfig, scope);
-        feedback.info(`Store file updated with scope: ${scope}`);
         break;
       }
 
