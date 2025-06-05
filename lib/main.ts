@@ -103,11 +103,7 @@ function startBundler() {
   if (process.argv.length === 2) process.argv.push('build');
 
   AzionBundler.command('store <command>')
-    .description(
-      'Manage local store. Commands:\n' +
-        '  init    - Initialize or create a new store configuration\n' +
-        '  destroy - Remove the store configuration',
-    )
+    .description('Manage store configuration')
     .option('--config <json>', 'Configuration in JSON format (e.g., \'{"key": "value"}\')')
     .option('--scope <scope>', 'Scope of the store (default: global)')
     .action(async (command, options) => {
@@ -119,7 +115,7 @@ function startBundler() {
     });
 
   AzionBundler.command('build')
-    .description('Build a project for edge deployment')
+    .description('Build your project for edge deployment')
     .option('--entry <entries...>', 'Code entrypoint (default: ./main.js or ./main.ts)')
     .option('--preset <type>', 'Preset of build target (e.g., vue, next, javascript)')
     .option(
@@ -147,7 +143,7 @@ function startBundler() {
     });
 
   AzionBundler.command('dev')
-    .description('Start local environment')
+    .description('Start local development environment')
     .argument('[entry]', 'Specify the entry file (default: .edge/worker.dev.js)')
     .option('-p, --port <port>', 'Specify the port', '3333')
     .option('--experimental [boolean]', 'Enable experimental features', false)
@@ -162,11 +158,7 @@ function startBundler() {
     });
 
   AzionBundler.command('presets <command>')
-    .description(
-      'Manage presets for Azion. Commands:\n' +
-        '  ls     - List all available presets\n' +
-        '  config - Get Azion configuration file for a specific preset',
-    )
+    .description('Manage presets for Azion projects')
     .argument('[preset]', 'Preset name (required for config command)')
     .action(async (command, preset) => {
       const { presetsCommand } = await import('#commands');
@@ -174,7 +166,7 @@ function startBundler() {
     });
 
   AzionBundler.command('manifest [action]')
-    .description('Manage manifest files for Azion. Available actions: transform, generate')
+    .description('Manage manifest files for Azion')
     .argument(
       '[action]',
       'Action to perform: "transform" (JSON to JS) or "generate" (config to manifest)',
