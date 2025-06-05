@@ -122,12 +122,12 @@ Builds your project for edge deployment.
 ef build [options]
 
 Options:
-  --entry <string>     Code entrypoint (default: ./handler.js or ./handler.ts)
-  --preset <type>      Preset of build target (e.g., vue, next, javascript)
-  --polyfills          Use node polyfills in build (default: true)
-  --worker            Enable worker mode with addEventListener signature (default: false)
-  --dev               Build in development mode (default: false)
-  --experimental      Enable experimental features (default: false)
+  -e, --entry <string>     Code entrypoint (default: ./handler.js or ./handler.ts)
+  -p, --preset <type>      Preset of build target (e.g., vue, next, javascript)
+  --polyfills              Use node polyfills in build (default: true)
+  -w, --worker             Enable worker mode with addEventListener signature (default: false)
+  -d, --dev                Build in development mode (default: false)
+  -x, --experimental       Enable experimental features (default: false)
 ```
 
 ### `dev`
@@ -137,11 +137,11 @@ Starts a local development environment.
 ef dev [entry] [options]
 
 Arguments:
-  entry               Specify the entry file (default: .edge/worker.dev.js)
+  entry                    Specify the entry file (default: .edge/worker.dev.js)
 
 Options:
-  -p, --port <port>  Specify the port (default: "3333")
-  --experimental     Enable experimental features (default: false)
+  -p, --port <port>        Specify the port (default: "3333")
+  -x, --experimental       Enable experimental features (default: false)
 ```
 
 ### `config`
@@ -159,7 +159,7 @@ Commands:
 Options:
   -k, --key <key>     Property key (e.g., build.preset or edgeApplications[0].name)
   -v, --value <value> Value to be set (for create/update commands)
-  --all               Read or delete entire configuration (for read/delete commands)
+  -a, --all           Read or delete entire configuration (for read/delete commands)
 
 Examples:
   $ ef config create -k "build.preset" -v "typescript"
@@ -199,8 +199,8 @@ Commands:
   destroy             Remove store configuration
 
 Options:
-  --config <json>     Configuration in JSON format
-  --scope <scope>     Scope of the store (default: global)
+  -c, --config <json> Configuration in JSON format
+  -s, --scope <scope> Scope of the store (default: global)
 ```
 
 ### `manifest`

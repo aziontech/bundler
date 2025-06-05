@@ -104,8 +104,8 @@ function startBundler() {
 
   AzionBundler.command('store <command>')
     .description('Manage store configuration')
-    .option('--config <json>', 'Configuration in JSON format (e.g., \'{"key": "value"}\')')
-    .option('--scope <scope>', 'Scope of the store (default: global)')
+    .option('-c, --config <json>', 'Configuration in JSON format (e.g., \'{"key": "value"}\')')
+    .option('-s, --scope <scope>', 'Scope of the store (default: global)')
     .action(async (command, options) => {
       const { storeCommand } = await import('#commands');
       await storeCommand({
@@ -116,18 +116,18 @@ function startBundler() {
 
   AzionBundler.command('build')
     .description('Build your project for edge deployment')
-    .option('--entry <entries...>', 'Code entrypoint (default: ./main.js or ./main.ts)')
-    .option('--preset <type>', 'Preset of build target (e.g., vue, next, javascript)')
+    .option('-e, --entry <entries...>', 'Code entrypoint (default: ./main.js or ./main.ts)')
+    .option('-p, --preset <type>', 'Preset of build target (e.g., vue, next, javascript)')
     .option(
       '--polyfills [boolean]',
       'Use node polyfills in build. Use --polyfills or --polyfills=true to enable, --polyfills=false to disable',
     )
     .option(
-      '--worker [boolean]',
+      '-w, --worker [boolean]',
       'Indicates that the constructed code inserts its own worker expression. Use --worker or --worker=true to enable, --worker=false to disable',
     )
-    .option('--dev', 'Build in development mode', false)
-    .option('--experimental [boolean]', 'Enable experimental features', false)
+    .option('-d, --dev', 'Build in development mode', false)
+    .option('-x, --experimental [boolean]', 'Enable experimental features', false)
     .action(async (options) => {
       const { buildCommand, manifestCommand } = await import('#commands');
       const { dev, experimental, ...buildOptions } = options;
@@ -146,7 +146,7 @@ function startBundler() {
     .description('Start local development environment')
     .argument('[entry]', 'Specify the entry file (default: .edge/worker.dev.js)')
     .option('-p, --port <port>', 'Specify the port', '3333')
-    .option('--experimental [boolean]', 'Enable experimental features', false)
+    .option('-x, --experimental [boolean]', 'Enable experimental features', false)
     .action(async (entry, options) => {
       const { devCommand } = await import('#commands');
 
@@ -195,6 +195,7 @@ Examples:
     .description('Manage azion.config settings')
     .option('-k, --key <key>', 'Property key (e.g., build.preset or edgeApplications[0].name)')
     .option('-v, --value <value>', 'Value to be set')
+    .option('-a, --all', 'Read or delete entire configuration (for read/delete commands)')
     .action(async (command, options) => {
       const { configCommand } = await import('#commands');
       await configCommand({
