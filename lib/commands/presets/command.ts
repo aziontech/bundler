@@ -1,5 +1,5 @@
 import { feedback } from 'azion/utils/node';
-import { getBeautify, getKeys } from './presets';
+import { getBeautify, getKeys, getPresetConfig } from './presets';
 
 /**
  * @function
@@ -9,8 +9,11 @@ import { getBeautify, getKeys } from './presets';
  * @example
  * // To list existing presets
  * presetsCommand('ls');
+ *
+ * // To get config of a specific preset
+ * presetsCommand('config', { preset: 'react' });
  */
-export async function presetsCommand(command: string) {
+export async function presetsCommand(command: string, options: { preset?: string } = {}) {
   const isCleanOutputEnabled = process.env.CLEAN_OUTPUT_MODE === 'true';
 
   switch (command) {
@@ -23,8 +26,22 @@ export async function presetsCommand(command: string) {
       }
       break;
 
+    case 'config':
+      if (!options.preset) {
+        feedback.error('Preset name is required. Use: ef presets config <preset-name>');
+        return;
+      }
+
+      try {
+        const config = getPresetConfig(options.preset);
+        console.log(JSON.stringify(config, null, 2));
+      } catch (error) {
+        feedback.error(error instanceof Error ? error.message : 'Unknown error occurred');
+      }
+      break;
+
     default:
-      feedback.error('Invalid argument provided.');
+      feedback.error('Invalid argument provided. Available commands: ls, config');
       break;
   }
 }
