@@ -1,3 +1,10 @@
+## [5.2.0-stage.9](https://github.com/aziontech/bundler/compare/v5.2.0-stage.8...v5.2.0-stage.9) (2025-06-06)
+
+
+### Features
+
+* add complete CRUD ops with JSON parsing ([2e19a85](https://github.com/aziontech/bundler/commit/2e19a85807aece696a5990bcbe8b0306b558d8c4))
+
 ## [5.2.0-stage.8](https://github.com/aziontech/bundler/compare/v5.2.0-stage.7...v5.2.0-stage.8) (2025-06-06)
 
 
