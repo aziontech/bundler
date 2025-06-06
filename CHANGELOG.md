@@ -1,3 +1,10 @@
+## [5.2.0-stage.8](https://github.com/aziontech/bundler/compare/v5.2.0-stage.7...v5.2.0-stage.8) (2025-06-06)
+
+
+### Bug Fixes
+
+* correct array index access in config read operation ([61d25fb](https://github.com/aziontech/bundler/commit/61d25fb8867ac92ddb6841de5e99c1d111314a93))
+
 ## [5.2.0-stage.7](https://github.com/aziontech/bundler/compare/v5.2.0-stage.6...v5.2.0-stage.7) (2025-06-06)
 
 
