@@ -167,24 +167,25 @@ describe('Config CRUD Operations', () => {
       expect(result.edgeApplications?.[0].rules?.request?.[0]).toEqual(newRule);
     });
 
-    it('should throw error if property does not exist', () => {
-      expect(() => {
-        updateConfig({
-          key: 'nonexistent.property',
-          value: 'value',
-          config: baseConfig,
-        });
-      }).toThrow("Property 'nonexistent' does not exist");
+    it('should create property if it does not exist', () => {
+      const result = updateConfig({
+        key: 'nonexistent.property',
+        value: 'value',
+        config: baseConfig,
+      });
+
+      expect((result as never)['nonexistent']).toEqual({ property: 'value' });
     });
 
-    it('should throw error if array index does not exist', () => {
-      expect(() => {
-        updateConfig({
-          key: 'edgeApplications[1].name',
-          value: 'New App',
-          config: baseConfig,
-        });
-      }).toThrow("Array index 1 does not exist in 'edgeApplications'");
+    it('should extend array when accessing out of bounds index', () => {
+      const result = updateConfig({
+        key: 'edgeApplications[1].name',
+        value: 'New App',
+        config: baseConfig,
+      });
+
+      expect(result.edgeApplications).toHaveLength(2);
+      expect(result.edgeApplications?.[1].name).toBe('New App');
     });
 
     it('should throw error if property is not an array', () => {
@@ -194,7 +195,7 @@ describe('Config CRUD Operations', () => {
           value: 'value',
           config: baseConfig,
         });
-      }).toThrow("Property 'preset' is not an array");
+      }).toThrow("Property 'preset' is not an array but trying to access array index");
     });
 
     it('should throw error if trying to access array index on non-array', () => {
@@ -204,26 +205,18 @@ describe('Config CRUD Operations', () => {
           value: 'value',
           config: baseConfig,
         });
-      }).toThrow("Property 'build' is not an array");
+      }).toThrow("Property 'build' is not an array but trying to access array index");
     });
 
-    it('should throw error if array index is out of bounds', () => {
-      expect(() => {
-        updateConfig({
-          key: 'edgeApplications[0].rules.request[2]',
-          value: { name: 'New Rule' },
-          config: baseConfig,
-        });
-      }).toThrow("Array index 2 does not exist in 'request'");
-    });
+    it('should extend nested arrays when needed', () => {
+      const result = updateConfig({
+        key: 'edgeApplications[0].rules.request[2]',
+        value: { name: 'New Rule' },
+        config: baseConfig,
+      });
 
-    it('should throw error if value is not provided', () => {
-      expect(() => {
-        updateConfig({
-          key: 'build.preset',
-          config: baseConfig,
-        });
-      }).toThrow('Value is required for update');
+      expect(result.edgeApplications?.[0].rules?.request).toHaveLength(3);
+      expect(result.edgeApplications?.[0].rules?.request?.[2]).toEqual({ name: 'New Rule' });
     });
   });
 

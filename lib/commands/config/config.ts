@@ -127,7 +127,7 @@ export function updateConfig(options: ConfigOptions): AzionConfig {
     return [part];
   });
 
-  // Navigate through the path and update at the end
+  // Navigate through the path and update/create at the end
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let current: any = userConfig;
 
@@ -136,48 +136,55 @@ export function updateConfig(options: ConfigOptions): AzionConfig {
     const nextPart = pathParts[i + 1];
 
     if (i === pathParts.length - 1) {
-      // Last part - this is what we want to update
+      // Last part - this is what we want to update/create
       if (typeof part === 'number') {
-        // Updating an array index
+        // Updating/creating an array index
         if (!Array.isArray(current)) {
-          throw new Error(`Property is not an array`);
+          throw new Error(`Cannot set array index on non-array property`);
         }
-        if (part >= current.length) {
-          throw new Error(`Array index ${part} does not exist`);
+        // Extend array if necessary
+        while (current.length <= part) {
+          current.push(null);
         }
         current[part] = tryParseJSON(options.value);
       } else {
-        // Updating a property
-        if (!(part in current)) {
-          throw new Error(`Property '${part}' does not exist`);
-        }
+        // Updating/creating a property
         current[part] = tryParseJSON(options.value);
       }
       break;
     }
 
-    // Not the last part - continue navigation
+    // Not the last part - continue navigation or create structure
     if (typeof part === 'number') {
       // Current part is an array index
       if (!Array.isArray(current)) {
-        throw new Error(`Property is not an array`);
+        throw new Error(`Cannot access array index on non-array property`);
+      }
+      // Extend array if necessary
+      while (current.length <= part) {
+        current.push({});
       }
       if (!current[part]) {
-        throw new Error(`Array index ${part} does not exist`);
+        current[part] = {};
       }
       current = current[part];
     } else {
       // Current part is a property
       if (!(part in current)) {
-        throw new Error(`Property '${part}' does not exist`);
+        // Property doesn't exist, create it
+        if (typeof nextPart === 'number') {
+          // Next part is array index, so create an array
+          current[part] = [];
+        } else {
+          // Next part is property, so create an object
+          current[part] = {};
+        }
       }
+
       if (typeof nextPart === 'number') {
         // Next part is an array index
         if (!Array.isArray(current[part])) {
-          throw new Error(`Property '${part}' is not an array`);
-        }
-        if (!(current[part] as unknown[])[nextPart]) {
-          throw new Error(`Array index ${nextPart} does not exist in '${part}'`);
+          throw new Error(`Property '${part}' is not an array but trying to access array index`);
         }
         current = current[part];
         // Don't skip the next part here, let the next iteration handle the array index
