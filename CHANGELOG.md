@@ -1,3 +1,10 @@
+## [5.2.0-stage.7](https://github.com/aziontech/bundler/compare/v5.2.0-stage.6...v5.2.0-stage.7) (2025-06-06)
+
+
+### Features
+
+* azion config crud command ([#485](https://github.com/aziontech/bundler/issues/485)) ([ee82199](https://github.com/aziontech/bundler/commit/ee82199bf32afc21cfe07302c82b2d4c085e3913))
+
 ## [5.2.0-stage.6](https://github.com/aziontech/bundler/compare/v5.2.0-stage.5...v5.2.0-stage.6) (2025-06-03)
 
 
