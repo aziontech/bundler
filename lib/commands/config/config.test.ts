@@ -1,5 +1,17 @@
 import { createConfig, updateConfig, readConfig, deleteConfig } from './config';
+import { configCommand } from './command';
 import type { AzionConfig, AzionBuild, AzionEdgeApplication, AzionRequestRule } from 'azion/config';
+
+// Mock das funções de ambiente
+jest.mock('#env', () => ({
+  readAzionConfig: jest.fn(),
+  writeUserConfig: jest.fn(),
+}));
+
+import { readAzionConfig, writeUserConfig } from '#env';
+
+const mockReadAzionConfig = readAzionConfig as jest.MockedFunction<typeof readAzionConfig>;
+const mockWriteUserConfig = writeUserConfig as jest.MockedFunction<typeof writeUserConfig>;
 
 describe('Config CRUD Operations', () => {
   describe('createConfig', () => {
@@ -414,5 +426,112 @@ describe('Config CRUD Operations', () => {
         });
       }).toThrow("Array index 1 does not exist in 'edgeApplications'");
     });
+  });
+});
+
+describe('Config Command with Multiple Arguments', () => {
+  const baseConfig: AzionConfig = {
+    build: {
+      entry: './src/index.ts',
+      bundler: 'webpack',
+      preset: 'javascript',
+      polyfills: true,
+      worker: false,
+    },
+    edgeApplications: [
+      {
+        name: 'Old App',
+        edgeCacheEnabled: true,
+      },
+    ],
+    edgeFunctions: [
+      {
+        name: 'Old Function',
+        path: './functions/old.js',
+      },
+    ],
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should update multiple properties at once', async () => {
+    mockReadAzionConfig.mockResolvedValue(baseConfig);
+    mockWriteUserConfig.mockResolvedValue();
+
+    const result = (await configCommand({
+      command: 'update',
+      options: {
+        key: ['edgeApplications[0].name', 'edgeFunctions[0].name'],
+        value: ['API Produção', 'Function Produção'],
+      },
+    })) as AzionConfig;
+
+    expect(result.edgeApplications?.[0].name).toBe('API Produção');
+    expect(result.edgeFunctions?.[0].name).toBe('Function Produção');
+    expect(mockWriteUserConfig).toHaveBeenCalledWith(result);
+  });
+
+  it('should update multiple build settings', async () => {
+    mockReadAzionConfig.mockResolvedValue(baseConfig);
+    mockWriteUserConfig.mockResolvedValue();
+
+    const result = (await configCommand({
+      command: 'update',
+      options: {
+        key: ['build.preset', 'build.polyfills', 'build.worker'],
+        value: ['typescript', false, true],
+      },
+    })) as AzionConfig;
+
+    expect(result.build?.preset).toBe('typescript');
+    expect(result.build?.polyfills).toBe(false);
+    expect(result.build?.worker).toBe(true);
+    expect(mockWriteUserConfig).toHaveBeenCalledWith(result);
+  });
+
+  it('should throw error if number of keys and values do not match', async () => {
+    mockReadAzionConfig.mockResolvedValue(baseConfig);
+
+    await expect(
+      configCommand({
+        command: 'update',
+        options: {
+          key: ['build.preset', 'build.polyfills'],
+          value: ['typescript'], // Only one value for two keys
+        },
+      }),
+    ).rejects.toThrow('Number of keys (2) must match number of values (1)');
+  });
+
+  it('should handle single key-value pair same as before', async () => {
+    mockReadAzionConfig.mockResolvedValue(baseConfig);
+    mockWriteUserConfig.mockResolvedValue();
+
+    const result = (await configCommand({
+      command: 'update',
+      options: {
+        key: 'edgeApplications[0].name',
+        value: 'Single Update',
+      },
+    })) as AzionConfig;
+
+    expect(result.edgeApplications?.[0].name).toBe('Single Update');
+    expect(mockWriteUserConfig).toHaveBeenCalledWith(result);
+  });
+
+  it('should only support multiple arguments for update command', async () => {
+    mockReadAzionConfig.mockResolvedValue(baseConfig);
+
+    // Read command should use only the first key
+    const readResult = await configCommand({
+      command: 'read',
+      options: {
+        key: ['edgeApplications[0].name', 'edgeFunctions[0].name'],
+      },
+    });
+
+    expect(readResult).toBe('Old App'); // Should return only first key's value
   });
 });

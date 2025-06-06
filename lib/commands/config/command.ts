@@ -65,6 +65,17 @@ import type { AzionConfig } from 'azion/config';
  * ef config update -k "edgeApplications[0].name" -v "Updated App Name"
  * ef config update -k "edgeApplications[0].edgeCacheEnabled" -v "false"
  *
+ * # Update multiple properties at once
+ * ef config update \
+ *   -k "edgeApplications[0].name" -v "API Produção" \
+ *   -k "edgeFunctions[0].name" -v "Function Produção"
+ *
+ * # Update multiple build settings
+ * ef config update \
+ *   -k "build.preset" -v "typescript" \
+ *   -k "build.polyfills" -v "false" \
+ *   -k "build.worker" -v "true"
+ *
  * # Update complex nested structures
  * ef config update -k "edgeApplications[0].rules.request[0].behavior" -v '{"bypassCache": true, "deliver": true}'
  *
@@ -159,36 +170,75 @@ export async function configCommand({ command, options }: ConfigCommandOptions) 
     }
   }
 
-  if (!options.key) {
+  // Handle multiple keys and values for batch operations
+  const keys = Array.isArray(options.key) ? options.key : options.key ? [options.key] : [];
+  const values = Array.isArray(options.value)
+    ? options.value
+    : options.value !== undefined
+      ? [options.value]
+      : [];
+
+  if (keys.length === 0) {
     throw new Error('Key is required when --all is not used');
   }
 
+  // For commands that support multiple operations
+  if (command === 'update' && keys.length > 1) {
+    if (values.length !== keys.length) {
+      throw new Error(
+        `Number of keys (${keys.length}) must match number of values (${values.length})`,
+      );
+    }
+
+    if (!userConfig) {
+      throw new Error('No configuration found. Use create command first.');
+    }
+
+    let result = userConfig;
+
+    // Apply each update sequentially
+    for (let i = 0; i < keys.length; i++) {
+      result = updateConfig({
+        key: keys[i],
+        value: values[i],
+        config: result,
+      });
+    }
+
+    await writeUserConfig(result);
+    return result;
+  }
+
+  // For single operations or commands that don't support batch
+  const key = keys[0];
+  const value = values[0];
+
   let result: AzionConfig;
-  let value: unknown;
+  let readValue: unknown;
 
   switch (command) {
     case 'create':
       if (userConfig) {
         throw new Error('Configuration already exists. Use update command instead.');
       }
-      if (!options.value) {
+      if (value === undefined) {
         throw new Error('Value is required for create command');
       }
       result = createConfig({
-        key: options.key,
-        value: options.value,
+        key,
+        value,
       });
       break;
     case 'update':
       if (!userConfig) {
         throw new Error('No configuration found. Use create command first.');
       }
-      if (!options.value) {
+      if (value === undefined) {
         throw new Error('Value is required for update command');
       }
       result = updateConfig({
-        key: options.key,
-        value: options.value,
+        key,
+        value,
         config: userConfig,
       });
       break;
@@ -196,18 +246,18 @@ export async function configCommand({ command, options }: ConfigCommandOptions) 
       if (!userConfig) {
         throw new Error('No configuration found');
       }
-      value = readConfig({
-        key: options.key,
+      readValue = readConfig({
+        key,
         config: userConfig,
       });
-      console.log(JSON.stringify(value, null, 2));
-      return value;
+      console.log(JSON.stringify(readValue, null, 2));
+      return readValue;
     case 'delete':
       if (!userConfig) {
         throw new Error('No configuration found');
       }
       result = deleteConfig({
-        key: options.key,
+        key,
         config: userConfig,
       });
       break;

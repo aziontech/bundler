@@ -1,32 +1,6 @@
 import { AzionConfig } from 'azion/config';
-
-type ConfigOptions = {
-  key: string;
-  value?: string | number | boolean | object | null;
-  config?: AzionConfig;
-};
-
-/**
- * Tries to parse a value as JSON, returns the original value if parsing fails
- */
-function tryParseJSON(value: string | number | boolean | object | null | undefined): unknown {
-  if (typeof value !== 'string') {
-    return value;
-  }
-
-  // Check if it looks like JSON (starts with { or [)
-  const trimmed = value.trim();
-  if (!trimmed.startsWith('{') && !trimmed.startsWith('[')) {
-    return value;
-  }
-
-  try {
-    return JSON.parse(value);
-  } catch {
-    // If parsing fails, return the original string
-    return value;
-  }
-}
+import { ConfigOptions } from './types';
+import { tryParseJSON } from './utils';
 
 /**
  * Creates a new property in the user's azion.config
