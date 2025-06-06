@@ -1,3 +1,11 @@
+## [5.2.0-stage.10](https://github.com/aziontech/bundler/compare/v5.2.0-stage.9...v5.2.0-stage.10) (2025-06-06)
+
+
+### Features
+
+* add support for multiple key-value pairs in update command ([0e09902](https://github.com/aziontech/bundler/commit/0e09902ab48c8ea1676f9ac3cb2805a2c327916c))
+* smart update that creates missing properties ([5ed973f](https://github.com/aziontech/bundler/commit/5ed973f8f2bb12da7adacf106ddce4ad3c5b3dd6))
+
 ## [5.2.0-stage.9](https://github.com/aziontech/bundler/compare/v5.2.0-stage.8...v5.2.0-stage.9) (2025-06-06)
 
 
