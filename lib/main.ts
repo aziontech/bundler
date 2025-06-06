@@ -103,17 +103,9 @@ function startBundler() {
   if (process.argv.length === 2) process.argv.push('build');
 
   AzionBundler.command('store <command>')
-    .description(
-      'Manage local store. Commands:\n' +
-        '  init    - Initialize or create a new store configuration\n' +
-        '  update  - Update existing resources by name or add new ones if not found\n' +
-        '  destroy - Remove the store configuration',
-    )
-    .option(
-      '--config <json>',
-      'Configuration in JSON format (e.g., \'{"edgeFunctions": [{"name": "my-function", "path": "/path"}]}\')',
-    )
-    .option('--scope <scope>', 'Scope of the store (default: global)')
+    .description('Manage store configuration')
+    .option('-c, --config <json>', 'Configuration in JSON format (e.g., \'{"key": "value"}\')')
+    .option('-s, --scope <scope>', 'Scope of the store (default: global)')
     .action(async (command, options) => {
       const { storeCommand } = await import('#commands');
       await storeCommand({
@@ -123,19 +115,19 @@ function startBundler() {
     });
 
   AzionBundler.command('build')
-    .description('Build a project for edge deployment')
-    .option('--entry <entries...>', 'Code entrypoint (default: ./main.js or ./main.ts)')
-    .option('--preset <type>', 'Preset of build target (e.g., vue, next, javascript)')
+    .description('Build your project for edge deployment')
+    .option('-e, --entry <entries...>', 'Code entrypoint (default: ./main.js or ./main.ts)')
+    .option('-p, --preset <type>', 'Preset of build target (e.g., vue, next, javascript)')
     .option(
       '--polyfills [boolean]',
       'Use node polyfills in build. Use --polyfills or --polyfills=true to enable, --polyfills=false to disable',
     )
     .option(
-      '--worker [boolean]',
+      '-w, --worker [boolean]',
       'Indicates that the constructed code inserts its own worker expression. Use --worker or --worker=true to enable, --worker=false to disable',
     )
-    .option('--dev', 'Build in development mode', false)
-    .option('--experimental [boolean]', 'Enable experimental features', false)
+    .option('-d, --dev', 'Build in development mode', false)
+    .option('-x, --experimental [boolean]', 'Enable experimental features', false)
     .action(async (options) => {
       const { buildCommand, manifestCommand } = await import('#commands');
       const { dev, experimental, ...buildOptions } = options;
@@ -151,10 +143,10 @@ function startBundler() {
     });
 
   AzionBundler.command('dev')
-    .description('Start local environment')
+    .description('Start local development environment')
     .argument('[entry]', 'Specify the entry file (default: .edge/worker.dev.js)')
     .option('-p, --port <port>', 'Specify the port', '3333')
-    .option('--experimental [boolean]', 'Enable experimental features', false)
+    .option('-x, --experimental [boolean]', 'Enable experimental features', false)
     .action(async (entry, options) => {
       const { devCommand } = await import('#commands');
 
@@ -166,28 +158,29 @@ function startBundler() {
     });
 
   AzionBundler.command('presets <command>')
-    .description('List <ls> defined project presets for Azion')
-    .action(async (command) => {
+    .description('Manage presets for Azion projects')
+    .argument('[preset]', 'Preset name (required for config command)')
+    .action(async (command, preset) => {
       const { presetsCommand } = await import('#commands');
-      await presetsCommand(command);
+      await presetsCommand(command, { preset });
     });
 
   AzionBundler.command('manifest [action]')
-    .description('Manage manifest files for Azion. Available actions: transform, generate')
+    .description('Manage manifest files for Azion')
     .argument(
       '[action]',
       'Action to perform: "transform" (JSON to JS) or "generate" (config to manifest)',
       'generate',
     )
-    .option('--entry <path>', 'Path to the input file or configuration file')
-    .option('--output <path>', 'Output file/directory path')
+    .option('-e, --entry <path>', 'Path to the input file or configuration file')
+    .option('-o, --output <path>', 'Output file/directory path')
     .addHelpText(
       'after',
       `
 Examples:
-  $ ef manifest transform --entry=manifest.json --output=azion.config.js
-  $ ef manifest generate --entry=azion.config.js --output=.edge
-  $ ef manifest --entry=azion.config.js --output=.edge
+  $ ef manifest transform -e manifest.json -o azion.config.js
+  $ ef manifest generate -e azion.config.js -o .edge
+  $ ef manifest -e azion.config.js -o .edge
     `,
     )
     .action(async (action, options) => {
@@ -195,6 +188,19 @@ Examples:
       await manifestCommand({
         ...options,
         action,
+      });
+    });
+
+  AzionBundler.command('config <command>')
+    .description('Manage azion.config settings')
+    .option('-k, --key <key>', 'Property key (e.g., build.preset or edgeApplications[0].name)')
+    .option('-v, --value <value>', 'Value to be set')
+    .option('-a, --all', 'Read or delete entire configuration (for read/delete commands)')
+    .action(async (command, options) => {
+      const { configCommand } = await import('#commands');
+      await configCommand({
+        command,
+        options,
       });
     });
 

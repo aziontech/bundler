@@ -20,7 +20,9 @@ import { DOCS_MESSAGE } from '../constants';
  * allowing the development environment to run according to
  * the settings defined in the build without having to pass arguments
  */
-export interface BundlerStore extends AzionConfig {}
+export interface BundlerStore {
+  [key: string]: unknown;
+}
 
 /**
  * Creates or updates Bundler environment variables.
@@ -129,7 +131,7 @@ function handleDependencyError(error: Error, configPath: string) {
  * @async
  * @param configPath - Optional specific config file path to read
  */
-export async function readUserConfig(configPath?: string): Promise<AzionConfig | null> {
+export async function readAzionConfig(configPath?: string): Promise<AzionConfig | null> {
   const explorer = cosmiconfig('azion', {
     searchPlaces: [
       'azion.config.ts',
@@ -253,6 +255,6 @@ export async function writeUserConfig(config: AzionConfig): Promise<void> {
 export default {
   writeStore,
   readStore,
-  readUserConfig,
+  readAzionConfig,
   writeUserConfig,
 };

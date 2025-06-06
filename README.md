@@ -22,8 +22,9 @@ Azion Bundler is a powerful tool designed to build and adapt projects for edge c
   - [Commands](#commands)
     - [`build`](#build)
     - [`dev`](#dev)
-    - [`store`](#store)
+    - [`config`](#config)
     - [`presets`](#presets)
+    - [`store`](#store)
     - [`manifest`](#manifest)
   - [Configuration](#configuration)
   - [Build Process Flow](#build-process-flow)
@@ -121,11 +122,12 @@ Builds your project for edge deployment.
 ef build [options]
 
 Options:
-  --entry <string>     Code entrypoint (default: ./handler.js or ./handler.ts)
-  --preset <type>      Preset of build target (e.g., vue, next, javascript)
-  --polyfills          Use node polyfills in build (default: true)
-  --worker            Enable worker mode with addEventListener signature (default: false)
-  --development       Build in development mode (default: false)
+  -e, --entry <string>     Code entrypoint (default: ./handler.js or ./handler.ts)
+  -p, --preset <type>      Preset of build target (e.g., vue, next, javascript)
+  --polyfills              Use node polyfills in build (default: true)
+  -w, --worker             Enable worker mode with addEventListener signature (default: false)
+  -d, --dev                Build in development mode (default: false)
+  -x, --experimental       Enable experimental features (default: false)
 ```
 
 ### `dev`
@@ -135,10 +137,55 @@ Starts a local development environment.
 ef dev [entry] [options]
 
 Arguments:
-  entry               Specify the entry file (default: .edge/functions/handler.dev.js)
+  entry                    Specify the entry file (default: .edge/worker.dev.js)
 
 Options:
-  -p, --port <port>  Specify the port (default: "3333")
+  -p, --port <port>        Specify the port (default: "3333")
+  -x, --experimental       Enable experimental features (default: false)
+```
+
+### `config`
+Manages Azion configuration settings with CRUD operations.
+
+```shell
+ef config <command> [options]
+
+Commands:
+  create              Create a new configuration property
+  read                Read configuration properties
+  update              Update existing configuration properties
+  delete              Delete configuration properties
+
+Options:
+  -k, --key <key>     Property key (e.g., build.preset or edgeApplications[0].name)
+  -v, --value <value> Value to be set (for create/update commands)
+  -a, --all           Read or delete entire configuration (for read/delete commands)
+
+Examples:
+  $ ef config create -k "build.preset" -v "typescript"
+  $ ef config read -k "edgeApplications[0].name"
+  $ ef config update -k "build.bundler" -v "esbuild"
+  $ ef config delete -k "build.polyfills"
+  $ ef config read --all
+```
+
+### `presets`
+Manages presets for Azion projects.
+
+```shell
+ef presets <command> [preset]
+
+Commands:
+  ls                  List all available presets
+  config              Get Azion configuration file for a specific preset
+
+Arguments:
+  preset              Preset name (required for config command)
+
+Examples:
+  $ ef presets ls
+  $ ef presets config react
+  $ ef presets config next
 ```
 
 ### `store`
@@ -152,22 +199,8 @@ Commands:
   destroy             Remove store configuration
 
 Options:
-  --scope <scope>     Project scope (default: "global")
-  --preset <string>   Preset name
-  --entry <string>    Code entrypoint
-  --bundler <type>    Bundler type (webpack/esbuild)
-  --polyfills        Use node polyfills in build
-  --worker           Enable worker mode
-```
-
-### `presets`
-Lists available project presets.
-
-```shell
-ef presets <command>
-
-Commands:
-  ls                  List all available presets
+  -c, --config <json> Configuration in JSON format
+  -s, --scope <scope> Scope of the store (default: global)
 ```
 
 ### `manifest`
@@ -181,13 +214,13 @@ Arguments:
                     (default: "generate")
 
 Options:
-  --entry <path>     Path to the input file or configuration file
-  --output <path>    Output file/directory path
+  -e, --entry <path>  Path to the input file or configuration file
+  -o, --output <path> Output file/directory path
 
 Examples:
-  $ ef manifest transform --entry=manifest.json --output=azion.config.js
-  $ ef manifest generate --entry=azion.config.js --output=.edge
-  $ ef manifest --entry=azion.config.js --output=.edge
+  $ ef manifest transform -e manifest.json -o azion.config.js
+  $ ef manifest generate -e azion.config.js -o .edge
+  $ ef manifest -e azion.config.js -o .edge
 ```
 
 ## Configuration
