@@ -145,9 +145,12 @@ export async function configCommand({ command, options }: ConfigCommandOptions) 
   const userConfig: AzionConfig | null = await readAzionConfig();
 
   if (options.all) {
+    let allConfig: AzionConfig;
     switch (command) {
       case 'read':
-        return userConfig || {};
+        allConfig = userConfig || {};
+        console.log(JSON.stringify(allConfig, null, 2));
+        return allConfig;
       case 'delete':
         await writeUserConfig({});
         return {};
@@ -161,6 +164,7 @@ export async function configCommand({ command, options }: ConfigCommandOptions) 
   }
 
   let result: AzionConfig;
+  let value: unknown;
 
   switch (command) {
     case 'create':
@@ -192,10 +196,12 @@ export async function configCommand({ command, options }: ConfigCommandOptions) 
       if (!userConfig) {
         throw new Error('No configuration found');
       }
-      return readConfig({
+      value = readConfig({
         key: options.key,
         config: userConfig,
       });
+      console.log(JSON.stringify(value, null, 2));
+      return value;
     case 'delete':
       if (!userConfig) {
         throw new Error('No configuration found');
