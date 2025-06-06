@@ -193,8 +193,8 @@ Examples:
 
   AzionBundler.command('config <command>')
     .description('Manage azion.config settings')
-    .option('-k, --key <key>', 'Property key (e.g., build.preset or edgeApplications[0].name)')
-    .option('-v, --value <value>', 'Value to be set')
+    .option('-k, --key <key...>', 'Property key (e.g., build.preset or edgeApplications[0].name)')
+    .option('-v, --value <value...>', 'Value to be set')
     .option('-a, --all', 'Read or delete entire configuration (for read/delete commands)')
     .action(async (command, options) => {
       const { configCommand } = await import('#commands');
