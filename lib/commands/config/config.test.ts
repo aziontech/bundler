@@ -134,6 +134,39 @@ describe('Config CRUD Operations', () => {
       expect(result.edgeApplications?.[0].rules?.request?.[1].name).toBe('New Rule');
     });
 
+    it('should update entire array element', () => {
+      const newApp = {
+        name: 'New App',
+        edgeCacheEnabled: false,
+        rules: {
+          request: [{ name: 'New Rule', behavior: { bypassCache: true } }],
+        },
+      };
+
+      const result = updateConfig({
+        key: 'edgeApplications[0]',
+        value: newApp,
+        config: baseConfig,
+      });
+
+      expect(result.edgeApplications?.[0]).toEqual(newApp);
+    });
+
+    it('should update nested array element', () => {
+      const newRule = {
+        name: 'New Rule',
+        behavior: { bypassCache: true },
+      };
+
+      const result = updateConfig({
+        key: 'edgeApplications[0].rules.request[0]',
+        value: newRule,
+        config: baseConfig,
+      });
+
+      expect(result.edgeApplications?.[0].rules?.request?.[0]).toEqual(newRule);
+    });
+
     it('should throw error if property does not exist', () => {
       expect(() => {
         updateConfig({
@@ -152,6 +185,45 @@ describe('Config CRUD Operations', () => {
           config: baseConfig,
         });
       }).toThrow("Array index 1 does not exist in 'edgeApplications'");
+    });
+
+    it('should throw error if property is not an array', () => {
+      expect(() => {
+        updateConfig({
+          key: 'build.preset[0]',
+          value: 'value',
+          config: baseConfig,
+        });
+      }).toThrow("Property 'preset' is not an array");
+    });
+
+    it('should throw error if trying to access array index on non-array', () => {
+      expect(() => {
+        updateConfig({
+          key: 'build[0]',
+          value: 'value',
+          config: baseConfig,
+        });
+      }).toThrow("Property 'build' is not an array");
+    });
+
+    it('should throw error if array index is out of bounds', () => {
+      expect(() => {
+        updateConfig({
+          key: 'edgeApplications[0].rules.request[2]',
+          value: { name: 'New Rule' },
+          config: baseConfig,
+        });
+      }).toThrow("Array index 2 does not exist in 'request'");
+    });
+
+    it('should throw error if value is not provided', () => {
+      expect(() => {
+        updateConfig({
+          key: 'build.preset',
+          config: baseConfig,
+        });
+      }).toThrow('Value is required for update');
     });
   });
 

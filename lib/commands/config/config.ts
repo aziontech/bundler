@@ -7,6 +7,28 @@ type ConfigOptions = {
 };
 
 /**
+ * Tries to parse a value as JSON, returns the original value if parsing fails
+ */
+function tryParseJSON(value: string | number | boolean | object | null | undefined): unknown {
+  if (typeof value !== 'string') {
+    return value;
+  }
+
+  // Check if it looks like JSON (starts with { or [)
+  const trimmed = value.trim();
+  if (!trimmed.startsWith('{') && !trimmed.startsWith('[')) {
+    return value;
+  }
+
+  try {
+    return JSON.parse(value);
+  } catch {
+    // If parsing fails, return the original string
+    return value;
+  }
+}
+
+/**
  * Creates a new property in the user's azion.config
  * @example
  * // Create a simple property
@@ -40,7 +62,7 @@ export function createConfig(options: ConfigOptions): AzionConfig {
         if (!current[arrayKey]) {
           current[arrayKey] = [];
         }
-        (current[arrayKey] as unknown[])[index] = options.value;
+        (current[arrayKey] as unknown[])[index] = tryParseJSON(options.value);
       } else {
         // Not last key - create structure
         if (!current[arrayKey]) {
@@ -54,7 +76,7 @@ export function createConfig(options: ConfigOptions): AzionConfig {
     } else {
       if (i === keys.length - 1) {
         // Last key - set the value
-        current[key] = options.value;
+        current[key] = tryParseJSON(options.value);
       } else {
         // Not last key - create structure
         if (!current[key]) {
@@ -90,9 +112,13 @@ export function updateConfig(options: ConfigOptions): AzionConfig {
   if (!options.config) {
     throw new Error('Config is required for update');
   }
+  if (!options.value) {
+    throw new Error('Value is required for update');
+  }
+
   const userConfig = { ...options.config };
 
-  // Split the path into parts and process arrays
+  // Use the same navigation logic as readConfig but for updating
   const pathParts = options.key.split('.').flatMap((part) => {
     const arrayMatch = part.match(/^(.+)\[(\d+)\]$/);
     if (arrayMatch) {
@@ -101,37 +127,65 @@ export function updateConfig(options: ConfigOptions): AzionConfig {
     return [part];
   });
 
-  // Navigate to the correct object
-  let current: Record<string, unknown> = userConfig;
-  for (let i = 0; i < pathParts.length - 1; i++) {
+  // Navigate through the path and update at the end
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let current: any = userConfig;
+
+  for (let i = 0; i < pathParts.length; i++) {
     const part = pathParts[i];
     const nextPart = pathParts[i + 1];
 
-    if (typeof nextPart === 'number') {
-      // If next is an array index
-      if (!Array.isArray(current[part])) {
-        throw new Error(`Property '${part}' is not an array`);
+    if (i === pathParts.length - 1) {
+      // Last part - this is what we want to update
+      if (typeof part === 'number') {
+        // Updating an array index
+        if (!Array.isArray(current)) {
+          throw new Error(`Property is not an array`);
+        }
+        if (part >= current.length) {
+          throw new Error(`Array index ${part} does not exist`);
+        }
+        current[part] = tryParseJSON(options.value);
+      } else {
+        // Updating a property
+        if (!(part in current)) {
+          throw new Error(`Property '${part}' does not exist`);
+        }
+        current[part] = tryParseJSON(options.value);
       }
-      const arr = current[part] as unknown[];
-      if (!arr[nextPart]) {
-        throw new Error(`Array index ${nextPart} does not exist in '${part}'`);
+      break;
+    }
+
+    // Not the last part - continue navigation
+    if (typeof part === 'number') {
+      // Current part is an array index
+      if (!Array.isArray(current)) {
+        throw new Error(`Property is not an array`);
       }
-      current = arr[nextPart] as Record<string, unknown>;
-      i++; // Skip next item as it was already processed
-    } else {
       if (!current[part]) {
+        throw new Error(`Array index ${part} does not exist`);
+      }
+      current = current[part];
+    } else {
+      // Current part is a property
+      if (!(part in current)) {
         throw new Error(`Property '${part}' does not exist`);
       }
-      current = current[part] as Record<string, unknown>;
+      if (typeof nextPart === 'number') {
+        // Next part is an array index
+        if (!Array.isArray(current[part])) {
+          throw new Error(`Property '${part}' is not an array`);
+        }
+        if (!(current[part] as unknown[])[nextPart]) {
+          throw new Error(`Array index ${nextPart} does not exist in '${part}'`);
+        }
+        current = current[part];
+        // Don't skip the next part here, let the next iteration handle the array index
+      } else {
+        current = current[part];
+      }
     }
   }
-
-  // Update the value
-  const lastPart = pathParts[pathParts.length - 1];
-  if (!(lastPart in current)) {
-    throw new Error(`Property '${lastPart}' does not exist`);
-  }
-  current[lastPart] = options.value;
 
   return userConfig;
 }
