@@ -205,6 +205,36 @@ describe('Config CRUD Operations', () => {
       expect(result).toBe('Rule 2');
     });
 
+    it('should read entire array element', () => {
+      const result = readConfig({
+        key: 'edgeApplications[0]',
+        config: baseConfig,
+      });
+
+      expect(result).toEqual({
+        name: 'My App',
+        edgeCacheEnabled: true,
+        rules: {
+          request: [
+            { name: 'Rule 1', behavior: { bypassCache: true } },
+            { name: 'Rule 2', behavior: { bypassCache: false } },
+          ],
+        },
+      });
+    });
+
+    it('should read nested array element', () => {
+      const result = readConfig({
+        key: 'edgeApplications[0].rules.request[0]',
+        config: baseConfig,
+      });
+
+      expect(result).toEqual({
+        name: 'Rule 1',
+        behavior: { bypassCache: true },
+      });
+    });
+
     it('should throw error if property does not exist', () => {
       expect(() => {
         readConfig({
@@ -221,6 +251,33 @@ describe('Config CRUD Operations', () => {
           config: baseConfig,
         });
       }).toThrow("Array index 1 does not exist in 'edgeApplications'");
+    });
+
+    it('should throw error if property is not an array', () => {
+      expect(() => {
+        readConfig({
+          key: 'build.preset[0]',
+          config: baseConfig,
+        });
+      }).toThrow("Property 'preset' is not an array");
+    });
+
+    it('should throw error if trying to access array index on non-array', () => {
+      expect(() => {
+        readConfig({
+          key: 'build[0]',
+          config: baseConfig,
+        });
+      }).toThrow("Property 'build' is not an array");
+    });
+
+    it('should throw error if array index is out of bounds', () => {
+      expect(() => {
+        readConfig({
+          key: 'edgeApplications[0].rules.request[2]',
+          config: baseConfig,
+        });
+      }).toThrow("Array index 2 does not exist in 'request'");
     });
   });
 
