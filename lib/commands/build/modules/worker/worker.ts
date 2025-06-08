@@ -1,6 +1,6 @@
 import fsPromises from 'fs/promises';
 import type { BuildConfiguration, BuildContext } from 'azion/config';
-import { generateWorkerEventHandler, normalizeEntryPointPaths } from './utils';
+import { normalizeEntryPointPaths } from './utils';
 
 /**
  * Processes handler files and prepares them for bundling
@@ -27,10 +27,7 @@ export const setupWorkerCode = async (
     await Promise.all(
       handlersPaths.map(async (handlerPath, index) => {
         const tempPath = Object.values(entriesPath)[index];
-
-        const codeRaw = buildConfig.worker
-          ? await fsPromises.readFile(handlerPath, 'utf-8')
-          : generateWorkerEventHandler(handlerPath);
+        const codeRaw = await fsPromises.readFile(handlerPath, 'utf-8');
         entriesPathMap[tempPath] = codeRaw;
       }),
     );

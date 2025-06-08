@@ -4,9 +4,7 @@ import { BuildConfiguration } from 'azion/config';
 import fsPromises from 'fs/promises';
 
 jest.mock('./utils', () => {
-  const original = jest.requireActual<typeof import('./utils')>('./utils');
   return {
-    generateWorkerEventHandler: original.generateWorkerEventHandler,
     normalizeEntryPointPaths: jest.fn((handler) => (Array.isArray(handler) ? handler : [handler])),
   };
 });
