@@ -2,10 +2,20 @@ import { BuildEntryPoint } from 'azion/config';
 
 /**
  * Detects if the source code already uses addEventListener pattern
+ * Ignores commented lines
  */
 export const detectAddEventListenerUsage = (code: string): boolean => {
+  const lines = code.split('\n');
   const addEventListenerRegex = /addEventListener\s*\(\s*['"`](fetch|firewall)['"`]\s*,/;
-  return addEventListenerRegex.test(code);
+
+  return lines.some((line) => {
+    const trimmedLine = line.trim();
+    // Ignore commented lines
+    if (trimmedLine.startsWith('//') || trimmedLine.startsWith('/*')) {
+      return false;
+    }
+    return addEventListenerRegex.test(line);
+  });
 };
 
 /**
@@ -45,22 +55,6 @@ if (fetchHandler) {
 } else if (!firewallHandler) {
   throw new Error("No fetch handler found in default export object.");
 }
-`;
-};
-
-/**
- * Generates addEventListener wrapper for legacy pattern: export default function(event)
- */
-export const generateLegacyWrapper = (entrypointPath: string): string => {
-  return `
-import handler from '${entrypointPath}';
-
-// Legacy pattern wrapper: export default function(event) → addEventListener
-addEventListener('fetch', (event) => {
-  event.respondWith((async () => {
-    return await handler(event);
-  })());
-});
 `;
 };
 

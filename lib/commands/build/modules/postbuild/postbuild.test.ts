@@ -25,7 +25,6 @@ describe('executePostbuild', () => {
         ) => Promise<void>,
       },
       polyfills: true,
-      worker: false,
       setup: {
         contentToInject: '',
         defineVars: {},
@@ -48,7 +47,6 @@ describe('executePostbuild', () => {
         config: { build: {} },
       },
       polyfills: true,
-      worker: false,
       setup: {
         contentToInject: '',
         defineVars: {},

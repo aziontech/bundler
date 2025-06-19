@@ -14,13 +14,6 @@ const hasObjectExportPattern = (code: string): boolean => {
 };
 
 /**
- * Detects if code uses legacy default function pattern: export default function(event)
- */
-const hasLegacyDefaultPattern = (code: string): boolean => {
-  return /export\s+default\s+(?:async\s+)?function\s*\([^)]*event[^)]*\)/.test(code);
-};
-
-/**
  * Gets the handler pattern used in the code
  */
 const getHandlerPattern = (code: string) => {
@@ -30,10 +23,6 @@ const getHandlerPattern = (code: string) => {
 
   if (hasObjectExportPattern(code)) {
     return 'ESModules';
-  }
-
-  if (hasLegacyDefaultPattern(code)) {
-    return 'legacy';
   }
 
   return 'unsupported';

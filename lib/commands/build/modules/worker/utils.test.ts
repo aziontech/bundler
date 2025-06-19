@@ -1,7 +1,6 @@
 import { describe, it, expect } from '@jest/globals';
 import {
   generateWorkerEventHandler,
-  generateLegacyWrapper,
   normalizeEntryPointPaths,
   detectAddEventListenerUsage,
 } from './utils';
@@ -96,59 +95,6 @@ describe('generateWorkerEventHandler', () => {
     const result = generateWorkerEventHandler('app.js');
 
     expect(result).toContain('No fetch handler found in default export object');
-  });
-});
-
-describe('generateLegacyWrapper', () => {
-  it('should generate addEventListener wrapper for legacy function', () => {
-    const entrypoint = 'src/legacy.js';
-    const result = generateLegacyWrapper(entrypoint);
-
-    expect(result).toContain(`import handler from '${entrypoint}'`);
-    expect(result).toContain('Legacy pattern wrapper');
-    expect(result).toContain("addEventListener('fetch', (event) => {");
-  });
-
-  it('should call the legacy handler with event', () => {
-    const result = generateLegacyWrapper('app.js');
-
-    expect(result).toContain('return await handler(event)');
-    expect(result).toContain('event.respondWith');
-  });
-
-  it('should include proper async handling', () => {
-    const result = generateLegacyWrapper('app.js');
-
-    expect(result).toContain('event.respondWith((async () => {');
-    expect(result).toContain('})());');
-  });
-});
-
-describe('detectLegacyPattern', () => {
-  it('should detect legacy default function pattern', () => {
-    const code1 = `export default function handler(event) { return new Response('ok'); }`;
-    const code2 = `export default async function(event) { return new Response('ok'); }`;
-    const code3 = `export default function(event, ctx) { return new Response('ok'); }`;
-
-    const hasLegacyPattern = (code: string) =>
-      /export\s+default\s+(?:async\s+)?function\s*\([^)]*event[^)]*\)/.test(code);
-
-    expect(hasLegacyPattern(code1)).toBe(true);
-    expect(hasLegacyPattern(code2)).toBe(true);
-    expect(hasLegacyPattern(code3)).toBe(true);
-  });
-
-  it('should not detect other function patterns', () => {
-    const code1 = `export default function handler(request, env, ctx) {}`;
-    const code2 = `export function handler(event) {}`;
-    const code3 = `export default { fetch: (event) => {} }`;
-
-    const hasLegacyPattern = (code: string) =>
-      /export\s+default\s+(?:async\s+)?function\s*\([^)]*event[^)]*\)/.test(code);
-
-    expect(hasLegacyPattern(code1)).toBe(false);
-    expect(hasLegacyPattern(code2)).toBe(false);
-    expect(hasLegacyPattern(code3)).toBe(false);
   });
 });
 
