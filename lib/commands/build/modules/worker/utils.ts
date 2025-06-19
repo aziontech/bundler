@@ -1,57 +1,65 @@
 import { BuildEntryPoint } from 'azion/config';
 
+/**
+ * Detects if the source code already uses addEventListener pattern
+ */
+export const detectAddEventListenerUsage = (code: string): boolean => {
+  const addEventListenerRegex = /addEventListener\s*\(\s*['"`](fetch|firewall)['"`]\s*,/;
+  return addEventListenerRegex.test(code);
+};
+
+/**
+ * Generates addEventListener wrapper for object exports: export default { fetch, firewall }
+ */
 export const generateWorkerEventHandler = (entrypointPath: string): string => {
   return `
-import entrypoint from '${entrypointPath}';
+import module from '${entrypointPath}';
 
-// Handle the case where import returns a function directly
-const module = typeof entrypoint === 'function' 
-  ? { default: entrypoint } 
-  : entrypoint;
+// Object export pattern: export default { fetch, firewall }
+const handlers = module;
+const firewallHandler = handlers.firewall;
+const fetchHandler = handlers.fetch;
 
-// Check standard handlers first
-const hasFirewallHandler = module.firewall || (module.default && module.default.firewall);
-
-// Detect if the module exports a function directly (legacy)
-const isLegacyDefaultFunction = typeof module.default === 'function';
-
-let eventType = 'fetch';
-let handler;
-
-if (hasFirewallHandler) {
-  eventType = 'firewall';
-  handler = module.firewall || module.default.firewall;
-} else if (isLegacyDefaultFunction) {
-  // Legacy case: function exported directly as default
-  handler = module.default;
-  } else {
-  // Normal case: look for fetch handler
-  handler = module.fetch || (module.default && module.default.fetch);
+if (firewallHandler) {
+  addEventListener('firewall', (event) => {
+    (async () => {
+      const request = event.request;
+      const env = {};
+      const ctx = { waitUntil: event.waitUntil?.bind(event) };
+      
+      await firewallHandler(request, env, ctx);
+    })().catch(console.error);
+  });
 }
 
-if (!handler) {
-  throw new Error("Handler not found in module");
-}
-
-addEventListener(eventType, (event) => {
-  if (eventType === 'fetch' && !hasFirewallHandler) {
-    event.respondWith((async function() {
-      try {
-        return handler(event);
-      } catch (error) {
-        return new Response(\`Error: \${error.message}\`, { status: 500 });
-      }
+if (fetchHandler) {
+  addEventListener('fetch', (event) => {
+    event.respondWith((async () => {
+      const request = event.request;
+      const env = {};
+      const ctx = { waitUntil: event.waitUntil?.bind(event) };
+      
+      return await fetchHandler(request, env, ctx);
     })());
-  } 
-  else {
-    (async function() {
-      try {
-        return handler(event);
-      } catch (error) {
-        return new Response(\`Error: \${error.message}\`, { status: 500 });
-      }
-    })();
-  }
+  });
+} else if (!firewallHandler) {
+  throw new Error("No fetch handler found in default export object.");
+}
+`;
+};
+
+/**
+ * Generates addEventListener wrapper for legacy pattern: export default function(event)
+ */
+export const generateLegacyWrapper = (entrypointPath: string): string => {
+  return `
+import handler from '${entrypointPath}';
+
+// Legacy pattern wrapper: export default function(event) → addEventListener
+addEventListener('fetch', (event) => {
+  event.respondWith((async () => {
+    return await handler(event);
+  })());
 });
 `;
 };
@@ -62,4 +70,8 @@ export const normalizeEntryPointPaths = (entry: BuildEntryPoint): string[] => {
   return Object.values(entry);
 };
 
-export default { generateWorkerEventHandler, normalizeEntryPointPaths };
+export default {
+  generateWorkerEventHandler,
+  normalizeEntryPointPaths,
+  detectAddEventListenerUsage,
+};

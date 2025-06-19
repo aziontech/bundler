@@ -24,7 +24,6 @@ describe('setupWorkerCode', () => {
       config: { build: {} },
     },
     polyfills: true,
-    worker: false,
     setup: {
       contentToInject: undefined,
       defineVars: {},
@@ -79,8 +78,8 @@ describe('setupWorkerCode', () => {
   it('should throw error when setup fails', async () => {
     spyReadFile.mockRejectedValue(new Error('Read error'));
 
-    await expect(
-      setupWorkerCode({ ...mockBuildConfig, worker: true }, mockContext),
-    ).rejects.toThrow('Failed to setup worker code: Read error');
+    await expect(setupWorkerCode({ ...mockBuildConfig }, mockContext)).rejects.toThrow(
+      'Failed to setup worker code: Read error',
+    );
   });
 });
