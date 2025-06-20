@@ -213,6 +213,7 @@ export async function buildCommand(options: BuildCommandOptions) {
     config,
     options: {
       production: options.production,
+      skipFrameworkBuild: options.skipFrameworkBuild,
     },
   });
 }
