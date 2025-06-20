@@ -27,7 +27,6 @@ describe('setEnvironment', () => {
     build: {
       entry: 'src/index.ts',
       polyfills: true,
-      worker: false,
     },
   };
 
@@ -49,7 +48,6 @@ describe('setEnvironment', () => {
       .mockReturnValue({
         build: {
           polyfills: true,
-          worker: false,
           entry: 'src/index.ts',
         },
       });

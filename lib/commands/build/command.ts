@@ -192,11 +192,6 @@ export async function buildCommand(options: BuildCommandOptions) {
       fileValue: options.polyfills,
       defaultValue: BUILD_CONFIG_DEFAULTS.POLYFILLS,
     }),
-    worker: resolveConfigPriority({
-      inputValue: userBuildConfig?.worker,
-      fileValue: options.worker,
-      defaultValue: BUILD_CONFIG_DEFAULTS.WORKER,
-    }),
   };
 
   const config: AzionConfig = {

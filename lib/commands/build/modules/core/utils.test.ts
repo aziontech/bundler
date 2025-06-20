@@ -78,7 +78,6 @@ const x = 1;
 describe('injectHybridFsPolyfill', () => {
   const mockBuildConfig: BuildConfiguration = {
     polyfills: false,
-    worker: false,
     bundler: 'esbuild',
     entry: {},
     preset: {} as AzionBuildPreset,

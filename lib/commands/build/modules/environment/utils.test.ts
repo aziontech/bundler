@@ -13,7 +13,6 @@ describe('mergeConfigWithUserOverrides', () => {
     const userConfig: AzionConfig = {
       build: {
         polyfills: false,
-        worker: true,
       },
     };
 
@@ -22,7 +21,6 @@ describe('mergeConfigWithUserOverrides', () => {
     expect(result).toEqual({
       build: {
         polyfills: false,
-        worker: true,
       },
     });
   });
