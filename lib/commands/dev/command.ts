@@ -138,11 +138,19 @@
  *
  * devCommand({ entry: './path/to/entry.js', port: '3000' });
  */
-export async function devCommand({ entry, port }: { entry?: string; port: string }) {
+export async function devCommand({
+  entry,
+  port,
+  skipProjectBuild = false,
+}: {
+  entry?: string;
+  port: string;
+  skipProjectBuild?: boolean;
+}) {
   const parsedPort = parseInt(port, 10);
   const { server } = await import('#env');
 
   const entryPoint = entry || null;
 
-  server(entryPoint, parsedPort);
+  server(entryPoint, parsedPort, skipProjectBuild);
 }

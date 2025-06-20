@@ -31,6 +31,12 @@ export interface BuildCommandOptions {
    * @default true
    */
   production?: boolean;
+
+  /**
+   * Bundler skip project build step
+   * @default false
+   */
+  skipProjectBuild?: boolean;
 }
 
 export interface PackageJson {

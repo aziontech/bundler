@@ -128,6 +128,7 @@ function startBundler() {
     )
     .option('-d, --dev', 'Build in development mode', false)
     .option('-x, --experimental [boolean]', 'Enable experimental features', false)
+    .option('--skipProjectBuild', 'Skip project build step', false)
     .action(async (options) => {
       const { buildCommand, manifestCommand } = await import('#commands');
       const { dev, experimental, ...buildOptions } = options;
@@ -147,6 +148,7 @@ function startBundler() {
     .argument('[entry]', 'Specify the entry file (default: .edge/worker.dev.js)')
     .option('-p, --port <port>', 'Specify the port', '3333')
     .option('-x, --experimental [boolean]', 'Enable experimental features', false)
+    .option('--skipProjectBuild', 'Skip project build step', false)
     .action(async (entry, options) => {
       const { devCommand } = await import('#commands');
 

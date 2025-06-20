@@ -21,6 +21,7 @@ describe('getPresetsList utils', () => {
       'jekyll',
       'next',
       'nuxt',
+      'opennextjs',
       'preact',
       'qwik',
       'react',
