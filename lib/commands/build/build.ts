@@ -26,7 +26,7 @@ import { setupBindings } from './modules/bindings';
 
 interface BuildOptions {
   production?: boolean;
-  skipProjectBuild?: boolean;
+  skipFrameworkBuild?: boolean;
 }
 
 interface BuildResult {
@@ -57,7 +57,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       buildConfig: buildConfigSetup,
       ctx: {
         production: isProduction ?? BUILD_CONFIG_DEFAULTS.PRODUCTION,
-        skipProjectBuild: Boolean(options.skipProjectBuild),
+        skipFrameworkBuild: Boolean(options.skipFrameworkBuild),
         handler: '', // Placeholder, will be set later
       },
     });
@@ -70,7 +70,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
         entrypoint: config.build?.entry,
         preset: resolvedPreset,
       }),
-      skipProjectBuild: Boolean(options.skipProjectBuild),
+      skipFrameworkBuild: Boolean(options.skipFrameworkBuild),
     };
 
     /** Map of resolved worker paths and their transformed contents ready for bundling */

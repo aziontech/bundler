@@ -141,16 +141,16 @@
 export async function devCommand({
   entry,
   port,
-  skipProjectBuild = false,
+  skipFrameworkBuild = false,
 }: {
   entry?: string;
   port: string;
-  skipProjectBuild?: boolean;
+  skipFrameworkBuild?: boolean;
 }) {
   const parsedPort = parseInt(port, 10);
   const { server } = await import('#env');
 
   const entryPoint = entry || null;
 
-  server(entryPoint, parsedPort, skipProjectBuild);
+  server(entryPoint, parsedPort, skipFrameworkBuild);
 }
