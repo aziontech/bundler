@@ -3,26 +3,27 @@ import type { BuildConfiguration, BuildContext } from 'azion/config';
 import {
   generateWorkerEventHandler,
   normalizeEntryPointPaths,
-  detectAddEventListenerUsage,
+  isServiceWorkerPattern,
+  isESModulesPattern,
+  isLegacyPattern,
+  WORKER_MESSAGES,
 } from './utils';
-
-/**
- * Detects if code uses object export pattern: export default { fetch, firewall }
- */
-const hasObjectExportPattern = (code: string): boolean => {
-  return /export\s+default\s*\{[\s\S]*fetch[\s\S]*\}/.test(code);
-};
+import { feedback } from 'azion/utils/node';
 
 /**
  * Gets the handler pattern used in the code
  */
 const getHandlerPattern = (code: string) => {
-  if (detectAddEventListenerUsage(code)) {
+  if (isServiceWorkerPattern(code)) {
     return 'serviceWorker';
   }
 
-  if (hasObjectExportPattern(code)) {
+  if (isESModulesPattern(code)) {
     return 'ESModules';
+  }
+
+  if (isLegacyPattern(code)) {
+    return 'legacy';
   }
 
   return 'unsupported';
@@ -47,26 +48,13 @@ const processWorkerCode = (
         ? originalCode // Production: native ESM support
         : generateWorkerEventHandler(handlerPath); // Development: addEventListener wrapper
 
+    case 'legacy':
+      feedback.build.warn(WORKER_MESSAGES.LEGACY_DEPRECATION);
+      return originalCode;
+
     case 'unsupported':
     default:
-      throw new Error(`Unsupported export pattern.
-
-Supported patterns:
-
-- Service Worker Pattern:
-addEventListener('fetch', (event) => {
-  event.respondWith(handleRequest(event.request));
-});
-
-- ES Modules Pattern:
-export default {
-  fetch: (request, env, ctx) => {
-    return new Response('Hello World');
-  },
-  firewall: (request, env, ctx) => {
-    return new Response('Hello World');
-  }
-};`);
+      throw new Error(WORKER_MESSAGES.UNSUPPORTED_PATTERN);
   }
 };
 

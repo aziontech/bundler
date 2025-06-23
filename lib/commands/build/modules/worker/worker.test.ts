@@ -8,7 +8,7 @@ jest.mock('./utils', () => {
   return {
     generateWorkerEventHandler: original.generateWorkerEventHandler,
     normalizeEntryPointPaths: jest.fn((handler) => (Array.isArray(handler) ? handler : [handler])),
-    detectAddEventListenerUsage: original.detectAddEventListenerUsage,
+    isServiceWorkerPattern: original.isServiceWorkerPattern,
   };
 });
 
@@ -102,6 +102,24 @@ describe('setupWorkerCode', () => {
     expect(result['/tmp/worker.js']).toContain(`new Response('worker esm')`);
     expect(result['/tmp/api.js']).toContain(`export default { fetch: (request, env, ctx) =>`);
     expect(result['/tmp/api.js']).toContain(`new Response('api esm')`);
+  });
+
+  it('should handle legacy pattern with deprecation warning', async () => {
+    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+    // Mock legacy pattern
+    spyReadFile.mockImplementation(() =>
+      Promise.resolve(`export default function handler() { return new Response('legacy'); }`),
+    );
+
+    const result = await setupWorkerCode(mockBuildConfig, mockContext);
+
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      expect.stringContaining('DEPRECATED: export default (non-object)'),
+    );
+    expect(result['/tmp/worker.js']).toContain('export default function handler()');
+
+    consoleWarnSpy.mockRestore();
   });
 
   it('should throw error when setup fails', async () => {

@@ -1,10 +1,34 @@
 import { BuildEntryPoint } from 'azion/config';
 
+// Constants
+export const WORKER_MESSAGES = {
+  LEGACY_DEPRECATION:
+    'DEPRECATED: Migrate to → export default { fetch: (request, env, ctx) => {...} }',
+  UNSUPPORTED_PATTERN: `Unsupported export pattern.
+
+Supported patterns:
+
+- Service Worker Pattern:
+addEventListener('fetch', (event) => {
+  event.respondWith(handleRequest(event.request));
+});
+
+- ES Modules Pattern:
+export default {
+  fetch: (request, env, ctx) => {
+    return new Response('Hello World');
+  },
+  firewall: (request, env, ctx) => {
+    return new Response('Hello World');
+  }
+};`,
+};
+
 /**
- * Detects if the source code already uses addEventListener pattern
+ * Detects if the source code uses Service Worker pattern (addEventListener)
  * Ignores commented lines
  */
-export const detectAddEventListenerUsage = (code: string): boolean => {
+export const isServiceWorkerPattern = (code: string): boolean => {
   const lines = code.split('\n');
   const addEventListenerRegex = /addEventListener\s*\(\s*['"`](fetch|firewall)['"`]\s*,/;
 
@@ -58,6 +82,34 @@ if (fetchHandler) {
 `;
 };
 
+/**
+ * Detects if code uses ES Modules pattern: export default { fetch, firewall }
+ */
+export const isESModulesPattern = (code: string): boolean => {
+  return /export\s+default\s*\{[\s\S]*fetch[\s\S]*\}/.test(code);
+};
+
+/**
+ * Detects if code uses legacy pattern (any export default that is not an object)
+ * Examples: export default main, export default function(){}, export default () => {}
+ */
+export const isLegacyPattern = (code: string): boolean => {
+  // Check if there's an export default
+  const hasExportDefault = /export\s+default\s+/.test(code);
+
+  if (!hasExportDefault) {
+    return false;
+  }
+
+  // If it's an ES Modules pattern, it's not legacy
+  if (isESModulesPattern(code)) {
+    return false;
+  }
+
+  // If it has export default but not ES Modules pattern, it's legacy
+  return true;
+};
+
 export const normalizeEntryPointPaths = (entry: BuildEntryPoint): string[] => {
   if (typeof entry === 'string') return [entry];
   if (Array.isArray(entry)) return entry;
@@ -67,5 +119,7 @@ export const normalizeEntryPointPaths = (entry: BuildEntryPoint): string[] => {
 export default {
   generateWorkerEventHandler,
   normalizeEntryPointPaths,
-  detectAddEventListenerUsage,
+  isServiceWorkerPattern,
+  isESModulesPattern,
+  isLegacyPattern,
 };

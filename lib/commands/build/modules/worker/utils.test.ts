@@ -2,28 +2,28 @@ import { describe, it, expect } from '@jest/globals';
 import {
   generateWorkerEventHandler,
   normalizeEntryPointPaths,
-  detectAddEventListenerUsage,
+  isServiceWorkerPattern,
 } from './utils';
 
-describe('detectAddEventListenerUsage', () => {
+describe('isServiceWorkerPattern', () => {
   it('should detect addEventListener with fetch event', () => {
     const code = `addEventListener('fetch', (event) => { /* handler */ });`;
-    expect(detectAddEventListenerUsage(code)).toBe(true);
+    expect(isServiceWorkerPattern(code)).toBe(true);
   });
 
   it('should detect addEventListener with firewall event', () => {
     const code = `addEventListener("firewall", function(event) { /* handler */ });`;
-    expect(detectAddEventListenerUsage(code)).toBe(true);
+    expect(isServiceWorkerPattern(code)).toBe(true);
   });
 
   it('should not detect addEventListener with other events', () => {
     const code = `addEventListener('click', (event) => { /* handler */ });`;
-    expect(detectAddEventListenerUsage(code)).toBe(false);
+    expect(isServiceWorkerPattern(code)).toBe(false);
   });
 
   it('should not detect addEventListener in comments', () => {
     const code = `// addEventListener('fetch', (event) => {});`;
-    expect(detectAddEventListenerUsage(code)).toBe(false);
+    expect(isServiceWorkerPattern(code)).toBe(false);
   });
 });
 
