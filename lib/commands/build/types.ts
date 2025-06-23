@@ -31,6 +31,12 @@ export interface BuildCommandOptions {
    * @default true
    */
   production?: boolean;
+
+  /**
+   * Bundler skip project build step
+   * @default false
+   */
+  skipFrameworkBuild?: boolean;
 }
 
 export interface PackageJson {
@@ -54,6 +60,7 @@ export interface PresetValueOptions {
 }
 export interface BuildOptions {
   production?: boolean;
+  skipFrameworkBuild?: boolean;
 }
 
 export interface BuildResult {

@@ -28,12 +28,28 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     const resolvedPreset = await resolvePreset(config.build?.preset);
     const buildConfigSetup = await setupBuildConfig(config, resolvedPreset, isProduction);
 
+    /* Execute build phases */
+    // Phase 1: Prebuild
+    feedback.prebuild.info('Starting pre-build...');
+
+    const prebuildResult: AzionPrebuildResult = await executePrebuild({
+      buildConfig: buildConfigSetup,
+      ctx: {
+        production: isProduction ?? BUILD_CONFIG_DEFAULTS.PRODUCTION,
+        skipFrameworkBuild: Boolean(options.skipFrameworkBuild),
+        handler: '', // Placeholder, will be set later
+      },
+    });
+
+    feedback.prebuild.info('Pre-build completed successfully');
+
     const ctx: BuildContext = {
       production: isProduction ?? BUILD_CONFIG_DEFAULTS.PRODUCTION,
       handler: await resolveHandlers({
         entrypoint: config.build?.entry,
         preset: resolvedPreset,
       }),
+      skipFrameworkBuild: Boolean(options.skipFrameworkBuild),
     };
 
     /** Map of resolved worker paths and their transformed contents ready for bundling */
@@ -45,17 +61,6 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
         await writeFile(path, code, 'utf-8');
       }),
     );
-
-    /* Execute build phases */
-    // Phase 1: Prebuild
-    feedback.prebuild.info('Starting pre-build...');
-
-    const prebuildResult: AzionPrebuildResult = await executePrebuild({
-      buildConfig: buildConfigSetup,
-      ctx,
-    });
-
-    feedback.prebuild.info('Pre-build completed successfully');
 
     // Phase 2: Build
     feedback.build.info('Starting build...');

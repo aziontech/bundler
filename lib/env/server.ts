@@ -113,7 +113,7 @@ async function initializeServer(port: number, workerCode: string) {
 /**
  * Handle server operations: start, restart.
  */
-async function manageServer(workerPath: string | null, port: number) {
+async function manageServer(workerPath: string | null, port: number, skipFrameworkBuild = false) {
   try {
     if (currentServer) {
       await currentServer.close();
@@ -121,7 +121,7 @@ async function manageServer(workerPath: string | null, port: number) {
 
     const {
       setup: { entry },
-    } = await buildCommand({ production: false });
+    } = await buildCommand({ production: false, skipFrameworkBuild });
 
     let workerCode;
     try {
@@ -193,13 +193,13 @@ async function handleFileChange(path: string, workerPath: string | null, port: n
 /**
  * Entry point function to start the server and watch for file changes.
  */
-async function startServer(workerPath: string | null, port: number) {
+async function startServer(workerPath: string | null, port: number, skipFrameworkBuild = false) {
   const IsPortInUse = await checkPortAvailability(port);
   if (IsPortInUse) {
     feedback.server.error(`Port ${port} is in use. Please choose another port.`);
     process.exit(1);
   }
-  await manageServer(workerPath, port);
+  await manageServer(workerPath, port, skipFrameworkBuild);
 
   const watcher = chokidar.watch('./', {
     persistent: true,

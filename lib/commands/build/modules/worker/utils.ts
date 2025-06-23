@@ -3,7 +3,7 @@ import { BuildEntryPoint } from 'azion/config';
 // Constants
 export const WORKER_MESSAGES = {
   LEGACY_DEPRECATION:
-    'DEPRECATED: Migrate to → export default { fetch: (request, env, ctx) => {...} }',
+    'DEPRECATED: Migrate handler to → export default { fetch: (request, env, ctx) => {...} }',
   UNSUPPORTED_PATTERN: `Unsupported export pattern.
 
 Supported patterns:
@@ -126,6 +126,48 @@ export const isLegacyPattern = (code: string): boolean => {
   return true;
 };
 
+/**
+ * Detects handler pattern by analyzing the actual module exports
+ */
+export const getHandlerPatternFromModule = async (filePath: string): Promise<string> => {
+  try {
+    // Dynamic import to analyze the module
+    const module = await import(filePath);
+
+    // Check for Service Worker pattern (addEventListener usage)
+    if (typeof module.default === 'undefined' && !module.fetch && !module.firewall) {
+      // Likely has addEventListener calls
+      return 'serviceWorker';
+    }
+
+    // Check for ES Modules pattern (object with fetch/firewall)
+    if (
+      module.default &&
+      typeof module.default === 'object' &&
+      (module.default.fetch || module.default.firewall)
+    ) {
+      return 'ESModules';
+    }
+
+    // Check for legacy pattern (any other default export)
+    if (module.default) {
+      return 'legacy';
+    }
+
+    return 'unsupported';
+  } catch (error) {
+    // Fallback to regex-based detection if import fails
+    const fs = await import('fs/promises');
+    const code = await fs.readFile(filePath, 'utf-8');
+
+    if (isServiceWorkerPattern(code)) return 'serviceWorker';
+    if (isESModulesPattern(code)) return 'ESModules';
+    if (isLegacyPattern(code)) return 'legacy';
+
+    return 'unsupported';
+  }
+};
+
 export const normalizeEntryPointPaths = (entry: BuildEntryPoint): string[] => {
   if (typeof entry === 'string') return [entry];
   if (Array.isArray(entry)) return entry;
@@ -139,4 +181,5 @@ export default {
   isServiceWorkerPattern,
   isESModulesPattern,
   isLegacyPattern,
+  getHandlerPatternFromModule,
 };
