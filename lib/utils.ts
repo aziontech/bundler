@@ -1,29 +1,102 @@
-import { readdirSync, unlinkSync } from 'fs';
+import { unlinkSync } from 'fs';
 import { join } from 'path';
 import { readFile, writeFile, access } from 'fs/promises';
 import { constants } from 'fs';
 import { DIRECTORIES } from '#constants';
+import { readStore, writeStore } from '#env';
 
 /**
- * @function
+ * @function markForCleanup
  *
- * @description Removes all temporary files that start with 'azion-' and end with '.temp.js' or '.temp.ts'.
+ * @description Marks a file for automatic cleanup by storing its path in the global bundler store.
+ * Files marked with this function will be automatically removed when the bundler process exits
+ * or when cleanup operations are executed.
+ *
+ * **How it works:**
+ * - Adds the file path to `store.tempFiles[]` array in the global store
+ * - Store persists in `.azion-bundler.json` in the temporary directory
+ * - Files are cleaned up by `removeAzionTempFiles()` during process exit or manual cleanup
+ *
+ * **Use cases:**
+ * - Mark temporary build artifacts for cleanup
+ * - Track generated files that should not persist between builds
+ * - Ensure temporary files are cleaned up even if process crashes
+ *
+ * **Safety:**
+ * - Fails silently to avoid breaking the build process
+ * - Only tracks unique file paths (no duplicates)
+ * - Does not immediately delete files, only marks them for later cleanup
+ *
+ * @param filePath - Absolute path to the file that should be cleaned up later
+ *
  * @example
+ * ```typescript
+ * // Mark a temporary build file for cleanup
+ * await markForCleanup('/tmp/azion-worker-123.temp.js');
  *
- * // Example usage:
- * removeAzionTempFiles();
- * // Removes files like: 'azion-123456.temp.js', 'azion-build.temp.ts'
+ * // Files will be automatically cleaned up when:
+ * // 1. Process exits normally
+ * // 2. Process receives SIGINT/SIGTERM
+ * // 3. removeAzionTempFiles() is called manually
+ * ```
  */
-function removeAzionTempFiles() {
-  const directory = process.cwd();
-  const tempFiles = readdirSync(directory).filter(
-    (file) => file.startsWith('azion-') && (file.endsWith('.temp.js') || file.endsWith('.temp.ts')),
-  );
+async function markForCleanup(filePath: string): Promise<void> {
+  try {
+    const store = await readStore();
+    const tempFiles = store.tempFiles || [];
 
-  tempFiles.forEach((file) => {
-    const filePath = join(directory, file);
-    unlinkSync(filePath);
-  });
+    if (!tempFiles.includes(filePath)) {
+      tempFiles.push(filePath);
+      await writeStore({ ...store, tempFiles });
+    }
+  } catch (error) {
+    // Silently fail - temp file registration shouldn't break the build
+    debug.warn('Failed to register temp file:', filePath);
+  }
+}
+
+/**
+ * @function executeCleanup
+ *
+ * @description Executes cleanup of all temporary files that were marked using markForCleanup().
+ * Only removes files that were explicitly marked during the build process, ensuring safe cleanup.
+ *
+ * **How it works:**
+ * - Reads the `tempFiles[]` array from the global bundler store
+ * - Attempts to delete each file in the list
+ * - Clears the tempFiles list from store after cleanup
+ * - Fails silently on individual file errors to prevent build interruption
+ *
+ * **When it's called:**
+ * - Automatically during process exit (SIGINT, SIGTERM, etc.)
+ * - Manually at the end of build process
+ * - Via `azion store destroy` command
+ *
+ * @example
+ * ```typescript
+ * // Execute cleanup of all marked files
+ * await executeCleanup();
+ *
+ * // This will remove all files previously marked with:
+ * // await markForCleanup('/path/to/temp/file.js');
+ * ```
+ */
+async function executeCleanup(): Promise<void> {
+  try {
+    const store = await readStore('global');
+    const tempFiles = store.tempFiles || [];
+
+    tempFiles.forEach((filePath) => {
+      try {
+        unlinkSync(filePath);
+      } catch (error) {
+        debug.warn('Failed to remove temp file:', filePath);
+      }
+    });
+    await writeStore({ ...store, tempFiles: [] });
+  } catch (error) {
+    debug.warn('Failed to clean temp files from store:', error);
+  }
 }
 
 /**
@@ -111,4 +184,4 @@ async function copyEnvVars(): Promise<void> {
   }
 }
 
-export { removeAzionTempFiles, generateTimestamp, debug, copyEnvVars };
+export { executeCleanup, generateTimestamp, debug, copyEnvVars, markForCleanup };

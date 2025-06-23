@@ -21,6 +21,8 @@ import { DOCS_MESSAGE } from '../constants';
  * the settings defined in the build without having to pass arguments
  */
 export interface BundlerStore {
+  /** List of temporary files created during build process for cleanup */
+  tempFiles?: string[];
   [key: string]: unknown;
 }
 

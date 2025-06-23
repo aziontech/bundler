@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 import { Command } from 'commander';
 import { satisfies } from 'semver';
-import { removeAzionTempFiles, debug } from '#utils';
+import { executeCleanup, debug } from '#utils';
 import { feedback } from 'azion/utils/node';
 import { BUNDLER } from '#constants';
 import { createHash } from 'crypto';
@@ -62,31 +62,31 @@ async function getBundlerEnvironment(): Promise<BundlerGlobals> {
  * Sets up event handlers for cleanup and error handling.
  */
 function setupBundlerProcessHandlers() {
-  process.on('exit', removeAzionTempFiles);
+  process.on('exit', executeCleanup);
   process.on('SIGINT', () => {
-    removeAzionTempFiles();
+    executeCleanup();
     process.exit(0);
   });
   process.on('SIGTERM', () => {
-    removeAzionTempFiles();
+    executeCleanup();
     process.exit(0);
   });
   process.on('SIGHUP', () => {
-    removeAzionTempFiles();
+    executeCleanup();
     process.exit(0);
   });
   process.on('SIGBREAK', () => {
-    removeAzionTempFiles();
+    executeCleanup();
     process.exit(0);
   });
   process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
-    removeAzionTempFiles();
+    executeCleanup();
     process.exit(1);
   });
   process.on('unhandledRejection', (reason) => {
     console.error('Unhandled Promise Rejection:', reason);
-    removeAzionTempFiles();
+    executeCleanup();
     process.exit(1);
   });
 }
