@@ -7,14 +7,15 @@ import {
   isServiceWorkerPattern,
   isESModulesPattern,
   isLegacyPattern,
+  getHandlerPatternFromModule,
   WORKER_MESSAGES,
 } from './utils';
 import { feedback } from 'azion/utils/node';
 
 /**
- * Gets the handler pattern used in the code
+ * Gets the handler pattern used in the code (fallback for when module import fails)
  */
-const getHandlerPattern = (code: string) => {
+const getHandlerPatternFromCode = (code: string) => {
   if (isServiceWorkerPattern(code)) {
     return 'serviceWorker';
   }
@@ -33,16 +34,22 @@ const getHandlerPattern = (code: string) => {
 /**
  * Processes worker code based on pattern and environment
  */
-const processWorkerCode = (
+const processWorkerCode = async (
   originalCode: string,
   handlerPath: string,
   isProduction: boolean,
-): string => {
-  const pattern = getHandlerPattern(originalCode);
+): Promise<string> => {
+  // Try module-based detection first, fallback to regex
+  let pattern: string;
+  try {
+    pattern = await getHandlerPatternFromModule(handlerPath);
+  } catch {
+    pattern = getHandlerPatternFromCode(originalCode);
+  }
 
   switch (pattern) {
     case 'serviceWorker':
-      return originalCode; // Always use original
+      return originalCode;
 
     case 'ESModules':
       return isProduction
@@ -85,7 +92,7 @@ export const setupWorkerCode = async (
         const tempPath = Object.values(entriesPath)[index];
         const originalCode = await fsPromises.readFile(handlerPath, 'utf-8');
 
-        const processedCode = processWorkerCode(originalCode, handlerPath, ctx.production);
+        const processedCode = await processWorkerCode(originalCode, handlerPath, ctx.production);
 
         return [tempPath, processedCode] as const;
       }),
