@@ -16,7 +16,7 @@ import { executePostbuild } from './modules/postbuild';
 import { setEnvironment } from './modules/environment';
 import { setupWorkerCode } from './modules/worker';
 import { resolveHandlers } from './modules/handler';
-import { setupBindings } from './modules/bindings';
+// import { setupBindings } from './modules/bindings';
 import { BuildParams, BuildResult } from './types';
 
 export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
@@ -77,7 +77,8 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     feedback.postbuild.success('Post-build completed successfully');
 
     // Phase 4: Set Bindings
-    await setupBindings({ config });
+    // TODO: Uncomment after migrating Azion Lib to the API V4
+    // await setupBindings({ config });
 
     // Phase 5: Setup Storage
     // TODO: Uncomment after migrating presets to the new storage system
