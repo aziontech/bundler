@@ -1,3 +1,10 @@
+## [5.2.0-stage.13](https://github.com/aziontech/bundler/compare/v5.2.0-stage.12...v5.2.0-stage.13) (2025-06-23)
+
+
+### Bug Fixes
+
+* revert API V4 features (azion lib) ([1fca897](https://github.com/aziontech/bundler/commit/1fca89783ea55284bee2829d8935b7f7100e967d))
+
 ## [5.2.0-stage.12](https://github.com/aziontech/bundler/compare/v5.2.0-stage.11...v5.2.0-stage.12) (2025-06-23)
 
 
