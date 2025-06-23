@@ -1,11 +1,6 @@
 import { dirname } from 'path';
 import { mkdir, writeFile } from 'fs/promises';
-import type {
-  AzionPrebuildResult,
-  AzionConfig,
-  BuildContext,
-  BuildConfiguration,
-} from 'azion/config';
+import type { AzionPrebuildResult, BuildContext } from 'azion/config';
 import { debug, removeAzionTempFiles, copyEnvVars } from '#utils';
 import { BUILD_CONFIG_DEFAULTS, DOCS_MESSAGE } from '#constants';
 import { feedback } from 'azion/utils/node';
@@ -22,22 +17,7 @@ import { setEnvironment } from './modules/environment';
 import { setupWorkerCode } from './modules/worker';
 import { resolveHandlers } from './modules/handler';
 import { setupBindings } from './modules/bindings';
-// import { setupStorage } from './modules/storage';
-
-interface BuildOptions {
-  production?: boolean;
-}
-
-interface BuildResult {
-  config: AzionConfig;
-  ctx: BuildContext;
-  setup: BuildConfiguration;
-}
-
-interface BuildParams {
-  config: AzionConfig;
-  options: BuildOptions;
-}
+import { BuildParams, BuildResult } from './types';
 
 export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
   try {

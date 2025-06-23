@@ -74,7 +74,6 @@ import type { AzionConfig } from 'azion/config';
  * ef config update \
  *   -k "build.preset" -v "typescript" \
  *   -k "build.polyfills" -v "false" \
- *   -k "build.worker" -v "true"
  *
  * # Update complex nested structures
  * ef config update -k "edgeApplications[0].rules.request[0].behavior" -v '{"bypassCache": true, "deliver": true}'
