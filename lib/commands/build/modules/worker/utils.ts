@@ -1,59 +1,129 @@
 import { BuildEntryPoint } from 'azion/config';
 
+// Constants
+export const WORKER_MESSAGES = {
+  LEGACY_DEPRECATION:
+    'DEPRECATED: Migrate to → export default { fetch: (request, env, ctx) => {...} }',
+  UNSUPPORTED_PATTERN: `Unsupported export pattern.
+
+Supported patterns:
+
+- Service Worker Pattern:
+addEventListener('fetch', (event) => {
+  event.respondWith(handleRequest(event.request));
+});
+
+- ES Modules Pattern:
+export default {
+  fetch: (request, env, ctx) => {
+    return new Response('Hello World');
+  },
+  firewall: (request, env, ctx) => {
+    return new Response('Hello World');
+  }
+};`,
+};
+
+/**
+ * Detects if the source code uses Service Worker pattern (addEventListener)
+ * Ignores commented lines
+ */
+export const isServiceWorkerPattern = (code: string): boolean => {
+  const lines = code.split('\n');
+  const addEventListenerRegex = /addEventListener\s*\(\s*['"`](fetch|firewall)['"`]\s*,/;
+
+  return lines.some((line) => {
+    const trimmedLine = line.trim();
+    // Ignore commented lines
+    if (trimmedLine.startsWith('//') || trimmedLine.startsWith('/*')) {
+      return false;
+    }
+    return addEventListenerRegex.test(line);
+  });
+};
+
+/**
+ * Generates addEventListener wrapper for object exports: export default { fetch, firewall }
+ */
 export const generateWorkerEventHandler = (entrypointPath: string): string => {
   return `
-import entrypoint from '${entrypointPath}';
+import module from '${entrypointPath}';
 
-// Handle the case where import returns a function directly
-const module = typeof entrypoint === 'function' 
-  ? { default: entrypoint } 
-  : entrypoint;
+// Object export pattern: export default { fetch, firewall }
+const handlers = module;
+const firewallHandler = handlers.firewall;
+const fetchHandler = handlers.fetch;
 
-// Check standard handlers first
-const hasFirewallHandler = module.firewall || (module.default && module.default.firewall);
-
-// Detect if the module exports a function directly (legacy)
-const isLegacyDefaultFunction = typeof module.default === 'function';
-
-let eventType = 'fetch';
-let handler;
-
-if (hasFirewallHandler) {
-  eventType = 'firewall';
-  handler = module.firewall || module.default.firewall;
-} else if (isLegacyDefaultFunction) {
-  // Legacy case: function exported directly as default
-  handler = module.default;
-  } else {
-  // Normal case: look for fetch handler
-  handler = module.fetch || (module.default && module.default.fetch);
+if (firewallHandler) {
+  addEventListener('firewall', (event) => {
+    (async () => {
+      const request = event.request;
+      const env = {};
+      const ctx = { waitUntil: event.waitUntil?.bind(event) };
+      
+      await firewallHandler(request, env, ctx);
+    })().catch(console.error);
+  });
 }
 
-if (!handler) {
-  throw new Error("Handler not found in module");
-}
-
-addEventListener(eventType, (event) => {
-  if (eventType === 'fetch' && !hasFirewallHandler) {
-    event.respondWith((async function() {
-      try {
-        return handler(event);
-      } catch (error) {
-        return new Response(\`Error: \${error.message}\`, { status: 500 });
-      }
+if (fetchHandler) {
+  addEventListener('fetch', (event) => {
+    event.respondWith((async () => {
+      const request = event.request;
+      const env = {};
+      const ctx = { waitUntil: event.waitUntil?.bind(event) };
+      
+      return await fetchHandler(request, env, ctx);
     })());
-  } 
-  else {
-    (async function() {
-      try {
-        return handler(event);
-      } catch (error) {
-        return new Response(\`Error: \${error.message}\`, { status: 500 });
-      }
-    })();
-  }
+  });
+} else if (!firewallHandler) {
+  throw new Error("No fetch handler found in default export object.");
+}
+`;
+};
+
+/**
+ * Generates addEventListener wrapper for legacy pattern: export default function
+ */
+export const generateLegacyWrapper = (entrypointPath: string): string => {
+  return `
+import handler from '${entrypointPath}';
+
+// Legacy pattern wrapper: export default function → addEventListener
+addEventListener('fetch', (event) => {
+  event.respondWith((async () => {
+    return await handler(event);
+  })());
 });
 `;
+};
+
+/**
+ * Detects if code uses ES Modules pattern: export default { fetch, firewall }
+ */
+export const isESModulesPattern = (code: string): boolean => {
+  return /export\s+default\s*\{[\s\S]*fetch[\s\S]*\}/.test(code);
+};
+
+/**
+ * Detects if code uses legacy pattern (any export default that is not an object)
+ * Examples: export default main, export default function(){}, export default () => {}
+ */
+export const isLegacyPattern = (code: string): boolean => {
+  // Check if there's an export default
+  const hasExportDefault = /export\s+default\s+/.test(code);
+
+  if (!hasExportDefault) {
+    return false;
+  }
+
+  // If it's an ES Modules pattern, it's not legacy
+  if (isESModulesPattern(code)) {
+    return false;
+  }
+
+  // If it has export default but not ES Modules pattern, it's legacy
+  return true;
 };
 
 export const normalizeEntryPointPaths = (entry: BuildEntryPoint): string[] => {
@@ -62,4 +132,11 @@ export const normalizeEntryPointPaths = (entry: BuildEntryPoint): string[] => {
   return Object.values(entry);
 };
 
-export default { generateWorkerEventHandler, normalizeEntryPointPaths };
+export default {
+  generateWorkerEventHandler,
+  generateLegacyWrapper,
+  normalizeEntryPointPaths,
+  isServiceWorkerPattern,
+  isESModulesPattern,
+  isLegacyPattern,
+};

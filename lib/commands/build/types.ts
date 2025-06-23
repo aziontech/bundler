@@ -1,4 +1,4 @@
-import { PresetInput } from 'azion/config';
+import { AzionConfig, BuildConfiguration, BuildContext, PresetInput } from 'azion/config';
 /**
  * Build command options received from CLI
  */
@@ -57,4 +57,19 @@ export interface PresetValueOptions {
   fileValue?: PresetInput;
   storeValue?: PresetInput;
   defaultValue?: string;
+}
+export interface BuildOptions {
+  production?: boolean;
+  skipFrameworkBuild?: boolean;
+}
+
+export interface BuildResult {
+  config: AzionConfig;
+  ctx: BuildContext;
+  setup: BuildConfiguration;
+}
+
+export interface BuildParams {
+  config: AzionConfig;
+  options: BuildOptions;
 }

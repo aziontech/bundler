@@ -1,3 +1,10 @@
+## [5.2.0-stage.11](https://github.com/aziontech/bundler/compare/v5.2.0-stage.10...v5.2.0-stage.11) (2025-06-23)
+
+
+### Features
+
+* runtime esmodules support ([#490](https://github.com/aziontech/bundler/issues/490)) ([a2a125b](https://github.com/aziontech/bundler/commit/a2a125b6850493d6458aee0f717506fd5bbf8734))
+
 ## [5.2.0-stage.10](https://github.com/aziontech/bundler/compare/v5.2.0-stage.9...v5.2.0-stage.10) (2025-06-06)
 
 
