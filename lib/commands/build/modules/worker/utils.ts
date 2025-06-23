@@ -83,6 +83,22 @@ if (fetchHandler) {
 };
 
 /**
+ * Generates addEventListener wrapper for legacy pattern: export default function
+ */
+export const generateLegacyWrapper = (entrypointPath: string): string => {
+  return `
+import handler from '${entrypointPath}';
+
+// Legacy pattern wrapper: export default function → addEventListener
+addEventListener('fetch', (event) => {
+  event.respondWith((async () => {
+    return await handler(event);
+  })());
+});
+`;
+};
+
+/**
  * Detects if code uses ES Modules pattern: export default { fetch, firewall }
  */
 export const isESModulesPattern = (code: string): boolean => {
@@ -118,6 +134,7 @@ export const normalizeEntryPointPaths = (entry: BuildEntryPoint): string[] => {
 
 export default {
   generateWorkerEventHandler,
+  generateLegacyWrapper,
   normalizeEntryPointPaths,
   isServiceWorkerPattern,
   isESModulesPattern,

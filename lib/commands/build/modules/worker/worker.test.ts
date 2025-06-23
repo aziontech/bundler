@@ -104,9 +104,7 @@ describe('setupWorkerCode', () => {
     expect(result['/tmp/api.js']).toContain(`new Response('api esm')`);
   });
 
-  it('should handle legacy pattern with deprecation warning', async () => {
-    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-
+  it('should handle legacy pattern with wrapper generation', async () => {
     // Mock legacy pattern
     spyReadFile.mockImplementation(() =>
       Promise.resolve(`export default function handler() { return new Response('legacy'); }`),
@@ -114,12 +112,10 @@ describe('setupWorkerCode', () => {
 
     const result = await setupWorkerCode(mockBuildConfig, mockContext);
 
-    expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining('DEPRECATED: export default (non-object)'),
-    );
-    expect(result['/tmp/worker.js']).toContain('export default function handler()');
-
-    consoleWarnSpy.mockRestore();
+    // Legacy should be wrapped with addEventListener
+    expect(result['/tmp/worker.js']).toContain('import handler from');
+    expect(result['/tmp/worker.js']).toContain("addEventListener('fetch'");
+    expect(result['/tmp/worker.js']).toContain('event.respondWith');
   });
 
   it('should throw error when setup fails', async () => {

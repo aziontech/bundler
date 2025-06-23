@@ -2,6 +2,7 @@ import fsPromises from 'fs/promises';
 import type { BuildConfiguration, BuildContext } from 'azion/config';
 import {
   generateWorkerEventHandler,
+  generateLegacyWrapper,
   normalizeEntryPointPaths,
   isServiceWorkerPattern,
   isESModulesPattern,
@@ -50,7 +51,7 @@ const processWorkerCode = (
 
     case 'legacy':
       feedback.build.warn(WORKER_MESSAGES.LEGACY_DEPRECATION);
-      return originalCode;
+      return generateLegacyWrapper(handlerPath); // Always wrap legacy with addEventListener
 
     case 'unsupported':
     default:
