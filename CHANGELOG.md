@@ -1,3 +1,10 @@
+## [5.2.0-stage.12](https://github.com/aziontech/bundler/compare/v5.2.0-stage.11...v5.2.0-stage.12) (2025-06-23)
+
+
+### Features
+
+* add preset openenxtjs ([#489](https://github.com/aziontech/bundler/issues/489)) ([4a7cd9d](https://github.com/aziontech/bundler/commit/4a7cd9d3fdd923830931fcbd6b997369381cbccb))
+
 ## [5.2.0-stage.11](https://github.com/aziontech/bundler/compare/v5.2.0-stage.10...v5.2.0-stage.11) (2025-06-23)
 
 
