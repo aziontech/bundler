@@ -8,9 +8,9 @@ import {
   isESModulesPattern,
   isLegacyPattern,
   getHandlerPatternFromModule,
-  WORKER_MESSAGES,
 } from './utils';
 import { feedback } from 'azion/utils/node';
+import { WORKER_MESSAGES } from './constants';
 
 /**
  * Gets the handler pattern used in the code (fallback for when module import fails)
@@ -54,7 +54,7 @@ const processWorkerCode = async (
     case 'ESModules':
       return isProduction
         ? originalCode // Production: native ESM support
-        : generateWorkerEventHandler(handlerPath); // Development: addEventListener wrapper
+        : await generateWorkerEventHandler(handlerPath); // Development: addEventListener wrapper
 
     case 'legacy':
       feedback.build.warn(WORKER_MESSAGES.LEGACY_DEPRECATION);
