@@ -1,3 +1,10 @@
+## [5.2.0-stage.14](https://github.com/aziontech/bundler/compare/v5.2.0-stage.13...v5.2.0-stage.14) (2025-06-24)
+
+
+### Bug Fixes
+
+* relative imports for subfolder entrypoint ([#492](https://github.com/aziontech/bundler/issues/492)) ([1a50d58](https://github.com/aziontech/bundler/commit/1a50d5899337b9c51417f6ff88db0f00931519f4))
+
 ## [5.2.0-stage.13](https://github.com/aziontech/bundler/compare/v5.2.0-stage.12...v5.2.0-stage.13) (2025-06-23)
 
 
