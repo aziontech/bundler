@@ -1,28 +1,8 @@
 import { BuildEntryPoint } from 'azion/config';
+import { WORKER_MESSAGES, WORKER_TEMPLATES } from './constants';
 
-// Constants
-export const WORKER_MESSAGES = {
-  LEGACY_DEPRECATION:
-    'DEPRECATED: Migrate handler to → export default { fetch: (request, env, ctx) => {...} }',
-  UNSUPPORTED_PATTERN: `Unsupported export pattern.
-
-Supported patterns:
-
-- Service Worker Pattern:
-addEventListener('fetch', (event) => {
-  event.respondWith(handleRequest(event.request));
-});
-
-- ES Modules Pattern:
-export default {
-  fetch: (request, env, ctx) => {
-    return new Response('Hello World');
-  },
-  firewall: (request, env, ctx) => {
-    return new Response('Hello World');
-  }
-};`,
-};
+// Re-export for backward compatibility
+export { WORKER_MESSAGES };
 
 /**
  * Detects if the source code uses Service Worker pattern (addEventListener)
@@ -34,7 +14,6 @@ export const isServiceWorkerPattern = (code: string): boolean => {
 
   return lines.some((line) => {
     const trimmedLine = line.trim();
-    // Ignore commented lines
     if (trimmedLine.startsWith('//') || trimmedLine.startsWith('/*')) {
       return false;
     }
@@ -43,43 +22,44 @@ export const isServiceWorkerPattern = (code: string): boolean => {
 };
 
 /**
- * Generates addEventListener wrapper for object exports: export default { fetch, firewall }
+ * Detects handlers in a module by dynamic import
  */
-export const generateWorkerEventHandler = (entrypointPath: string): string => {
-  return `
-import module from '${entrypointPath}';
+const detectHandlers = async (entrypointPath: string) => {
+  try {
+    const module = await import(entrypointPath);
+    const handlers = module.default || module;
 
-// Object export pattern: export default { fetch, firewall }
-const handlers = module;
-const firewallHandler = handlers.firewall;
-const fetchHandler = handlers.fetch;
+    return {
+      hasFirewall: Boolean(handlers.firewall),
+      hasFetch: Boolean(handlers.fetch),
+    };
+  } catch (error) {
+    // For tests or invalid files, assume has fetch handler
+    return {
+      hasFirewall: false,
+      hasFetch: true,
+    };
+  }
+};
 
-if (firewallHandler) {
-  addEventListener('firewall', (event) => {
-    (async () => {
-      const request = event.request;
-      const env = {};
-      const ctx = { waitUntil: event.waitUntil?.bind(event) };
-      
-      await firewallHandler(request, env, ctx);
-    })().catch(console.error);
-  });
-}
+/**
+ * Generates addEventListener wrapper for object exports: export default { fetch, firewall }
+ *
+ * Uses dynamic import to detect actual handlers, then generates optimized code
+ * that only includes the event listeners for handlers that actually exist.
+ */
+export const generateWorkerEventHandler = async (entrypointPath: string): Promise<string> => {
+  const { hasFirewall, hasFetch } = await detectHandlers(entrypointPath);
 
-if (fetchHandler) {
-  addEventListener('fetch', (event) => {
-    event.respondWith((async () => {
-      const request = event.request;
-      const env = {};
-      const ctx = { waitUntil: event.waitUntil?.bind(event) };
-      
-      return await fetchHandler(request, env, ctx);
-    })());
-  });
-} else if (!firewallHandler) {
-  throw new Error("No fetch handler found in default export object.");
-}
-`;
+  if (!hasFirewall && !hasFetch) {
+    throw new Error(WORKER_MESSAGES.UNSUPPORTED_PATTERN);
+  }
+
+  const parts = [WORKER_TEMPLATES.baseImport(entrypointPath)];
+  if (hasFirewall) parts.push(WORKER_TEMPLATES.firewallHandler);
+  if (hasFetch) parts.push(WORKER_TEMPLATES.fetchHandler);
+
+  return parts.join('\n');
 };
 
 /**

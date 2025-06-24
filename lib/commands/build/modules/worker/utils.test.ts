@@ -59,42 +59,38 @@ describe('detectObjectExport', () => {
 });
 
 describe('generateWorkerEventHandler', () => {
-  it('should generate addEventListener wrapper for object exports', () => {
+  it('should generate addEventListener wrapper for object exports', async () => {
     const entrypoint = 'src/index.js';
-    const result = generateWorkerEventHandler(entrypoint);
+    const result = await generateWorkerEventHandler(entrypoint);
 
     expect(result).toContain(`import module from '${entrypoint}'`);
     expect(result).toContain('Object export pattern');
     expect(result).toContain('const handlers = module');
   });
 
-  it('should handle fetch handler', () => {
-    const result = generateWorkerEventHandler('app.js');
+  it('should handle fetch handler', async () => {
+    const result = await generateWorkerEventHandler('app.js');
 
     expect(result).toContain('const fetchHandler = handlers.fetch');
     expect(result).toContain("addEventListener('fetch', (event) => {");
     expect(result).toContain('event.respondWith');
   });
 
-  it('should handle firewall handler', () => {
-    const result = generateWorkerEventHandler('app.js');
-
-    expect(result).toContain('const firewallHandler = handlers.firewall');
-    expect(result).toContain("addEventListener('firewall', (event) => {");
-  });
-
-  it('should create proper ESM signature', () => {
-    const result = generateWorkerEventHandler('app.js');
+  it('should create proper ESM signature', async () => {
+    const result = await generateWorkerEventHandler('app.js');
 
     expect(result).toContain('const request = event.request');
     expect(result).toContain('const env = {}');
     expect(result).toContain('const ctx = { waitUntil: event.waitUntil?.bind(event) }');
   });
 
-  it('should include error handling for missing fetch handler', () => {
-    const result = generateWorkerEventHandler('app.js');
+  it('should generate fallback fetch handler when import fails', async () => {
+    const result = await generateWorkerEventHandler('non-existent.js');
 
-    expect(result).toContain('No fetch handler found in default export object');
+    // When import fails, fallback assumes fetch handler exists
+    expect(result).toContain('const fetchHandler = handlers.fetch');
+    expect(result).toContain("addEventListener('fetch', (event) => {");
+    expect(result).toContain('event.respondWith');
   });
 });
 

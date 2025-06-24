@@ -1,7 +1,7 @@
 import { dirname } from 'path';
 import { mkdir, writeFile } from 'fs/promises';
 import type { AzionPrebuildResult, BuildContext } from 'azion/config';
-import { debug, removeAzionTempFiles, copyEnvVars } from '#utils';
+import { debug, copyEnvVars, executeCleanup, markForCleanup } from '#utils';
 import { BUILD_CONFIG_DEFAULTS, DOCS_MESSAGE } from '#constants';
 import { feedback } from 'azion/utils/node';
 
@@ -59,6 +59,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       Object.entries(workerEntries).map(async ([path, code]) => {
         await mkdir(dirname(path), { recursive: true });
         await writeFile(path, code, 'utf-8');
+        await markForCleanup(path);
       }),
     );
 
@@ -70,6 +71,8 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       ctx,
     });
     feedback.build.success('Build completed successfully');
+
+    await executeCleanup();
 
     // Phase 3: Postbuild
     feedback.postbuild.info('Starting post-build...');
@@ -92,7 +95,6 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       ctx,
     });
 
-    removeAzionTempFiles();
     await copyEnvVars();
 
     return {

@@ -38,7 +38,7 @@ export const createPathEntriesMap = async ({
 
     // Temporary file
     const tempFileName = `azion-${base}-${timestamp}.temp.${ext}`;
-    const tempPath = resolve(process.cwd(), tempFileName);
+    const tempPath = resolve(dir, tempFileName);
 
     // When using webpack as bundler, we need to explicitly add .js extension
     const finalExt = bundler === 'webpack' ? '.js' : '';
