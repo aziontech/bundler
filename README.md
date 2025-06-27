@@ -238,30 +238,25 @@ While these hooks are pre-configured in framework presets, you can customize the
 ```typescript
 import { defineConfig } from 'azion';
 import type { AzionPrebuildResult, AzionConfig } from 'azion/config';
-import { Next } from 'azion/presets';
+import { emscripten } from 'azion/presets';
 
 export default defineConfig({
   build: {
+    extend: (config) => {
+      config.define = {
+        ...config.define,
+        'global.customFeature': 'JSON.stringify(true)',
+        'process.env.CUSTOM_VAR': 'JSON.stringify("value")'
+      }
+      return config
+    },
     preset: {
-      ...Next,
-      config: {
-        ...Next.config,
-        bundler: 'esbuild',
-        extend: (config) => {
-          config.define = {
-            ...config.define,
-            'global.customFeature': 'JSON.stringify(true)',
-            'process.env.CUSTOM_VAR': 'JSON.stringify("value")'
-          }
-          return config
-        }
-      },
+      ...emscripten,
       prebuild: async (config: AzionConfig, ctx: BuildContext): Promise<AzionPrebuildResult> => {
         // Your custom prebuild logic here
         const result = await doSomething();
         return {
           ...result,
-          // Additional prebuild configurations
         }
       }
     }
@@ -271,47 +266,82 @@ export default defineConfig({
 
 ## Build Process Flow
 
-1. **Preset Resolution** (`@modules/preset`)
+1. **Config Validation**
+   - Validates user configuration using `validateConfig`
+   - Ensures configuration schema compliance
+   - Early error detection and user feedback
+
+2. **Dependencies Check**
+   - Verifies required dependencies are installed
+   - Validates build environment requirements
+
+3. **Preset Resolution** (`@modules/preset`)
    - Resolves preset from string name or custom module
    - Loads built-in presets from azion/presets
-   - Validates preset interface
+   - Validates preset interface and metadata
 
-2. **Build Config Setup** (`@modules/config`)
+4. **Build Config Setup** (`@modules/config`)
    - Resolves configuration priorities in the following order:
      1. CLI arguments (highest priority)
      2. User config file (`azion.config.js`)
-     3. Local store settings
-     4. Preset defaults (lowest priority)
+     3. Preset defaults (lowest priority)
    - Sets up bundler configuration
    - Configures build options and extensions
 
-3. **Handler Resolution** (`@modules/handler`)
-   - Resolves entry point/handler from CLI args, preset, or user config (azion.config.js)
-   - Validates file existence
-
-4. **Worker Setup** (`@modules/worker`)
-   - Converts ESM exports to worker format
-   - Injects worker runtime and globals
-   - Sets up event listeners
-
 5. **Prebuild Phase** (`@modules/prebuild`)
    - Executes preset's prebuild hooks
+   - Prepares build environment and dependencies
+   - Framework-specific build preparations
 
-6. **Core Build** (`@modules/core`)
+6. **Handler Resolution** (`@modules/handler`)
+   - Resolves entry point/handler from CLI args, preset, or user config
+   - Validates file existence and accessibility
+   - Supports multiple entry points
+
+7. **Worker Setup** (`@modules/worker`)
+   - Processes handler files and converts to worker-compatible format
+   - Detects handler patterns (ES Modules, Service Worker, Legacy)
+   - Generates appropriate wrappers for development/production
+   - Creates temporary worker files for bundling
+
+8. **Core Build** (`@modules/core`)
    - Processes bundler configuration (esbuild/webpack)
    - Handles file imports and dependencies
    - Applies polyfills and transformations
+   - Generates optimized output
 
-7. **Postbuild Phase** (`@modules/postbuild`)
-   - Executes preset's postbuild hooks
+9. **Cleanup**
+   - Removes temporary files created during build
+   - Cleans up intermediate build artifacts
 
-8. **Environment Setup** (`@modules/environment`)
-   - Creates initial `azion.config.js` from preset if none exists
-   - Merges configurations (user config takes precedence over preset defaults)
-   - Stores build settings locally for development and subsequent builds
+10. **Postbuild Phase** (`@modules/postbuild`)
+    - Executes preset's postbuild hooks
+    - Post-processing optimizations
+    - Asset finalization
+
+11. **Bindings Setup** (`@modules/bindings`) [Future]
+    - Configures Azion platform bindings
+    - Sets up edge functions connections
+    - *Currently in development*
+
+12. **Storage Setup** (`@modules/storage`) [Future]
+    - Configures edge storage connections
+    - Sets up data persistence layers
+    - *Currently in development*
+
+13. **Environment Setup** (`@modules/environment`)
+    - Creates initial `azion.config.js` from preset if none exists
+    - Merges configurations (user config takes precedence over preset defaults)
+    - Stores build settings locally for development and subsequent builds
+
+14. **Environment Variables**
+    - Copies and processes environment variables
+    - Sets up runtime environment context
 
 ## Documentation
 
+- [Handler Patterns](docs/handler-patterns.md)
+- [Node.js APIs](docs/nodejs-apis.md)
 - [Nextjs](docs/nextjs.md)
 - [Rust/Wasm example](https://github.com/aziontech/bundler-examples/tree/main/examples/rust-wasm-yew-ssr/)
 - [Emscripten/Wasm example](https://github.com/aziontech/bundler-examples/tree/main/examples/emscripten-wasm/)
@@ -338,7 +368,7 @@ Table:
 | Next Static                          | ✅      |
 | Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ✅      |
-| Vue Vite Static                      | ⚠️     |
+| Vue Vite Static                      | ⚠️      |
 | Next 12 Static                       | ✅      |
 | Astro Static                         | ✅      |
 | Qwik Static                          | ✅      |
