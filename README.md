@@ -368,31 +368,31 @@ Table:
 | Next Static                          | ✅      |
 | Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ✅      |
-| Vue Vite Static                      | ⚠️      |
+| Vue Vite Static                      | ✅      |
 | Next 12 Static                       | ✅      |
 | Astro Static                         | ✅      |
 | Qwik Static                          | ✅      |
-| Eleventy Static                      | ✅      |
 | Simple Js Env Vars                   | ✅      |
-| React Static                         | ✅      |
-| Angular Static                       | ✅      |
-| Svelte Static                        | ✅      |
-| Preact Static                        | ✅      |
-| Stencil Static                       | ✅      |
+| Eleventy Static                      | ✅      |
 | Simple Js Network List               | ✅      |
+| Angular Static                       | ✅      |
+| React Static                         | ✅      |
+| Svelte Static                        | ✅      |
+| Stencil Static                       | ✅      |
 | Vitepress Static                     | ✅      |
+| Preact Static                        | ✅      |
 | Vuepress Static                      | ✅      |
 | Nuxt Static                          | ✅      |
 | Docusaurus Static                    | ✅      |
 | Simple Js Firewall Event             | ✅      |
-| Jekyll Static                        | ✅      |
 | Simple Js Network List With Firewall | ✅      |
+| Jekyll Static                        | ✅      |
 | Simple Js Esm Worker                 | ✅      |
 | Simple Js Esm Node                   | ✅      |
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 04/20/25 04:04:26 AM
+Last test run date: 06/27/25 03:58:47 AM
 
 ## Contributing
 
