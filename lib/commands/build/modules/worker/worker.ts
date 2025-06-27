@@ -52,9 +52,10 @@ const processWorkerCode = async (
       return originalCode;
 
     case 'ESModules':
-      return isProduction
-        ? originalCode // Production: native ESM support
-        : await generateWorkerEventHandler(handlerPath); // Development: addEventListener wrapper
+      if (isProduction) {
+        return originalCode; // Production: native ESM support
+      }
+      return await generateWorkerEventHandler(handlerPath); // Development: addEventListener wrapper
 
     case 'legacy':
       feedback.build.warn(WORKER_MESSAGES.LEGACY_DEPRECATION);
@@ -62,7 +63,10 @@ const processWorkerCode = async (
 
     case 'unsupported':
     default:
-      throw new Error(WORKER_MESSAGES.UNSUPPORTED_PATTERN);
+      // For unsupported patterns, use original code and warn the user
+      feedback.build.warn(WORKER_MESSAGES.UNSUPPORTED_PATTERN_DETECTED);
+      feedback.build.info(WORKER_MESSAGES.UNSUPPORTED_PATTERN_SUGGESTIONS);
+      return originalCode; // Use original code in both prod and dev
   }
 };
 

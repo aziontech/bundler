@@ -2,24 +2,9 @@
 export const WORKER_MESSAGES = {
   LEGACY_DEPRECATION:
     'DEPRECATED: Migrate handler to → export default { fetch: (request, env, ctx) => {...} }',
-  UNSUPPORTED_PATTERN: `unsupported export pattern.
-
-Supported patterns:
-
-- Service Worker Pattern:
-addEventListener('fetch', (event) => {
-  event.respondWith(handleRequest(event.request));
-});
-
-- ES Modules Pattern:
-export default {
-  fetch: (request, env, ctx) => {
-    return new Response('Hello World');
-  },
-  firewall: (request, env, ctx) => {
-    return new Response('Hello World');
-  }
-};`,
+  UNSUPPORTED_PATTERN_DETECTED:
+    'Unsupported handler pattern detected. Generating Service Worker wrapper as fallback.',
+  UNSUPPORTED_PATTERN_SUGGESTIONS: `Consider updating your handler to use ES Modules pattern.`,
 };
 
 // Templates for code generation
