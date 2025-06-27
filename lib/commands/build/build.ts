@@ -1,6 +1,6 @@
 import { dirname } from 'path';
 import { mkdir, writeFile } from 'fs/promises';
-import type { AzionPrebuildResult, BuildContext } from 'azion/config';
+import { validateConfig, type AzionPrebuildResult, type BuildContext } from 'azion/config';
 import { debug, copyEnvVars, executeCleanup, markForCleanup } from '#utils';
 import { BUILD_CONFIG_DEFAULTS, DOCS_MESSAGE } from '#constants';
 import { feedback } from 'azion/utils/node';
@@ -24,7 +24,9 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     const { config, options } = buildParams;
     const isProduction = Boolean(options.production);
 
+    validateConfig(config);
     await checkDependencies();
+
     const resolvedPreset = await resolvePreset(config.build?.preset);
     const buildConfigSetup = await setupBuildConfig(config, resolvedPreset, isProduction);
 
