@@ -1,6 +1,6 @@
 import { readAzionConfig } from '#env';
 import { build } from './build';
-import { AzionConfig } from 'azion/config';
+import { type AzionConfig } from 'azion/config';
 import type { BuildCommandOptions } from './types';
 import { cleanDirectory, resolveConfigPriority } from './utils';
 import { BUILD_CONFIG_DEFAULTS, DIRECTORIES, type BundlerType } from '#constants';
@@ -20,6 +20,7 @@ import { BUILD_CONFIG_DEFAULTS, DIRECTORIES, type BundlerType } from '#constants
  */
 export async function buildCommand(options: BuildCommandOptions) {
   const userConfig: AzionConfig = (await readAzionConfig()) || {};
+
   const { build: userBuildConfig } = userConfig;
 
   const resolvedBuildConfig = {

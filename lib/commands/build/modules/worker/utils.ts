@@ -34,7 +34,6 @@ const detectHandlers = async (entrypointPath: string) => {
       hasFetch: Boolean(handlers.fetch),
     };
   } catch (error) {
-    // For tests or invalid files, assume has fetch handler
     return {
       hasFirewall: false,
       hasFetch: true,
@@ -52,7 +51,12 @@ export const generateWorkerEventHandler = async (entrypointPath: string): Promis
   const { hasFirewall, hasFetch } = await detectHandlers(entrypointPath);
 
   if (!hasFirewall && !hasFetch) {
-    throw new Error(WORKER_MESSAGES.UNSUPPORTED_PATTERN);
+    // No handlers found - return a comment explaining this
+    return `// No fetch or firewall handlers found in: ${entrypointPath}
+// The original file will be used as-is in production mode.
+// Consider adding: export default { fetch: (request, env, ctx) => { ... } }
+
+console.warn('No Edge Function handlers found. File will run as-is.');`;
   }
 
   const parts = [WORKER_TEMPLATES.baseImport(entrypointPath)];

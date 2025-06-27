@@ -5,7 +5,7 @@
  */
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
-import type { AzionConfig } from 'azion/config';
+import { type AzionConfig } from 'azion/config';
 
 import fs from 'fs';
 import fsPromises from 'fs/promises';
@@ -157,7 +157,9 @@ export async function readAzionConfig(configPath?: string): Promise<AzionConfig 
       return null;
     }
 
-    return result.config as AzionConfig;
+    const config = result.config as AzionConfig;
+
+    return config;
   } catch (error) {
     if ((error as Error).message.includes('ERR_MODULE_NOT_FOUND')) {
       handleDependencyError(error as Error, configPath || 'azion.config');
@@ -170,6 +172,14 @@ export async function readAzionConfig(configPath?: string): Promise<AzionConfig 
         ?.trim();
 
       feedback.build.error(`${validationError || (error as Error).message}${DOCS_MESSAGE}`);
+      process.exit(1);
+    }
+
+    // Handle ERR_REQUIRE_CYCLE_MODULE error specifically
+    if ((error as Error).message.includes('ERR_REQUIRE_CYCLE_MODULE')) {
+      feedback.build.error(
+        `Circular dependency detected while loading configuration file. This usually happens when using ES modules. Please ensure your configuration file doesn't have circular imports.${DOCS_MESSAGE}`,
+      );
       process.exit(1);
     }
 
