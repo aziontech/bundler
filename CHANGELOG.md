@@ -1,3 +1,11 @@
+## [5.2.0-stage.15](https://github.com/aziontech/bundler/compare/v5.2.0-stage.14...v5.2.0-stage.15) (2025-06-27)
+
+
+### Bug Fixes
+
+* local environment worker ([b6d81aa](https://github.com/aziontech/bundler/commit/b6d81aa15c05f7fee805f42315985ae5bbde14e3))
+* validate user config ([de23fea](https://github.com/aziontech/bundler/commit/de23fea0a0a27f45aab9b9556d048c52a5d83593))
+
 ## [5.2.0-stage.14](https://github.com/aziontech/bundler/compare/v5.2.0-stage.13...v5.2.0-stage.14) (2025-06-24)
 
 
