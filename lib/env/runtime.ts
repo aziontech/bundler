@@ -15,6 +15,9 @@ import {
   NetworkListContext,
   fsContext,
   FirewallEventContext,
+  streamContext,
+  cryptoContext,
+  promisesContext,
 } from 'azion/bundler/polyfills';
 
 /**
@@ -87,6 +90,16 @@ function runtime(code: string, isFirewallEvent = false) {
 
     // FS Context
     context.FS_CONTEXT = fsContext;
+
+    // Stream
+    context.STREAM_CONTEXT = streamContext;
+
+    // Crypto
+    context.CRYPTO_CONTEXT = cryptoContext;
+
+    // Promises
+    context.Promise = Promise;
+    context.Promise.withResolvers = promisesContext;
 
     return context;
   };

@@ -20,7 +20,15 @@ describe('Node.js APIs - http', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'javascript', serverPort, false);
+    await projectInitializer(
+      EXAMPLE_PATH,
+      'javascript',
+      serverPort,
+      true,
+      'http://0.0.0.0',
+      false,
+      'index.js',
+    );
   }, TIMEOUT);
 
   afterAll(async () => {
@@ -31,6 +39,6 @@ describe('Node.js APIs - http', () => {
     const response = await request.get('/');
     expect(response.status).toEqual(200);
     expect(response.headers['content-type']).toMatch(/text/);
-    expect(response.text).toEqual(expect.stringContaining('id'));
+    expect(response.text).toEqual('Done!');
   });
 });

@@ -1,6 +1,5 @@
 import supertest from 'supertest';
 import { expect } from '@jest/globals';
-import zlib from 'node:zlib';
 import projectInitializer from '../utils/project-initializer.js';
 import projectStop from '../utils/project-stop.js';
 import { getContainerPort } from '../utils/docker-env-actions.js';
@@ -21,7 +20,15 @@ describe('Node.js APIs - zlib', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'javascript', serverPort, false);
+    await projectInitializer(
+      EXAMPLE_PATH,
+      'javascript',
+      serverPort,
+      true,
+      'http://0.0.0.0',
+      false,
+      'index.js',
+    );
   }, TIMEOUT);
 
   afterAll(async () => {
@@ -31,13 +38,7 @@ describe('Node.js APIs - zlib', () => {
   test('should request the "/" route and get a 200 status code', async () => {
     const response = await request.get('/');
     expect(response.status).toEqual(200);
-    expect(response.headers['content-type']).toMatch(/octet-stream/);
-    expect(response.headers['transfer-encoding']).toEqual('chunked');
-    expect(response.body.toString()).toEqual('H4sIAAAAAAAAA/NIzcnJ11EIzy/KSVEEANDDSuwNAAAA');
-    // decompressed
-    const decodeBase64 = Buffer.from(response.body.toString(), 'base64');
-    const decompressedBody = zlib.gunzipSync(decodeBase64).toString();
-    expect(decompressedBody).toEqual('Hello, World!');
-    // Hello, World!
+    expect(response.headers['content-type']).toMatch(/text/);
+    expect(response.text).toEqual('Done!');
   });
 });

@@ -73,7 +73,15 @@ export function resolveConfigPriority<T>({
   storeValue,
   defaultValue,
 }: ConfigValueOptions<T>): T | undefined {
-  return inputValue ?? fileValue ?? storeValue ?? defaultValue;
+  // Convert string booleans to actual booleans
+  const convertBoolean = (value: unknown): unknown => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value;
+  };
+
+  const resolvedValue = inputValue ?? fileValue ?? storeValue ?? defaultValue;
+  return convertBoolean(resolvedValue) as T;
 }
 
 /**

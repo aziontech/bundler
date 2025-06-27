@@ -19,7 +19,15 @@ describe('Node.js APIs - async_hooks', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'javascript', serverPort, false);
+    await projectInitializer(
+      EXAMPLE_PATH,
+      'javascript',
+      serverPort,
+      true,
+      'http://0.0.0.0',
+      false,
+      'index.js',
+    );
   }, TIMEOUT);
 
   afterAll(async () => {
@@ -28,6 +36,6 @@ describe('Node.js APIs - async_hooks', () => {
 
   test('should request the "/" route and get a 200 status code', async () => {
     const response = await request.get('/').expect(200);
-    expect(response.text).toContain('ok');
+    expect(response.text).toContain('Done!');
   });
 });

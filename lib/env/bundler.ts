@@ -5,8 +5,7 @@
  */
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
-import { PresetInput } from 'azion/config';
-import type { AzionConfig, BuildEntryPoint } from 'azion/config';
+import { type AzionConfig } from 'azion/config';
 
 import fs from 'fs';
 import fsPromises from 'fs/promises';
@@ -16,18 +15,15 @@ import prettier from 'prettier';
 import { cosmiconfig } from 'cosmiconfig';
 import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
 import { DOCS_MESSAGE } from '../constants';
-
 /**
  * The store uses the local disk to save configurations,
  * allowing the development environment to run according to
  * the settings defined in the build without having to pass arguments
  */
 export interface BundlerStore {
-  preset?: PresetInput;
-  entry?: BuildEntryPoint;
-  bundler?: 'webpack' | 'esbuild';
-  polyfills?: boolean;
-  worker?: boolean;
+  /** List of temporary files created during build process for cleanup */
+  tempFiles?: string[];
+  [key: string]: unknown;
 }
 
 /**
@@ -137,7 +133,7 @@ function handleDependencyError(error: Error, configPath: string) {
  * @async
  * @param configPath - Optional specific config file path to read
  */
-export async function readUserConfig(configPath?: string): Promise<AzionConfig | null> {
+export async function readAzionConfig(configPath?: string): Promise<AzionConfig | null> {
   const explorer = cosmiconfig('azion', {
     searchPlaces: [
       'azion.config.ts',
@@ -161,7 +157,9 @@ export async function readUserConfig(configPath?: string): Promise<AzionConfig |
       return null;
     }
 
-    return result.config as AzionConfig;
+    const config = result.config as AzionConfig;
+
+    return config;
   } catch (error) {
     if ((error as Error).message.includes('ERR_MODULE_NOT_FOUND')) {
       handleDependencyError(error as Error, configPath || 'azion.config');
@@ -174,6 +172,14 @@ export async function readUserConfig(configPath?: string): Promise<AzionConfig |
         ?.trim();
 
       feedback.build.error(`${validationError || (error as Error).message}${DOCS_MESSAGE}`);
+      process.exit(1);
+    }
+
+    // Handle ERR_REQUIRE_CYCLE_MODULE error specifically
+    if ((error as Error).message.includes('ERR_REQUIRE_CYCLE_MODULE')) {
+      feedback.build.error(
+        `Circular dependency detected while loading configuration file. This usually happens when using ES modules. Please ensure your configuration file doesn't have circular imports.${DOCS_MESSAGE}`,
+      );
       process.exit(1);
     }
 
@@ -229,8 +235,13 @@ export async function writeUserConfig(config: AzionConfig): Promise<void> {
  * 2. Use defineConfig:
  *    import { defineConfig } from 'azion'
  * 
+ * 3. Replace the configuration with defineConfig:
+ *    export default defineConfig({
+ *      // Your configuration here
+ *    })
+ * 
  * For more configuration options, visit:
- * https://github.com/aziontech/azion
+ * https://github.com/aziontech/lib/tree/main/packages/config
  */\n\n`;
 
   const replacer = (key: string, value: unknown) => {
@@ -256,6 +267,6 @@ export async function writeUserConfig(config: AzionConfig): Promise<void> {
 export default {
   writeStore,
   readStore,
-  readUserConfig,
+  readAzionConfig,
   writeUserConfig,
 };

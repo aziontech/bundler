@@ -1,4 +1,4 @@
-import { describe, it, expect, jest, beforeEach } from '@jest/globals';
+import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
 import envDefault from '#env';
 import utilsDefault from './utils';
 
@@ -9,8 +9,7 @@ describe('setEnvironment', () => {
   let spyMergeConfigWithUserOverrides: jest.SpiedFunction<
     typeof utilsDefault.mergeConfigWithUserOverrides
   >;
-  let spyWriteUserConfig: jest.SpiedFunction<typeof envDefault.writeUserConfig>;
-  let spyWriteStore: jest.SpiedFunction<typeof envDefault.writeStore>;
+  let spywriteUserConfig: jest.SpiedFunction<typeof envDefault.writeUserConfig>;
 
   const mockPreset: AzionBuildPreset = {
     metadata: {
@@ -28,7 +27,6 @@ describe('setEnvironment', () => {
     build: {
       entry: 'src/index.ts',
       polyfills: true,
-      worker: false,
     },
   };
 
@@ -38,14 +36,18 @@ describe('setEnvironment', () => {
   };
 
   beforeEach(() => {
-    spyWriteUserConfig = jest.spyOn(envDefault, 'writeUserConfig').mockResolvedValue();
-    spyWriteStore = jest.spyOn(envDefault, 'writeStore').mockResolvedValue();
+    globalThis.bundler = {
+      tempPath: '/tmp/azion',
+      experimental: false,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any;
+
+    spywriteUserConfig = jest.spyOn(envDefault, 'writeUserConfig').mockResolvedValue();
     spyMergeConfigWithUserOverrides = jest
       .spyOn(utilsDefault, 'mergeConfigWithUserOverrides')
       .mockReturnValue({
         build: {
           polyfills: true,
-          worker: false,
           entry: 'src/index.ts',
         },
       });
@@ -53,10 +55,13 @@ describe('setEnvironment', () => {
 
   afterEach(() => {
     jest.restoreAllMocks();
+    // Clean up globalThis.bundler
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    globalThis.bundler = {} as any;
   });
 
   it('should create initial configuration when user config does not exist', async () => {
-    jest.spyOn(envDefault, 'readUserConfig').mockResolvedValueOnce(null);
+    jest.spyOn(envDefault, 'readAzionConfig').mockResolvedValueOnce(null);
 
     await setEnvironment({
       config: mockConfig,
@@ -65,12 +70,11 @@ describe('setEnvironment', () => {
     });
 
     expect(spyMergeConfigWithUserOverrides).toHaveBeenCalledWith(mockPreset.config, mockConfig);
-    expect(spyWriteUserConfig).toHaveBeenCalled();
-    expect(spyWriteStore).toHaveBeenCalled();
+    expect(spywriteUserConfig).toHaveBeenCalled();
   });
 
   it('should not create configuration when user config already exists', async () => {
-    jest.spyOn(envDefault, 'readUserConfig').mockResolvedValueOnce({});
+    jest.spyOn(envDefault, 'readAzionConfig').mockResolvedValueOnce({});
 
     await setEnvironment({
       config: mockConfig,
@@ -79,12 +83,11 @@ describe('setEnvironment', () => {
     });
 
     expect(spyMergeConfigWithUserOverrides).toHaveBeenCalledWith(mockPreset.config, mockConfig);
-    expect(spyWriteUserConfig).not.toHaveBeenCalled();
-    expect(spyWriteStore).toHaveBeenCalled();
+    expect(spywriteUserConfig).not.toHaveBeenCalled();
   });
 
   it('should add preset name to configuration when not defined', async () => {
-    jest.spyOn(envDefault, 'readUserConfig').mockResolvedValueOnce(null);
+    jest.spyOn(envDefault, 'readAzionConfig').mockResolvedValueOnce(null);
     spyMergeConfigWithUserOverrides.mockReturnValue({
       build: {
         polyfills: true,
@@ -98,7 +101,7 @@ describe('setEnvironment', () => {
       ctx: mockContext,
     });
 
-    expect(spyWriteUserConfig).toHaveBeenCalledWith(
+    expect(spywriteUserConfig).toHaveBeenCalledWith(
       expect.objectContaining({
         build: expect.objectContaining({
           preset: 'test-preset',
@@ -108,7 +111,7 @@ describe('setEnvironment', () => {
   });
 
   it('should throw error when environment setup fails', async () => {
-    jest.spyOn(envDefault, 'readUserConfig').mockRejectedValueOnce(new Error('Test error'));
+    jest.spyOn(envDefault, 'readAzionConfig').mockRejectedValueOnce(new Error('Test error'));
     await expect(
       setEnvironment({
         config: mockConfig,
