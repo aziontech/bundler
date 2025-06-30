@@ -8,6 +8,7 @@ jest.mock('./utils', () => {
   return {
     generateWorkerEventHandler: original.generateWorkerEventHandler,
     normalizeEntryPointPaths: jest.fn((handler) => (Array.isArray(handler) ? handler : [handler])),
+    isServiceWorkerPattern: original.isServiceWorkerPattern,
   };
 });
 
@@ -24,7 +25,6 @@ describe('setupWorkerCode', () => {
       config: { build: {} },
     },
     polyfills: true,
-    worker: false,
     setup: {
       contentToInject: undefined,
       defineVars: {},
@@ -40,7 +40,11 @@ describe('setupWorkerCode', () => {
     spyReadFile = jest
       .spyOn(fsPromises, 'readFile')
       .mockImplementation((path: unknown) =>
-        Promise.resolve(String(path).includes('api') ? 'api code' : 'worker code'),
+        Promise.resolve(
+          String(path).includes('api')
+            ? `addEventListener('fetch', (event) => { event.respondWith(new Response('api')); });`
+            : `addEventListener('fetch', (event) => { event.respondWith(new Response('worker')); });`,
+        ),
       );
   });
 
@@ -48,39 +52,77 @@ describe('setupWorkerCode', () => {
     jest.clearAllMocks();
   });
 
-  it('should return mapped entries with original code when worker=true', async () => {
-    const configWithWorker = { ...mockBuildConfig, worker: true };
+  it('should return mapped entries with original code for service worker pattern', async () => {
+    const result = await setupWorkerCode(mockBuildConfig, mockContext);
 
-    const result = await setupWorkerCode(configWithWorker, mockContext);
+    // Service Worker pattern should return original code
+    expect(result['/tmp/worker.js']).toContain(`addEventListener('fetch', (event) => {`);
+    expect(result['/tmp/worker.js']).toContain(`new Response('worker')`);
+    expect(result['/tmp/api.js']).toContain(`addEventListener('fetch', (event) => {`);
+    expect(result['/tmp/api.js']).toContain(`new Response('api')`);
 
-    expect(result).toEqual({
-      '/tmp/worker.js': 'worker code',
-      '/tmp/api.js': 'api code',
-    });
     expect(spyReadFile).toHaveBeenCalledWith('/tmp/worker.js', 'utf-8');
     expect(spyReadFile).toHaveBeenCalledWith('/tmp/api.js', 'utf-8');
   });
 
-  it('should return mapped entries with generated code when worker=false', async () => {
+  it('should return mapped entries with generated code for ESM pattern in development', async () => {
+    // Mock ESM pattern
+    spyReadFile.mockImplementation((path: unknown) =>
+      Promise.resolve(
+        String(path).includes('api')
+          ? `export default { fetch: (request, env, ctx) => new Response('api esm') };`
+          : `export default { fetch: (request, env, ctx) => new Response('worker esm') };`,
+      ),
+    );
+
+    const devContext = { ...mockContext, production: false };
+    const result = await setupWorkerCode(mockBuildConfig, devContext);
+
+    // ESM in development should be wrapped with addEventListener
+    expect(result['/tmp/worker.js']).toContain(`import module from '/tmp/worker.js'`);
+    expect(result['/tmp/worker.js']).toContain(`addEventListener('fetch', (event) => {`);
+    expect(result['/tmp/api.js']).toContain(`import module from '/tmp/api.js'`);
+    expect(result['/tmp/api.js']).toContain(`addEventListener('fetch', (event) => {`);
+  });
+
+  it('should return original code for ESM pattern in production', async () => {
+    // Mock ESM pattern
+    spyReadFile.mockImplementation((path: unknown) =>
+      Promise.resolve(
+        String(path).includes('api')
+          ? `export default { fetch: (request, env, ctx) => new Response('api esm') };`
+          : `export default { fetch: (request, env, ctx) => new Response('worker esm') };`,
+      ),
+    );
+
     const result = await setupWorkerCode(mockBuildConfig, mockContext);
 
-    // Verificar apenas que as chaves estão corretas
-    expect(Object.keys(result).sort()).toEqual(['/tmp/worker.js', '/tmp/api.js'].sort());
+    // ESM in production should return original code
+    expect(result['/tmp/worker.js']).toContain(`export default { fetch: (request, env, ctx) =>`);
+    expect(result['/tmp/worker.js']).toContain(`new Response('worker esm')`);
+    expect(result['/tmp/api.js']).toContain(`export default { fetch: (request, env, ctx) =>`);
+    expect(result['/tmp/api.js']).toContain(`new Response('api esm')`);
+  });
 
-    // Verificar que o conteúdo contém o import correto
-    expect(result['/tmp/worker.js']).toContain(`import entrypoint from '/tmp/worker.js'`);
-    expect(result['/tmp/api.js']).toContain(`import entrypoint from '/tmp/api.js'`);
+  it('should handle legacy pattern with wrapper generation', async () => {
+    // Mock legacy pattern
+    spyReadFile.mockImplementation(() =>
+      Promise.resolve(`export default function handler() { return new Response('legacy'); }`),
+    );
 
-    // Verificar que o conteúdo contém outros elementos esperados
-    expect(result['/tmp/worker.js']).toContain('addEventListener(eventType, (event)');
-    expect(result['/tmp/api.js']).toContain('addEventListener(eventType, (event)');
+    const result = await setupWorkerCode(mockBuildConfig, mockContext);
+
+    // Legacy should be wrapped with addEventListener
+    expect(result['/tmp/worker.js']).toContain('import handler from');
+    expect(result['/tmp/worker.js']).toContain("addEventListener('fetch'");
+    expect(result['/tmp/worker.js']).toContain('event.respondWith');
   });
 
   it('should throw error when setup fails', async () => {
     spyReadFile.mockRejectedValue(new Error('Read error'));
 
-    await expect(
-      setupWorkerCode({ ...mockBuildConfig, worker: true }, mockContext),
-    ).rejects.toThrow('Failed to setup worker code: Read error');
+    await expect(setupWorkerCode({ ...mockBuildConfig }, mockContext)).rejects.toThrow(
+      'Failed to setup worker code: Read error',
+    );
   });
 });

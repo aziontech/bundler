@@ -22,8 +22,9 @@ Azion Bundler is a powerful tool designed to build and adapt projects for edge c
   - [Commands](#commands)
     - [`build`](#build)
     - [`dev`](#dev)
-    - [`store`](#store)
+    - [`config`](#config)
     - [`presets`](#presets)
+    - [`store`](#store)
     - [`manifest`](#manifest)
   - [Configuration](#configuration)
   - [Build Process Flow](#build-process-flow)
@@ -111,6 +112,9 @@ See some examples below:
 
 The Azion Bundler CLI provides several commands to help you manage your edge applications:
 
+> ⚠️ \*Deprecation Notice:
+> Support for the webpack bundler will be discontinued in future releases. While it is still available for now, new features, fixes, and improvements will be focused exclusively on esbuild. We recommend migrating to esbuild as soon as possible to ensure compatibility and better performance in upcoming versions.
+
 ### `build`
 Builds your project for edge deployment.
 
@@ -118,11 +122,12 @@ Builds your project for edge deployment.
 ef build [options]
 
 Options:
-  --entry <string>     Code entrypoint (default: ./handler.js or ./handler.ts)
-  --preset <type>      Preset of build target (e.g., vue, next, javascript)
-  --polyfills          Use node polyfills in build (default: true)
-  --worker            Enable worker mode with addEventListener signature (default: false)
-  --development       Build in development mode (default: false)
+  -e, --entry <string>     Code entrypoint (default: ./handler.js or ./handler.ts)
+  -p, --preset <type>      Preset of build target (e.g., vue, next, javascript)
+  --polyfills              Use node polyfills in build (default: true)
+  -w, --worker             Enable worker mode with addEventListener signature (default: false)
+  -d, --dev                Build in development mode (default: false)
+  -x, --experimental       Enable experimental features (default: false)
 ```
 
 ### `dev`
@@ -132,10 +137,55 @@ Starts a local development environment.
 ef dev [entry] [options]
 
 Arguments:
-  entry               Specify the entry file (default: .edge/functions/handler.dev.js)
+  entry                    Specify the entry file (default: .edge/worker.dev.js)
 
 Options:
-  -p, --port <port>  Specify the port (default: "3333")
+  -p, --port <port>        Specify the port (default: "3333")
+  -x, --experimental       Enable experimental features (default: false)
+```
+
+### `config`
+Manages Azion configuration settings with CRUD operations.
+
+```shell
+ef config <command> [options]
+
+Commands:
+  create              Create a new configuration property
+  read                Read configuration properties
+  update              Update existing configuration properties
+  delete              Delete configuration properties
+
+Options:
+  -k, --key <key>     Property key (e.g., build.preset or edgeApplications[0].name)
+  -v, --value <value> Value to be set (for create/update commands)
+  -a, --all           Read or delete entire configuration (for read/delete commands)
+
+Examples:
+  $ ef config create -k "build.preset" -v "typescript"
+  $ ef config read -k "edgeApplications[0].name"
+  $ ef config update -k "build.bundler" -v "esbuild"
+  $ ef config delete -k "build.polyfills"
+  $ ef config read --all
+```
+
+### `presets`
+Manages presets for Azion projects.
+
+```shell
+ef presets <command> [preset]
+
+Commands:
+  ls                  List all available presets
+  config              Get Azion configuration file for a specific preset
+
+Arguments:
+  preset              Preset name (required for config command)
+
+Examples:
+  $ ef presets ls
+  $ ef presets config react
+  $ ef presets config next
 ```
 
 ### `store`
@@ -149,22 +199,8 @@ Commands:
   destroy             Remove store configuration
 
 Options:
-  --scope <scope>     Project scope (default: "global")
-  --preset <string>   Preset name
-  --entry <string>    Code entrypoint
-  --bundler <type>    Bundler type (webpack/esbuild)
-  --polyfills        Use node polyfills in build
-  --worker           Enable worker mode
-```
-
-### `presets`
-Lists available project presets.
-
-```shell
-ef presets <command>
-
-Commands:
-  ls                  List all available presets
+  -c, --config <json> Configuration in JSON format
+  -s, --scope <scope> Scope of the store (default: global)
 ```
 
 ### `manifest`
@@ -178,13 +214,13 @@ Arguments:
                     (default: "generate")
 
 Options:
-  --entry <path>     Path to the input file or configuration file
-  --output <path>    Output file/directory path
+  -e, --entry <path>  Path to the input file or configuration file
+  -o, --output <path> Output file/directory path
 
 Examples:
-  $ ef manifest transform --entry=manifest.json --output=azion.config.js
-  $ ef manifest generate --entry=azion.config.js --output=.edge
-  $ ef manifest --entry=azion.config.js --output=.edge
+  $ ef manifest transform -e manifest.json -o azion.config.js
+  $ ef manifest generate -e azion.config.js -o .edge
+  $ ef manifest -e azion.config.js -o .edge
 ```
 
 ## Configuration
@@ -202,30 +238,25 @@ While these hooks are pre-configured in framework presets, you can customize the
 ```typescript
 import { defineConfig } from 'azion';
 import type { AzionPrebuildResult, AzionConfig } from 'azion/config';
-import { Next } from 'azion/presets';
+import { emscripten } from 'azion/presets';
 
 export default defineConfig({
   build: {
+    extend: (config) => {
+      config.define = {
+        ...config.define,
+        'global.customFeature': 'JSON.stringify(true)',
+        'process.env.CUSTOM_VAR': 'JSON.stringify("value")'
+      }
+      return config
+    },
     preset: {
-      ...Next,
-      config: {
-        ...Next.config,
-        bundler: 'esbuild',
-        extend: (config) => {
-          config.define = {
-            ...config.define,
-            'global.customFeature': 'JSON.stringify(true)',
-            'process.env.CUSTOM_VAR': 'JSON.stringify("value")'
-          }
-          return config
-        }
-      },
+      ...emscripten,
       prebuild: async (config: AzionConfig, ctx: BuildContext): Promise<AzionPrebuildResult> => {
         // Your custom prebuild logic here
         const result = await doSomething();
         return {
           ...result,
-          // Additional prebuild configurations
         }
       }
     }
@@ -235,47 +266,82 @@ export default defineConfig({
 
 ## Build Process Flow
 
-1. **Preset Resolution** (`@modules/preset`)
+1. **Config Validation**
+   - Validates user configuration using `validateConfig`
+   - Ensures configuration schema compliance
+   - Early error detection and user feedback
+
+2. **Dependencies Check**
+   - Verifies required dependencies are installed
+   - Validates build environment requirements
+
+3. **Preset Resolution** (`@modules/preset`)
    - Resolves preset from string name or custom module
    - Loads built-in presets from azion/presets
-   - Validates preset interface
+   - Validates preset interface and metadata
 
-2. **Build Config Setup** (`@modules/config`)
+4. **Build Config Setup** (`@modules/config`)
    - Resolves configuration priorities in the following order:
      1. CLI arguments (highest priority)
      2. User config file (`azion.config.js`)
-     3. Local store settings
-     4. Preset defaults (lowest priority)
+     3. Preset defaults (lowest priority)
    - Sets up bundler configuration
    - Configures build options and extensions
 
-3. **Handler Resolution** (`@modules/handler`)
-   - Resolves entry point/handler from CLI args, preset, or user config (azion.config.js)
-   - Validates file existence
-
-4. **Worker Setup** (`@modules/worker`)
-   - Converts ESM exports to worker format
-   - Injects worker runtime and globals
-   - Sets up event listeners
-
 5. **Prebuild Phase** (`@modules/prebuild`)
    - Executes preset's prebuild hooks
+   - Prepares build environment and dependencies
+   - Framework-specific build preparations
 
-6. **Core Build** (`@modules/core`)
+6. **Handler Resolution** (`@modules/handler`)
+   - Resolves entry point/handler from CLI args, preset, or user config
+   - Validates file existence and accessibility
+   - Supports multiple entry points
+
+7. **Worker Setup** (`@modules/worker`)
+   - Processes handler files and converts to worker-compatible format
+   - Detects handler patterns (ES Modules, Service Worker, Legacy)
+   - Generates appropriate wrappers for development/production
+   - Creates temporary worker files for bundling
+
+8. **Core Build** (`@modules/core`)
    - Processes bundler configuration (esbuild/webpack)
    - Handles file imports and dependencies
    - Applies polyfills and transformations
+   - Generates optimized output
 
-7. **Postbuild Phase** (`@modules/postbuild`)
-   - Executes preset's postbuild hooks
+9. **Cleanup**
+   - Removes temporary files created during build
+   - Cleans up intermediate build artifacts
 
-8. **Environment Setup** (`@modules/environment`)
-   - Creates initial `azion.config.js` from preset if none exists
-   - Merges configurations (user config takes precedence over preset defaults)
-   - Stores build settings locally for development and subsequent builds
+10. **Postbuild Phase** (`@modules/postbuild`)
+    - Executes preset's postbuild hooks
+    - Post-processing optimizations
+    - Asset finalization
+
+11. **Bindings Setup** (`@modules/bindings`) [Future]
+    - Configures Azion platform bindings
+    - Sets up edge functions connections
+    - *Currently in development*
+
+12. **Storage Setup** (`@modules/storage`) [Future]
+    - Configures edge storage connections
+    - Sets up data persistence layers
+    - *Currently in development*
+
+13. **Environment Setup** (`@modules/environment`)
+    - Creates initial `azion.config.js` from preset if none exists
+    - Merges configurations (user config takes precedence over preset defaults)
+    - Stores build settings locally for development and subsequent builds
+
+14. **Environment Variables**
+    - Copies and processes environment variables
+    - Sets up runtime environment context
 
 ## Documentation
 
+- [Handler Patterns](docs/handler-patterns.md)
+- [Node.js APIs](docs/nodejs-apis.md)
 - [Nextjs](docs/nextjs.md)
 - [Rust/Wasm example](https://github.com/aziontech/bundler-examples/tree/main/examples/rust-wasm-yew-ssr/)
 - [Emscripten/Wasm example](https://github.com/aziontech/bundler-examples/tree/main/examples/emscripten-wasm/)

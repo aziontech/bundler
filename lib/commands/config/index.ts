@@ -1,0 +1,1 @@
+export { configCommand } from './command';

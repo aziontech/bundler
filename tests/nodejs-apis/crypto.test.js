@@ -13,7 +13,6 @@ const EXAMPLE_PATH = '/examples/runtime-apis/nodejs/crypto';
 
 describe('Node.js APIs - crypto', () => {
   let request;
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
   beforeAll(async () => {
     serverPort = getContainerPort();
@@ -21,7 +20,15 @@ describe('Node.js APIs - crypto', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'javascript', serverPort, false);
+    await projectInitializer(
+      EXAMPLE_PATH,
+      'javascript',
+      serverPort,
+      true,
+      'http://0.0.0.0',
+      false,
+      'index.js',
+    );
   }, TIMEOUT);
 
   afterAll(async () => {
@@ -30,6 +37,7 @@ describe('Node.js APIs - crypto', () => {
 
   test('should request the "/" route and get a 200 status code', async () => {
     const response = await request.get('/').expect(200);
-    expect(response.text).toMatch(uuidRegex);
+    expect(response.headers['content-type']).toMatch(/text/);
+    expect(response.text).toEqual('Done!');
   });
 });

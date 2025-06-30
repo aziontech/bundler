@@ -22,7 +22,6 @@ describe('executeBuild', () => {
       config: { build: {} },
     },
     polyfills: true,
-    worker: false,
     bundler: 'esbuild',
     setup: {
       contentToInject: '',

@@ -2,6 +2,8 @@ import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
 import { generateManifest, transformManifest } from './manifest';
 import { AzionConfig } from 'azion/config';
+import { rm } from 'fs/promises';
+import { DIRECTORIES, DOCS_MESSAGE } from '#constants';
 
 export enum ManifestAction {
   GENERATE = 'generate',
@@ -58,7 +60,8 @@ export async function manifestCommand(options: ManifestCommandOptions): Promise<
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (debug as any).error(error);
-    feedback.manifest.error(error instanceof Error ? error.message : String(error));
+    feedback.error(`${error instanceof Error ? error.message : String(error)}${DOCS_MESSAGE}`);
+    await rm(DIRECTORIES.OUTPUT_BASE_PATH, { recursive: true, force: true });
     process.exit(1);
   }
 }
