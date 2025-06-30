@@ -1,3 +1,30 @@
+## [5.2.0](https://github.com/aziontech/bundler/compare/v5.1.0...v5.2.0) (2025-06-30)
+
+
+### Features
+
+* add complete CRUD ops with JSON parsing ([2e19a85](https://github.com/aziontech/bundler/commit/2e19a85807aece696a5990bcbe8b0306b558d8c4))
+* add preset openenxtjs ([#489](https://github.com/aziontech/bundler/issues/489)) ([4a7cd9d](https://github.com/aziontech/bundler/commit/4a7cd9d3fdd923830931fcbd6b997369381cbccb))
+* add support for multiple key-value pairs in update command ([0e09902](https://github.com/aziontech/bundler/commit/0e09902ab48c8ea1676f9ac3cb2805a2c327916c))
+* azion config crud command ([#485](https://github.com/aziontech/bundler/issues/485)) ([ee82199](https://github.com/aziontech/bundler/commit/ee82199bf32afc21cfe07302c82b2d4c085e3913))
+* bindings ([#482](https://github.com/aziontech/bundler/issues/482)) ([20dfddd](https://github.com/aziontech/bundler/commit/20dfddd79ea4661597e3932673854abb33576132))
+* copy .env vars ([#481](https://github.com/aziontech/bundler/issues/481)) ([1af42bc](https://github.com/aziontech/bundler/commit/1af42bcd2cb631ba865ebedcda5fa7381fb18e02))
+* runtime esmodules support ([#490](https://github.com/aziontech/bundler/issues/490)) ([a2a125b](https://github.com/aziontech/bundler/commit/a2a125b6850493d6458aee0f717506fd5bbf8734))
+* smart update that creates missing properties ([5ed973f](https://github.com/aziontech/bundler/commit/5ed973f8f2bb12da7adacf106ddce4ad3c5b3dd6))
+* update local store item by name ([#484](https://github.com/aziontech/bundler/issues/484)) ([bcf479f](https://github.com/aziontech/bundler/commit/bcf479fcdb628afd3f02781375cead2698d9759d))
+* updating azion lib with unenv 2.x and also env dev polyfills ([#479](https://github.com/aziontech/bundler/issues/479)) ([13e5b78](https://github.com/aziontech/bundler/commit/13e5b788441f3152122638424579642106bb0348))
+
+
+### Bug Fixes
+
+* correct array index access in config read operation ([61d25fb](https://github.com/aziontech/bundler/commit/61d25fb8867ac92ddb6841de5e99c1d111314a93))
+* local environment worker ([b6d81aa](https://github.com/aziontech/bundler/commit/b6d81aa15c05f7fee805f42315985ae5bbde14e3))
+* relative imports for subfolder entrypoint ([#492](https://github.com/aziontech/bundler/issues/492)) ([1a50d58](https://github.com/aziontech/bundler/commit/1a50d5899337b9c51417f6ff88db0f00931519f4))
+* revert API V4 features (azion lib) ([1fca897](https://github.com/aziontech/bundler/commit/1fca89783ea55284bee2829d8935b7f7100e967d))
+* update azion dependency to version ~1.20.0-stage.7 ([#483](https://github.com/aziontech/bundler/issues/483)) ([8a4d34a](https://github.com/aziontech/bundler/commit/8a4d34a1c169b819967b79cd2f1892751da38335))
+* update azion dependency to version 1.20.0-stage.2 ([#480](https://github.com/aziontech/bundler/issues/480)) ([36352a7](https://github.com/aziontech/bundler/commit/36352a7b7caa00510dc7f19a12a324e888f1005b))
+* validate user config ([de23fea](https://github.com/aziontech/bundler/commit/de23fea0a0a27f45aab9b9556d048c52a5d83593))
+
 ## [5.2.0-stage.15](https://github.com/aziontech/bundler/compare/v5.2.0-stage.14...v5.2.0-stage.15) (2025-06-27)
 
 
