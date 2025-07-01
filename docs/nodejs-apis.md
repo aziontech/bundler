@@ -33,25 +33,25 @@ Tests run daily in the [Bundler Examples](https://github.com/aziontech/bundler-e
 Table:
 | Test           | Status |
 | -------------- | ------ |
-| Zlib           | ✅      |
 | Process        | ✅      |
 | Path           | ✅      |
 | Os             | ✅      |
-| Http           | ✅      |
 | String Decoder | ✅      |
-| Crypto         | ✅      |
 | Timers         | ✅      |
 | Stream         | ✅      |
 | Module         | ✅      |
+| Zlib           | ✅      |
 | Util           | ✅      |
+| Http           | ✅      |
 | Url            | ✅      |
 | Vm             | ✅      |
+| Crypto         | ✅      |
 | Events         | ✅      |
 | Buffer         | ✅      |
 | Fs             | ✅      |
 | Async Hooks    | ✅      |
 
-Last test run date: 04/25/25 04:03:59 AM
+Last test run date: 07/01/25 03:57:40 AM
 #### Docs support
 
 See support for the Node.js APIs in the [https://www.azion.com/en/documentation/products/azion-edge-runtime/compatibility/node/](https://www.azion.com/en/documentation/products/azion-edge-runtime/compatibility/node/)
