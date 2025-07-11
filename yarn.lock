@@ -3365,7 +3365,7 @@ axios@^1.6.1:
     form-data "^4.0.0"
     proxy-from-env "^1.1.0"
 
-azion@~1.20:
+azion@~1.20.0:
   version "1.20.1"
   resolved "https://registry.yarnpkg.com/azion/-/azion-1.20.1.tgz#9dda0608f16f2a1d3b92399dd480a0a965f8edf2"
   integrity sha512-7WNjJJfIawPQTEYaaRTePsoRIIPdWBC8CF6OB0Q4efU0W7V/b6fRD0U/Hs4Rw3zsQ3UPLZPCKOShYmHCRzxaMw==
