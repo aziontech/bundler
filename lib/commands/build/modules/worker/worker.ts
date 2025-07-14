@@ -52,7 +52,7 @@ const processWorkerCode = async (
       return originalCode;
 
     case 'ESModules':
-      return isProduction ? originalCode : await generateWorkerEventHandler(handlerPath);
+      return await generateWorkerEventHandler(handlerPath, isProduction);
 
     case 'legacy':
       feedback.build.warn(WORKER_MESSAGES.LEGACY_DEPRECATION);
