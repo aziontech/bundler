@@ -44,7 +44,7 @@
   "dependencies": {
     "@edge-runtime/primitives": "4.0.5",
     "@netlify/framework-info": "^9.9.1",
-    "azion": "~2.0.0-stage.3",
+    "azion": "~1.20.1",
     "chokidar": "^3.5.3",
     "commander": "^10.0.1",
     "cosmiconfig": "^9.0.0",
@@ -103,5 +103,6 @@
     "dist",
     "package.json",
     "README.md"
-  ]
+  ],
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
