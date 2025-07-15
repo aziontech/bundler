@@ -1,3 +1,17 @@
+## [5.3.0-stage.2](https://github.com/aziontech/bundler/compare/v5.3.0-stage.1...v5.3.0-stage.2) (2025-07-15)
+
+
+### Bug Fixes
+
+* azion lib version ([3e77d75](https://github.com/aziontech/bundler/commit/3e77d758665c5d99b9eab11bb2026906366702f6))
+
+## [5.3.0-stage.1](https://github.com/aziontech/bundler/compare/v5.2.0...v5.3.0-stage.1) (2025-07-15)
+
+
+### Features
+
+* adding support for dynamic import to the runtime environment ([#496](https://github.com/aziontech/bundler/issues/496)) ([dffd3f0](https://github.com/aziontech/bundler/commit/dffd3f03f50750e16c94ab88628f7ca6b060e2f1))
+
 ## [5.2.0](https://github.com/aziontech/bundler/compare/v5.1.0...v5.2.0) (2025-06-30)
 
 

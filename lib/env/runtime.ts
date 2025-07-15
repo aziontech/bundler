@@ -3,8 +3,6 @@
  * This module provides edge runtime simulation and should be restructured
  * to better handle different event types and contexts.
  */
-import { EdgeRuntime } from 'edge-runtime';
-import { EdgeContext } from '@edge-runtime/vm';
 
 import {
   fetchContext,
@@ -19,6 +17,7 @@ import {
   cryptoContext,
   promisesContext,
 } from 'azion/bundler/polyfills';
+import { EdgeContext, EdgeVM } from './edge-vm';
 
 /**
  * Executes the specified JavaScript code within a sandbox environment,
@@ -104,7 +103,7 @@ function runtime(code: string, isFirewallEvent = false) {
     return context;
   };
 
-  const edgeRuntime = new EdgeRuntime({
+  const edgeRuntime = new EdgeVM({
     extend,
     initialCode: code,
     codeGeneration: {

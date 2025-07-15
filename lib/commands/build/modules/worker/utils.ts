@@ -47,7 +47,10 @@ const detectHandlers = async (entrypointPath: string) => {
  * Uses dynamic import to detect actual handlers, then generates optimized code
  * that only includes the event listeners for handlers that actually exist.
  */
-export const generateWorkerEventHandler = async (entrypointPath: string): Promise<string> => {
+export const generateWorkerEventHandler = async (
+  entrypointPath: string,
+  isProduction: boolean,
+): Promise<string> => {
   const { hasFirewall, hasFetch } = await detectHandlers(entrypointPath);
 
   if (!hasFirewall && !hasFetch) {
@@ -61,7 +64,7 @@ console.warn('No Edge Function handlers found. File will run as-is.');`;
 
   const parts = [WORKER_TEMPLATES.baseImport(entrypointPath)];
   if (hasFirewall) parts.push(WORKER_TEMPLATES.firewallHandler);
-  if (hasFetch) parts.push(WORKER_TEMPLATES.fetchHandler);
+  if (hasFetch) parts.push(WORKER_TEMPLATES.fetchHandler(isProduction));
 
   return parts.join('\n');
 };
