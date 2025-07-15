@@ -1,3 +1,10 @@
+## [5.3.0-stage.2](https://github.com/aziontech/bundler/compare/v5.3.0-stage.1...v5.3.0-stage.2) (2025-07-15)
+
+
+### Bug Fixes
+
+* azion lib version ([3e77d75](https://github.com/aziontech/bundler/commit/3e77d758665c5d99b9eab11bb2026906366702f6))
+
 ## [5.3.0-stage.1](https://github.com/aziontech/bundler/compare/v5.2.0...v5.3.0-stage.1) (2025-07-15)
 
 
