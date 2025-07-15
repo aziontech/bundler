@@ -1,3 +1,10 @@
+## [5.3.0-stage.1](https://github.com/aziontech/bundler/compare/v5.2.0...v5.3.0-stage.1) (2025-07-15)
+
+
+### Features
+
+* adding support for dynamic import to the runtime environment ([#496](https://github.com/aziontech/bundler/issues/496)) ([dffd3f0](https://github.com/aziontech/bundler/commit/dffd3f03f50750e16c94ab88628f7ca6b060e2f1))
+
 ## [5.2.0](https://github.com/aziontech/bundler/compare/v5.1.0...v5.2.0) (2025-06-30)
 
 
