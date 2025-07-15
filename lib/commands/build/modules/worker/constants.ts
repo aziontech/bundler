@@ -31,14 +31,19 @@ addEventListener('firewall', (event) => {
   })().catch(console.error);
 });`,
 
-  fetchHandler: `
-const fetchHandler = handlers.fetch;
-addEventListener('fetch', (event) => {${contextSetup}
-  
+  fetchHandler: (isProduction: boolean) => `
+${
+  isProduction
+    ? 'export default module;'
+    : `
+    const fetchHandler = handlers.fetch;
+  addEventListener('fetch', (event) => {${contextSetup}
   event.respondWith((async () => {
     return fetchHandler(request, env, ctx);
   })());
-});`,
+});`
+}
+`,
 
   fallbackHandler: (entrypointPath: string) => {
     const baseImport = `

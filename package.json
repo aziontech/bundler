@@ -25,8 +25,8 @@
     "e2e:start": "yarn submodule:update && tests/scripts/start-e2e-env.sh",
     "e2e:stop": "tests/scripts/stop-e2e-env.sh",
     "e2e:destroy": "tests/scripts/destroy-e2e-env.sh",
-    "test:e2e": "yarn e2e:start && NODE_OPTIONS='--experimental-vm-modules' jest --maxWorkers 1 --config=./jest-e2e.config.js tests/e2e/ --json --outputFile e2e_results.json && yarn e2e:stop; yarn task:reports",
-    "test:nodejs-apis": "yarn e2e:start && NODE_OPTIONS='--experimental-vm-modules' jest --maxWorkers 1 --config=./jest-e2e.config.js tests/nodejs-apis/ --json --outputFile nodejs_apis_results.json && yarn e2e:stop && yarn task:reports-nodejs-apis",
+    "test:e2e": "yarn e2e:start && NODE_OPTIONS='--experimental-vm-modules' jest --detectOpenHandles --runInBand --config=./jest-e2e.config.js tests/e2e/ --json --outputFile e2e_results.json && yarn e2e:stop; yarn task:reports",
+    "test:nodejs-apis": "yarn e2e:start && NODE_OPTIONS='--experimental-vm-modules' jest --runInBand --config=./jest-e2e.config.js tests/nodejs-apis/ --json --outputFile nodejs_apis_results.json && yarn e2e:stop && yarn task:reports-nodejs-apis",
     "prepare": "husky install",
     "submodule:update": "git submodule update --init --recursive && git submodule foreach git pull origin main"
   },
@@ -42,8 +42,9 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@edge-runtime/primitives": "4.0.5",
     "@netlify/framework-info": "^9.9.1",
-    "azion": "~1.20.0",
+    "azion": "~2.0.0-stage.3",
     "chokidar": "^3.5.3",
     "commander": "^10.0.1",
     "cosmiconfig": "^9.0.0",
