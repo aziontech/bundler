@@ -1,12 +1,7 @@
 import { dirname } from 'path';
 import { mkdir, writeFile } from 'fs/promises';
-import type {
-  AzionPrebuildResult,
-  AzionConfig,
-  BuildContext,
-  BuildConfiguration,
-} from 'azion/config';
-import { debug, removeAzionTempFiles } from '#utils';
+import { validateConfig, type AzionPrebuildResult, type BuildContext } from 'azion/config';
+import { debug, copyEnvVars, executeCleanup, markForCleanup } from '#utils';
 import { BUILD_CONFIG_DEFAULTS, DOCS_MESSAGE } from '#constants';
 import { feedback } from 'azion/utils/node';
 
@@ -21,30 +16,34 @@ import { executePostbuild } from './modules/postbuild';
 import { setEnvironment } from './modules/environment';
 import { setupWorkerCode } from './modules/worker';
 import { resolveHandlers } from './modules/handler';
-
-interface BuildOptions {
-  production?: boolean;
-}
-
-interface BuildResult {
-  config: AzionConfig;
-  ctx: BuildContext;
-  setup: BuildConfiguration;
-}
-
-interface BuildParams {
-  config: AzionConfig;
-  options: BuildOptions;
-}
+// import { setupBindings } from './modules/bindings';
+import { BuildParams, BuildResult } from './types';
 
 export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
   try {
     const { config, options } = buildParams;
     const isProduction = Boolean(options.production);
 
+    validateConfig(config);
     await checkDependencies();
+
     const resolvedPreset = await resolvePreset(config.build?.preset);
     const buildConfigSetup = await setupBuildConfig(config, resolvedPreset, isProduction);
+
+    /* Execute build phases */
+    // Phase 1: Prebuild
+    feedback.prebuild.info('Starting pre-build...');
+
+    const prebuildResult: AzionPrebuildResult = await executePrebuild({
+      buildConfig: buildConfigSetup,
+      ctx: {
+        production: isProduction ?? BUILD_CONFIG_DEFAULTS.PRODUCTION,
+        skipFrameworkBuild: Boolean(options.skipFrameworkBuild),
+        handler: '', // Placeholder, will be set later
+      },
+    });
+
+    feedback.prebuild.info('Pre-build completed successfully');
 
     const ctx: BuildContext = {
       production: isProduction ?? BUILD_CONFIG_DEFAULTS.PRODUCTION,
@@ -52,6 +51,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
         entrypoint: config.build?.entry,
         preset: resolvedPreset,
       }),
+      skipFrameworkBuild: Boolean(options.skipFrameworkBuild),
     };
 
     /** Map of resolved worker paths and their transformed contents ready for bundling */
@@ -61,19 +61,9 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       Object.entries(workerEntries).map(async ([path, code]) => {
         await mkdir(dirname(path), { recursive: true });
         await writeFile(path, code, 'utf-8');
+        await markForCleanup(path);
       }),
     );
-
-    /* Execute build phases */
-    // Phase 1: Prebuild
-    feedback.prebuild.info('Starting pre-build...');
-
-    const prebuildResult: AzionPrebuildResult = await executePrebuild({
-      buildConfig: buildConfigSetup,
-      ctx,
-    });
-
-    feedback.prebuild.info('Pre-build completed successfully');
 
     // Phase 2: Build
     feedback.build.info('Starting build...');
@@ -84,12 +74,22 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     });
     feedback.build.success('Build completed successfully');
 
+    await executeCleanup();
+
     // Phase 3: Postbuild
     feedback.postbuild.info('Starting post-build...');
     await executePostbuild({ buildConfig: buildConfigSetup, ctx });
     feedback.postbuild.success('Post-build completed successfully');
 
-    // Phase 4: Set Environment
+    // Phase 4: Set Bindings
+    // TODO: Uncomment after migrating Azion Lib to the API V4
+    // await setupBindings({ config });
+
+    // Phase 5: Setup Storage
+    // TODO: Uncomment after migrating presets to the new storage system
+    // await setupStorage({ config });
+
+    // Phase 6: Set Environment
     // TODO: rafactor this to use the same function
     const mergedConfig = await setEnvironment({
       config,
@@ -97,7 +97,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       ctx,
     });
 
-    removeAzionTempFiles();
+    await copyEnvVars();
 
     return {
       config: mergedConfig,

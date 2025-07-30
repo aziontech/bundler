@@ -83,6 +83,5 @@ export const setupBuildConfig = async (
       defineVars: {},
     },
     polyfills: Boolean(azionConfig.build?.polyfills),
-    worker: Boolean(azionConfig.build?.worker),
   };
 };

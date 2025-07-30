@@ -1,7 +1,7 @@
 import { AzionConfig, AzionBuildPreset, BuildContext } from 'azion/config';
 import utilsDefault from './utils';
 
-import envDefault, { type BundlerStore } from '#env';
+import envDefault from '#env';
 
 interface EnvironmentParams {
   config: AzionConfig;
@@ -20,11 +20,16 @@ interface EnvironmentParams {
  * This establishes the preset's default rules as a starting point, which users
  * can then override in their own configuration. This ensures a consistent base
  * configuration while maintaining flexibility for customization.
+ *
+ * Note: The current implementation uses a temporary solution for edge applications rules.
+ * Instead of a proper merge strategy, we check if rules exist and if not, we use the preset's rules.
+ * This is a workaround to ensure backward compatibility while we work on a more robust solution
+ * for handling edge application configurations. The goal is to make this more flexible and
+ * maintainable in future versions.
  */
 export const setEnvironment = async ({
   config: userConfig,
   preset,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ctx,
 }: EnvironmentParams): Promise<AzionConfig> => {
   try {
@@ -56,10 +61,10 @@ export const setEnvironment = async ({
       };
     }
 
-    // ===== TEMPORARY SOLUTION START =====
+    // ===== TEMPORARY 1 SOLUTION START =====
     // In non-experimental mode, we need to set a fixed path for the function
     // This will be removed once multi-entry point support is fully implemented
-    if (!globalThis.bundler?.experimental) {
+    if (!globalThis.bundler?.experimental && mergedConfig.functions) {
       mergedConfig.functions = [];
       const bundlerType = mergedConfig.build?.bundler || 'webpack';
       const finalExt = bundlerType === 'webpack' ? '.js' : '';
@@ -70,32 +75,17 @@ export const setEnvironment = async ({
       mergedConfig.functions.push({
         name: userConfig?.functions?.[0]?.name || preset.config?.functions?.[0]?.name || 'handler',
         path: singleOutputPath,
+        // bindings:
+        //   userConfig?.functions?.[0]?.bindings || preset.config?.functions?.[0]?.bindings,
       });
     }
-    // ===== TEMPORARY SOLUTION END =====
+    // ===== TEMPORARY 1 SOLUTION END =====
 
-    const hasUserConfig = await envDefault.readUserConfig();
+    const hasUserConfig = await envDefault.readAzionConfig();
 
     // Create initial config file if none exists
     if (!hasUserConfig) await envDefault.writeUserConfig(mergedConfig);
 
-    /**
-     * Setup environment store with the following rules:
-     * - Always include preset name for framework identification
-     * - Include build configurations (bundler, polyfills, worker)
-     * - Only include entry point if:
-     *   1. User provided an entrypoint AND
-     *   2. Preset doesn't have a built-in handler
-     */
-    const storeConfig: BundlerStore = {
-      preset: mergedConfig.build.preset,
-      bundler: mergedConfig.build?.bundler,
-      polyfills: mergedConfig.build?.polyfills,
-      worker: mergedConfig.build?.worker,
-      entry: mergedConfig.build.entry,
-    };
-
-    await envDefault.writeStore(storeConfig);
     return mergedConfig;
   } catch (error) {
     throw new Error(`Failed to set environment: ${(error as Error).message}`);

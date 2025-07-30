@@ -20,7 +20,6 @@ describe('executePrebuild', () => {
       ) => Promise<AzionPrebuildResult>,
     },
     polyfills: true,
-    worker: false,
     setup: {
       contentToInject: '',
       defineVars: {},
