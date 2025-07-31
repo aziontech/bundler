@@ -192,9 +192,9 @@ Examples:
         action,
       });
     });
-}
 
-AzionBundler.parse(process.argv);
+  AzionBundler.parse(process.argv);
+}
 
 try {
   if (validateNodeMinVersion()) {
