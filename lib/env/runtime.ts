@@ -96,6 +96,24 @@ function runtime(code: string, isFirewallEvent = false) {
     // Crypto
     context.CRYPTO_CONTEXT = cryptoContext;
 
+    // TextDecoderStream
+    context.TextDecoderStream = TextDecoderStream;
+
+    // TextEncoderStream
+    context.TextEncoderStream = TextEncoderStream;
+
+    // Performance.now
+    context.perfomance = { now: performance.now };
+
+    // CompressionStream
+    context.CompressionStream = CompressionStream;
+
+    // CountQueuingStrategy
+    context.CountQueuingStrategy = CountQueuingStrategy;
+
+    // DecompressionStream
+    context.DecompressionStream = DecompressionStream;
+
     // Promises
     context.Promise = Promise;
     context.Promise.withResolvers = promisesContext;
