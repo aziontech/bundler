@@ -1,5 +1,3 @@
-import type { AzionFunctionBinding } from 'azion/config';
-
 export interface BundlerGlobals {
   root: string;
   package: Record<string, unknown>;
@@ -8,7 +6,6 @@ export interface BundlerGlobals {
   tempPath: string;
   argsPath: string;
   experimental: boolean;
-  bindings?: AzionFunctionBinding;
 }
 
 declare global {

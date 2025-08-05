@@ -19,7 +19,7 @@ import { BUILD_CONFIG_DEFAULTS, DIRECTORIES, type BundlerType } from '#constants
  * });
  */
 export async function buildCommand(options: BuildCommandOptions) {
-  const userConfig: AzionConfig = (await readAzionConfig()) || {};
+  const userConfig = (await readAzionConfig()) || {};
 
   const { build: userBuildConfig } = userConfig;
 
