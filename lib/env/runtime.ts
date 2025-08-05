@@ -102,9 +102,6 @@ function runtime(code: string, isFirewallEvent = false) {
     // TextEncoderStream
     context.TextEncoderStream = TextEncoderStream;
 
-    // Performance.now
-    context.perfomance = { now: performance.now };
-
     // CompressionStream
     context.CompressionStream = CompressionStream;
 
