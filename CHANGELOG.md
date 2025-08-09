@@ -1,3 +1,11 @@
+## [5.4.0-stage.1](https://github.com/aziontech/bundler/compare/v5.3.0...v5.4.0-stage.1) (2025-08-05)
+
+
+### Features
+
+* add additional WEB APIs to local environment ([830d7e1](https://github.com/aziontech/bundler/commit/830d7e1d278139aac6fa3c78f6fb590301a6c6bc))
+* new web apis local dev ([#501](https://github.com/aziontech/bundler/issues/501)) ([b49a9a7](https://github.com/aziontech/bundler/commit/b49a9a7b59cbe30e9f0d1e08c4a6aaec91ec251e))
+
 ## [5.3.0](https://github.com/aziontech/bundler/compare/v5.2.0...v5.3.0) (2025-07-15)
 
 
