@@ -149,6 +149,7 @@ function startBundler() {
     .option('-p, --port <port>', 'Specify the port', '3333')
     .option('-x, --experimental [boolean]', 'Enable experimental features', false)
     .option('--skip-framework-build', 'Skip framework build step', false)
+    .option('--function-name <name>', 'Specify the function name')
     .action(async (entry, options) => {
       const { devCommand } = await import('#commands');
 

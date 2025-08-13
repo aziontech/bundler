@@ -15,7 +15,8 @@ import { buildCommand } from '../commands/build';
 import { runServer } from 'edge-runtime';
 import fs from 'fs/promises';
 import { basename } from 'path';
-import { DOCS_MESSAGE } from '#constants';
+import { DOCS_MESSAGE, MANIFEST_PLACEHOLDERS } from '#constants';
+import { AzionEdgeFunction } from 'azion/config';
 let currentServer: Awaited<ReturnType<typeof runServer>>;
 let isChangeHandlerRunning = false;
 
@@ -110,10 +111,90 @@ async function initializeServer(port: number, workerCode: string) {
   return runServer({ port, host: '0.0.0.0', runtime: execution });
 }
 
+// Helper function to set current bucket name globally
+function setCurrentBucketName(edgeFunction?: AzionEdgeFunction): string {
+  const bucketName =
+    edgeFunction?.bindings?.storage?.bucket || MANIFEST_PLACEHOLDERS.BUCKET_NAME_DEFAULT;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (globalThis as any).CURRENT_BUCKET_NAME = bucketName;
+  return bucketName;
+}
+
+// Helper function to find entry path for a function
+function findEntryPathForFunction(entries: Record<string, string>, functionName: string): string {
+  const entryPath = Object.keys(entries).find((key) => {
+    const normalizedKey = key.replace(/\.dev$/, '');
+    return normalizedKey.endsWith(functionName);
+  });
+
+  if (!entryPath) {
+    throw new Error(`Entry path not found for function "${functionName}"`);
+  }
+
+  return entryPath;
+}
+
+// Helper function to normalize path extension
+function normalizePathExtension(path: string): string {
+  return path.endsWith('.js') ? path : `${path}.js`;
+}
+
+// Return type for defineCurrentFunction
+interface CurrentFunctionResult {
+  name?: string;
+  bucket?: string;
+  path: string;
+}
+
+function defineCurrentFunction(
+  entries: Record<string, string>,
+  config: { edgeFunctions: AzionEdgeFunction[] | undefined },
+  functionName?: string,
+): CurrentFunctionResult {
+  // Validate inputs
+  if (!entries || Object.keys(entries).length === 0) {
+    throw new Error('No entries provided');
+  }
+
+  // Handle specific function case
+  if (functionName) {
+    const targetFunction = config.edgeFunctions?.find((f) => f.name === functionName);
+
+    if (!targetFunction) {
+      throw new Error(`Function "${functionName}" not found in edge functions configuration`);
+    }
+
+    const entryPath = findEntryPathForFunction(entries, functionName);
+    const bucketName = setCurrentBucketName(targetFunction);
+
+    return {
+      name: targetFunction.name,
+      bucket: bucketName,
+      path: normalizePathExtension(entryPath),
+    };
+  }
+
+  // Handle default case (first entry)
+  const entryPath = Object.keys(entries)[0];
+  const defaultFunction = config.edgeFunctions?.[0];
+  const bucketName = setCurrentBucketName(defaultFunction);
+
+  return {
+    name: defaultFunction?.name,
+    bucket: bucketName,
+    path: normalizePathExtension(entryPath),
+  };
+}
+
 /**
  * Handle server operations: start, restart.
  */
-async function manageServer(workerPath: string | null, port: number, skipFrameworkBuild = false) {
+async function manageServer(
+  workerPath: string | null,
+  port: number,
+  skipFrameworkBuild = false,
+  functionName?: string,
+) {
   try {
     if (currentServer) {
       await currentServer.close();
@@ -121,16 +202,13 @@ async function manageServer(workerPath: string | null, port: number, skipFramewo
 
     const {
       setup: { entry },
+      config: { edgeFunctions },
     } = await buildCommand({ production: false, skipFrameworkBuild });
 
     let workerCode;
     try {
-      // FIXME: Temporary solution to maintain compatibility.
-      // Will be refactored along with the legacy module for better
-      // handling of file extensions.
-      const entryPath = Object.keys(entry)[0];
-      const finalPath = entryPath.endsWith('.js') ? entryPath : `${entryPath}.js`;
-      workerCode = await readWorkerFile(workerPath || finalPath);
+      const { path: finalPath } = defineCurrentFunction(entry, { edgeFunctions }, functionName);
+      workerCode = await readWorkerFile(finalPath);
     } catch (error) {
       feedback.server.error((error as Error).message);
       debug.error(`Error reading worker file: ${error}`);
@@ -193,13 +271,18 @@ async function handleFileChange(path: string, workerPath: string | null, port: n
 /**
  * Entry point function to start the server and watch for file changes.
  */
-async function startServer(workerPath: string | null, port: number, skipFrameworkBuild = false) {
+async function startServer(
+  workerPath: string | null,
+  port: number,
+  skipFrameworkBuild = false,
+  functionName?: string,
+) {
   const IsPortInUse = await checkPortAvailability(port);
   if (IsPortInUse) {
     feedback.server.error(`Port ${port} is in use. Please choose another port.`);
     process.exit(1);
   }
-  await manageServer(workerPath, port, skipFrameworkBuild);
+  await manageServer(workerPath, port, skipFrameworkBuild, functionName);
 
   const watcher = chokidar.watch('./', {
     persistent: true,

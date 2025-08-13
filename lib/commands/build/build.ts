@@ -58,13 +58,18 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     /** Map of resolved worker paths and their transformed contents ready for bundling */
     const workerEntries: Record<string, string> = await setupWorkerCode(buildConfigSetup, ctx);
     /** Write each transformed worker to its bundler entry path */
+    const workerPaths: string[] = [];
     await Promise.all(
       Object.entries(workerEntries).map(async ([path, code]) => {
         await mkdir(dirname(path), { recursive: true });
         await writeFile(path, code, 'utf-8');
-        await markForCleanup(path);
+        workerPaths.push(path);
       }),
     );
+
+    for (const path of workerPaths) {
+      await markForCleanup(path);
+    }
 
     // Phase 2: Build
     feedback.build.info('Starting build...');
@@ -82,19 +87,19 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     await executePostbuild({ buildConfig: buildConfigSetup, ctx });
     feedback.postbuild.success('Post-build completed successfully');
 
-    // Phase 4: Set Storage
-    const storageSetup = await setupStorage({ config });
-
-    // Phase 5: Set Bindings
-    await setupBindings({ config, storageSetup });
-
-    // Phase 6: Set Environment
+    // Phase 4: Set Environment
     // TODO: rafactor this to use the same function
     const mergedConfig = await setEnvironment({
       config,
       preset: resolvedPreset,
       ctx,
     });
+
+    // Phase 5: Set Storage
+    const storageSetup = await setupStorage({ config: mergedConfig });
+
+    // Phase 6: Set Bindings
+    await setupBindings({ config: mergedConfig, storageSetup });
 
     await copyEnvVars();
 

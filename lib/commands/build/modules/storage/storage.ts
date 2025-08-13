@@ -2,7 +2,7 @@ import { debug } from '#utils';
 import fsPromises from 'fs/promises';
 import path from 'path';
 import { AzionConfig, AzionBucket } from 'azion/config';
-import { DIRECTORIES } from '#constants';
+import { DIRECTORIES, MANIFEST_PLACEHOLDERS } from '#constants';
 import { feedback } from 'azion/utils/node';
 
 interface BucketMetadata {
@@ -49,6 +49,9 @@ const saveBucketMetadata = async (
   storageName: string,
   metadata: Omit<BucketMetadata, 'createdAt'>,
 ): Promise<void> => {
+  const placeholderBucketName = MANIFEST_PLACEHOLDERS.BUCKET_NAME;
+  const storageNameDefault =
+    placeholderBucketName === storageName ? MANIFEST_PLACEHOLDERS.BUCKET_NAME_DEFAULT : storageName;
   try {
     const metadataPath = DIRECTORIES.OUTPUT_STORAGE_METADATA_PATH;
 
@@ -65,14 +68,14 @@ const saveBucketMetadata = async (
       createdAt: new Date().toISOString(),
     };
 
-    allMetadata = allMetadata.filter((item) => item.name !== storageName);
+    allMetadata = allMetadata.filter((item) => item.name !== storageNameDefault);
 
     allMetadata.push(fullMetadata);
 
     await fsPromises.writeFile(metadataPath, JSON.stringify(allMetadata, null, 2), 'utf-8');
-    debug.info(`Storage metadata saved for: ${storageName}`);
+    debug.info(`Storage metadata saved for: ${storageNameDefault}`);
   } catch (error) {
-    debug.error(`Failed to save storage metadata for ${storageName}:`, error);
+    debug.error(`Failed to save storage metadata for ${storageNameDefault}:`, error);
     throw error;
   }
 };
@@ -86,8 +89,14 @@ const createStorageSymlink = async (
   targetDir: string,
   prefix: string,
 ): Promise<void> => {
+  const placeholderBucketName = MANIFEST_PLACEHOLDERS.BUCKET_NAME;
+  const storageName =
+    placeholderBucketName === storage.name
+      ? MANIFEST_PLACEHOLDERS.BUCKET_NAME_DEFAULT
+      : storage.name;
+
   try {
-    const targetPath = path.join(targetDir, storage.name);
+    const targetPath = path.join(targetDir, storageName);
 
     try {
       await fsPromises.unlink(targetPath);
@@ -97,17 +106,17 @@ const createStorageSymlink = async (
     }
 
     await fsPromises.symlink(sourceDir, targetPath, 'dir');
-    debug.info(`Storage link created: ${storage.name} -> ${sourceDir}`);
+    debug.info(`Storage link created: ${storageName} -> ${sourceDir}`);
 
-    await saveBucketMetadata(storage.name, {
-      name: storage.name,
+    await saveBucketMetadata(storageName, {
+      name: storageName,
       edgeAccess: storage.edgeAccess || 'read_only',
       sourceDir,
       targetDir: targetPath,
       prefix,
     });
   } catch (error) {
-    debug.error(`Failed to create storage link for ${storage.name}:`, error);
+    debug.error(`Failed to create storage link for ${storageName}:`, error);
     throw error;
   }
 };
