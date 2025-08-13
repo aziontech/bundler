@@ -121,10 +121,14 @@ function setCurrentBucketName(edgeFunction?: AzionEdgeFunction): string {
 }
 
 // Helper function to find entry path for a function
-function findEntryPathForFunction(entries: Record<string, string>, functionName: string): string {
+function findEntryPathForFunction(
+  entries: Record<string, string>,
+  functionName: string,
+  targetFunctionPath: string,
+): string {
   const entryPath = Object.keys(entries).find((key) => {
-    const normalizedKey = key.replace(/\.dev$/, '');
-    return normalizedKey.endsWith(functionName);
+    const normalizedKey = key.replace(/\.dev$/, '').replace(/\.edge\//, '');
+    return targetFunctionPath.replace(/\.js$/, '').endsWith(normalizedKey);
   });
 
   if (!entryPath) {
@@ -164,7 +168,7 @@ function defineCurrentFunction(
       throw new Error(`Function "${functionName}" not found in edge functions configuration`);
     }
 
-    const entryPath = findEntryPathForFunction(entries, functionName);
+    const entryPath = findEntryPathForFunction(entries, functionName, targetFunction.path);
     const bucketName = setCurrentBucketName(targetFunction);
 
     return {
