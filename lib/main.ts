@@ -99,8 +99,8 @@ function setupBundlerProcessHandlers() {
 function startBundler() {
   AzionBundler.version(globalThis.bundler.version);
 
-  // Default to 'build' command when no command is provided
-  if (process.argv.length === 2) process.argv.push('build');
+  // // Default to 'build' command when no command is provided
+  // if (process.argv.length === 2) process.argv.push('build');
 
   AzionBundler.command('store <command>')
     .description('Manage store configuration')
@@ -149,6 +149,7 @@ function startBundler() {
     .option('-p, --port <port>', 'Specify the port', '3333')
     .option('-x, --experimental [boolean]', 'Enable experimental features', false)
     .option('--skip-framework-build', 'Skip framework build step', false)
+    .option('--function-name <name>', 'Specify the function name')
     .action(async (entry, options) => {
       const { devCommand } = await import('#commands');
 
@@ -190,19 +191,6 @@ Examples:
       await manifestCommand({
         ...options,
         action,
-      });
-    });
-
-  AzionBundler.command('config <command>')
-    .description('Manage azion.config settings')
-    .option('-k, --key <key...>', 'Property key (e.g., build.preset or edgeApplications[0].name)')
-    .option('-v, --value <value...>', 'Value to be set')
-    .option('-a, --all', 'Read or delete entire configuration (for read/delete commands)')
-    .action(async (command, options) => {
-      const { configCommand } = await import('#commands');
-      await configCommand({
-        command,
-        options,
       });
     });
 

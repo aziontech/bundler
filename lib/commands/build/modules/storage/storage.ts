@@ -2,15 +2,32 @@ import { debug } from '#utils';
 import fsPromises from 'fs/promises';
 import path from 'path';
 import { AzionConfig, AzionBucket } from 'azion/config';
-import { DIRECTORIES } from '#constants';
+import { DIRECTORIES, MANIFEST_PLACEHOLDERS } from '#constants';
+import { feedback } from 'azion/utils/node';
 
-interface StorageMetadata {
+interface BucketMetadata {
   name: string;
   edgeAccess: 'read_only' | 'read_write' | 'restricted';
   sourceDir: string;
   targetDir: string;
+  prefix: string;
   createdAt: string;
 }
+
+/**
+ * Extends AzionBucket with processed prefix information
+ */
+export interface BucketSetup extends AzionBucket {
+  prefix: string;
+}
+
+/**
+ * Generates a timestamp-based prefix for storage
+ */
+const generateTimestampPrefix = (): string => {
+  const timestamp = Date.now();
+  return `${timestamp}`;
+};
 
 /**
  * Checks if a directory exists
@@ -28,21 +45,37 @@ const directoryExists = async (dirPath: string): Promise<boolean> => {
 /**
  * Saves storage metadata to a JSON file
  */
-const saveStorageMetadata = async (
+const saveBucketMetadata = async (
   storageName: string,
-  metadata: Omit<StorageMetadata, 'createdAt'>,
+  metadata: Omit<BucketMetadata, 'createdAt'>,
 ): Promise<void> => {
+  const placeholderBucketName = MANIFEST_PLACEHOLDERS.BUCKET_NAME;
+  const storageNameDefault =
+    placeholderBucketName === storageName ? MANIFEST_PLACEHOLDERS.BUCKET_NAME_DEFAULT : storageName;
   try {
-    const metadataPath = path.join(DIRECTORIES.OUTPUT_STORAGE_PATH, `${storageName}.metadata.json`);
-    const fullMetadata: StorageMetadata = {
+    const metadataPath = DIRECTORIES.OUTPUT_STORAGE_METADATA_PATH;
+
+    let allMetadata: BucketMetadata[] = [];
+    try {
+      const existingData = await fsPromises.readFile(metadataPath, 'utf-8');
+      allMetadata = JSON.parse(existingData);
+    } catch (error) {
+      debug.info('Creating new storage metadata file');
+    }
+
+    const fullMetadata: BucketMetadata = {
       ...metadata,
       createdAt: new Date().toISOString(),
     };
 
-    await fsPromises.writeFile(metadataPath, JSON.stringify(fullMetadata, null, 2), 'utf-8');
-    debug.info(`Storage metadata saved for: ${storageName}`);
+    allMetadata = allMetadata.filter((item) => item.name !== storageNameDefault);
+
+    allMetadata.push(fullMetadata);
+
+    await fsPromises.writeFile(metadataPath, JSON.stringify(allMetadata, null, 2), 'utf-8');
+    debug.info(`Storage metadata saved for: ${storageNameDefault}`);
   } catch (error) {
-    debug.error(`Failed to save storage metadata for ${storageName}:`, error);
+    debug.error(`Failed to save storage metadata for ${storageNameDefault}:`, error);
     throw error;
   }
 };
@@ -54,32 +87,36 @@ const createStorageSymlink = async (
   storage: AzionBucket,
   sourceDir: string,
   targetDir: string,
+  prefix: string,
 ): Promise<void> => {
-  try {
-    const targetPath = path.join(targetDir, storage.name);
+  const placeholderBucketName = MANIFEST_PLACEHOLDERS.BUCKET_NAME;
+  const storageName =
+    placeholderBucketName === storage.name
+      ? MANIFEST_PLACEHOLDERS.BUCKET_NAME_DEFAULT
+      : storage.name;
 
-    // Remove existing symlink if it exists
+  try {
+    const targetPath = path.join(targetDir, storageName);
+
     try {
       await fsPromises.unlink(targetPath);
       debug.info(`Removed existing storage link: ${targetPath}`);
     } catch (error) {
-      // Ignore error if file doesn't exist
       debug.warn(`Storage link not found: ${targetPath}`);
     }
 
-    // Create the symbolic link
     await fsPromises.symlink(sourceDir, targetPath, 'dir');
-    debug.info(`Storage link created: ${storage.name} -> ${sourceDir}`);
+    debug.info(`Storage link created: ${storageName} -> ${sourceDir}`);
 
-    // Save storage metadata
-    await saveStorageMetadata(storage.name, {
-      name: storage.name,
+    await saveBucketMetadata(storageName, {
+      name: storageName,
       edgeAccess: storage.edgeAccess || 'read_only',
       sourceDir,
       targetDir: targetPath,
+      prefix,
     });
   } catch (error) {
-    debug.error(`Failed to create storage link for ${storage.name}:`, error);
+    debug.error(`Failed to create storage link for ${storageName}:`, error);
     throw error;
   }
 };
@@ -98,16 +135,16 @@ const validateStorageConfig = (storage: AzionBucket): boolean => {
 /**
  * Sets up virtual local storages based on Azion configuration
  */
-export const setupStorage = async ({ config }: { config: AzionConfig }): Promise<void> => {
+export const setupStorage = async ({ config }: { config: AzionConfig }): Promise<BucketSetup[]> => {
   try {
     const storages = config.edgeStorage || [];
+    const processedStorages: BucketSetup[] = [];
 
     if (storages.length === 0) {
       debug.info('No storages found to setup');
-      return;
+      return processedStorages;
     }
 
-    // Ensure base storage directory exists
     await fsPromises.mkdir(DIRECTORIES.OUTPUT_STORAGE_PATH, { recursive: true });
 
     for (const storage of storages) {
@@ -117,16 +154,32 @@ export const setupStorage = async ({ config }: { config: AzionConfig }): Promise
 
       const sourceDir = path.resolve(process.cwd(), storage.dir);
 
-      // Validate if source directory exists
       if (!(await directoryExists(sourceDir))) {
         throw new Error(`Storage directory not found: ${sourceDir}`);
       }
 
-      // Create symbolic link for storage
-      await createStorageSymlink(storage, sourceDir, DIRECTORIES.OUTPUT_STORAGE_PATH);
+      const providedPrefix = (storage as BucketSetup).prefix;
+      const prefix = providedPrefix || generateTimestampPrefix();
+
+      if (!providedPrefix) {
+        feedback.storage.info(
+          `No prefix provided for storage '${storage.name}', generating version prefix: ${prefix}`,
+        );
+      }
+      if (providedPrefix) {
+        feedback.storage.info(`Using provided prefix for storage '${storage.name}': ${prefix}`);
+      }
+
+      await createStorageSymlink(storage, sourceDir, DIRECTORIES.OUTPUT_STORAGE_PATH, prefix);
+
+      processedStorages.push({
+        ...storage,
+        prefix,
+      });
     }
 
     debug.info('Storage setup completed successfully');
+    return processedStorages;
   } catch (error) {
     debug.error('Failed to setup storages:', error);
     throw error;

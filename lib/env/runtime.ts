@@ -52,7 +52,9 @@ import { EdgeContext, EdgeVM } from './edge-vm';
 function runtime(code: string, isFirewallEvent = false) {
   const extend = (context: EdgeContext) => {
     context.RESERVED_FETCH = context.fetch.bind(context);
-    context.fetch = async (resource, options) => fetchContext(context, resource, options);
+    context.fetch = async (resource, options) =>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      fetchContext(context, resource, options, (globalThis as any)?.CURRENT_BUCKET_NAME);
 
     // Set the context for the FetchEvent if it's a Firewall event or a Fetch event
     context.FetchEvent = isFirewallEvent ? FirewallEventContext : FetchEventContext;
