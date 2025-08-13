@@ -1,3 +1,10 @@
+## [5.4.0-stage.3](https://github.com/aziontech/bundler/compare/v5.4.0-stage.2...v5.4.0-stage.3) (2025-08-13)
+
+
+### Features
+
+* improvements, command replace and flag only-generate-config to build command ([#503](https://github.com/aziontech/bundler/issues/503)) ([b964349](https://github.com/aziontech/bundler/commit/b964349f9fb46b8965faca34426220e844c06348))
+
 ## [5.4.0-stage.2](https://github.com/aziontech/bundler/compare/v5.4.0-stage.1...v5.4.0-stage.2) (2025-08-13)
 
 
