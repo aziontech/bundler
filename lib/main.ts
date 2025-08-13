@@ -194,6 +194,32 @@ Examples:
       });
     });
 
+  AzionBundler.command('config <command>')
+    .description('Manage azion.config settings')
+    .option('-k, --key <key...>', 'Property key (e.g., build.preset or edgeApplications[0].name)')
+    .option('-v, --value <value...>', 'Value to be set')
+    .option('-a, --all', 'Read or delete entire configuration (for read/delete commands)')
+    .addHelpText(
+      'after',
+      `
+Examples:
+  $ ef config create -k "build.preset" -v "typescript"
+  $ ef config read -a
+  $ ef config read -k "build.preset"
+  $ ef config update -k "build.preset" -v "vue"
+  $ ef config delete -a
+  $ ef config delete -k "build.preset"
+  $ ef config replace -k '$EDGE_FUNCTION_NAME' -v "my-func"
+    `,
+    )
+    .action(async (command, options) => {
+      const { configCommand } = await import('#commands');
+      await configCommand({
+        command,
+        options,
+      });
+    });
+
   AzionBundler.parse(process.argv);
 }
 

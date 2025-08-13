@@ -1,5 +1,5 @@
 import { readAzionConfig, writeUserConfig } from '#env';
-import { createConfig, updateConfig, readConfig, deleteConfig } from './config';
+import { createConfig, updateConfig, readConfig, deleteConfig, replaceConfig } from './config';
 import type { ConfigCommandOptions } from './types';
 import type { AzionConfig } from 'azion/config';
 
@@ -96,9 +96,21 @@ import type { AzionConfig } from 'azion/config';
  * ef config delete -k "edgeFunctions[0]"
  * ef config delete -k "edgeApplications[0].rules.request[1]"
  *
- * # Delete entire sections
- * ef config delete -k "build"
- * ef config delete -k "edgeApplications[0].rules"
+ * # Delete storage configuration
+ * ef config delete -k "edgeStorage[0]"
+ *
+ * # Delete entire configuration
+ * ef config delete --all
+ *
+ * === REPLACING PLACEHOLDERS ===
+ *
+ * # Replace all occurrences of a placeholder with a new value
+ * ef config replace -r "$EDGE_FUNCTION_NAME" -v "my-func"
+ * ef config replace --replace "$LOCAL_FUNCTION_PATH" --value "./dist/handler.js"
+ *
+ * # Replace multiple placeholders (requires multiple commands)
+ * ef config replace -r "$EDGE_FUNCTION_NAME" -v "auth-function"
+ * ef config replace -r "$EDGE_APPLICATION_NAME" -v "my-app"
  *
  * === ADVANCED EXAMPLES ===
  *
@@ -177,7 +189,7 @@ export async function configCommand({ command, options }: ConfigCommandOptions) 
       ? [options.value]
       : [];
 
-  if (keys.length === 0) {
+  if (keys.length === 0 && command !== 'replace') {
     throw new Error('Key is required when --all is not used');
   }
 
@@ -257,6 +269,22 @@ export async function configCommand({ command, options }: ConfigCommandOptions) 
       }
       result = deleteConfig({
         key,
+        config: userConfig,
+      });
+      break;
+    case 'replace':
+      if (!userConfig) {
+        throw new Error('No configuration found');
+      }
+      if (!options.key) {
+        throw new Error('Placeholder is required for replace command (use -k or --key)');
+      }
+      if (value === undefined) {
+        throw new Error('Value is required for replace command');
+      }
+      result = replaceConfig({
+        placeholder: options.key,
+        value: String(value),
         config: userConfig,
       });
       break;
