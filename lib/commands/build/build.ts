@@ -31,6 +31,29 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     const resolvedPreset = await resolvePreset(config.build?.preset);
     const buildConfigSetup = await setupBuildConfig(config, resolvedPreset, isProduction);
 
+    // only generate azion.config.js
+    if (options.onlyGenerateConfig) {
+      const mergedConfig = await setEnvironment({
+        config,
+        preset: resolvedPreset,
+        ctx: {
+          production: isProduction ?? BUILD_CONFIG_DEFAULTS.PRODUCTION,
+          skipFrameworkBuild: Boolean(options.skipFrameworkBuild),
+          handler: '',
+        },
+      });
+      feedback.build.success('Build completed successfully with only azion.config');
+      return {
+        config: mergedConfig,
+        ctx: {
+          production: isProduction ?? BUILD_CONFIG_DEFAULTS.PRODUCTION,
+          skipFrameworkBuild: Boolean(options.skipFrameworkBuild),
+          handler: '',
+        },
+        setup: buildConfigSetup,
+      };
+    }
+
     /* Execute build phases */
     // Phase 1: Prebuild
     feedback.prebuild.info('Starting pre-build...');
