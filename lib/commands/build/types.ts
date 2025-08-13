@@ -61,6 +61,7 @@ export interface PresetValueOptions {
 export interface BuildOptions {
   production?: boolean;
   skipFrameworkBuild?: boolean;
+  onlyGenerateConfig?: boolean;
 }
 
 export interface BuildResult {

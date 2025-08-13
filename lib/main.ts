@@ -129,6 +129,17 @@ function startBundler() {
     .option('-d, --dev', 'Build in development mode', false)
     .option('-x, --experimental [boolean]', 'Enable experimental features', false)
     .option('--skip-framework-build', 'Skip framework build step', false)
+    .option('--only-generate-config', 'Build only generate azion.config', false)
+    .addHelpText(
+      'after',
+      `
+Examples:
+  $ ef build -e ./src/index.js -p javascript
+  $ ef build --only-generate-config -e index.js -p javascript
+  $ ef build --preset opennextjs
+  $ ef build --preset opennextjs --skip-framework-build
+    `,
+    )
     .action(async (options) => {
       const { buildCommand, manifestCommand } = await import('#commands');
       const { dev, experimental, ...buildOptions } = options;

@@ -1,4 +1,6 @@
 import { readAzionConfig, writeUserConfig } from '#env';
+import { debug } from '#utils';
+import { feedback } from 'azion/utils/node';
 import { createConfig, updateConfig, readConfig, deleteConfig, replaceConfig } from './config';
 import type { ConfigCommandOptions } from './types';
 import type { AzionConfig } from 'azion/config';
@@ -164,134 +166,141 @@ import type { AzionConfig } from 'azion/config';
  */
 
 export async function configCommand({ command, options }: ConfigCommandOptions) {
-  const userConfig: AzionConfig | null = await readAzionConfig();
+  try {
+    const userConfig: AzionConfig | null = await readAzionConfig();
 
-  if (options.all) {
-    let allConfig: AzionConfig;
+    if (options.all) {
+      let allConfig: AzionConfig;
+      switch (command) {
+        case 'read':
+          allConfig = userConfig || {};
+          console.log(JSON.stringify(allConfig, null, 2));
+          return allConfig;
+        case 'delete':
+          await writeUserConfig({});
+          return {};
+        default:
+          throw new Error('--all flag is only supported for read and delete commands');
+      }
+    }
+
+    // Handle multiple keys and values for batch operations
+    const keys = Array.isArray(options.key) ? options.key : options.key ? [options.key] : [];
+    const values = Array.isArray(options.value)
+      ? options.value
+      : options.value !== undefined
+        ? [options.value]
+        : [];
+
+    if (keys.length === 0 && command !== 'replace') {
+      throw new Error('Key is required when --all is not used');
+    }
+
+    // For commands that support multiple operations
+    if (command === 'update' && keys.length > 1) {
+      if (values.length !== keys.length) {
+        throw new Error(
+          `Number of keys (${keys.length}) must match number of values (${values.length})`,
+        );
+      }
+
+      if (!userConfig) {
+        throw new Error('No configuration found. Use create command first.');
+      }
+
+      let result = userConfig;
+
+      // Apply each update sequentially
+      for (let i = 0; i < keys.length; i++) {
+        result = updateConfig({
+          key: keys[i],
+          value: values[i],
+          config: result,
+        });
+      }
+
+      await writeUserConfig(result);
+      return result;
+    }
+
+    // For single operations or commands that don't support batch
+    const key = keys[0];
+    const value = values[0];
+
+    let result: AzionConfig;
+    let readValue: unknown;
+
     switch (command) {
+      case 'create':
+        if (userConfig) {
+          throw new Error('Configuration already exists. Use update command instead.');
+        }
+        if (value === undefined) {
+          throw new Error('Value is required for create command');
+        }
+        result = createConfig({
+          key,
+          value,
+        });
+        break;
+      case 'update':
+        if (!userConfig) {
+          throw new Error('No configuration found. Use create command first.');
+        }
+        if (value === undefined) {
+          throw new Error('Value is required for update command');
+        }
+        result = updateConfig({
+          key,
+          value,
+          config: userConfig,
+        });
+        break;
       case 'read':
-        allConfig = userConfig || {};
-        console.log(JSON.stringify(allConfig, null, 2));
-        return allConfig;
+        if (!userConfig) {
+          throw new Error('No configuration found');
+        }
+        readValue = readConfig({
+          key,
+          config: userConfig,
+        });
+        return readValue;
       case 'delete':
-        await writeUserConfig({});
-        return {};
+        if (!userConfig) {
+          throw new Error('No configuration found');
+        }
+        result = deleteConfig({
+          key,
+          config: userConfig,
+        });
+        break;
+      case 'replace':
+        if (!userConfig) {
+          throw new Error('No configuration found');
+        }
+        if (!options.key) {
+          throw new Error('Placeholder is required for replace command (use -k or --key)');
+        }
+        if (value === undefined) {
+          throw new Error('Value is required for replace command');
+        }
+        result = replaceConfig({
+          placeholder: options.key,
+          value: String(value),
+          config: userConfig,
+        });
+        break;
+
       default:
-        throw new Error('--all flag is only supported for read and delete commands');
-    }
-  }
-
-  // Handle multiple keys and values for batch operations
-  const keys = Array.isArray(options.key) ? options.key : options.key ? [options.key] : [];
-  const values = Array.isArray(options.value)
-    ? options.value
-    : options.value !== undefined
-      ? [options.value]
-      : [];
-
-  if (keys.length === 0 && command !== 'replace') {
-    throw new Error('Key is required when --all is not used');
-  }
-
-  // For commands that support multiple operations
-  if (command === 'update' && keys.length > 1) {
-    if (values.length !== keys.length) {
-      throw new Error(
-        `Number of keys (${keys.length}) must match number of values (${values.length})`,
-      );
-    }
-
-    if (!userConfig) {
-      throw new Error('No configuration found. Use create command first.');
-    }
-
-    let result = userConfig;
-
-    // Apply each update sequentially
-    for (let i = 0; i < keys.length; i++) {
-      result = updateConfig({
-        key: keys[i],
-        value: values[i],
-        config: result,
-      });
+        throw new Error(`Unknown command: ${command}`);
     }
 
     await writeUserConfig(result);
     return result;
+  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (debug as any).error(error);
+    feedback.error(`${error instanceof Error ? error.message : String(error)}`);
+    process.exit(1);
   }
-
-  // For single operations or commands that don't support batch
-  const key = keys[0];
-  const value = values[0];
-
-  let result: AzionConfig;
-  let readValue: unknown;
-
-  switch (command) {
-    case 'create':
-      if (userConfig) {
-        throw new Error('Configuration already exists. Use update command instead.');
-      }
-      if (value === undefined) {
-        throw new Error('Value is required for create command');
-      }
-      result = createConfig({
-        key,
-        value,
-      });
-      break;
-    case 'update':
-      if (!userConfig) {
-        throw new Error('No configuration found. Use create command first.');
-      }
-      if (value === undefined) {
-        throw new Error('Value is required for update command');
-      }
-      result = updateConfig({
-        key,
-        value,
-        config: userConfig,
-      });
-      break;
-    case 'read':
-      if (!userConfig) {
-        throw new Error('No configuration found');
-      }
-      readValue = readConfig({
-        key,
-        config: userConfig,
-      });
-      console.log(JSON.stringify(readValue, null, 2));
-      return readValue;
-    case 'delete':
-      if (!userConfig) {
-        throw new Error('No configuration found');
-      }
-      result = deleteConfig({
-        key,
-        config: userConfig,
-      });
-      break;
-    case 'replace':
-      if (!userConfig) {
-        throw new Error('No configuration found');
-      }
-      if (!options.key) {
-        throw new Error('Placeholder is required for replace command (use -k or --key)');
-      }
-      if (value === undefined) {
-        throw new Error('Value is required for replace command');
-      }
-      result = replaceConfig({
-        placeholder: options.key,
-        value: String(value),
-        config: userConfig,
-      });
-      break;
-    default:
-      throw new Error(`Unknown command: ${command}`);
-  }
-
-  await writeUserConfig(result);
-  return result;
 }
