@@ -1,3 +1,10 @@
+## [5.4.0-stage.2](https://github.com/aziontech/bundler/compare/v5.4.0-stage.1...v5.4.0-stage.2) (2025-08-13)
+
+
+### Features
+
+* API V4 ([#500](https://github.com/aziontech/bundler/issues/500)) ([41e7940](https://github.com/aziontech/bundler/commit/41e7940c6cd90b2b3798466700161499ef285204))
+
 ## [5.4.0-stage.1](https://github.com/aziontech/bundler/compare/v5.3.0...v5.4.0-stage.1) (2025-08-05)
 
 
