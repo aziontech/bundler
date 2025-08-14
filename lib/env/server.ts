@@ -15,8 +15,8 @@ import { buildCommand } from '../commands/build';
 import { runServer } from 'edge-runtime';
 import fs from 'fs/promises';
 import { basename } from 'path';
-import { DOCS_MESSAGE, MANIFEST_PLACEHOLDERS } from '#constants';
-import { AzionEdgeFunction } from 'azion/config';
+import { DOCS_MESSAGE } from '#constants';
+import { AzionConfig, AzionEdgeFunction } from 'azion/config';
 let currentServer: Awaited<ReturnType<typeof runServer>>;
 let isChangeHandlerRunning = false;
 
@@ -112,11 +112,8 @@ async function initializeServer(port: number, workerCode: string) {
 }
 
 // Helper function to set current bucket name globally
-function setCurrentBucketName(edgeFunction?: AzionEdgeFunction): string {
-  const bucketName =
-    edgeFunction?.bindings?.storage?.bucket || MANIFEST_PLACEHOLDERS.BUCKET_NAME_DEFAULT;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (globalThis as any).CURRENT_BUCKET_NAME = bucketName;
+function setCurrentBucketName(edgeFunction?: AzionEdgeFunction, config?: AzionConfig): string {
+  const bucketName = edgeFunction?.bindings?.storage?.bucket || config?.edgeStorage?.[0].name || '';
   return bucketName;
 }
 
@@ -169,11 +166,11 @@ function defineCurrentFunction(
     }
 
     const entryPath = findEntryPathForFunction(entries, functionName, targetFunction.path);
-    const bucketName = setCurrentBucketName(targetFunction);
+    // const bucketName = setCurrentBucketName(targetFunction, config);
 
     return {
       name: targetFunction.name,
-      bucket: bucketName,
+      // bucket: bucketName,
       path: normalizePathExtension(entryPath),
     };
   }

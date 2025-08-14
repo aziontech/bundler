@@ -13,13 +13,6 @@ export const DIRECTORIES = {
   OUTPUT_STORAGE_METADATA_PATH: join('.edge', 'storage', 'metadata.json'),
 } as const;
 
-/** Placeholders manifest */
-export const MANIFEST_PLACEHOLDERS = {
-  BUCKET_NAME: '$BUCKET_NAME',
-  BUCKET_NAME_DEFAULT: 'root',
-  LOCAL_BUCKET_DIR: '$LOCAL_BUCKET_DIR',
-} as const;
-
 /** Default build configuration values */
 export const BUILD_CONFIG_DEFAULTS = {
   POLYFILLS: true,

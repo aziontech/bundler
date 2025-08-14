@@ -15,7 +15,10 @@ const createStorageBindingTemplate = (storage: { bucket: string; prefix: string 
 //   - name: assets
 //     bucket: ${storage.bucket}
 //     prefix: ${storage.prefix}
-//---`;
+//---
+/* this temporary binding is used to inject the storage name and prefix into the function file */
+globalThis.AZION_BUCKET_NAME = '${storage.bucket}';
+globalThis.AZION_BUCKET_PREFIX = '${storage.prefix}';`;
 };
 
 /**
@@ -55,6 +58,7 @@ const findStorageForBinding = (
 const injectBindingsIntoFile = async (
   func: AzionEdgeFunction,
   bucketsSetup: BucketSetup[],
+  isProduction: boolean,
 ): Promise<void> => {
   if (!func.path) {
     debug.warn(`Function ${func.name} does not have a defined path`);
@@ -64,11 +68,12 @@ const injectBindingsIntoFile = async (
   const storageBindings = func.bindings?.storage;
   if (!storageBindings) {
     debug.info(`Function ${func.name} does not have storage bindings`);
-
     return;
   }
 
-  const edgeFunctionsPath = resolveFunctionPath(func.path);
+  const edgeFunctionsPath = resolveFunctionPath(
+    func.path.replace(/\.js$/, isProduction ? '.js' : '.dev.js'),
+  );
 
   if (!(await fileExists(edgeFunctionsPath))) {
     feedback.bindings.warn(`Function file not found: ${edgeFunctionsPath}.`);
@@ -129,9 +134,11 @@ const injectBindingsIntoFile = async (
 export const setupBindings = async ({
   config,
   storageSetup,
+  isProduction,
 }: {
   config: AzionConfig;
   storageSetup: BucketSetup[];
+  isProduction: boolean;
 }): Promise<void> => {
   try {
     const functions = config.edgeFunctions || [];
@@ -142,7 +149,9 @@ export const setupBindings = async ({
     }
 
     debug.info('Injecting bindings into functions...');
-    await Promise.all(functions.map((func) => injectBindingsIntoFile(func, storageSetup)));
+    await Promise.all(
+      functions.map((func) => injectBindingsIntoFile(func, storageSetup, isProduction)),
+    );
   } catch (error) {
     debug.error('Failed to execute bindings setup:', error);
     return Promise.reject(error);

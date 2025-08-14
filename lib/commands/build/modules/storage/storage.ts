@@ -2,7 +2,7 @@ import { debug } from '#utils';
 import fsPromises from 'fs/promises';
 import path from 'path';
 import { AzionConfig, AzionBucket } from 'azion/config';
-import { DIRECTORIES, MANIFEST_PLACEHOLDERS } from '#constants';
+import { DIRECTORIES } from '#constants';
 import { feedback } from 'azion/utils/node';
 
 interface BucketMetadata {
@@ -49,9 +49,6 @@ const saveBucketMetadata = async (
   storageName: string,
   metadata: Omit<BucketMetadata, 'createdAt'>,
 ): Promise<void> => {
-  const placeholderBucketName = MANIFEST_PLACEHOLDERS.BUCKET_NAME;
-  const storageNameDefault =
-    placeholderBucketName === storageName ? MANIFEST_PLACEHOLDERS.BUCKET_NAME_DEFAULT : storageName;
   try {
     const metadataPath = DIRECTORIES.OUTPUT_STORAGE_METADATA_PATH;
 
@@ -68,14 +65,14 @@ const saveBucketMetadata = async (
       createdAt: new Date().toISOString(),
     };
 
-    allMetadata = allMetadata.filter((item) => item.name !== storageNameDefault);
+    allMetadata = allMetadata.filter((item) => item.name !== storageName);
 
     allMetadata.push(fullMetadata);
 
     await fsPromises.writeFile(metadataPath, JSON.stringify(allMetadata, null, 2), 'utf-8');
-    debug.info(`Storage metadata saved for: ${storageNameDefault}`);
+    debug.info(`Storage metadata saved for: ${storageName}`);
   } catch (error) {
-    debug.error(`Failed to save storage metadata for ${storageNameDefault}:`, error);
+    debug.error(`Failed to save storage metadata for ${storageName}:`, error);
     throw error;
   }
 };
@@ -89,14 +86,13 @@ const createStorageSymlink = async (
   targetDir: string,
   prefix: string,
 ): Promise<void> => {
-  const placeholderBucketName = MANIFEST_PLACEHOLDERS.BUCKET_NAME;
-  const storageName =
-    placeholderBucketName === storage.name
-      ? MANIFEST_PLACEHOLDERS.BUCKET_NAME_DEFAULT
-      : storage.name;
+  const storageName = storage.name;
 
   try {
-    const targetPath = path.join(targetDir, storageName);
+    const targetPath = path.join(targetDir, storageName, prefix);
+
+    // create folder targetPath
+    await fsPromises.mkdir(path.join(targetDir, storageName), { recursive: true });
 
     try {
       await fsPromises.unlink(targetPath);
@@ -162,6 +158,14 @@ export const setupStorage = async ({ config }: { config: AzionConfig }): Promise
 
       const providedPrefix = (storage as BucketSetup).prefix;
       const prefix = providedPrefix || generateTimestampPrefix();
+
+      // TODO: temp set globalThis
+      // this is a temporary solution to pass the storage name and prefix to the runtime
+      // future set on env fetch attributes
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (globalThis as any).AZION_BUCKET_NAME = storage.name;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (globalThis as any).AZION_BUCKET_PREFIX = prefix;
 
       if (!providedPrefix) {
         feedback.storage.info(
