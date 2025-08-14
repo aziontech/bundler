@@ -25,6 +25,10 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     const { config, options } = buildParams;
     const isProduction = Boolean(options.production);
 
+    if (options.skipFrameworkBuild) {
+      feedback.build.warn('Skipping framework build');
+    }
+
     validateConfig(config);
     await checkDependencies();
 

@@ -37,6 +37,12 @@ export interface BuildCommandOptions {
    * @default false
    */
   skipFrameworkBuild?: boolean;
+
+  /**
+   * Only generate azion.config.js
+   * @default false
+   */
+  onlyGenerateConfig?: boolean;
 }
 
 export interface PackageJson {

@@ -61,6 +61,7 @@ export async function buildCommand(options: BuildCommandOptions) {
     options: {
       production: options.production,
       skipFrameworkBuild: options.skipFrameworkBuild,
+      onlyGenerateConfig: options.onlyGenerateConfig,
     },
   });
 }
