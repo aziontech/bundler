@@ -1,3 +1,10 @@
+## [5.4.0-stage.4](https://github.com/aziontech/bundler/compare/v5.4.0-stage.3...v5.4.0-stage.4) (2025-08-14)
+
+
+### Bug Fixes
+
+* add onlyGenerateConfig option and improve storage error message ([#504](https://github.com/aziontech/bundler/issues/504)) ([0bab091](https://github.com/aziontech/bundler/commit/0bab09139892dfb77e5ed97b6fdd715fb8113af6))
+
 ## [5.4.0-stage.3](https://github.com/aziontech/bundler/compare/v5.4.0-stage.2...v5.4.0-stage.3) (2025-08-13)
 
 
