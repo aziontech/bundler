@@ -155,7 +155,9 @@ export const setupStorage = async ({ config }: { config: AzionConfig }): Promise
       const sourceDir = path.resolve(process.cwd(), storage.dir);
 
       if (!(await directoryExists(sourceDir))) {
-        throw new Error(`Storage directory not found: ${sourceDir}`);
+        throw new Error(
+          `Storage directory not found: ${sourceDir}. \n- Please check the path provided in the azion.config file on edgeStorage[].dir`,
+        );
       }
 
       const providedPrefix = (storage as BucketSetup).prefix;
