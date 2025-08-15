@@ -126,7 +126,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     const storageSetup = await setupStorage({ config: mergedConfig });
 
     // Phase 6: Set Bindings
-    await setupBindings({ config: mergedConfig, storageSetup });
+    await setupBindings({ config: mergedConfig, storageSetup, isProduction });
 
     await copyEnvVars();
 
