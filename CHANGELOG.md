@@ -1,3 +1,14 @@
+## [6.0.0-stage.1](https://github.com/aziontech/bundler/compare/v5.4.0-stage.4...v6.0.0-stage.1) (2025-08-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* All azion.config files across all presets have been updated to the new API v4 schema. 
+Existing configurations are incompatible and must be rewritten to match the new format.
+Older files will not work with this release.
+
+* feat!: update all preset azion.config files for API v4 compatibility (#505) ([b7beae9](https://github.com/aziontech/bundler/commit/b7beae9c1498e20cc2896b791bd1a605aba474a8)), closes [#505](https://github.com/aziontech/bundler/issues/505)
+
 ## [5.4.0-stage.4](https://github.com/aziontech/bundler/compare/v5.4.0-stage.3...v5.4.0-stage.4) (2025-08-14)
 
 
