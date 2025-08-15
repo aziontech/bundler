@@ -95,10 +95,43 @@ const createStorageSymlink = async (
     await fsPromises.mkdir(path.join(targetDir, storageName), { recursive: true });
 
     try {
-      await fsPromises.unlink(targetPath);
-      debug.info(`Removed existing storage link: ${targetPath}`);
+      const folders = await fsPromises.readdir(path.join(targetDir, storageName));
+      await Promise.all(
+        folders
+          .filter((folder) => folder !== prefix)
+          .map(async (folder) => {
+            const folderPath = path.join(targetDir, storageName, folder);
+            try {
+              const stats = await fsPromises.lstat(folderPath);
+              if (stats.isSymbolicLink()) {
+                await fsPromises.unlink(folderPath);
+              } else if (stats.isDirectory()) {
+                await fsPromises.rmdir(folderPath, { recursive: true });
+              } else {
+                await fsPromises.unlink(folderPath);
+              }
+            } catch (err) {
+              debug.warn(`Failed to remove ${folderPath}:`, err);
+            }
+          }),
+      );
+      debug.info(`Cleaned up existing storage items in: ${path.join(targetDir, storageName)}`);
     } catch (error) {
-      debug.warn(`Storage link not found: ${targetPath}`);
+      debug.warn(`Storage directory not found or empty: ${path.join(targetDir, storageName)}`);
+    }
+
+    // Check if target symlink already exists and remove it
+    try {
+      const stats = await fsPromises.lstat(targetPath);
+      if (stats.isSymbolicLink()) {
+        await fsPromises.unlink(targetPath);
+        debug.info(`Removed existing symlink: ${targetPath}`);
+      } else if (stats.isDirectory()) {
+        await fsPromises.rmdir(targetPath, { recursive: true });
+        debug.info(`Removed existing directory: ${targetPath}`);
+      }
+    } catch (error) {
+      // Target doesn't exist, which is fine
     }
 
     await fsPromises.symlink(sourceDir, targetPath, 'dir');
@@ -158,14 +191,6 @@ export const setupStorage = async ({ config }: { config: AzionConfig }): Promise
 
       const providedPrefix = (storage as BucketSetup).prefix;
       const prefix = providedPrefix || generateTimestampPrefix();
-
-      // TODO: temp set globalThis
-      // this is a temporary solution to pass the storage name and prefix to the runtime
-      // future set on env fetch attributes
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (globalThis as any).AZION_BUCKET_NAME = storage.name;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (globalThis as any).AZION_BUCKET_PREFIX = prefix;
 
       if (!providedPrefix) {
         feedback.storage.info(

@@ -105,11 +105,6 @@ const injectBindingsIntoFile = async (
         `No prefix provided for binding in function '${func.name}', using storage prefix: ${prefix}`,
       );
     }
-    if (bindingPrefix) {
-      feedback.postbuild.info(
-        `Using provided prefix for binding in function '${func.name}': ${prefix}`,
-      );
-    }
 
     const bindingTemplate = createStorageBindingTemplate({
       bucket: bucketName,

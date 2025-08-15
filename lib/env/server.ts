@@ -16,7 +16,7 @@ import { runServer } from 'edge-runtime';
 import fs from 'fs/promises';
 import { basename } from 'path';
 import { DOCS_MESSAGE } from '#constants';
-import { AzionConfig, AzionEdgeFunction } from 'azion/config';
+import { AzionBucket, AzionConfig, AzionEdgeFunction } from 'azion/config';
 let currentServer: Awaited<ReturnType<typeof runServer>>;
 let isChangeHandlerRunning = false;
 
@@ -112,9 +112,15 @@ async function initializeServer(port: number, workerCode: string) {
 }
 
 // Helper function to set current bucket name globally
-function setCurrentBucketName(edgeFunction?: AzionEdgeFunction, config?: AzionConfig): string {
+function setCurrentBucketName(
+  edgeFunction?: AzionEdgeFunction,
+  config?: AzionConfig,
+): { bucketName: string; prefix: string } {
+  // TODO: change to multiple storage support
   const bucketName = edgeFunction?.bindings?.storage?.bucket || config?.edgeStorage?.[0].name || '';
-  return bucketName;
+  const prefix = edgeFunction?.bindings?.storage?.prefix || config?.edgeStorage?.[0].prefix || '';
+
+  return { bucketName, prefix };
 }
 
 // Helper function to find entry path for a function
@@ -143,13 +149,17 @@ function normalizePathExtension(path: string): string {
 // Return type for defineCurrentFunction
 interface CurrentFunctionResult {
   name?: string;
-  bucket?: string;
+  bucket: string;
+  prefix: string;
   path: string;
 }
 
 function defineCurrentFunction(
   entries: Record<string, string>,
-  config: { edgeFunctions: AzionEdgeFunction[] | undefined },
+  config: {
+    edgeFunctions: AzionEdgeFunction[] | undefined;
+    edgeStorage: AzionBucket[] | undefined;
+  },
   functionName?: string,
 ): CurrentFunctionResult {
   // Validate inputs
@@ -166,11 +176,12 @@ function defineCurrentFunction(
     }
 
     const entryPath = findEntryPathForFunction(entries, functionName, targetFunction.path);
-    // const bucketName = setCurrentBucketName(targetFunction, config);
+    const bucketName = setCurrentBucketName(targetFunction, config);
 
     return {
       name: targetFunction.name,
-      // bucket: bucketName,
+      bucket: bucketName.bucketName,
+      prefix: bucketName.prefix,
       path: normalizePathExtension(entryPath),
     };
   }
@@ -178,11 +189,12 @@ function defineCurrentFunction(
   // Handle default case (first entry)
   const entryPath = Object.keys(entries)[0];
   const defaultFunction = config.edgeFunctions?.[0];
-  const bucketName = setCurrentBucketName(defaultFunction);
+  const bucketName = setCurrentBucketName(defaultFunction, config);
 
   return {
     name: defaultFunction?.name,
-    bucket: bucketName,
+    bucket: bucketName.bucketName,
+    prefix: bucketName.prefix,
     path: normalizePathExtension(entryPath),
   };
 }
@@ -203,12 +215,25 @@ async function manageServer(
 
     const {
       setup: { entry },
-      config: { edgeFunctions },
+      config: { edgeFunctions, edgeStorage },
     } = await buildCommand({ production: false, skipFrameworkBuild });
 
     let workerCode;
     try {
-      const { path: finalPath } = defineCurrentFunction(entry, { edgeFunctions }, functionName);
+      const {
+        path: finalPath,
+        bucket,
+        prefix,
+      } = defineCurrentFunction(entry, { edgeFunctions, edgeStorage }, functionName);
+
+      // TODO: temp set globalThis
+      // this is a temporary solution to pass the storage name and prefix to the runtime
+      // future set on env fetch attributes
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (globalThis as any).AZION_BUCKET_NAME = bucket;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (globalThis as any).AZION_BUCKET_PREFIX = prefix;
+
       workerCode = await readWorkerFile(finalPath);
     } catch (error) {
       feedback.server.error((error as Error).message);
