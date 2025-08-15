@@ -52,7 +52,16 @@ import { EdgeContext, EdgeVM } from './edge-vm';
 function runtime(code: string, isFirewallEvent = false) {
   const extend = (context: EdgeContext) => {
     context.RESERVED_FETCH = context.fetch.bind(context);
-    context.fetch = async (resource, options) => fetchContext(context, resource, options);
+    context.fetch = async (resource, options) =>
+      fetchContext(
+        context,
+        resource,
+        options,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (globalThis as any)?.AZION_BUCKET_NAME,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (globalThis as any)?.AZION_BUCKET_PREFIX,
+      );
 
     // Set the context for the FetchEvent if it's a Firewall event or a Fetch event
     context.FetchEvent = isFirewallEvent ? FirewallEventContext : FetchEventContext;
@@ -95,6 +104,24 @@ function runtime(code: string, isFirewallEvent = false) {
 
     // Crypto
     context.CRYPTO_CONTEXT = cryptoContext;
+
+    // TextDecoderStream
+    context.TextDecoderStream = TextDecoderStream;
+
+    // TextEncoderStream
+    context.TextEncoderStream = TextEncoderStream;
+
+    // Performance.now
+    context.perfomance = { now: performance.now };
+
+    // CompressionStream
+    context.CompressionStream = CompressionStream;
+
+    // CountQueuingStrategy
+    context.CountQueuingStrategy = CountQueuingStrategy;
+
+    // DecompressionStream
+    context.DecompressionStream = DecompressionStream;
 
     // Promises
     context.Promise = Promise;

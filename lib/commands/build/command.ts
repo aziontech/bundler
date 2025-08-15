@@ -19,7 +19,7 @@ import { BUILD_CONFIG_DEFAULTS, DIRECTORIES, type BundlerType } from '#constants
  * });
  */
 export async function buildCommand(options: BuildCommandOptions) {
-  const userConfig: AzionConfig = (await readAzionConfig()) || {};
+  const userConfig = (await readAzionConfig()) || {};
 
   const { build: userBuildConfig } = userConfig;
 
@@ -61,6 +61,7 @@ export async function buildCommand(options: BuildCommandOptions) {
     options: {
       production: options.production,
       skipFrameworkBuild: options.skipFrameworkBuild,
+      onlyGenerateConfig: options.onlyGenerateConfig,
     },
   });
 }

@@ -5,7 +5,7 @@
  */
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
-import { type AzionConfig } from 'azion/config';
+import { convertJsonConfigToObject, type AzionConfig } from 'azion/config';
 
 import fs from 'fs';
 import fsPromises from 'fs/promises';
@@ -142,6 +142,7 @@ export async function readAzionConfig(configPath?: string): Promise<AzionConfig 
       'azion.config.js',
       'azion.config.mjs',
       'azion.config.cjs',
+      'azion.config.json',
     ],
     loaders: {
       '.ts': TypeScriptLoader(),
@@ -153,13 +154,16 @@ export async function readAzionConfig(configPath?: string): Promise<AzionConfig 
   try {
     const result = configPath ? await explorer.load(configPath) : await explorer.search();
 
-    if (!result) {
-      return null;
-    }
+    if (!result) return null;
 
-    const config = result.config as AzionConfig;
+    const azionConfig = result.config as AzionConfig;
 
-    return config;
+    const azionConfigPath = result.filepath;
+    const azionConfigExt = path.extname(azionConfigPath);
+
+    if (azionConfigExt === '.json') return convertJsonConfigToObject(JSON.stringify(azionConfig));
+
+    return azionConfig;
   } catch (error) {
     if ((error as Error).message.includes('ERR_MODULE_NOT_FOUND')) {
       handleDependencyError(error as Error, configPath || 'azion.config');
