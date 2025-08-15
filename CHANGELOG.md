@@ -1,3 +1,10 @@
+## [6.0.0-stage.2](https://github.com/aziontech/bundler/compare/v6.0.0-stage.1...v6.0.0-stage.2) (2025-08-15)
+
+
+### Bug Fixes
+
+* improve storage cleanup and move bucket globals to server initialization ([#506](https://github.com/aziontech/bundler/issues/506)) ([0158de6](https://github.com/aziontech/bundler/commit/0158de621d46797f0ea4f8e4428ff95ad3225f29))
+
 ## [6.0.0-stage.1](https://github.com/aziontech/bundler/compare/v5.4.0-stage.4...v6.0.0-stage.1) (2025-08-15)
 
 
