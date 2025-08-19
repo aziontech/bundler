@@ -356,43 +356,43 @@ E2E tests run daily in the [Bundler Examples](https://github.com/aziontech/bundl
 Table:
 | Test                                 | Status |
 | ------------------------------------ | ------ |
-| Next 14 2 15 Middleware              | ✅      |
-| Next 13 5 6 I18n                     | ✅      |
-| Next 12 3 4 I18n                     | ✅      |
-| Hexo Static                          | ✅      |
-| Next 13 5 6 Middleware               | ✅      |
-| Next 12 3 4 Middleware               | ✅      |
-| Next Node Pages 12 3 1               | ✅      |
-| Next 13 5 6 Config                   | ✅      |
-| Next 12 3 4 Config                   | ✅      |
-| Next Static                          | ✅      |
-| Gatsby Static                        | ✅      |
-| Next Node Pages 12 3 1 Fs            | ✅      |
-| Vue Vite Static                      | ✅      |
-| Next 12 Static                       | ✅      |
-| Astro Static                         | ✅      |
-| Qwik Static                          | ✅      |
-| Simple Js Env Vars                   | ✅      |
-| Eleventy Static                      | ✅      |
-| Simple Js Network List               | ✅      |
-| Angular Static                       | ✅      |
-| React Static                         | ✅      |
-| Svelte Static                        | ✅      |
-| Stencil Static                       | ✅      |
-| Vitepress Static                     | ✅      |
-| Preact Static                        | ✅      |
-| Vuepress Static                      | ✅      |
-| Nuxt Static                          | ✅      |
-| Docusaurus Static                    | ✅      |
-| Simple Js Firewall Event             | ✅      |
-| Simple Js Network List With Firewall | ✅      |
-| Jekyll Static                        | ✅      |
-| Simple Js Esm Worker                 | ✅      |
-| Simple Js Esm Node                   | ✅      |
-| Simple Ts Esm                        | ✅      |
-| Simple Js Esm                        | ✅      |
+| Next 14 2 15 Middleware              | ⚠️     |
+| Next 13 5 6 I18n                     | ⚠️     |
+| Next 12 3 4 I18n                     | ⚠️     |
+| Hexo Static                          | ⚠️     |
+| Next 13 5 6 Middleware               | ⚠️     |
+| Next 12 3 4 Middleware               | ⚠️     |
+| Next Node Pages 12 3 1               | ⚠️     |
+| Next 13 5 6 Config                   | ⚠️     |
+| Next 12 3 4 Config                   | ⚠️     |
+| Next Static                          | ⚠️     |
+| Gatsby Static                        | ⚠️     |
+| Next Node Pages 12 3 1 Fs            | ⚠️     |
+| Vue Vite Static                      | ⚠️     |
+| Next 12 Static                       | ⚠️     |
+| Astro Static                         | ⚠️     |
+| Qwik Static                          | ⚠️     |
+| Simple Js Env Vars                   | ⚠️     |
+| Eleventy Static                      | ⚠️     |
+| Simple Js Network List               | ⚠️     |
+| Angular Static                       | ⚠️     |
+| React Static                         | ⚠️     |
+| Svelte Static                        | ⚠️     |
+| Stencil Static                       | ⚠️     |
+| Vitepress Static                     | ⚠️     |
+| Preact Static                        | ⚠️     |
+| Vuepress Static                      | ⚠️     |
+| Nuxt Static                          | ⚠️     |
+| Docusaurus Static                    | ⚠️     |
+| Simple Js Firewall Event             | ⚠️     |
+| Simple Js Network List With Firewall | ⚠️     |
+| Jekyll Static                        | ⚠️     |
+| Simple Js Esm Worker                 | ⚠️     |
+| Simple Js Esm Node                   | ⚠️     |
+| Simple Ts Esm                        | ⚠️     |
+| Simple Js Esm                        | ⚠️     |
 
-Last test run date: 06/30/25 04:01:14 AM
+Last test run date: 08/19/25 03:14:09 AM
 
 ## Contributing
 
