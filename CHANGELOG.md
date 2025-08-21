@@ -1,3 +1,28 @@
+## [6.0.0](https://github.com/aziontech/bundler/compare/v5.3.0...v6.0.0) (2025-08-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* All azion.config files across all presets have been updated to the new API v4 schema. 
+Existing configurations are incompatible and must be rewritten to match the new format.
+Older files will not work with this release.
+
+### Features
+
+* add additional WEB APIs to local environment ([830d7e1](https://github.com/aziontech/bundler/commit/830d7e1d278139aac6fa3c78f6fb590301a6c6bc))
+* API V4 ([#500](https://github.com/aziontech/bundler/issues/500)) ([41e7940](https://github.com/aziontech/bundler/commit/41e7940c6cd90b2b3798466700161499ef285204))
+* improvements, command replace and flag only-generate-config to build command ([#503](https://github.com/aziontech/bundler/issues/503)) ([b964349](https://github.com/aziontech/bundler/commit/b964349f9fb46b8965faca34426220e844c06348))
+* new web apis local dev ([#501](https://github.com/aziontech/bundler/issues/501)) ([b49a9a7](https://github.com/aziontech/bundler/commit/b49a9a7b59cbe30e9f0d1e08c4a6aaec91ec251e))
+
+
+### Bug Fixes
+
+* add onlyGenerateConfig option and improve storage error message ([#504](https://github.com/aziontech/bundler/issues/504)) ([0bab091](https://github.com/aziontech/bundler/commit/0bab09139892dfb77e5ed97b6fdd715fb8113af6))
+* improve storage cleanup and move bucket globals to server initialization ([#506](https://github.com/aziontech/bundler/issues/506)) ([0158de6](https://github.com/aziontech/bundler/commit/0158de621d46797f0ea4f8e4428ff95ad3225f29))
+
+
+* feat!: update all preset azion.config files for API v4 compatibility (#505) ([b7beae9](https://github.com/aziontech/bundler/commit/b7beae9c1498e20cc2896b791bd1a605aba474a8)), closes [#505](https://github.com/aziontech/bundler/issues/505)
+
 ## [6.0.0-stage.2](https://github.com/aziontech/bundler/compare/v6.0.0-stage.1...v6.0.0-stage.2) (2025-08-15)
 
 
