@@ -1,9 +1,9 @@
 import { AzionConfig } from 'azion/config';
 
 export type ConfigCommandOptions = {
-  command: 'create' | 'read' | 'update' | 'delete';
+  command: 'create' | 'read' | 'update' | 'delete' | 'replace';
   options: {
-    key?: string | string[];
+    key?: string;
     value?:
       | string
       | number

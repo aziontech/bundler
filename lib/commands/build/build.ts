@@ -16,7 +16,8 @@ import { executePostbuild } from './modules/postbuild';
 import { setEnvironment } from './modules/environment';
 import { setupWorkerCode } from './modules/worker';
 import { resolveHandlers } from './modules/handler';
-// import { setupBindings } from './modules/bindings';
+import { setupBindings } from './modules/bindings';
+import { setupStorage } from './modules/storage';
 import { BuildParams, BuildResult } from './types';
 
 export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
@@ -24,11 +25,38 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     const { config, options } = buildParams;
     const isProduction = Boolean(options.production);
 
+    if (options.skipFrameworkBuild) {
+      feedback.build.warn('Skipping framework build');
+    }
+
     validateConfig(config);
     await checkDependencies();
 
     const resolvedPreset = await resolvePreset(config.build?.preset);
     const buildConfigSetup = await setupBuildConfig(config, resolvedPreset, isProduction);
+
+    // only generate azion.config.js
+    if (options.onlyGenerateConfig) {
+      const mergedConfig = await setEnvironment({
+        config,
+        preset: resolvedPreset,
+        ctx: {
+          production: isProduction ?? BUILD_CONFIG_DEFAULTS.PRODUCTION,
+          skipFrameworkBuild: Boolean(options.skipFrameworkBuild),
+          handler: '',
+        },
+      });
+      feedback.build.success('Build completed successfully with only azion.config');
+      return {
+        config: mergedConfig,
+        ctx: {
+          production: isProduction ?? BUILD_CONFIG_DEFAULTS.PRODUCTION,
+          skipFrameworkBuild: Boolean(options.skipFrameworkBuild),
+          handler: '',
+        },
+        setup: buildConfigSetup,
+      };
+    }
 
     /* Execute build phases */
     // Phase 1: Prebuild
@@ -57,13 +85,18 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     /** Map of resolved worker paths and their transformed contents ready for bundling */
     const workerEntries: Record<string, string> = await setupWorkerCode(buildConfigSetup, ctx);
     /** Write each transformed worker to its bundler entry path */
+    const workerPaths: string[] = [];
     await Promise.all(
       Object.entries(workerEntries).map(async ([path, code]) => {
         await mkdir(dirname(path), { recursive: true });
         await writeFile(path, code, 'utf-8');
-        await markForCleanup(path);
+        workerPaths.push(path);
       }),
     );
+
+    for (const path of workerPaths) {
+      await markForCleanup(path);
+    }
 
     // Phase 2: Build
     feedback.build.info('Starting build...');
@@ -81,21 +114,19 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     await executePostbuild({ buildConfig: buildConfigSetup, ctx });
     feedback.postbuild.success('Post-build completed successfully');
 
-    // Phase 4: Set Bindings
-    // TODO: Uncomment after migrating Azion Lib to the API V4
-    // await setupBindings({ config });
-
-    // Phase 5: Setup Storage
-    // TODO: Uncomment after migrating presets to the new storage system
-    // await setupStorage({ config });
-
-    // Phase 6: Set Environment
+    // Phase 4: Set Environment
     // TODO: rafactor this to use the same function
     const mergedConfig = await setEnvironment({
       config,
       preset: resolvedPreset,
       ctx,
     });
+
+    // Phase 5: Set Storage
+    const storageSetup = await setupStorage({ config: mergedConfig });
+
+    // Phase 6: Set Bindings
+    await setupBindings({ config: mergedConfig, storageSetup, isProduction });
 
     await copyEnvVars();
 

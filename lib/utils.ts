@@ -42,12 +42,11 @@ import { readStore, writeStore } from '#env';
  */
 async function markForCleanup(filePath: string): Promise<void> {
   try {
-    const store = await readStore();
+    const store = await readStore('global');
     const tempFiles = store.tempFiles || [];
-
     if (!tempFiles.includes(filePath)) {
       tempFiles.push(filePath);
-      await writeStore({ ...store, tempFiles });
+      await writeStore({ ...store, tempFiles }, 'global');
     }
   } catch (error) {
     // Silently fail - temp file registration shouldn't break the build
@@ -85,15 +84,24 @@ async function executeCleanup(): Promise<void> {
   try {
     const store = await readStore('global');
     const tempFiles = store.tempFiles || [];
+    const failedFiles: string[] = [];
 
     tempFiles.forEach((filePath) => {
       try {
         unlinkSync(filePath);
+        debug.info('Successfully removed temp file:', filePath);
       } catch (error) {
         debug.warn('Failed to remove temp file:', filePath);
+        failedFiles.push(filePath);
       }
     });
-    await writeStore({ ...store, tempFiles: [] });
+
+    // Manter apenas os arquivos que falharam ao ser deletados
+    await writeStore({ ...store, tempFiles: failedFiles }, 'global');
+
+    if (failedFiles.length > 0) {
+      debug.warn(`${failedFiles.length} temp files could not be removed and will be retried later`);
+    }
   } catch (error) {
     debug.warn('Failed to clean temp files from store:', error);
   }

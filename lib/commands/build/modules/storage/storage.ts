@@ -3,14 +3,31 @@ import fsPromises from 'fs/promises';
 import path from 'path';
 import { AzionConfig, AzionBucket } from 'azion/config';
 import { DIRECTORIES } from '#constants';
+import { feedback } from 'azion/utils/node';
 
-interface StorageMetadata {
+interface BucketMetadata {
   name: string;
   edgeAccess: 'read_only' | 'read_write' | 'restricted';
   sourceDir: string;
   targetDir: string;
+  prefix: string;
   createdAt: string;
 }
+
+/**
+ * Extends AzionBucket with processed prefix information
+ */
+export interface BucketSetup extends AzionBucket {
+  prefix: string;
+}
+
+/**
+ * Generates a timestamp-based prefix for storage
+ */
+const generateTimestampPrefix = (): string => {
+  const timestamp = Date.now();
+  return `${timestamp}`;
+};
 
 /**
  * Checks if a directory exists
@@ -28,18 +45,31 @@ const directoryExists = async (dirPath: string): Promise<boolean> => {
 /**
  * Saves storage metadata to a JSON file
  */
-const saveStorageMetadata = async (
+const saveBucketMetadata = async (
   storageName: string,
-  metadata: Omit<StorageMetadata, 'createdAt'>,
+  metadata: Omit<BucketMetadata, 'createdAt'>,
 ): Promise<void> => {
   try {
-    const metadataPath = path.join(DIRECTORIES.OUTPUT_STORAGE_PATH, `${storageName}.metadata.json`);
-    const fullMetadata: StorageMetadata = {
+    const metadataPath = DIRECTORIES.OUTPUT_STORAGE_METADATA_PATH;
+
+    let allMetadata: BucketMetadata[] = [];
+    try {
+      const existingData = await fsPromises.readFile(metadataPath, 'utf-8');
+      allMetadata = JSON.parse(existingData);
+    } catch (error) {
+      debug.info('Creating new storage metadata file');
+    }
+
+    const fullMetadata: BucketMetadata = {
       ...metadata,
       createdAt: new Date().toISOString(),
     };
 
-    await fsPromises.writeFile(metadataPath, JSON.stringify(fullMetadata, null, 2), 'utf-8');
+    allMetadata = allMetadata.filter((item) => item.name !== storageName);
+
+    allMetadata.push(fullMetadata);
+
+    await fsPromises.writeFile(metadataPath, JSON.stringify(allMetadata, null, 2), 'utf-8');
     debug.info(`Storage metadata saved for: ${storageName}`);
   } catch (error) {
     debug.error(`Failed to save storage metadata for ${storageName}:`, error);
@@ -54,32 +84,68 @@ const createStorageSymlink = async (
   storage: AzionBucket,
   sourceDir: string,
   targetDir: string,
+  prefix: string,
 ): Promise<void> => {
-  try {
-    const targetPath = path.join(targetDir, storage.name);
+  const storageName = storage.name;
 
-    // Remove existing symlink if it exists
+  try {
+    const targetPath = path.join(targetDir, storageName, prefix);
+
+    // create folder targetPath
+    await fsPromises.mkdir(path.join(targetDir, storageName), { recursive: true });
+
     try {
-      await fsPromises.unlink(targetPath);
-      debug.info(`Removed existing storage link: ${targetPath}`);
+      const folders = await fsPromises.readdir(path.join(targetDir, storageName));
+      await Promise.all(
+        folders
+          .filter((folder) => folder !== prefix)
+          .map(async (folder) => {
+            const folderPath = path.join(targetDir, storageName, folder);
+            try {
+              const stats = await fsPromises.lstat(folderPath);
+              if (stats.isSymbolicLink()) {
+                await fsPromises.unlink(folderPath);
+              } else if (stats.isDirectory()) {
+                await fsPromises.rmdir(folderPath, { recursive: true });
+              } else {
+                await fsPromises.unlink(folderPath);
+              }
+            } catch (err) {
+              debug.warn(`Failed to remove ${folderPath}:`, err);
+            }
+          }),
+      );
+      debug.info(`Cleaned up existing storage items in: ${path.join(targetDir, storageName)}`);
     } catch (error) {
-      // Ignore error if file doesn't exist
-      debug.warn(`Storage link not found: ${targetPath}`);
+      debug.warn(`Storage directory not found or empty: ${path.join(targetDir, storageName)}`);
     }
 
-    // Create the symbolic link
-    await fsPromises.symlink(sourceDir, targetPath, 'dir');
-    debug.info(`Storage link created: ${storage.name} -> ${sourceDir}`);
+    // Check if target symlink already exists and remove it
+    try {
+      const stats = await fsPromises.lstat(targetPath);
+      if (stats.isSymbolicLink()) {
+        await fsPromises.unlink(targetPath);
+        debug.info(`Removed existing symlink: ${targetPath}`);
+      } else if (stats.isDirectory()) {
+        await fsPromises.rmdir(targetPath, { recursive: true });
+        debug.info(`Removed existing directory: ${targetPath}`);
+      }
+    } catch (error) {
+      // Target doesn't exist, which is fine
+    }
 
-    // Save storage metadata
-    await saveStorageMetadata(storage.name, {
-      name: storage.name,
+    await fsPromises.symlink(sourceDir, targetPath, 'dir');
+    debug.info(`Storage link created: ${storageName} -> ${sourceDir}`);
+
+    await saveBucketMetadata(storageName, {
+      name: storageName,
       edgeAccess: storage.edgeAccess || 'read_only',
       sourceDir,
       targetDir: targetPath,
+      prefix,
     });
   } catch (error) {
-    debug.error(`Failed to create storage link for ${storage.name}:`, error);
+    debug.error(`Failed to create storage link for ${storageName}:`, error);
     throw error;
   }
 };
@@ -98,16 +164,16 @@ const validateStorageConfig = (storage: AzionBucket): boolean => {
 /**
  * Sets up virtual local storages based on Azion configuration
  */
-export const setupStorage = async ({ config }: { config: AzionConfig }): Promise<void> => {
+export const setupStorage = async ({ config }: { config: AzionConfig }): Promise<BucketSetup[]> => {
   try {
     const storages = config.edgeStorage || [];
+    const processedStorages: BucketSetup[] = [];
 
     if (storages.length === 0) {
       debug.info('No storages found to setup');
-      return;
+      return processedStorages;
     }
 
-    // Ensure base storage directory exists
     await fsPromises.mkdir(DIRECTORIES.OUTPUT_STORAGE_PATH, { recursive: true });
 
     for (const storage of storages) {
@@ -117,16 +183,34 @@ export const setupStorage = async ({ config }: { config: AzionConfig }): Promise
 
       const sourceDir = path.resolve(process.cwd(), storage.dir);
 
-      // Validate if source directory exists
       if (!(await directoryExists(sourceDir))) {
-        throw new Error(`Storage directory not found: ${sourceDir}`);
+        throw new Error(
+          `Storage directory not found: ${sourceDir}. \n- Please check the path provided in the azion.config file on edgeStorage[].dir`,
+        );
       }
 
-      // Create symbolic link for storage
-      await createStorageSymlink(storage, sourceDir, DIRECTORIES.OUTPUT_STORAGE_PATH);
+      const providedPrefix = (storage as BucketSetup).prefix;
+      const prefix = providedPrefix || generateTimestampPrefix();
+
+      if (!providedPrefix) {
+        feedback.storage.info(
+          `No prefix provided for storage '${storage.name}', generating version prefix: ${prefix}`,
+        );
+      }
+      if (providedPrefix) {
+        feedback.storage.info(`Using provided prefix for storage '${storage.name}': ${prefix}`);
+      }
+
+      await createStorageSymlink(storage, sourceDir, DIRECTORIES.OUTPUT_STORAGE_PATH, prefix);
+
+      processedStorages.push({
+        ...storage,
+        prefix,
+      });
     }
 
     debug.info('Storage setup completed successfully');
+    return processedStorages;
   } catch (error) {
     debug.error('Failed to setup storages:', error);
     throw error;

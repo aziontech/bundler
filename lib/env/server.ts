@@ -16,6 +16,7 @@ import { runServer } from 'edge-runtime';
 import fs from 'fs/promises';
 import { basename } from 'path';
 import { DOCS_MESSAGE } from '#constants';
+import { AzionBucket, AzionConfig, AzionEdgeFunction } from 'azion/config';
 let currentServer: Awaited<ReturnType<typeof runServer>>;
 let isChangeHandlerRunning = false;
 
@@ -110,10 +111,103 @@ async function initializeServer(port: number, workerCode: string) {
   return runServer({ port, host: '0.0.0.0', runtime: execution });
 }
 
+// Helper function to set current bucket name globally
+function setCurrentBucketName(
+  edgeFunction?: AzionEdgeFunction,
+  config?: AzionConfig,
+): { bucketName: string; prefix: string } {
+  // TODO: change to multiple storage support
+  const bucketName = edgeFunction?.bindings?.storage?.bucket || config?.edgeStorage?.[0].name || '';
+  const prefix = edgeFunction?.bindings?.storage?.prefix || config?.edgeStorage?.[0].prefix || '';
+
+  return { bucketName, prefix };
+}
+
+// Helper function to find entry path for a function
+function findEntryPathForFunction(
+  entries: Record<string, string>,
+  functionName: string,
+  targetFunctionPath: string,
+): string {
+  const entryPath = Object.keys(entries).find((key) => {
+    const normalizedKey = key.replace(/\.dev$/, '').replace(/\.edge\//, '');
+    return targetFunctionPath.replace(/\.js$/, '').endsWith(normalizedKey);
+  });
+
+  if (!entryPath) {
+    throw new Error(`Entry path not found for function "${functionName}"`);
+  }
+
+  return entryPath;
+}
+
+// Helper function to normalize path extension
+function normalizePathExtension(path: string): string {
+  return path.endsWith('.js') ? path : `${path}.js`;
+}
+
+// Return type for defineCurrentFunction
+interface CurrentFunctionResult {
+  name?: string;
+  bucket: string;
+  prefix: string;
+  path: string;
+}
+
+function defineCurrentFunction(
+  entries: Record<string, string>,
+  config: {
+    edgeFunctions: AzionEdgeFunction[] | undefined;
+    edgeStorage: AzionBucket[] | undefined;
+  },
+  functionName?: string,
+): CurrentFunctionResult {
+  // Validate inputs
+  if (!entries || Object.keys(entries).length === 0) {
+    throw new Error('No entries provided');
+  }
+
+  // Handle specific function case
+  if (functionName) {
+    const targetFunction = config.edgeFunctions?.find((f) => f.name === functionName);
+
+    if (!targetFunction) {
+      throw new Error(`Function "${functionName}" not found in edge functions configuration`);
+    }
+
+    const entryPath = findEntryPathForFunction(entries, functionName, targetFunction.path);
+    const bucketName = setCurrentBucketName(targetFunction, config);
+
+    return {
+      name: targetFunction.name,
+      bucket: bucketName.bucketName,
+      prefix: bucketName.prefix,
+      path: normalizePathExtension(entryPath),
+    };
+  }
+
+  // Handle default case (first entry)
+  const entryPath = Object.keys(entries)[0];
+  const defaultFunction = config.edgeFunctions?.[0];
+  const bucketName = setCurrentBucketName(defaultFunction, config);
+
+  return {
+    name: defaultFunction?.name,
+    bucket: bucketName.bucketName,
+    prefix: bucketName.prefix,
+    path: normalizePathExtension(entryPath),
+  };
+}
+
 /**
  * Handle server operations: start, restart.
  */
-async function manageServer(workerPath: string | null, port: number, skipFrameworkBuild = false) {
+async function manageServer(
+  workerPath: string | null,
+  port: number,
+  skipFrameworkBuild = false,
+  functionName?: string,
+) {
   try {
     if (currentServer) {
       await currentServer.close();
@@ -121,16 +215,26 @@ async function manageServer(workerPath: string | null, port: number, skipFramewo
 
     const {
       setup: { entry },
+      config: { edgeFunctions, edgeStorage },
     } = await buildCommand({ production: false, skipFrameworkBuild });
 
     let workerCode;
     try {
-      // FIXME: Temporary solution to maintain compatibility.
-      // Will be refactored along with the legacy module for better
-      // handling of file extensions.
-      const entryPath = Object.keys(entry)[0];
-      const finalPath = entryPath.endsWith('.js') ? entryPath : `${entryPath}.js`;
-      workerCode = await readWorkerFile(workerPath || finalPath);
+      const {
+        path: finalPath,
+        bucket,
+        prefix,
+      } = defineCurrentFunction(entry, { edgeFunctions, edgeStorage }, functionName);
+
+      // TODO: temp set globalThis
+      // this is a temporary solution to pass the storage name and prefix to the runtime
+      // future set on env fetch attributes
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (globalThis as any).AZION_BUCKET_NAME = bucket;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (globalThis as any).AZION_BUCKET_PREFIX = prefix;
+
+      workerCode = await readWorkerFile(finalPath);
     } catch (error) {
       feedback.server.error((error as Error).message);
       debug.error(`Error reading worker file: ${error}`);
@@ -193,13 +297,18 @@ async function handleFileChange(path: string, workerPath: string | null, port: n
 /**
  * Entry point function to start the server and watch for file changes.
  */
-async function startServer(workerPath: string | null, port: number, skipFrameworkBuild = false) {
+async function startServer(
+  workerPath: string | null,
+  port: number,
+  skipFrameworkBuild = false,
+  functionName?: string,
+) {
   const IsPortInUse = await checkPortAvailability(port);
   if (IsPortInUse) {
     feedback.server.error(`Port ${port} is in use. Please choose another port.`);
     process.exit(1);
   }
-  await manageServer(workerPath, port, skipFrameworkBuild);
+  await manageServer(workerPath, port, skipFrameworkBuild, functionName);
 
   const watcher = chokidar.watch('./', {
     persistent: true,

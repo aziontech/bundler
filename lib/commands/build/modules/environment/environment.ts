@@ -30,7 +30,6 @@ interface EnvironmentParams {
 export const setEnvironment = async ({
   config: userConfig,
   preset,
-  ctx,
 }: EnvironmentParams): Promise<AzionConfig> => {
   try {
     const { config: presetConfig } = preset;
@@ -60,26 +59,6 @@ export const setEnvironment = async ({
           }),
       };
     }
-
-    // ===== TEMPORARY 1 SOLUTION START =====
-    // In non-experimental mode, we need to set a fixed path for the function
-    // This will be removed once multi-entry point support is fully implemented
-    if (!globalThis.bundler?.experimental && mergedConfig.functions) {
-      mergedConfig.functions = [];
-      const bundlerType = mergedConfig.build?.bundler || 'webpack';
-      const finalExt = bundlerType === 'webpack' ? '.js' : '';
-      const outputFileName = ctx.production ? 'worker' : 'worker.dev';
-      const singleOutputPath = `.edge/${outputFileName}${finalExt}`;
-
-      // Add a single function with the fixed path
-      mergedConfig.functions.push({
-        name: userConfig?.functions?.[0]?.name || preset.config?.functions?.[0]?.name || 'handler',
-        path: singleOutputPath,
-        // bindings:
-        //   userConfig?.functions?.[0]?.bindings || preset.config?.functions?.[0]?.bindings,
-      });
-    }
-    // ===== TEMPORARY 1 SOLUTION END =====
 
     const hasUserConfig = await envDefault.readAzionConfig();
 

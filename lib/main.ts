@@ -99,8 +99,8 @@ function setupBundlerProcessHandlers() {
 function startBundler() {
   AzionBundler.version(globalThis.bundler.version);
 
-  // Default to 'build' command when no command is provided
-  if (process.argv.length === 2) process.argv.push('build');
+  // // Default to 'build' command when no command is provided
+  // if (process.argv.length === 2) process.argv.push('build');
 
   AzionBundler.command('store <command>')
     .description('Manage store configuration')
@@ -129,6 +129,17 @@ function startBundler() {
     .option('-d, --dev', 'Build in development mode', false)
     .option('-x, --experimental [boolean]', 'Enable experimental features', false)
     .option('--skip-framework-build', 'Skip framework build step', false)
+    .option('--only-generate-config', 'Build only generate azion.config', false)
+    .addHelpText(
+      'after',
+      `
+Examples:
+  $ ef build -e ./src/index.js -p javascript
+  $ ef build --only-generate-config -e index.js -p javascript
+  $ ef build --preset opennextjs
+  $ ef build --preset opennextjs --skip-framework-build
+    `,
+    )
     .action(async (options) => {
       const { buildCommand, manifestCommand } = await import('#commands');
       const { dev, experimental, ...buildOptions } = options;
@@ -149,6 +160,7 @@ function startBundler() {
     .option('-p, --port <port>', 'Specify the port', '3333')
     .option('-x, --experimental [boolean]', 'Enable experimental features', false)
     .option('--skip-framework-build', 'Skip framework build step', false)
+    .option('--function-name <name>', 'Specify the function name')
     .action(async (entry, options) => {
       const { devCommand } = await import('#commands');
 
@@ -198,6 +210,19 @@ Examples:
     .option('-k, --key <key...>', 'Property key (e.g., build.preset or edgeApplications[0].name)')
     .option('-v, --value <value...>', 'Value to be set')
     .option('-a, --all', 'Read or delete entire configuration (for read/delete commands)')
+    .addHelpText(
+      'after',
+      `
+Examples:
+  $ ef config create -k "build.preset" -v "typescript"
+  $ ef config read -a
+  $ ef config read -k "build.preset"
+  $ ef config update -k "build.preset" -v "vue"
+  $ ef config delete -a
+  $ ef config delete -k "build.preset"
+  $ ef config replace -k '$EDGE_FUNCTION_NAME' -v "my-func"
+    `,
+    )
     .action(async (command, options) => {
       const { configCommand } = await import('#commands');
       await configCommand({

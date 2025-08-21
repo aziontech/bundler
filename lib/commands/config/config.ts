@@ -3,6 +3,56 @@ import { ConfigOptions } from './types';
 import { tryParseJSON } from './utils';
 
 /**
+ * Recursively replaces all occurrences of a placeholder string with a new value
+ * in an object or array structure
+ * @param obj - The object/array to search and replace in
+ * @param placeholder - The placeholder string to replace
+ * @param newValue - The new value to replace the placeholder with
+ * @returns The object with all placeholders replaced
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function replaceInObject(obj: any, placeholder: string, newValue: string): any {
+  if (typeof obj === 'string') {
+    const isMatch = obj.trim() === String(placeholder).trim();
+    return isMatch ? newValue : obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map((item) => replaceInObject(item, placeholder, newValue));
+  }
+
+  if (obj !== null && typeof obj === 'object') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const result: any = {};
+    for (const [key, value] of Object.entries(obj)) {
+      result[key] = replaceInObject(value, placeholder, newValue);
+    }
+    return result;
+  }
+
+  return obj;
+}
+
+/**
+ * Replaces all occurrences of a placeholder string with a new value
+ * throughout the entire configuration object
+ * @example
+ * // Replace all occurrences of $EDGE_FUNCTION_NAME with "my-func"
+ * replaceConfig({
+ *   placeholder: '$EDGE_FUNCTION_NAME',
+ *   value: 'my-func',
+ *   config: userConfig
+ * });
+ */
+export function replaceConfig(options: {
+  placeholder: string;
+  value: string;
+  config: AzionConfig;
+}): AzionConfig {
+  return replaceInObject(options.config, options.placeholder, options.value) as AzionConfig;
+}
+
+/**
  * Creates a new property in the user's azion.config
  * @example
  * // Create a simple property
