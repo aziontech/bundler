@@ -28,16 +28,16 @@ import type { AzionConfig } from 'azion/config';
  * ef config create -k "build" -v '{"preset": "react", "bundler": "esbuild", "polyfills": true}'
  *
  * # Create edge application
- * ef config create -k "edgeApplications[0]" -v '{"name": "My App", "edgeCacheEnabled": true}'
+ * ef config create -k "applications[0]" -v '{"name": "My App", "edgeCacheEnabled": true}'
  *
  * # Create edge application with rules
- * ef config create -k "edgeApplications[0].rules.request[0]" -v '{"name": "Static Assets", "behavior": {"deliver": true}}'
+ * ef config create -k "applications[0].rules.request[0]" -v '{"name": "Static Assets", "behavior": {"deliver": true}}'
  *
  * # Create edge function
- * ef config create -k "edgeFunctions[0]" -v '{"name": "auth", "path": "./functions/auth.js"}'
+ * ef config create -k "functions[0]" -v '{"name": "auth", "path": "./functions/auth.js"}'
  *
  * # Create storage configuration
- * ef config create -k "edgeStorage[0]" -v '{"name": "assets", "dir": "./public", "edgeAccess": "read_only"}'
+ * ef config create -k "storage[0]" -v '{"name": "assets", "dir": "./public", "edgeAccess": "read_only"}'
  *
  * === READING CONFIGURATIONS ===
  *
@@ -47,15 +47,15 @@ import type { AzionConfig } from 'azion/config';
  *
  * # Read specific properties
  * ef config read -k "build.preset"
- * ef config read --key "edgeApplications[0].name"
+ * ef config read --key "applications[0].name"
  *
  * # Read nested objects
  * ef config read -k "build"
- * ef config read -k "edgeApplications[0].rules"
+ * ef config read -k "applications[0].rules"
  *
  * # Read array elements
- * ef config read -k "edgeFunctions[0]"
- * ef config read -k "edgeApplications[0].rules.request[1]"
+ * ef config read -k "functions[0]"
+ * ef config read -k "applications[0].rules.request[1]"
  *
  * === UPDATING CONFIGURATIONS ===
  *
@@ -64,13 +64,13 @@ import type { AzionConfig } from 'azion/config';
  * ef config update -k "build.polyfills" -v "false"
  *
  * # Update edge application properties
- * ef config update -k "edgeApplications[0].name" -v "Updated App Name"
- * ef config update -k "edgeApplications[0].edgeCacheEnabled" -v "false"
+ * ef config update -k "applications[0].name" -v "Updated App Name"
+ * ef config update -k "applications[0].edgeCacheEnabled" -v "false"
  *
  * # Update multiple properties at once
  * ef config update \
- *   -k "edgeApplications[0].name" -v "API Produção" \
- *   -k "edgeFunctions[0].name" -v "Function Produção"
+ *   -k "applications[0].name" -v "API Produção" \
+ *   -k "functions[0].name" -v "Function Produção"
  *
  * # Update multiple build settings
  * ef config update \
@@ -78,11 +78,11 @@ import type { AzionConfig } from 'azion/config';
  *   -k "build.polyfills" -v "false" \
  *
  * # Update complex nested structures
- * ef config update -k "edgeApplications[0].rules.request[0].behavior" -v '{"bypassCache": true, "deliver": true}'
+ * ef config update -k "applications[0].rules.request[0].behavior" -v '{"bypassCache": true, "deliver": true}'
  *
  * # Update array elements
- * ef config update -k "edgeFunctions[0].path" -v "./functions/updated-auth.js"
- * ef config update -k "edgeStorage[0].edgeAccess" -v "read_write"
+ * ef config update -k "functions[0].path" -v "./functions/updated-auth.js"
+ * ef config update -k "storage[0].edgeAccess" -v "read_write"
  *
  * === DELETING CONFIGURATIONS ===
  *
@@ -92,14 +92,14 @@ import type { AzionConfig } from 'azion/config';
  *
  * # Delete specific properties
  * ef config delete -k "build.polyfills"
- * ef config delete -k "edgeApplications[0].debug"
+ * ef config delete -k "applications[0].debug"
  *
  * # Delete array elements (removes and shifts)
- * ef config delete -k "edgeFunctions[0]"
- * ef config delete -k "edgeApplications[0].rules.request[1]"
+ * ef config delete -k "functions[0]"
+ * ef config delete -k "applications[0].rules.request[1]"
  *
  * # Delete storage configuration
- * ef config delete -k "edgeStorage[0]"
+ * ef config delete -k "storage[0]"
  *
  * # Delete entire configuration
  * ef config delete --all
@@ -117,10 +117,10 @@ import type { AzionConfig } from 'azion/config';
  * === ADVANCED EXAMPLES ===
  *
  * # Create complete edge application with cache and rules
- * ef config create -k "edgeApplications[0]" -v '{
+ * ef config create -k "applications[0]" -v '{
  *   "name": "Production App",
  *   "edgeCacheEnabled": true,
- *   "edgeFunctionsEnabled": true,
+ *   "functionEnabled": true,
  *   "cache": [
  *     {
  *       "name": "default",

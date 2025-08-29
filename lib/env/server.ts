@@ -16,7 +16,7 @@ import { runServer } from 'edge-runtime';
 import fs from 'fs/promises';
 import { basename } from 'path';
 import { DOCS_MESSAGE } from '#constants';
-import { AzionBucket, AzionConfig, AzionEdgeFunction } from 'azion/config';
+import { AzionBucket, AzionConfig, AzionFunction } from 'azion/config';
 let currentServer: Awaited<ReturnType<typeof runServer>>;
 let isChangeHandlerRunning = false;
 
@@ -113,12 +113,12 @@ async function initializeServer(port: number, workerCode: string) {
 
 // Helper function to set current bucket name globally
 function setCurrentBucketName(
-  edgeFunction?: AzionEdgeFunction,
+  runtimeFunction?: AzionFunction,
   config?: AzionConfig,
 ): { bucketName: string; prefix: string } {
   // TODO: change to multiple storage support
-  const bucketName = edgeFunction?.bindings?.storage?.bucket || config?.edgeStorage?.[0].name || '';
-  const prefix = edgeFunction?.bindings?.storage?.prefix || config?.edgeStorage?.[0].prefix || '';
+  const bucketName = runtimeFunction?.bindings?.storage?.bucket || config?.storage?.[0].name || '';
+  const prefix = runtimeFunction?.bindings?.storage?.prefix || config?.storage?.[0].prefix || '';
 
   return { bucketName, prefix };
 }
@@ -157,8 +157,8 @@ interface CurrentFunctionResult {
 function defineCurrentFunction(
   entries: Record<string, string>,
   config: {
-    edgeFunctions: AzionEdgeFunction[] | undefined;
-    edgeStorage: AzionBucket[] | undefined;
+    functions: AzionFunction[] | undefined;
+    storage: AzionBucket[] | undefined;
   },
   functionName?: string,
 ): CurrentFunctionResult {
@@ -169,7 +169,7 @@ function defineCurrentFunction(
 
   // Handle specific function case
   if (functionName) {
-    const targetFunction = config.edgeFunctions?.find((f) => f.name === functionName);
+    const targetFunction = config.functions?.find((f) => f.name === functionName);
 
     if (!targetFunction) {
       throw new Error(`Function "${functionName}" not found in edge functions configuration`);
@@ -188,7 +188,7 @@ function defineCurrentFunction(
 
   // Handle default case (first entry)
   const entryPath = Object.keys(entries)[0];
-  const defaultFunction = config.edgeFunctions?.[0];
+  const defaultFunction = config.functions?.[0];
   const bucketName = setCurrentBucketName(defaultFunction, config);
 
   return {
@@ -215,7 +215,7 @@ async function manageServer(
 
     const {
       setup: { entry },
-      config: { edgeFunctions, edgeStorage },
+      config: { functions, storage },
     } = await buildCommand({ production: false, skipFrameworkBuild });
 
     let workerCode;
@@ -224,7 +224,7 @@ async function manageServer(
         path: finalPath,
         bucket,
         prefix,
-      } = defineCurrentFunction(entry, { edgeFunctions, edgeStorage }, functionName);
+      } = defineCurrentFunction(entry, { functions, storage }, functionName);
 
       // TODO: temp set globalThis
       // this is a temporary solution to pass the storage name and prefix to the runtime

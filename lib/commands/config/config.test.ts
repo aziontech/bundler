@@ -50,18 +50,18 @@
 //       const edgeApp: AzionEdgeApplication = {
 //         name: 'My Application',
 //         edgeCacheEnabled: true,
-//         edgeFunctionsEnabled: true,
+//         functionEnabled: true,
 //         applicationAcceleratorEnabled: true,
 //         active: true,
 //       };
 
 //       const result = createConfig({
-//         key: 'edgeApplications[0]',
+//         key: 'applications[0]',
 //         value: edgeApp,
 //       });
 
 //       expect(result).toEqual({
-//         edgeApplications: [edgeApp],
+//         applications: [edgeApp],
 //       });
 //     });
 
@@ -76,12 +76,12 @@
 //       };
 
 //       const result = createConfig({
-//         key: 'edgeApplications[0].rules.request[0]',
+//         key: 'applications[0].rules.request[0]',
 //         value: rule,
 //       });
 
 //       expect(result).toEqual({
-//         edgeApplications: [
+//         applications: [
 //           {
 //             rules: {
 //               request: [rule],
@@ -101,7 +101,7 @@
 //         polyfills: true,
 //         worker: false,
 //       },
-//       edgeApplications: [
+//       applications: [
 //         {
 //           name: 'Old App',
 //           edgeCacheEnabled: true,
@@ -127,22 +127,22 @@
 
 //     it('should update an edge application property', () => {
 //       const result = updateConfig({
-//         key: 'edgeApplications[0].name',
+//         key: 'applications[0].name',
 //         value: 'New App',
 //         config: baseConfig,
 //       });
 
-//       expect(result.edgeApplications?.[0].name).toBe('New App');
+//       expect(result.applications?.[0].name).toBe('New App');
 //     });
 
 //     it('should update a request rule', () => {
 //       const result = updateConfig({
-//         key: 'edgeApplications[0].rules.request[1].name',
+//         key: 'applications[0].rules.request[1].name',
 //         value: 'New Rule',
 //         config: baseConfig,
 //       });
 
-//       expect(result.edgeApplications?.[0].rules?.request?.[1].name).toBe('New Rule');
+//       expect(result.applications?.[0].rules?.request?.[1].name).toBe('New Rule');
 //     });
 
 //     it('should update entire array element', () => {
@@ -155,12 +155,12 @@
 //       };
 
 //       const result = updateConfig({
-//         key: 'edgeApplications[0]',
+//         key: 'applications[0]',
 //         value: newApp,
 //         config: baseConfig,
 //       });
 
-//       expect(result.edgeApplications?.[0]).toEqual(newApp);
+//       expect(result.applications?.[0]).toEqual(newApp);
 //     });
 
 //     it('should update nested array element', () => {
@@ -170,12 +170,12 @@
 //       };
 
 //       const result = updateConfig({
-//         key: 'edgeApplications[0].rules.request[0]',
+//         key: 'applications[0].rules.request[0]',
 //         value: newRule,
 //         config: baseConfig,
 //       });
 
-//       expect(result.edgeApplications?.[0].rules?.request?.[0]).toEqual(newRule);
+//       expect(result.applications?.[0].rules?.request?.[0]).toEqual(newRule);
 //     });
 
 //     it('should create property if it does not exist', () => {
@@ -190,13 +190,13 @@
 
 //     it('should extend array when accessing out of bounds index', () => {
 //       const result = updateConfig({
-//         key: 'edgeApplications[1].name',
+//         key: 'applications[1].name',
 //         value: 'New App',
 //         config: baseConfig,
 //       });
 
-//       expect(result.edgeApplications).toHaveLength(2);
-//       expect(result.edgeApplications?.[1].name).toBe('New App');
+//       expect(result.applications).toHaveLength(2);
+//       expect(result.applications?.[1].name).toBe('New App');
 //     });
 
 //     it('should throw error if property is not an array', () => {
@@ -221,13 +221,13 @@
 
 //     it('should extend nested arrays when needed', () => {
 //       const result = updateConfig({
-//         key: 'edgeApplications[0].rules.request[2]',
+//         key: 'applications[0].rules.request[2]',
 //         value: { name: 'New Rule' },
 //         config: baseConfig,
 //       });
 
-//       expect(result.edgeApplications?.[0].rules?.request).toHaveLength(3);
-//       expect(result.edgeApplications?.[0].rules?.request?.[2]).toEqual({ name: 'New Rule' });
+//       expect(result.applications?.[0].rules?.request).toHaveLength(3);
+//       expect(result.applications?.[0].rules?.request?.[2]).toEqual({ name: 'New Rule' });
 //     });
 //   });
 
@@ -240,7 +240,7 @@
 //         polyfills: true,
 //         worker: false,
 //       },
-//       edgeApplications: [
+//       applications: [
 //         {
 //           name: 'My App',
 //           edgeCacheEnabled: true,
@@ -265,7 +265,7 @@
 
 //     it('should read an edge application property', () => {
 //       const result = readConfig({
-//         key: 'edgeApplications[0].name',
+//         key: 'applications[0].name',
 //         config: baseConfig,
 //       });
 
@@ -274,7 +274,7 @@
 
 //     it('should read a request rule', () => {
 //       const result = readConfig({
-//         key: 'edgeApplications[0].rules.request[1].name',
+//         key: 'applications[0].rules.request[1].name',
 //         config: baseConfig,
 //       });
 
@@ -283,7 +283,7 @@
 
 //     it('should read entire array element', () => {
 //       const result = readConfig({
-//         key: 'edgeApplications[0]',
+//         key: 'applications[0]',
 //         config: baseConfig,
 //       });
 
@@ -301,7 +301,7 @@
 
 //     it('should read nested array element', () => {
 //       const result = readConfig({
-//         key: 'edgeApplications[0].rules.request[0]',
+//         key: 'applications[0].rules.request[0]',
 //         config: baseConfig,
 //       });
 
@@ -323,10 +323,10 @@
 //     it('should throw error if array index does not exist', () => {
 //       expect(() => {
 //         readConfig({
-//           key: 'edgeApplications[1].name',
+//           key: 'applications[1].name',
 //           config: baseConfig,
 //         });
-//       }).toThrow("Array index 1 does not exist in 'edgeApplications'");
+//       }).toThrow("Array index 1 does not exist in 'applications'");
 //     });
 
 //     it('should throw error if property is not an array', () => {
@@ -350,7 +350,7 @@
 //     it('should throw error if array index is out of bounds', () => {
 //       expect(() => {
 //         readConfig({
-//           key: 'edgeApplications[0].rules.request[2]',
+//           key: 'applications[0].rules.request[2]',
 //           config: baseConfig,
 //         });
 //       }).toThrow("Array index 2 does not exist in 'request'");
@@ -366,7 +366,7 @@
 //         polyfills: true,
 //         worker: false,
 //       },
-//       edgeApplications: [
+//       applications: [
 //         {
 //           name: 'My App',
 //           edgeCacheEnabled: true,
@@ -391,21 +391,21 @@
 
 //     it('should delete a request rule', () => {
 //       const result = deleteConfig({
-//         key: 'edgeApplications[0].rules.request[1]',
+//         key: 'applications[0].rules.request[1]',
 //         config: baseConfig,
 //       });
 
-//       expect(result.edgeApplications?.[0].rules?.request).toHaveLength(1);
-//       expect(result.edgeApplications?.[0].rules?.request?.[0].name).toBe('Rule 1');
+//       expect(result.applications?.[0].rules?.request).toHaveLength(1);
+//       expect(result.applications?.[0].rules?.request?.[0].name).toBe('Rule 1');
 //     });
 
 //     it('should delete an edge application', () => {
 //       const result = deleteConfig({
-//         key: 'edgeApplications[0]',
+//         key: 'applications[0]',
 //         config: baseConfig,
 //       });
 
-//       expect(result.edgeApplications).toHaveLength(0);
+//       expect(result.applications).toHaveLength(0);
 //     });
 
 //     it('should throw error if property does not exist', () => {
@@ -420,10 +420,10 @@
 //     it('should throw error if array index does not exist', () => {
 //       expect(() => {
 //         deleteConfig({
-//           key: 'edgeApplications[1]',
+//           key: 'applications[1]',
 //           config: baseConfig,
 //         });
-//       }).toThrow("Array index 1 does not exist in 'edgeApplications'");
+//       }).toThrow("Array index 1 does not exist in 'applications'");
 //     });
 //   });
 // });
@@ -437,13 +437,13 @@
 //       polyfills: true,
 //       worker: false,
 //     },
-//     edgeApplications: [
+//     applications: [
 //       {
 //         name: 'Old App',
 //         edgeCacheEnabled: true,
 //       },
 //     ],
-//     edgeFunctions: [
+//     functions: [
 //       {
 //         name: 'Old Function',
 //         path: './functions/old.js',
@@ -462,13 +462,13 @@
 //     const result = (await configCommand({
 //       command: 'update',
 //       options: {
-//         key: ['edgeApplications[0].name', 'edgeFunctions[0].name'],
+//         key: ['applications[0].name', 'functions[0].name'],
 //         value: ['API Produção', 'Function Produção'],
 //       },
 //     })) as AzionConfig;
 
-//     expect(result.edgeApplications?.[0].name).toBe('API Produção');
-//     expect(result.edgeFunctions?.[0].name).toBe('Function Produção');
+//     expect(result.applications?.[0].name).toBe('API Produção');
+//     expect(result.functions?.[0].name).toBe('Function Produção');
 //     expect(mockWriteUserConfig).toHaveBeenCalledWith(result);
 //   });
 
@@ -510,12 +510,12 @@
 //     const result = (await configCommand({
 //       command: 'update',
 //       options: {
-//         key: 'edgeApplications[0].name',
+//         key: 'applications[0].name',
 //         value: 'Single Update',
 //       },
 //     })) as AzionConfig;
 
-//     expect(result.edgeApplications?.[0].name).toBe('Single Update');
+//     expect(result.applications?.[0].name).toBe('Single Update');
 //     expect(mockWriteUserConfig).toHaveBeenCalledWith(result);
 //   });
 
@@ -526,7 +526,7 @@
 //     const readResult = await configCommand({
 //       command: 'read',
 //       options: {
-//         key: ['edgeApplications[0].name', 'edgeFunctions[0].name'],
+//         key: ['applications[0].name', 'functions[0].name'],
 //       },
 //     });
 
