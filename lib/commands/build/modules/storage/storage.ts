@@ -166,7 +166,7 @@ const validateStorageConfig = (storage: AzionBucket): boolean => {
  */
 export const setupStorage = async ({ config }: { config: AzionConfig }): Promise<BucketSetup[]> => {
   try {
-    const storages = config.edgeStorage || [];
+    const storages = config.storage || [];
     const processedStorages: BucketSetup[] = [];
 
     if (storages.length === 0) {
@@ -185,7 +185,7 @@ export const setupStorage = async ({ config }: { config: AzionConfig }): Promise
 
       if (!(await directoryExists(sourceDir))) {
         throw new Error(
-          `Storage directory not found: ${sourceDir}. \n- Please check the path provided in the azion.config file on edgeStorage[].dir`,
+          `Storage directory not found: ${sourceDir}. \n- Please check the path provided in the azion.config file on storage[].dir`,
         );
       }
 

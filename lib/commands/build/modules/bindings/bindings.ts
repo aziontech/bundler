@@ -1,7 +1,7 @@
 import { debug } from '#utils';
 import fsPromises from 'fs/promises';
 import path from 'path';
-import { AzionConfig, AzionEdgeFunction } from 'azion/config';
+import { AzionConfig, AzionFunction } from 'azion/config';
 import { BucketSetup } from '../storage/storage';
 import { feedback } from 'azion/utils/node';
 import { DIRECTORIES } from '#constants';
@@ -56,7 +56,7 @@ const findStorageForBinding = (
  * Injects bindings into a single function file
  */
 const injectBindingsIntoFile = async (
-  func: AzionEdgeFunction,
+  func: AzionFunction,
   bucketsSetup: BucketSetup[],
   isProduction: boolean,
 ): Promise<void> => {
@@ -71,18 +71,18 @@ const injectBindingsIntoFile = async (
     return;
   }
 
-  const edgeFunctionsPath = resolveFunctionPath(
+  const functionsPath = resolveFunctionPath(
     func.path.replace(/\.js$/, isProduction ? '.js' : '.dev.js'),
   );
 
-  if (!(await fileExists(edgeFunctionsPath))) {
-    feedback.bindings.warn(`Function file not found: ${edgeFunctionsPath}.`);
+  if (!(await fileExists(functionsPath))) {
+    feedback.bindings.warn(`Function file not found: ${functionsPath}.`);
     feedback.bindings.info(`Binding injection skipped for function ${func.name}`);
     return;
   }
 
   try {
-    const entryContent = await fsPromises.readFile(edgeFunctionsPath, 'utf-8');
+    const entryContent = await fsPromises.readFile(functionsPath, 'utf-8');
 
     // Skip if bindings are already injected
     if (entryContent.includes('//storages:') || entryContent.includes('//---')) {
@@ -115,8 +115,8 @@ const injectBindingsIntoFile = async (
 
     const contentWithBindings = `${bindingTemplate}\n${entryContent}`;
 
-    await fsPromises.writeFile(edgeFunctionsPath, contentWithBindings);
-    debug.info(`Bindings injected into ${edgeFunctionsPath} for function ${func.name}`);
+    await fsPromises.writeFile(functionsPath, contentWithBindings);
+    debug.info(`Bindings injected into ${functionsPath} for function ${func.name}`);
   } catch (error) {
     debug.error(`Failed to process bindings for function ${func.name}:`, error);
     throw error;
@@ -136,7 +136,7 @@ export const setupBindings = async ({
   isProduction: boolean;
 }): Promise<void> => {
   try {
-    const functions = config.edgeFunctions || [];
+    const functions = config.functions || [];
 
     if (functions.length === 0) {
       debug.info('No functions found to inject bindings');

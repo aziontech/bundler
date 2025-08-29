@@ -45,7 +45,7 @@ describe('getPresetsList utils', () => {
     expect(result).toBeDefined();
     expect(typeof result).toBe('object');
     expect(result).toHaveProperty('build');
-    expect(result).toHaveProperty('edgeApplications');
+    expect(result).toHaveProperty('applications');
   });
 
   test('Should throw error for invalid preset', () => {

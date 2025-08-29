@@ -63,7 +63,7 @@ export function replaceConfig(options: {
  *
  * // Create an array element
  * createConfig({
- *   key: 'edgeApplications[0].name',
+ *   key: 'applications[0].name',
  *   value: 'My Application'
  * });
  */
@@ -127,7 +127,7 @@ export function createConfig(options: ConfigOptions): AzionConfig {
  *
  * // Updates an existing array element
  * updateConfig({
- *   key: 'edgeApplications[0].name',
+ *   key: 'applications[0].name',
  *   value: 'My Application',
  *   config: userConfig
  * });
@@ -233,7 +233,7 @@ export function updateConfig(options: ConfigOptions): AzionConfig {
  *
  * // Get an array element
  * readConfig({
- *   key: 'edgeApplications[0].name',
+ *   key: 'applications[0].name',
  *   config: userConfig
  * });
  */
@@ -303,7 +303,7 @@ export function readConfig(options: ConfigOptions): unknown {
  *
  * // Delete an array element
  * deleteConfig({
- *   key: 'edgeApplications[0].name',
+ *   key: 'applications[0].name',
  *   config: userConfig
  * });
  */
