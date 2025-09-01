@@ -1,3 +1,10 @@
+## [6.1.0-stage.1](https://github.com/aziontech/bundler/compare/v6.0.0...v6.1.0-stage.1) (2025-08-29)
+
+
+### Features
+
+* rename properties to remove "Edge" prefix ([#508](https://github.com/aziontech/bundler/issues/508)) ([4d3c156](https://github.com/aziontech/bundler/commit/4d3c1561d37443c9e4a553b8e610ab0349e5cec2))
+
 ## [6.0.0](https://github.com/aziontech/bundler/compare/v5.3.0...v6.0.0) (2025-08-21)
 
 

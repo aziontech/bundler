@@ -157,13 +157,13 @@ Commands:
   delete              Delete configuration properties
 
 Options:
-  -k, --key <key>     Property key (e.g., build.preset or edgeApplications[0].name)
+  -k, --key <key>     Property key (e.g., build.preset or applications[0].name)
   -v, --value <value> Value to be set (for create/update commands)
   -a, --all           Read or delete entire configuration (for read/delete commands)
 
 Examples:
   $ ef config create -k "build.preset" -v "typescript"
-  $ ef config read -k "edgeApplications[0].name"
+  $ ef config read -k "applications[0].name"
   $ ef config update -k "build.bundler" -v "esbuild"
   $ ef config delete -k "build.polyfills"
   $ ef config read --all
