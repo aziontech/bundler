@@ -1,3 +1,10 @@
+### [6.1.1-stage.1](https://github.com/aziontech/bundler/compare/v6.1.0...v6.1.1-stage.1) (2025-09-23)
+
+
+### Bug Fixes
+
+* preserve function serialization in config command ([#511](https://github.com/aziontech/bundler/issues/511)) ([c74b893](https://github.com/aziontech/bundler/commit/c74b8933a2978b73d20dd7875cf655045a566cc3))
+
 ## [6.1.0](https://github.com/aziontech/bundler/compare/v6.0.0...v6.1.0) (2025-09-01)
 
 
