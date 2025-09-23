@@ -248,15 +248,87 @@ export async function writeUserConfig(config: AzionConfig): Promise<void> {
  * https://github.com/aziontech/lib/tree/main/packages/config
  */\n\n`;
 
-  const replacer = (key: string, value: unknown) => {
-    if (typeof value === 'function') {
-      return `__FUNCTION_START__${value.toString()}__FUNCTION_END__`;
+  /**
+   * Recursively removes undefined values from an object
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function cleanUndefinedValues(obj: any): any {
+    if (obj === null || obj === undefined) {
+      return obj;
     }
-    return value;
-  };
+
+    if (Array.isArray(obj)) {
+      return obj.map(cleanUndefinedValues).filter((item) => item !== undefined);
+    }
+
+    if (typeof obj === 'object') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const cleaned: any = {};
+      for (const [key, value] of Object.entries(obj)) {
+        if (value !== undefined) {
+          const cleanedValue = cleanUndefinedValues(value);
+          if (cleanedValue !== undefined) {
+            cleaned[key] = cleanedValue;
+          }
+        }
+      }
+      return cleaned;
+    }
+
+    return obj;
+  }
+
+  /**
+   * Converts a configuration object to JavaScript code string, preserving functions
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function configToJavaScript(obj: any, indent = 0): string {
+    const spaces = '  '.repeat(indent);
+
+    if (typeof obj === 'function') {
+      return obj.toString();
+    }
+
+    if (typeof obj === 'string') {
+      return `'${obj.replace(/'/g, "\\'")}'`;
+    }
+
+    if (typeof obj === 'number' || typeof obj === 'boolean') {
+      return String(obj);
+    }
+
+    if (obj === null || obj === undefined) {
+      return String(obj);
+    }
+
+    if (Array.isArray(obj)) {
+      if (obj.length === 0) return '[]';
+      const items = obj.map((item) => configToJavaScript(item, indent + 1));
+      return `[\n${spaces}  ${items.join(`,\n${spaces}  `)}\n${spaces}]`;
+    }
+
+    if (typeof obj === 'object') {
+      // Filter out undefined values to keep the config clean
+      const entries = Object.entries(obj).filter(([, value]) => value !== undefined);
+      if (entries.length === 0) return '{}';
+
+      const props = entries.map(([key, value]) => {
+        const keyStr = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(key) ? key : `'${key}'`;
+        return `${spaces}  ${keyStr}: ${configToJavaScript(value, indent + 1)}`;
+      });
+
+      return `{\n${props.join(',\n')}\n${spaces}}`;
+    }
+
+    return String(obj);
+  }
+
+  // Clean undefined values from config before converting to JavaScript
+  const cleanedConfig = cleanUndefinedValues(config);
+  const configString = configToJavaScript(cleanedConfig);
 
   const formattedContent = await prettier.format(
-    configComment + `${moduleExportStyle} ${JSON.stringify(config, replacer, 2)};`,
+    configComment + `${moduleExportStyle} ${configString};`,
     {
       parser: 'babel',
       semi: false,

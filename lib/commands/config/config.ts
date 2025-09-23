@@ -12,6 +12,10 @@ import { tryParseJSON } from './utils';
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function replaceInObject(obj: any, placeholder: string, newValue: string): any {
+  if (typeof obj === 'function') {
+    return obj;
+  }
+
   if (typeof obj === 'string') {
     const isMatch = obj.trim() === String(placeholder).trim();
     return isMatch ? newValue : obj;
