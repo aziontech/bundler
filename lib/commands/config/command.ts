@@ -241,7 +241,7 @@ export async function configCommand({ command, options }: ConfigCommandOptions) 
         if (!key) {
           throw new Error('Placeholder is required for replace command (use -k or --key)');
         }
-        if (!value) {
+        if (value === undefined) {
           throw new Error('Value is required for replace command');
         }
         // Use direct file replacement instead of object manipulation
