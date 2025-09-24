@@ -1,7 +1,9 @@
 import { readAzionConfig, writeUserConfig } from '#env';
 import { debug } from '#utils';
 import { feedback } from 'azion/utils/node';
-import { createConfig, updateConfig, readConfig, deleteConfig, replaceConfig } from './config';
+import { createConfig, readConfig, deleteConfig } from './config';
+import { replaceInConfigFile } from './replace';
+import { updateInConfigFile } from './update';
 import type { ConfigCommandOptions } from './types';
 import type { AzionConfig } from 'azion/config';
 
@@ -66,16 +68,6 @@ import type { AzionConfig } from 'azion/config';
  * # Update edge application properties
  * ef config update -k "applications[0].name" -v "Updated App Name"
  * ef config update -k "applications[0].edgeCacheEnabled" -v "false"
- *
- * # Update multiple properties at once
- * ef config update \
- *   -k "applications[0].name" -v "API Produção" \
- *   -k "functions[0].name" -v "Function Produção"
- *
- * # Update multiple build settings
- * ef config update \
- *   -k "build.preset" -v "typescript" \
- *   -k "build.polyfills" -v "false" \
  *
  * # Update complex nested structures
  * ef config update -k "applications[0].rules.request[0].behavior" -v '{"bypassCache": true, "deliver": true}'
@@ -196,33 +188,6 @@ export async function configCommand({ command, options }: ConfigCommandOptions) 
       throw new Error('Key is required when --all is not used');
     }
 
-    // For commands that support multiple operations
-    if (command === 'update' && keys.length > 1) {
-      if (values.length !== keys.length) {
-        throw new Error(
-          `Number of keys (${keys.length}) must match number of values (${values.length})`,
-        );
-      }
-
-      if (!userConfig) {
-        throw new Error('No configuration found. Use create command first.');
-      }
-
-      let result = userConfig;
-
-      // Apply each update sequentially
-      for (let i = 0; i < keys.length; i++) {
-        result = updateConfig({
-          key: keys[i],
-          value: values[i],
-          config: result,
-        });
-      }
-
-      await writeUserConfig(result);
-      return result;
-    }
-
     // For single operations or commands that don't support batch
     const key = keys[0];
     const value = values[0];
@@ -250,12 +215,10 @@ export async function configCommand({ command, options }: ConfigCommandOptions) 
         if (value === undefined) {
           throw new Error('Value is required for update command');
         }
-        result = updateConfig({
-          key,
-          value,
-          config: userConfig,
-        });
-        break;
+        // Use direct file update instead of object manipulation
+        await updateInConfigFile(key, value);
+
+        return {};
       case 'read':
         if (!userConfig) {
           throw new Error('No configuration found');
@@ -275,21 +238,16 @@ export async function configCommand({ command, options }: ConfigCommandOptions) 
         });
         break;
       case 'replace':
-        if (!userConfig) {
-          throw new Error('No configuration found');
-        }
-        if (!options.key) {
+        if (!key) {
           throw new Error('Placeholder is required for replace command (use -k or --key)');
         }
-        if (value === undefined) {
+        if (!value) {
           throw new Error('Value is required for replace command');
         }
-        result = replaceConfig({
-          placeholder: options.key,
-          value: String(value),
-          config: userConfig,
-        });
-        break;
+        // Use direct file replacement instead of object manipulation
+        await replaceInConfigFile(key, value);
+
+        return {};
 
       default:
         throw new Error(`Unknown command: ${command}`);
