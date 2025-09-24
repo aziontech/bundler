@@ -1,3 +1,10 @@
+### [6.1.1-stage.2](https://github.com/aziontech/bundler/compare/v6.1.1-stage.1...v6.1.1-stage.2) (2025-09-24)
+
+
+### Bug Fixes
+
+* preserve imports, comments and functions in azion.config during update/replace ([#513](https://github.com/aziontech/bundler/issues/513)) ([70d4dcf](https://github.com/aziontech/bundler/commit/70d4dcf55ce9a7cb9b134d65b9e415d56ecdb83f))
+
 ### [6.1.1-stage.1](https://github.com/aziontech/bundler/compare/v6.1.0...v6.1.1-stage.1) (2025-09-23)
 
 
