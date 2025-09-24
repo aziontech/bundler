@@ -1,3 +1,10 @@
+### [6.1.1-stage.3](https://github.com/aziontech/bundler/compare/v6.1.1-stage.2...v6.1.1-stage.3) (2025-09-24)
+
+
+### Bug Fixes
+
+* allow empty string values in config replace command ([#514](https://github.com/aziontech/bundler/issues/514)) ([b25423e](https://github.com/aziontech/bundler/commit/b25423e4be289133efb93892c9630f346e800e2b))
+
 ### [6.1.1-stage.2](https://github.com/aziontech/bundler/compare/v6.1.1-stage.1...v6.1.1-stage.2) (2025-09-24)
 
 
