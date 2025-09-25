@@ -1,3 +1,24 @@
+### [6.1.1-stage.3](https://github.com/aziontech/bundler/compare/v6.1.1-stage.2...v6.1.1-stage.3) (2025-09-24)
+
+
+### Bug Fixes
+
+* allow empty string values in config replace command ([#514](https://github.com/aziontech/bundler/issues/514)) ([b25423e](https://github.com/aziontech/bundler/commit/b25423e4be289133efb93892c9630f346e800e2b))
+
+### [6.1.1-stage.2](https://github.com/aziontech/bundler/compare/v6.1.1-stage.1...v6.1.1-stage.2) (2025-09-24)
+
+
+### Bug Fixes
+
+* preserve imports, comments and functions in azion.config during update/replace ([#513](https://github.com/aziontech/bundler/issues/513)) ([70d4dcf](https://github.com/aziontech/bundler/commit/70d4dcf55ce9a7cb9b134d65b9e415d56ecdb83f))
+
+### [6.1.1-stage.1](https://github.com/aziontech/bundler/compare/v6.1.0...v6.1.1-stage.1) (2025-09-23)
+
+
+### Bug Fixes
+
+* preserve function serialization in config command ([#511](https://github.com/aziontech/bundler/issues/511)) ([c74b893](https://github.com/aziontech/bundler/commit/c74b8933a2978b73d20dd7875cf655045a566cc3))
+
 ## [6.1.0](https://github.com/aziontech/bundler/compare/v6.0.0...v6.1.0) (2025-09-01)
 
 
