@@ -1,3 +1,10 @@
+### [6.1.2](https://github.com/aziontech/bundler/compare/v6.1.1...v6.1.2) (2025-10-01)
+
+
+### Bug Fixes
+
+* bump azion lib version - stage ([#515](https://github.com/aziontech/bundler/issues/515)) ([85e4bfe](https://github.com/aziontech/bundler/commit/85e4bfe3c62360f60e9059963ca99ef7964cdaea))
+
 ### [6.1.2-stage.1](https://github.com/aziontech/bundler/compare/v6.1.1...v6.1.2-stage.1) (2025-09-25)
 
 
