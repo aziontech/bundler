@@ -38,7 +38,7 @@ describe('E2E - simple-js-network-list-with-firewall project', () => {
   test('should return 200 and the response header x-azion-outcome with the value continue', async () => {
     const response = await request
       .get('/')
-      .set('x-network-list-id', '1111')
+      .set('x-network-list-id', '$NETWORK_LIST_NAME')
       .expect(200)
       .expect('x-azion-outcome', 'continue');
 

@@ -38,7 +38,7 @@ describe('E2E - simple-js-network-list project', () => {
   test('should return 200 and the response header x-presence with the value present', async () => {
     const response = await request
       .get('/')
-      .set('x-network-list-id', '1111')
+      .set('x-network-list-id', '$NETWORK_LIST_NAME')
       .set('x-element', '10.0.0.1')
       .expect(200);
 
@@ -48,7 +48,7 @@ describe('E2E - simple-js-network-list project', () => {
   test('should return 403 and the response header x-presence with the value absent', async () => {
     const response = await request
       .get('/')
-      .set('x-network-list-id', '1111')
+      .set('x-network-list-id', '$NETWORK_LIST_NAME')
       .set('x-element', '10.0.0.3')
       .expect(200);
 
