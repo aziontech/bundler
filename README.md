@@ -374,7 +374,7 @@ Table:
 | Qwik Static                          | ✅      |
 | Simple Js Env Vars                   | ✅      |
 | Eleventy Static                      | ✅      |
-| Simple Js Network List               | ⚠️     |
+| Simple Js Network List               | ✅      |
 | Angular Static                       | ✅      |
 | React Static                         | ✅      |
 | Svelte Static                        | ✅      |
@@ -385,14 +385,14 @@ Table:
 | Nuxt Static                          | ✅      |
 | Docusaurus Static                    | ✅      |
 | Simple Js Firewall Event             | ✅      |
-| Simple Js Network List With Firewall | ⚠️     |
+| Simple Js Network List With Firewall | ✅      |
 | Jekyll Static                        | ✅      |
 | Simple Js Esm Worker                 | ✅      |
 | Simple Js Esm Node                   | ✅      |
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 09/24/25 03:25:13 AM
+Last test run date: 10/02/25 03:24:58 AM
 
 ## Contributing
 
