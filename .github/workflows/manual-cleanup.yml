@@ -1,0 +1,83 @@
+name: Manual Disk Cleanup
+
+on:
+  workflow_dispatch:
+    inputs:
+      clean_docker:
+        description: 'Clean Docker resources'
+        type: boolean
+        default: true
+      clean_packages:
+        description: 'Clean package caches (npm/yarn/pnpm)'
+        type: boolean
+        default: true
+      clean_system:
+        description: 'Clean system packages and tools'
+        type: boolean
+        default: true
+      clean_build:
+        description: 'Clean build artifacts'
+        type: boolean
+        default: false
+
+jobs:
+  cleanup:
+    name: Disk Cleanup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check initial disk space
+        run: |
+          echo "Initial disk space:"
+          df -h
+          echo "Top 10 directories by size:"
+          sudo du -sh /* 2>/dev/null | sort -hr | head -10
+
+      - name: Clean Docker resources
+        if: ${{ inputs.clean_docker }}
+        run: |
+          echo "Cleaning Docker resources..."
+          docker system prune -af || true
+          docker volume prune -f || true
+          echo "Docker resources cleaned."
+
+      - name: Clean package caches
+        if: ${{ inputs.clean_packages }}
+        run: |
+          echo "Cleaning package caches..."
+          npm cache clean --force || true
+          yarn cache clean || true
+          pnpm store prune || true
+          echo "Package caches cleaned."
+
+      - name: Clean system packages and tools
+        if: ${{ inputs.clean_system }}
+        run: |
+          echo "Cleaning system packages and tools..."
+          sudo rm -rf /usr/share/dotnet || true
+          sudo rm -rf /opt/ghc || true
+          sudo rm -rf /usr/local/share/boost || true
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY" || true
+          sudo apt-get clean || true
+          echo "System packages and tools cleaned."
+
+      - name: Checkout code for build artifact cleanup
+        if: ${{ inputs.clean_build }}
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Clean build artifacts
+        if: ${{ inputs.clean_build }}
+        run: |
+          echo "Cleaning build artifacts..."
+          rm -rf ./dist || true
+          rm -rf ./node_modules/.cache || true
+          rm -rf ./e2e_results.json || true
+          rm -rf ./nodejs_apis_results.json || true
+          echo "Build artifacts cleaned."
+
+      - name: Check final disk space
+        run: |
+          echo "Final disk space:"
+          df -h
+          echo "Space freed up!"
