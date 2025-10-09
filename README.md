@@ -377,7 +377,7 @@ Table:
 | Simple Js Network List               | ✅      |
 | Angular Static                       | ✅      |
 | React Static                         | ✅      |
-| Svelte Static                        | ⚠️     |
+| Svelte Static                        | ✅      |
 | Stencil Static                       | ✅      |
 | Vitepress Static                     | ✅      |
 | Preact Static                        | ✅      |
@@ -392,7 +392,7 @@ Table:
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 10/08/25 03:25:28 AM
+Last test run date: 10/09/25 03:26:53 AM
 
 ## Contributing
 
