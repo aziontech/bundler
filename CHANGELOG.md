@@ -1,3 +1,10 @@
+### [6.1.3-stage.1](https://github.com/aziontech/bundler/compare/v6.1.2...v6.1.3-stage.1) (2025-10-14)
+
+
+### Bug Fixes
+
+* bump azion dependency to v2.2.0-stage.x ([#532](https://github.com/aziontech/bundler/issues/532)) ([8387fe6](https://github.com/aziontech/bundler/commit/8387fe60eeb6d9705a86f34686d088cde81c59f7))
+
 ### [6.1.2](https://github.com/aziontech/bundler/compare/v6.1.1...v6.1.2) (2025-10-01)
 
 
