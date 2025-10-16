@@ -41,7 +41,7 @@ describe('E2E - simple-js-env-vars project', () => {
   }, TIMEOUT);
 
   afterEach(async () => {
-    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''));
+    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''), EXAMPLE_PATH);
   }, TIMEOUT);
 
   test('should receive a 500 status code and env var not defined in .env file', async () => {

@@ -9,7 +9,7 @@ const TIMEOUT = 10 * 60 * 1000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/nuxt-static';
+const EXAMPLE_PATH = '/examples/nuxt/nuxt-static';
 
 describe('E2E - nuxt-static project', () => {
   let request;
@@ -32,7 +32,7 @@ describe('E2E - nuxt-static project', () => {
   }, TIMEOUT);
 
   afterAll(async () => {
-    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''));
+    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''), EXAMPLE_PATH);
 
     await browser.close();
   }, TIMEOUT);

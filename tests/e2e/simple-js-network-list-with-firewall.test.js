@@ -32,7 +32,7 @@ describe('E2E - simple-js-network-list-with-firewall project', () => {
   }, TIMEOUT);
 
   afterEach(async () => {
-    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''));
+    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''), EXAMPLE_PATH);
   }, TIMEOUT);
 
   test('should return 200 and the response header x-azion-outcome with the value continue', async () => {

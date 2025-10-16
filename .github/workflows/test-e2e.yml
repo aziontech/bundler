@@ -2,12 +2,14 @@ name: E2E Tests
 
 on:
   pull_request:
+    branches: [main, stage]
     types: [opened, synchronize, reopened]
 
 jobs:
   tests-e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 80
+    if: ${{ !startsWith(github.head_ref, 'dependabot/') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

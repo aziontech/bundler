@@ -1,4 +1,3 @@
-import supertest from 'supertest';
 import puppeteer from 'puppeteer';
 import projectInitializer from '../utils/project-initializer.js';
 import projectStop from '../utils/project-stop.js';
@@ -9,10 +8,9 @@ const TIMEOUT = 10 * 60 * 1000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/svelte-static';
+const EXAMPLE_PATH = '/examples/nuxt/nuxt-ssr';
 
-describe('E2E - svelte-static project', () => {
-  let request;
+describe('E2E - nuxt-ssr project', () => {
   let browser;
   let page;
 
@@ -20,9 +18,7 @@ describe('E2E - svelte-static project', () => {
     serverPort = getContainerPort();
     localhostBaseUrl = `http://0.0.0.0:${serverPort}`;
 
-    request = supertest(localhostBaseUrl);
-
-    await projectInitializer(EXAMPLE_PATH, 'svelte', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'nuxt', serverPort);
 
     browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -37,21 +33,19 @@ describe('E2E - svelte-static project', () => {
     await browser.close();
   }, TIMEOUT);
 
-  test('Should render home page in "/" route', async () => {
-    await page.goto(`${localhostBaseUrl}/`, {
-      waitUntil: 'domcontentloaded',
-    });
-    await page.waitForSelector('h1');
+  test('should render home page in "/" route', async () => {
+    await page.goto(`${localhostBaseUrl}/`);
+
     const pageContent = await page.content();
 
-    expect(pageContent).toContain('Welcome to SvelteKit');
-    expect(pageContent).toContain('kit.svelte.dev');
+    expect(pageContent).toContain('Welcome to');
   });
 
-  test('Should return correct asset', async () => {
-    await request
-      .get('/favicon.png')
-      .expect(200)
-      .expect('Content-Type', /image\/png/);
+  test('should navigate to "/ssr" route', async () => {
+    await page.goto(`${localhostBaseUrl}/ssr`);
+
+    const pageContent = await page.content();
+
+    expect(pageContent).toContain('Side Rendering');
   });
 });
