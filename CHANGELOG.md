@@ -1,3 +1,10 @@
+## [6.2.0-stage.1](https://github.com/aziontech/bundler/compare/v6.1.3-stage.1...v6.2.0-stage.1) (2025-10-16)
+
+
+### Features
+
+* nuxt.js preset support with SSR and SSG capabilities ([#533](https://github.com/aziontech/bundler/issues/533)) ([df2304c](https://github.com/aziontech/bundler/commit/df2304c20f7a96a1bd3a56c2f4bc6fbf80c6fa8b))
+
 ### [6.1.3-stage.1](https://github.com/aziontech/bundler/compare/v6.1.2...v6.1.3-stage.1) (2025-10-14)
 
 
