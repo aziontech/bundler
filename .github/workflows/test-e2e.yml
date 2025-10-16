@@ -2,6 +2,7 @@ name: E2E Tests
 
 on:
   pull_request:
+    branches: [main, stage]
     types: [opened, synchronize, reopened]
 
 jobs:
