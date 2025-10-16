@@ -31,7 +31,7 @@ describe('E2E - simple-js-firewall-event project', () => {
   }, TIMEOUT);
 
   afterEach(async () => {
-    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''));
+    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''), EXAMPLE_PATH);
   }, TIMEOUT);
 
   test('should receive a 417 status code, the response headers and body message', async () => {

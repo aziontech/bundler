@@ -31,7 +31,7 @@ describe('Node.js APIs - async_hooks', () => {
   }, TIMEOUT);
 
   afterAll(async () => {
-    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''));
+    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''), EXAMPLE_PATH);
   }, TIMEOUT);
 
   test('should request the "/" route and get a 200 status code', async () => {

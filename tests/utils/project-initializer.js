@@ -25,7 +25,7 @@ async function projectInitializer(
 
   if (installPkgs) {
     feedback.info(`[${example}] Installing project dependencies ...`);
-    await execCommandInContainer('yarn --ignore-engines', examplePath);
+    await execCommandInContainer('npm install --force', examplePath);
   }
 
   feedback.info(`[${example}] Building the project ...`);
@@ -38,7 +38,7 @@ async function projectInitializer(
 
   feedback.info(`[${example}] Starting Bundler local server ...`);
   await execCommandInContainer(
-    `${bundlerCmd} dev -p ${serverPort} ${isFirewall ? '--firewall' : ''}`,
+    `${bundlerCmd} dev -p ${serverPort} ${isFirewall ? '--firewall' : ''} --skip-framework-build`,
     examplePath,
     true,
   );

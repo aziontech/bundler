@@ -31,7 +31,7 @@ describe('E2E - simple-js-esm-worker project', () => {
   }, TIMEOUT);
 
   afterAll(async () => {
-    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''));
+    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''), EXAMPLE_PATH);
   }, TIMEOUT);
 
   test('Should return a message in "/" route', async () => {
