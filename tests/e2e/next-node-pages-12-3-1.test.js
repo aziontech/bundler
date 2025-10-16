@@ -33,7 +33,7 @@ describe('E2E - next-node-pages-12-3-1 project', () => {
   }, TIMEOUT);
 
   afterAll(async () => {
-    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''));
+    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''), EXAMPLE_PATH);
 
     await browser.close();
   }, TIMEOUT);

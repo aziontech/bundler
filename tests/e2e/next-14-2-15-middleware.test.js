@@ -30,7 +30,7 @@ describe('E2E - next-14-2-15-middleware project', () => {
   }, TIMEOUT);
 
   afterAll(async () => {
-    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''));
+    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''), EXAMPLE_PATH);
 
     await browser.close();
   }, TIMEOUT);

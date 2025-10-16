@@ -32,7 +32,7 @@ describe('E2E - simple-js-network-list project', () => {
   }, TIMEOUT);
 
   afterEach(async () => {
-    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''));
+    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''), EXAMPLE_PATH);
   }, TIMEOUT);
 
   test('should return 200 and the response header x-presence with the value present', async () => {

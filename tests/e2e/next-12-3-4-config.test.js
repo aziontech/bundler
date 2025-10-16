@@ -29,7 +29,7 @@ describe('E2E - next-12-3-4-configs project', () => {
   }, TIMEOUT);
 
   afterAll(async () => {
-    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''));
+    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''), EXAMPLE_PATH);
 
     await browser.close();
   }, TIMEOUT);

@@ -38,7 +38,7 @@ async function projectInitializer(
 
   feedback.info(`[${example}] Starting Bundler local server ...`);
   await execCommandInContainer(
-    `${bundlerCmd} dev -p ${serverPort} ${isFirewall ? '--firewall' : ''}`,
+    `${bundlerCmd} dev -p ${serverPort} ${isFirewall ? '--firewall' : ''} --skip-framework-build`,
     examplePath,
     true,
   );

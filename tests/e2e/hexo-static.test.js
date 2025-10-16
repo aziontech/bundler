@@ -39,7 +39,7 @@ describe('E2E - hexo-static project', () => {
   }, TIMEOUT);
 
   afterAll(async () => {
-    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''));
+    await projectStop(serverPort, EXAMPLE_PATH.replace('/examples/', ''), EXAMPLE_PATH);
 
     await browser.close();
   }, TIMEOUT);
