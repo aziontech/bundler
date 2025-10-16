@@ -62,7 +62,7 @@ jobs:
 
       - name: Checkout code for build artifact cleanup
         if: ${{ inputs.clean_build }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
