@@ -1,4 +1,3 @@
-import supertest from 'supertest';
 import puppeteer from 'puppeteer';
 import projectInitializer from '../utils/project-initializer.js';
 import projectStop from '../utils/project-stop.js';
@@ -9,18 +8,15 @@ const TIMEOUT = 10 * 60 * 1000;
 
 let serverPort;
 let localhostBaseUrl;
-const EXAMPLE_PATH = '/examples/nuxt/nuxt-static';
+const EXAMPLE_PATH = '/examples/nuxt/nuxt-ssr';
 
-describe('E2E - nuxt-static project', () => {
-  let request;
+describe('E2E - nuxt-ssr project', () => {
   let browser;
   let page;
 
   beforeAll(async () => {
     serverPort = getContainerPort();
     localhostBaseUrl = `http://0.0.0.0:${serverPort}`;
-
-    request = supertest(localhostBaseUrl);
 
     await projectInitializer(EXAMPLE_PATH, 'nuxt', serverPort);
 
@@ -37,17 +33,19 @@ describe('E2E - nuxt-static project', () => {
     await browser.close();
   }, TIMEOUT);
 
-  test('Should render home page in "/" route', async () => {
+  test('should render home page in "/" route', async () => {
     await page.goto(`${localhostBaseUrl}/`);
 
     const pageContent = await page.content();
-    const pageTitle = await page.title();
 
-    expect(pageContent).toContain('Get started');
-    expect(pageTitle).toBe('Welcome to Nuxt!');
+    expect(pageContent).toContain('Welcome to');
   });
 
-  test('Should return correct asset', async () => {
-    await request.get('/favicon.ico').expect(200).expect('Content-Type', /image/);
+  test('should navigate to "/ssr" route', async () => {
+    await page.goto(`${localhostBaseUrl}/ssr`);
+
+    const pageContent = await page.content();
+
+    expect(pageContent).toContain('Side Rendering');
   });
 });
