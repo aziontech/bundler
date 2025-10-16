@@ -25,7 +25,7 @@ async function projectInitializer(
 
   if (installPkgs) {
     feedback.info(`[${example}] Installing project dependencies ...`);
-    await execCommandInContainer('npm install --force', examplePath);
+    await execCommandInContainer('yarn install --ignore-engines', examplePath);
   }
 
   feedback.info(`[${example}] Building the project ...`);
