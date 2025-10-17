@@ -385,6 +385,7 @@ Table:
 | Nuxt Static                          | ✅      |
 | Docusaurus Static                    | ✅      |
 | Simple Js Firewall Event             | ✅      |
+| Nuxt Ssr                             | ✅      |
 | Simple Js Network List With Firewall | ✅      |
 | Jekyll Static                        | ✅      |
 | Simple Js Esm Worker                 | ✅      |
@@ -392,7 +393,7 @@ Table:
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 10/14/25 03:27:09 AM
+Last test run date: 10/17/25 03:25:06 AM
 
 ## Contributing
 
