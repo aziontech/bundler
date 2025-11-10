@@ -1,3 +1,10 @@
+### [6.2.1-stage.1](https://github.com/aziontech/bundler/compare/v6.2.0...v6.2.1-stage.1) (2025-11-10)
+
+
+### Bug Fixes
+
+* string escaping ([#540](https://github.com/aziontech/bundler/issues/540)) ([4558e40](https://github.com/aziontech/bundler/commit/4558e40b3e55bf7b45911b098b1bd98c2fa094fa))
+
 ## [6.2.0](https://github.com/aziontech/bundler/compare/v6.1.2...v6.2.0) (2025-10-16)
 
 
