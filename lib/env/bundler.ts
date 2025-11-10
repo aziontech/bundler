@@ -290,7 +290,7 @@ export async function writeUserConfig(config: AzionConfig): Promise<void> {
     }
 
     if (typeof obj === 'string') {
-      return `'${obj.replace(/'/g, "\\'")}'`;
+      return `'${obj.replaceAll("'", "\\'")}'`;
     }
 
     if (typeof obj === 'number' || typeof obj === 'boolean') {
