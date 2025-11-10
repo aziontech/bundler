@@ -22,6 +22,9 @@ on:
 
 jobs:
   cleanup:
+    permissions:
+      contents: write
+      pull-requests: write
     name: Disk Cleanup
     runs-on: ubuntu-latest
     steps:
