@@ -31,8 +31,7 @@ export interface ManifestCommandOptions {
  */
 export async function manifestCommand(options: ManifestCommandOptions): Promise<void> {
   try {
-    const action =
-      options.action || (options.config ? ManifestAction.GENERATE : ManifestAction.TRANSFORM);
+    const action = options.action || ManifestAction.GENERATE;
 
     const actionHandlers = {
       [ManifestAction.GENERATE]: async () => {
