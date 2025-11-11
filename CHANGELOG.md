@@ -1,3 +1,10 @@
+### [6.2.1-stage.2](https://github.com/aziontech/bundler/compare/v6.2.1-stage.1...v6.2.1-stage.2) (2025-11-11)
+
+
+### Bug Fixes
+
+* manifest command default action handling ([#541](https://github.com/aziontech/bundler/issues/541)) ([57dc0e7](https://github.com/aziontech/bundler/commit/57dc0e73f4ba4b8e363617a0094fe410df5c18f6))
+
 ### [6.2.1-stage.1](https://github.com/aziontech/bundler/compare/v6.2.0...v6.2.1-stage.1) (2025-11-10)
 
 
