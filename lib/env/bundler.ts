@@ -222,17 +222,33 @@ export async function writeUserConfig(config: AzionConfig, outputPath?: string):
 
   const isTypeScript = config.build?.preset === 'typescript';
   let configExtension = isTypeScript ? '.ts' : extension;
-
   let configPath: string;
 
   if (outputPath) {
     const parsedPath = path.parse(outputPath);
+    const validExtensions = ['.js', '.mjs', '.cjs', '.ts'];
+    const hasValidExtension = validExtensions.includes(parsedPath.ext);
 
-    if (parsedPath.ext) {
+    if (hasValidExtension) {
       configPath = path.resolve(outputPath);
       configExtension = parsedPath.ext;
     } else {
-      configPath = path.join(outputPath, `azion.config${configExtension}`);
+      const resolvedPath = path.resolve(outputPath);
+
+      try {
+        const stats = await fsPromises.stat(resolvedPath);
+        if (stats.isFile()) {
+          configPath = `${resolvedPath}${configExtension}`;
+        } else {
+          configPath = path.join(resolvedPath, `azion.config${configExtension}`);
+        }
+      } catch {
+        if (outputPath.includes('/') || outputPath.includes('\\')) {
+          configPath = path.join(resolvedPath, `azion.config${configExtension}`);
+        } else {
+          configPath = `${resolvedPath}${configExtension}`;
+        }
+      }
     }
   } else {
     configPath = path.join(process.cwd(), `azion.config${configExtension}`);
