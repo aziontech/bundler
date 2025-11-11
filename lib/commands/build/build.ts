@@ -29,7 +29,6 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       feedback.build.warn('Skipping framework build');
     }
 
-    validateConfig(config);
     await checkDependencies();
 
     const resolvedPreset = await resolvePreset(config.build?.preset);
@@ -47,6 +46,10 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
         },
       });
       feedback.build.success('Build completed successfully with only azion.config');
+
+      // validate config
+      validateConfig(mergedConfig);
+
       return {
         config: mergedConfig,
         ctx: {
@@ -121,6 +124,9 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       preset: resolvedPreset,
       ctx,
     });
+
+    // validate config
+    validateConfig(mergedConfig);
 
     // Phase 5: Set Storage
     const storageSetup = await setupStorage({ config: mergedConfig });

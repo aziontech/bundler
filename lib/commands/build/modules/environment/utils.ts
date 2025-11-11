@@ -14,6 +14,10 @@ export const mergeConfigWithUserOverrides = (
     if (objValue && !objValue.build) {
       return srcValue;
     }
+    // se objValue is Array and srcValue is not Array, return srcValue
+    if (Array.isArray(objValue) && !Array.isArray(srcValue)) {
+      return srcValue;
+    }
     return undefined;
   };
 
