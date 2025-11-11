@@ -1,3 +1,11 @@
+### [6.2.1-stage.3](https://github.com/aziontech/bundler/compare/v6.2.1-stage.2...v6.2.1-stage.3) (2025-11-11)
+
+
+### Bug Fixes
+
+* improve config file path resolution logic ([#543](https://github.com/aziontech/bundler/issues/543)) ([7e18936](https://github.com/aziontech/bundler/commit/7e18936ae2de79f760d3d4e43f1b17f667b212a8))
+* regex escape ([#542](https://github.com/aziontech/bundler/issues/542)) ([9a8fe95](https://github.com/aziontech/bundler/commit/9a8fe956bf11e8f0687970d9cc90a1993c1bf1f5))
+
 ### [6.2.1-stage.2](https://github.com/aziontech/bundler/compare/v6.2.1-stage.1...v6.2.1-stage.2) (2025-11-11)
 
 
