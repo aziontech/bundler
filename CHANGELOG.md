@@ -1,3 +1,10 @@
+### [6.2.1-stage.4](https://github.com/aziontech/bundler/compare/v6.2.1-stage.3...v6.2.1-stage.4) (2025-11-11)
+
+
+### Bug Fixes
+
+* move config validation after merging ([#544](https://github.com/aziontech/bundler/issues/544)) ([d7d6e2b](https://github.com/aziontech/bundler/commit/d7d6e2b07e25fc60d6cb8ab014e10c82ba2e3eee))
+
 ### [6.2.1-stage.3](https://github.com/aziontech/bundler/compare/v6.2.1-stage.2...v6.2.1-stage.3) (2025-11-11)
 
 
