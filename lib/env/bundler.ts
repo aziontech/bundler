@@ -216,17 +216,31 @@ function isCommonJS(): boolean {
  * Determines module type (CommonJS/ESM) from package.json
  * @async
  */
-export async function writeUserConfig(config: AzionConfig): Promise<void> {
+export async function writeUserConfig(config: AzionConfig, outputPath?: string): Promise<void> {
   const useCommonJS = isCommonJS();
   const extension = useCommonJS ? '.cjs' : '.mjs';
 
   const isTypeScript = config.build?.preset === 'typescript';
-  const configExtension = isTypeScript ? '.ts' : extension;
-  const configPath = path.join(process.cwd(), `azion.config${configExtension}`);
+  let configExtension = isTypeScript ? '.ts' : extension;
+
+  let configPath: string;
+
+  if (outputPath) {
+    const parsedPath = path.parse(outputPath);
+
+    if (parsedPath.ext) {
+      configPath = path.resolve(outputPath);
+      configExtension = parsedPath.ext;
+    } else {
+      configPath = path.join(outputPath, `azion.config${configExtension}`);
+    }
+  } else {
+    configPath = path.join(process.cwd(), `azion.config${configExtension}`);
+  }
 
   const moduleExportStyle = isTypeScript
     ? 'export default'
-    : useCommonJS
+    : configExtension === '.cjs'
       ? 'module.exports ='
       : 'export default';
   const configComment = `/**

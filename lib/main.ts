@@ -184,7 +184,6 @@ Examples:
     .argument(
       '[action]',
       'Action to perform: "transform" (JSON to JS) or "generate" (config to manifest)',
-      'generate',
     )
     .option('-e, --entry <path>', 'Path to the input file or configuration file')
     .option('-o, --output <path>', 'Output file/directory path')
@@ -197,10 +196,13 @@ Examples:
   $ ef manifest -e azion.config.js -o .edge
     `,
     )
-    .action(async (action, options) => {
+    .action(async (action, options, command) => {
       const { manifestCommand } = await import('#commands');
+
+      const actualOptions = options || command;
+
       await manifestCommand({
-        ...options,
+        ...actualOptions,
         action,
       });
     });
