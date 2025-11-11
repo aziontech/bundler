@@ -223,14 +223,19 @@ function updateInObjectContent(
   const [firstKey, ...restPath] = keyPath;
 
   if (typeof firstKey === 'string') {
+    // Escape firstKey to prevent regex injection
+    const escapedFirstKey = firstKey.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+
     // Property access
     if (restPath.length === 0) {
       // Final property, update it
-      const propertyRegex = new RegExp(`(${firstKey}\\s*:\\s*)([^,}]+)`);
+      const propertyRegex = new RegExp(`(${escapedFirstKey}\\s*:\\s*)([^,}]+)`);
       return objectContent.replace(propertyRegex, `$1${value}`);
     } else {
       // Need to go deeper into nested property
-      const propertyMatch = objectContent.match(new RegExp(`(.*${firstKey}\\s*:\\s*)([^,}]+)(.*)`));
+      const propertyMatch = objectContent.match(
+        new RegExp(`(.*${escapedFirstKey}\\s*:\\s*)([^,}]+)(.*)`),
+      );
       if (propertyMatch) {
         const [, , propValue] = propertyMatch;
 
