@@ -61,6 +61,9 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       };
     }
 
+    // validate config
+    validateConfig(config);
+
     /* Execute build phases */
     // Phase 1: Prebuild
     feedback.prebuild.info('Starting pre-build...');
@@ -125,7 +128,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       ctx,
     });
 
-    // validate config
+    // validate config after merge
     validateConfig(mergedConfig);
 
     // Phase 5: Set Storage
