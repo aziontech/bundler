@@ -61,25 +61,36 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       };
     }
 
-    // validate config
-    validateConfig(config);
+    // Phase 0: Setup context
+    let context: BuildContext = {
+      production: isProduction ?? BUILD_CONFIG_DEFAULTS.PRODUCTION,
+      skipFrameworkBuild: Boolean(options.skipFrameworkBuild),
+      handler: '',
+    };
+
+    // Phase 1: Set Environment
+    // TODO: rafactor this to use the same function
+    const mergedConfig = await setEnvironment({
+      config,
+      preset: resolvedPreset,
+      ctx: context,
+    });
+
+    // validate config after merge
+    validateConfig(mergedConfig);
 
     /* Execute build phases */
-    // Phase 1: Prebuild
+    // Phase 2: Prebuild
     feedback.prebuild.info('Starting pre-build...');
 
     const prebuildResult: AzionPrebuildResult = await executePrebuild({
       buildConfig: buildConfigSetup,
-      ctx: {
-        production: isProduction ?? BUILD_CONFIG_DEFAULTS.PRODUCTION,
-        skipFrameworkBuild: Boolean(options.skipFrameworkBuild),
-        handler: '', // Placeholder, will be set later
-      },
+      ctx: context,
     });
 
     feedback.prebuild.info('Pre-build completed successfully');
 
-    const ctx: BuildContext = {
+    context = {
       production: isProduction ?? BUILD_CONFIG_DEFAULTS.PRODUCTION,
       handler: await resolveHandlers({
         entrypoint: config.build?.entry,
@@ -89,7 +100,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     };
 
     /** Map of resolved worker paths and their transformed contents ready for bundling */
-    const workerEntries: Record<string, string> = await setupWorkerCode(buildConfigSetup, ctx);
+    const workerEntries: Record<string, string> = await setupWorkerCode(buildConfigSetup, context);
     /** Write each transformed worker to its bundler entry path */
     const workerPaths: string[] = [];
     await Promise.all(
@@ -104,32 +115,21 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       await markForCleanup(path);
     }
 
-    // Phase 2: Build
+    // Phase 3: Build
     feedback.build.info('Starting build...');
     await executeBuild({
       buildConfig: buildConfigSetup,
       prebuildResult,
-      ctx,
+      ctx: context,
     });
     feedback.build.success('Build completed successfully');
 
     await executeCleanup();
 
-    // Phase 3: Postbuild
+    // Phase 4: Postbuild
     feedback.postbuild.info('Starting post-build...');
-    await executePostbuild({ buildConfig: buildConfigSetup, ctx });
+    await executePostbuild({ buildConfig: buildConfigSetup, ctx: context });
     feedback.postbuild.success('Post-build completed successfully');
-
-    // Phase 4: Set Environment
-    // TODO: rafactor this to use the same function
-    const mergedConfig = await setEnvironment({
-      config,
-      preset: resolvedPreset,
-      ctx,
-    });
-
-    // validate config after merge
-    validateConfig(mergedConfig);
 
     // Phase 5: Set Storage
     const storageSetup = await setupStorage({ config: mergedConfig });
@@ -141,7 +141,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
 
     return {
       config: mergedConfig,
-      ctx,
+      ctx: context,
       setup: buildConfigSetup,
     };
   } catch (error: unknown) {
