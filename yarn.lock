@@ -1116,37 +1116,37 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@edge-runtime/format@2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@edge-runtime/format/-/format-2.2.1.tgz#10dcedb0d7c2063c9ee360fbab23846c8720f986"
-  integrity sha512-JQTRVuiusQLNNLe2W9tnzBlV/GvSVcozLl4XZHk5swnRZ/v6jp8TqR8P7sqmJsQqblDZ3EztcWmLDbhRje/+8g==
+"@edge-runtime/format@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@edge-runtime/format/-/format-4.0.0.tgz#3600515faeb553972bf1fe5aba23e5f163a53d3f"
+  integrity sha512-dON4E/O3u0TvksmgS3E+3kniWerMji54mRA/uviHlbn7CiP7eYZVu2sgk/lXMaIvXAu+Jx+bV8KhE3+oQO5N5Q==
 
-"@edge-runtime/ponyfill@2.4.2":
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/@edge-runtime/ponyfill/-/ponyfill-2.4.2.tgz#9bec9feff18623f9f3ebe2f4ad8f0475c644ed07"
-  integrity sha512-oN17GjFr69chu6sDLvXxdhg0Qe8EZviGSuqzR9qOiKh4MhFYGdBBcqRNzdmYeAdeRzOW2mM9yil4RftUQ7sUOA==
+"@edge-runtime/ponyfill@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@edge-runtime/ponyfill/-/ponyfill-4.0.0.tgz#7a375f04cac4c3cd9872bcabd5182547426acc1b"
+  integrity sha512-JZdDyYUqweSbhMgSxxL8QuquNuanVw+gMK8RfFq1LHMQHxzXPVvAf9aw6M7MSuyhnCBtFhqtSTr682rf8U5eyA==
 
 "@edge-runtime/primitives@4.0.5":
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/@edge-runtime/primitives/-/primitives-4.0.5.tgz#67b4f555816d7c8cb32a05da0b3c2cac32a70f1c"
   integrity sha512-t7QiN5d/KpXgCvIfSt6Nm9Hj3WVdNgc5CpOD73jasY+9EvTI7Ngdj5cXvjcHrPcmYWJZMySPgeEeoL/1N/Llag==
 
-"@edge-runtime/primitives@4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@edge-runtime/primitives/-/primitives-4.1.0.tgz#43c6e793362f3333acf0955a75b5735b34035494"
-  integrity sha512-Vw0lbJ2lvRUqc7/soqygUX216Xb8T3WBZ987oywz6aJqRxcwSVWwr9e+Nqo2m9bxobA9mdbWNNoRY6S9eko1EQ==
+"@edge-runtime/primitives@6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@edge-runtime/primitives/-/primitives-6.0.0.tgz#7ca59111605d72b6789b55e6d9c264afb656a5b1"
+  integrity sha512-FqoxaBT+prPBHBwE1WXS1ocnu/VLTQyZ6NMUBAdbP7N2hsFTTxMC/jMu2D/8GAlMQfxeuppcPuCUk/HO3fpIvA==
 
 "@edge-runtime/primitives@^3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@edge-runtime/primitives/-/primitives-3.1.1.tgz#45c97f492ad06272136024122c4b639241f9b0f9"
   integrity sha512-ROO22py+KdAfzqWZu6CtVMC4qV6mS0W1jPI51jGXE+uenyBUN7cQTWB9ReQc8Bm4cnjqmhajvpqEx3j7Y9iSOg==
 
-"@edge-runtime/vm@3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@edge-runtime/vm/-/vm-3.2.0.tgz#8a735241d14e9fdad85497b8b17d0ea157df4710"
-  integrity sha512-0dEVyRLM/lG4gp1R/Ik5bfPl/1wX00xFwd5KcNH602tzBa09oF7pbTKETEhR1GjZ75K6OJnYFu8II2dyMhONMw==
+"@edge-runtime/vm@5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@edge-runtime/vm/-/vm-5.0.0.tgz#0db56607125248bb58d53470a4388c738e4f9bf4"
+  integrity sha512-NKBGBSIKUG584qrS1tyxVpX/AKJKQw5HgjYEnPLC0QsTw79JrGn+qUr8CXFb955Iy7GUdiiUv1rJ6JBGvaKb6w==
   dependencies:
-    "@edge-runtime/primitives" "4.1.0"
+    "@edge-runtime/primitives" "6.0.0"
 
 "@esbuild/aix-ppc64@0.25.10":
   version "0.25.10"
@@ -4434,17 +4434,17 @@ eastasianwidth@^0.2.0:
   resolved "https://registry.yarnpkg.com/eastasianwidth/-/eastasianwidth-0.2.0.tgz#696ce2ec0aa0e6ea93a397ffcf24aa7840c827cb"
   integrity sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==
 
-edge-runtime@^2.4.5:
-  version "2.5.10"
-  resolved "https://registry.yarnpkg.com/edge-runtime/-/edge-runtime-2.5.10.tgz#0270224f315814b3b9c7503ca8b98e92a266ee9b"
-  integrity sha512-oe6JjFbU1MbISzeSBMHqmzBhNEwmy2AYDY0LxStl8FAIWSGdGO+CqzWub9nbgmANuJYPXZA0v3XAlbxeKV/Omw==
+edge-runtime@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/edge-runtime/-/edge-runtime-4.0.1.tgz#d06b236d21354f4a2f5f55c1a222bd4bedea4098"
+  integrity sha512-knylcPEqTugSmZolBR7P0O+StzYHd2J7wSmI0zqETD+xhy2xSeTA03p0SZqMKRsAsHPZ1qIGb7/bL71LUh9hqQ==
   dependencies:
-    "@edge-runtime/format" "2.2.1"
-    "@edge-runtime/ponyfill" "2.4.2"
-    "@edge-runtime/vm" "3.2.0"
+    "@edge-runtime/format" "4.0.0"
+    "@edge-runtime/ponyfill" "4.0.0"
+    "@edge-runtime/vm" "5.0.0"
     async-listen "3.0.1"
     mri "1.2.0"
-    picocolors "1.0.0"
+    picocolors "1.1.1"
     pretty-ms "7.0.1"
     signal-exit "4.0.2"
     time-span "4.0.0"
@@ -8111,12 +8111,7 @@ pend@~1.2.0:
   resolved "https://registry.yarnpkg.com/pend/-/pend-1.2.0.tgz#7a57eb550a6783f9115331fcf4663d5c8e007a50"
   integrity sha512-F3asv42UuXchdzt+xXqfW1OGlVBe+mxa2mqI0pg5yAHZPvFmY3Y6drSf/GQ1A86WgWEN9Kzh/WrgKa6iGcHXLg==
 
-picocolors@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.0.tgz#cb5bdc74ff3f51892236eaf79d68bc44564ab81c"
-  integrity sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==
-
-picocolors@^1.1.1:
+picocolors@1.1.1, picocolors@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.1.1.tgz#3d321af3eab939b083c8f929a1d12cda81c26b6b"
   integrity sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==
