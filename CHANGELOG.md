@@ -1,3 +1,10 @@
+### [6.2.1-stage.6](https://github.com/aziontech/bundler/compare/v6.2.1-stage.5...v6.2.1-stage.6) (2025-11-13)
+
+
+### Bug Fixes
+
+* move initial config validation earlier in build process ([#546](https://github.com/aziontech/bundler/issues/546)) ([c8ca9aa](https://github.com/aziontech/bundler/commit/c8ca9aa4e52efb5f5d0e59aa3099fddc300212be))
+
 ### [6.2.1-stage.5](https://github.com/aziontech/bundler/compare/v6.2.1-stage.4...v6.2.1-stage.5) (2025-11-13)
 
 
