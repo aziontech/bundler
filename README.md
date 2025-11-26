@@ -368,7 +368,7 @@ Table:
 | Next Static                          | ✅      |
 | Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ✅      |
-| Vue Vite Static                      | ✅      |
+| Vue Vite Static                      | ⚠️     |
 | Next 12 Static                       | ✅      |
 | Astro Static                         | ✅      |
 | Qwik Static                          | ✅      |
@@ -393,7 +393,7 @@ Table:
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 11/25/25 03:36:45 AM
+Last test run date: 11/26/25 03:34:14 AM
 
 ## Contributing
 
