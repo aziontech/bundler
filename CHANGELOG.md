@@ -1,3 +1,10 @@
+### [5.3.1](https://github.com/aziontech/bundler/compare/v5.3.0...v5.3.1) (2025-12-05)
+
+
+### Bug Fixes
+
+* update azion dependency to ~1.20.14 ([31edb6e](https://github.com/aziontech/bundler/commit/31edb6ec860565d4401ee7197f164737d3a3fc20))
+
 ## [5.3.0](https://github.com/aziontech/bundler/compare/v5.2.0...v5.3.0) (2025-07-15)
 
 
