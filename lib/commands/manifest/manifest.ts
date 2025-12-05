@@ -74,7 +74,7 @@ export const transformManifest = async (
   };
 
   const config = await readConfigFromPath(input || DEFAULT_TRANSFORM_INPUT_PATH);
-  await envBundler.writeUserConfig(config);
+  await envBundler.writeUserConfig(config, outputPath);
 
   utilsNode.feedback.manifest.success(`Config file generated successfully at ${outputPath}`);
 };

@@ -6,6 +6,9 @@ on:
 
 jobs:
   post-merge-tasks:
+    permissions:
+      contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/stage'
     steps:

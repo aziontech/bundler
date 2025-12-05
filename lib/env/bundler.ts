@@ -216,17 +216,47 @@ function isCommonJS(): boolean {
  * Determines module type (CommonJS/ESM) from package.json
  * @async
  */
-export async function writeUserConfig(config: AzionConfig): Promise<void> {
+export async function writeUserConfig(config: AzionConfig, outputPath?: string): Promise<void> {
   const useCommonJS = isCommonJS();
   const extension = useCommonJS ? '.cjs' : '.mjs';
 
   const isTypeScript = config.build?.preset === 'typescript';
-  const configExtension = isTypeScript ? '.ts' : extension;
-  const configPath = path.join(process.cwd(), `azion.config${configExtension}`);
+  let configExtension = isTypeScript ? '.ts' : extension;
+  let configPath: string;
+
+  if (outputPath) {
+    const parsedPath = path.parse(outputPath);
+    const validExtensions = ['.js', '.mjs', '.cjs', '.ts'];
+    const hasValidExtension = validExtensions.includes(parsedPath.ext);
+
+    if (hasValidExtension) {
+      configPath = path.resolve(outputPath);
+      configExtension = parsedPath.ext;
+    } else {
+      const resolvedPath = path.resolve(outputPath);
+
+      try {
+        const stats = await fsPromises.stat(resolvedPath);
+        if (stats.isFile()) {
+          configPath = `${resolvedPath}${configExtension}`;
+        } else {
+          configPath = path.join(resolvedPath, `azion.config${configExtension}`);
+        }
+      } catch {
+        if (outputPath.includes('/') || outputPath.includes('\\')) {
+          configPath = path.join(resolvedPath, `azion.config${configExtension}`);
+        } else {
+          configPath = `${resolvedPath}${configExtension}`;
+        }
+      }
+    }
+  } else {
+    configPath = path.join(process.cwd(), `azion.config${configExtension}`);
+  }
 
   const moduleExportStyle = isTypeScript
     ? 'export default'
-    : useCommonJS
+    : configExtension === '.cjs'
       ? 'module.exports ='
       : 'export default';
   const configComment = `/**
@@ -290,7 +320,7 @@ export async function writeUserConfig(config: AzionConfig): Promise<void> {
     }
 
     if (typeof obj === 'string') {
-      return `'${obj.replace(/'/g, "\\'")}'`;
+      return `'${obj.replaceAll("'", "\\'")}'`;
     }
 
     if (typeof obj === 'number' || typeof obj === 'boolean') {

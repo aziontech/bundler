@@ -1,3 +1,53 @@
+### [6.2.1-stage.7](https://github.com/aziontech/bundler/compare/v6.2.1-stage.6...v6.2.1-stage.7) (2025-12-05)
+
+
+### Bug Fixes
+
+* update azion dependency to 2.3.0-stage.5 ([#550](https://github.com/aziontech/bundler/issues/550)) ([6d79a59](https://github.com/aziontech/bundler/commit/6d79a5961fffe19b138d138da43f90f775eb6a0a))
+
+### [6.2.1-stage.6](https://github.com/aziontech/bundler/compare/v6.2.1-stage.5...v6.2.1-stage.6) (2025-11-13)
+
+
+### Bug Fixes
+
+* move initial config validation earlier in build process ([#546](https://github.com/aziontech/bundler/issues/546)) ([c8ca9aa](https://github.com/aziontech/bundler/commit/c8ca9aa4e52efb5f5d0e59aa3099fddc300212be))
+
+### [6.2.1-stage.5](https://github.com/aziontech/bundler/compare/v6.2.1-stage.4...v6.2.1-stage.5) (2025-11-13)
+
+
+### Bug Fixes
+
+* update azion dependency to 2.3.0-stage.1 ([#545](https://github.com/aziontech/bundler/issues/545)) ([83d9e33](https://github.com/aziontech/bundler/commit/83d9e33149715070808761342b10bfd95ea9ba9d))
+
+### [6.2.1-stage.4](https://github.com/aziontech/bundler/compare/v6.2.1-stage.3...v6.2.1-stage.4) (2025-11-11)
+
+
+### Bug Fixes
+
+* move config validation after merging ([#544](https://github.com/aziontech/bundler/issues/544)) ([d7d6e2b](https://github.com/aziontech/bundler/commit/d7d6e2b07e25fc60d6cb8ab014e10c82ba2e3eee))
+
+### [6.2.1-stage.3](https://github.com/aziontech/bundler/compare/v6.2.1-stage.2...v6.2.1-stage.3) (2025-11-11)
+
+
+### Bug Fixes
+
+* improve config file path resolution logic ([#543](https://github.com/aziontech/bundler/issues/543)) ([7e18936](https://github.com/aziontech/bundler/commit/7e18936ae2de79f760d3d4e43f1b17f667b212a8))
+* regex escape ([#542](https://github.com/aziontech/bundler/issues/542)) ([9a8fe95](https://github.com/aziontech/bundler/commit/9a8fe956bf11e8f0687970d9cc90a1993c1bf1f5))
+
+### [6.2.1-stage.2](https://github.com/aziontech/bundler/compare/v6.2.1-stage.1...v6.2.1-stage.2) (2025-11-11)
+
+
+### Bug Fixes
+
+* manifest command default action handling ([#541](https://github.com/aziontech/bundler/issues/541)) ([57dc0e7](https://github.com/aziontech/bundler/commit/57dc0e73f4ba4b8e363617a0094fe410df5c18f6))
+
+### [6.2.1-stage.1](https://github.com/aziontech/bundler/compare/v6.2.0...v6.2.1-stage.1) (2025-11-10)
+
+
+### Bug Fixes
+
+* string escaping ([#540](https://github.com/aziontech/bundler/issues/540)) ([4558e40](https://github.com/aziontech/bundler/commit/4558e40b3e55bf7b45911b098b1bd98c2fa094fa))
+
 ## [6.2.0](https://github.com/aziontech/bundler/compare/v6.1.2...v6.2.0) (2025-10-16)
 
 
