@@ -368,7 +368,7 @@ Table:
 | Next Static                          | ✅      |
 | Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ✅      |
-| Vue Vite Static                      | ✅      |
+| Vue Vite Static                      | ⚠️     |
 | Next 12 Static                       | ✅      |
 | Astro Static                         | ✅      |
 | Qwik Static                          | ✅      |
@@ -385,6 +385,7 @@ Table:
 | Nuxt Static                          | ✅      |
 | Docusaurus Static                    | ✅      |
 | Simple Js Firewall Event             | ✅      |
+| Nuxt Ssr                             | ✅      |
 | Simple Js Network List With Firewall | ✅      |
 | Jekyll Static                        | ✅      |
 | Simple Js Esm Worker                 | ✅      |
@@ -392,7 +393,7 @@ Table:
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 10/14/25 03:27:09 AM
+Last test run date: 12/05/25 03:35:23 AM
 
 ## Contributing
 
