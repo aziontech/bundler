@@ -1,3 +1,8 @@
+## <small>6.2.2-stage.1 (2025-12-12)</small>
+
+* fix: update deployment workflow to use npm trusted publishers (#555) ([9563915](https://github.com/aziontech/bundler/commit/9563915)), closes [#555](https://github.com/aziontech/bundler/issues/555)
+* Merge branch 'main' into stage [skip ci] ([3aab8cd](https://github.com/aziontech/bundler/commit/3aab8cd))
+
 ### [6.2.1](https://github.com/aziontech/bundler/compare/v6.2.0...v6.2.1) (2025-12-05)
 
 
