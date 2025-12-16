@@ -1,3 +1,33 @@
+## <small>6.2.2 (2025-12-16)</small>
+
+* chore(release): 6.2.2-stage.1 ([22cb333](https://github.com/aziontech/bundler/commit/22cb333))
+* Merge branch 'main' into stage [skip ci] ([3aab8cd](https://github.com/aziontech/bundler/commit/3aab8cd))
+* Release 6.2.2 (#559) ([5301472](https://github.com/aziontech/bundler/commit/5301472)), closes [#559](https://github.com/aziontech/bundler/issues/559)
+* chore: update azion dependency to 2.3.1 (#558) ([be4326b](https://github.com/aziontech/bundler/commit/be4326b)), closes [#558](https://github.com/aziontech/bundler/issues/558)
+* chore: update reports ([e67e7c5](https://github.com/aziontech/bundler/commit/e67e7c5))
+* chore: update reports ([57c1067](https://github.com/aziontech/bundler/commit/57c1067))
+* chore: update reports ([e854434](https://github.com/aziontech/bundler/commit/e854434))
+* chore: update reports ([7a05ca3](https://github.com/aziontech/bundler/commit/7a05ca3))
+* chore: update reports ([d11e948](https://github.com/aziontech/bundler/commit/d11e948))
+* chore: update reports ([482336e](https://github.com/aziontech/bundler/commit/482336e))
+* chore: update reports ([9bd9261](https://github.com/aziontech/bundler/commit/9bd9261))
+* chore: update reports ([5f1b1d0](https://github.com/aziontech/bundler/commit/5f1b1d0))
+* chore: update reports ([39d0d66](https://github.com/aziontech/bundler/commit/39d0d66))
+* chore: update reports ([bd7d2f1](https://github.com/aziontech/bundler/commit/bd7d2f1))
+* chore: update reports ([5956ada](https://github.com/aziontech/bundler/commit/5956ada))
+* chore: update reports node.js apis ([2da5fc8](https://github.com/aziontech/bundler/commit/2da5fc8))
+* chore: update reports node.js apis ([7f07fb5](https://github.com/aziontech/bundler/commit/7f07fb5))
+* chore: update reports node.js apis ([473c54c](https://github.com/aziontech/bundler/commit/473c54c))
+* chore: update reports node.js apis ([407fba0](https://github.com/aziontech/bundler/commit/407fba0))
+* chore: update reports node.js apis ([665aa2c](https://github.com/aziontech/bundler/commit/665aa2c))
+* chore: update reports node.js apis ([e5a8031](https://github.com/aziontech/bundler/commit/e5a8031))
+* chore: update reports node.js apis ([fccab33](https://github.com/aziontech/bundler/commit/fccab33))
+* chore: update reports node.js apis ([0da56f7](https://github.com/aziontech/bundler/commit/0da56f7))
+* chore: update reports node.js apis ([d8133e4](https://github.com/aziontech/bundler/commit/d8133e4))
+* chore: update reports node.js apis ([4598e50](https://github.com/aziontech/bundler/commit/4598e50))
+* chore: update reports node.js apis ([c15297c](https://github.com/aziontech/bundler/commit/c15297c))
+* fix: update deployment workflow to use npm trusted publishers (#555) ([9563915](https://github.com/aziontech/bundler/commit/9563915)), closes [#555](https://github.com/aziontech/bundler/issues/555)
+
 ## <small>6.2.2-stage.1 (2025-12-12)</small>
 
 * fix: update deployment workflow to use npm trusted publishers (#555) ([9563915](https://github.com/aziontech/bundler/commit/9563915)), closes [#555](https://github.com/aziontech/bundler/issues/555)

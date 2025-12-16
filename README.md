@@ -368,7 +368,7 @@ Table:
 | Next Static                          | ✅      |
 | Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ✅      |
-| Vue Vite Static                      | ⚠️     |
+| Vue Vite Static                      | ✅      |
 | Next 12 Static                       | ✅      |
 | Astro Static                         | ✅      |
 | Qwik Static                          | ✅      |
@@ -378,7 +378,7 @@ Table:
 | Angular Static                       | ✅      |
 | React Static                         | ✅      |
 | Svelte Static                        | ✅      |
-| Stencil Static                       | ✅      |
+| Stencil Static                       | ⚠️     |
 | Vitepress Static                     | ✅      |
 | Preact Static                        | ✅      |
 | Vuepress Static                      | ✅      |
@@ -393,7 +393,7 @@ Table:
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 12/05/25 03:35:23 AM
+Last test run date: 12/16/25 03:36:31 AM
 
 ## Contributing
 
