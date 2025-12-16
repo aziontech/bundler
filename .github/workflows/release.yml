@@ -3,8 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - main
-      - stage
+      - 5.3.x
 
 permissions: write-all
 
@@ -19,14 +18,18 @@ jobs:
       id-token: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v5
         with:
-          node-version: 'lts/*'
+          node-version: 22
+          cache: 'yarn'
+          registry-url: 'https://registry.npmjs.org'
+
       - name: Install dependencies
         run: yarn install
 
@@ -36,27 +39,4 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
-
-  sync-stage:
-    needs: release
-    if: github.ref == 'refs/heads/main' && github.event.commits[0].author.name != 'Azion Bundler Reports'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
-      - name: Set up Git
-        run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
-      - name: Merge main into stage
-        run: |
-          git fetch origin
-          git pull origin main
-          git checkout stage
-          git merge main --allow-unrelated-histories --no-edit -Xtheirs -m "Merge branch 'main' into stage [skip ci]"
-          git push origin stage
