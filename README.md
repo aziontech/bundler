@@ -378,7 +378,7 @@ Table:
 | Angular Static                       | ✅      |
 | React Static                         | ✅      |
 | Svelte Static                        | ✅      |
-| Stencil Static                       | ⚠️     |
+| Stencil Static                       | ✅      |
 | Vitepress Static                     | ✅      |
 | Preact Static                        | ✅      |
 | Vuepress Static                      | ✅      |
@@ -387,13 +387,13 @@ Table:
 | Simple Js Firewall Event             | ✅      |
 | Nuxt Ssr                             | ✅      |
 | Simple Js Network List With Firewall | ✅      |
-| Jekyll Static                        | ✅      |
+| Jekyll Static                        | ⚠️     |
 | Simple Js Esm Worker                 | ✅      |
 | Simple Js Esm Node                   | ✅      |
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 12/16/25 03:36:31 AM
+Last test run date: 01/12/26 03:42:37 AM
 
 ## Contributing
 
