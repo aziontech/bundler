@@ -1,3 +1,13 @@
+## 7.0.0-stage.1 (2026-01-12)
+
+* chore: update azion dependency to 3.0.0 (#560) ([7735236](https://github.com/aziontech/bundler/commit/7735236)), closes [#560](https://github.com/aziontech/bundler/issues/560)
+* Merge branch 'main' into stage [skip ci] ([404c9df](https://github.com/aziontech/bundler/commit/404c9df))
+
+
+### BREAKING CHANGE
+
+* rename edge_access to workloads_access in the storage package.
+
 ## <small>6.2.2 (2025-12-16)</small>
 
 * chore(release): 6.2.2-stage.1 ([22cb333](https://github.com/aziontech/bundler/commit/22cb333))
