@@ -16,6 +16,7 @@ import {
   streamContext,
   cryptoContext,
   promisesContext,
+  KVContext,
 } from 'azion/bundler/polyfills';
 import { EdgeContext, EdgeVM } from './edge-vm';
 
@@ -127,16 +128,13 @@ function runtime(code: string, isFirewallEvent = false) {
     context.Promise = Promise;
     context.Promise.withResolvers = promisesContext;
 
+    // KV
+    context.KV_CONTEXT = KVContext;
+
     return context;
   };
 
-  const edgeRuntime = new EdgeVM({
-    extend,
-    initialCode: code,
-    codeGeneration: {
-      strings: true,
-    },
-  });
+  const edgeRuntime = new EdgeVM({ extend, initialCode: code, codeGeneration: { strings: true } });
   return edgeRuntime;
 }
 
