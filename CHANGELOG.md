@@ -1,3 +1,8 @@
+## 7.1.0-stage.1 (2026-01-14)
+
+* feat: add KV storage polyfill for local development (#562) ([e345129](https://github.com/aziontech/bundler/commit/e345129)), closes [#562](https://github.com/aziontech/bundler/issues/562)
+* Merge branch 'main' into stage [skip ci] ([1cc9ba3](https://github.com/aziontech/bundler/commit/1cc9ba3))
+
 ## 7.0.0 (2026-01-12)
 
 * chore(release): 7.0.0-stage.1 ([24467d7](https://github.com/aziontech/bundler/commit/24467d7))
