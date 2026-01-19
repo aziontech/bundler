@@ -40,8 +40,8 @@ Table:
 | Timers         | ✅      |
 | Stream         | ✅      |
 | Module         | ✅      |
-| Util           | ✅      |
 | Zlib           | ✅      |
+| Util           | ✅      |
 | Http           | ✅      |
 | Url            | ✅      |
 | Vm             | ✅      |
@@ -51,7 +51,7 @@ Table:
 | Fs             | ✅      |
 | Async Hooks    | ✅      |
 
-Last test run date: 01/18/26 04:04:30 AM
+Last test run date: 01/19/26 04:08:33 AM
 #### Docs support
 
 See support for the Node.js APIs in the [https://www.azion.com/en/documentation/products/azion-edge-runtime/compatibility/node/](https://www.azion.com/en/documentation/products/azion-edge-runtime/compatibility/node/)
