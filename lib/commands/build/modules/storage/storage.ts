@@ -7,7 +7,7 @@ import { feedback } from 'azion/utils/node';
 
 interface BucketMetadata {
   name: string;
-  edgeAccess: 'read_only' | 'read_write' | 'restricted';
+  workloadsAccess: 'read_only' | 'read_write' | 'restricted';
   sourceDir: string;
   targetDir: string;
   prefix: string;
@@ -139,7 +139,7 @@ const createStorageSymlink = async (
 
     await saveBucketMetadata(storageName, {
       name: storageName,
-      edgeAccess: storage.edgeAccess || 'read_only',
+      workloadsAccess: storage.workloadsAccess || 'read_only',
       sourceDir,
       targetDir: targetPath,
       prefix,

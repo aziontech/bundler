@@ -163,7 +163,7 @@ describe('replace.ts', () => {
             name: "next-commerce-test9",
             prefix: "20250923115113",
             dir: "./.edge/assets",
-            edgeAccess: "read_write",
+            workloadsAccess: "read_write",
             },
         ]
         });
