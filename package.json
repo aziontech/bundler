@@ -2,16 +2,16 @@
   "name": "edge-functions",
   "version": "7.1.0-stage.1",
   "description": "Tool to launch and build JavaScript/Frameworks. This tool automates polyfills for Edge Computing and assists in creating Workers, notably for the Azion platform.",
-  "main": "dist/main.js",
-  "module": "dist/main.ts",
+  "index": "dist/index.js",
+  "module": "dist/index.js",
   "type": "module",
   "bin": {
-    "azbundler": "dist/main.js",
-    "edge-functions": "dist/main.js",
-    "ef": "dist/main.js"
+    "azbundler": "dist/index.js",
+    "edge-functions": "dist/index.js",
+    "ef": "dist/index.js"
   },
   "scripts": {
-    "build": "tsup --config ./tsup.config.ts",
+    "build": "vite build",
     "task:reports": "node tasks/process-reports-e2e.js",
     "task:reports-nodejs-apis": "node tasks/process-reports-nodejs-apis.js",
     "lint": "eslint .",
@@ -28,7 +28,7 @@
     "test:e2e": "yarn e2e:start && NODE_OPTIONS='--experimental-vm-modules' jest --detectOpenHandles --runInBand --config=./jest-e2e.config.js tests/e2e/ --json --outputFile e2e_results.json && yarn e2e:stop; yarn task:reports",
     "test:nodejs-apis": "yarn e2e:start && NODE_OPTIONS='--experimental-vm-modules' jest --runInBand --config=./jest-e2e.config.js tests/nodejs-apis/ --json --outputFile nodejs_apis_results.json && yarn e2e:stop && yarn task:reports-nodejs-apis",
     "prepare": "husky install",
-    "submodule:update": "git submodule update --init --recursive && git submodule foreach git pull origin main"
+    "submodule:update": "git submodule update --init --recursive && git submodule foreach git pull origin index"
   },
   "author": "aziontech",
   "contributors": [
@@ -87,8 +87,8 @@
     "tmp": "^0.2.1",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
-    "tsup": "^8.3.6",
-    "typescript-eslint": "^7.16.0"
+    "typescript-eslint": "^7.16.0",
+    "vite": "^7.3.1"
   },
   "repository": {
     "type": "git",
