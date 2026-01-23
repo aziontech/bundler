@@ -1,3 +1,7 @@
+## 7.1.0-stage.2 (2026-01-23)
+
+* feat: migrate build system from tsup to vite (#566) ([5fffcaa](https://github.com/aziontech/bundler/commit/5fffcaa)), closes [#566](https://github.com/aziontech/bundler/issues/566)
+
 ## 7.1.0-stage.1 (2026-01-14)
 
 * feat: add KV storage polyfill for local development (#562) ([e345129](https://github.com/aziontech/bundler/commit/e345129)), closes [#562](https://github.com/aziontech/bundler/issues/562)
