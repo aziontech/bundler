@@ -50,7 +50,7 @@
     "cosmiconfig": "^9.0.0",
     "cosmiconfig-typescript-loader": "^6.1.0",
     "edge-runtime": "^2.4.5",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "prettier": "^3.3.2",
     "semver": "^7.5.2",
     "typescript": "^5.5.3"
@@ -67,7 +67,7 @@
     "@swc/jest": "^0.2.29",
     "@types/inquirer": "^9.0.7",
     "@types/jest": "^29.5.14",
-    "@types/lodash": "^4.17.16",
+    "@types/lodash": "^4.17.23",
     "@types/mock-fs": "^4.13.4",
     "@types/semver": "^7.5.8",
     "@types/tmp": "^0.2.6",
