@@ -48,7 +48,7 @@
     "chokidar": "^3.5.3",
     "commander": "^10.0.1",
     "cosmiconfig": "^9.0.0",
-    "cosmiconfig-typescript-loader": "^6.1.0",
+    "cosmiconfig-typescript-loader": "^6.2.0",
     "edge-runtime": "^2.4.5",
     "lodash": "^4.17.21",
     "prettier": "^3.3.2",
