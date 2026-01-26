@@ -81,7 +81,7 @@
     "jsdoc": "^4.0.2",
     "markdown-table": "^3.0.3",
     "mock-fs": "^5.2.0",
-    "puppeteer": "^23.3.0",
+    "puppeteer": "^24.36.0",
     "semantic-release": "^25.0.2",
     "supertest": "^6.3.3",
     "tmp": "^0.2.1",
