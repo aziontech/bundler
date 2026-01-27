@@ -38,11 +38,10 @@ describe('E2E - sveltekit-ssr project', () => {
   }, TIMEOUT);
 
   test('Should render home page in "/" route', async () => {
-    console.log("VASCO?")
     await page.goto(`${localhostBaseUrl}/`, {
       waitUntil: 'domcontentloaded',
     });
-    
+
     const pageContent = await page.content();
     const pageTitle = await page.title();
 
@@ -54,7 +53,7 @@ describe('E2E - sveltekit-ssr project', () => {
     await page.goto(`${localhostBaseUrl}/product/acme-cup`, {
       waitUntil: 'domcontentloaded',
     });
-    
+
     const pageContent = await page.content();
     const pageTitle = await page.title();
 
@@ -63,9 +62,6 @@ describe('E2E - sveltekit-ssr project', () => {
   });
 
   test('Should return correct asset', async () => {
-    await request
-      .get('/favicon.png')
-      .expect(200)
-      .expect('Content-Type', 'image/png');
+    await request.get('/favicon.png').expect(200).expect('Content-Type', 'image/png');
   });
 });
