@@ -63,9 +63,6 @@ describe('E2E - sveltekit-static project', () => {
   });
 
   test('Should return correct asset', async () => {
-    await request
-      .get('/favicon.png')
-      .expect(200)
-      .expect('Content-Type', 'image/png');
+    await request.get('/favicon.png').expect(200).expect('Content-Type', 'image/png');
   });
 });
