@@ -366,7 +366,7 @@ Table:
 | Next 13 5 6 Config                   | ✅      |
 | Next 12 3 4 Config                   | ✅      |
 | Next Static                          | ✅      |
-| Gatsby Static                        | ✅      |
+| Gatsby Static                        | ⚠️     |
 | Next Node Pages 12 3 1 Fs            | ✅      |
 | Vue Vite Static                      | ✅      |
 | Next 12 Static                       | ✅      |
@@ -393,7 +393,7 @@ Table:
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 01/29/26 03:49:09 AM
+Last test run date: 01/30/26 03:49:15 AM
 
 ## Contributing
 
