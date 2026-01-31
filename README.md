@@ -357,7 +357,7 @@ Table:
 | Test                                 | Status |
 | ------------------------------------ | ------ |
 | Next 14 2 15 Middleware              | ✅      |
-| Next 13 5 6 I18n                     | ✅      |
+| Next 13 5 6 I18n                     | ⚠️     |
 | Next 12 3 4 I18n                     | ✅      |
 | Hexo Static                          | ✅      |
 | Next 13 5 6 Middleware               | ✅      |
@@ -366,7 +366,7 @@ Table:
 | Next 13 5 6 Config                   | ✅      |
 | Next 12 3 4 Config                   | ✅      |
 | Next Static                          | ✅      |
-| Gatsby Static                        | ⚠️     |
+| Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ✅      |
 | Vue Vite Static                      | ✅      |
 | Next 12 Static                       | ✅      |
@@ -393,7 +393,7 @@ Table:
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 01/30/26 03:49:15 AM
+Last test run date: 01/31/26 03:48:10 AM
 
 ## Contributing
 
