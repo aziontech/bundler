@@ -15,7 +15,7 @@ jobs:
     if: ${{ !startsWith(github.head_ref, 'dependabot/') }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
