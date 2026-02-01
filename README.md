@@ -357,7 +357,7 @@ Table:
 | Test                                 | Status |
 | ------------------------------------ | ------ |
 | Next 14 2 15 Middleware              | ✅      |
-| Next 13 5 6 I18n                     | ⚠️     |
+| Next 13 5 6 I18n                     | ✅      |
 | Next 12 3 4 I18n                     | ✅      |
 | Hexo Static                          | ✅      |
 | Next 13 5 6 Middleware               | ✅      |
@@ -393,7 +393,7 @@ Table:
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 01/31/26 03:48:10 AM
+Last test run date: 02/01/26 04:05:15 AM
 
 ## Contributing
 
