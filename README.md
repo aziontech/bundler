@@ -362,11 +362,11 @@ Table:
 | Hexo Static                          | ✅      |
 | Next 13 5 6 Middleware               | ✅      |
 | Next 12 3 4 Middleware               | ✅      |
-| Next Node Pages 12 3 1               | ⚠️     |
+| Next Node Pages 12 3 1               | ✅      |
 | Next 13 5 6 Config                   | ✅      |
 | Next 12 3 4 Config                   | ✅      |
 | Next Static                          | ✅      |
-| Gatsby Static                        | ⚠️     |
+| Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ✅      |
 | Vue Vite Static                      | ✅      |
 | Next 12 Static                       | ✅      |
@@ -393,7 +393,7 @@ Table:
 | Simple Ts Esm                        | ✅      |
 | Simple Js Esm                        | ✅      |
 
-Last test run date: 02/10/26 04:03:15 AM
+Last test run date: 02/11/26 04:04:00 AM
 
 ## Contributing
 
