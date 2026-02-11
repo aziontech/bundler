@@ -1,3 +1,5 @@
+import { server } from '#env';
+
 /*
  * @function devCommand
  * @description A command to start the development server.
@@ -18,7 +20,6 @@ export async function devCommand({
   functionName?: string;
 }) {
   const parsedPort = parseInt(port, 10);
-  const { server } = await import('#env');
 
   const entryPoint = entry || null;
 

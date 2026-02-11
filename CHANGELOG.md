@@ -1,3 +1,19 @@
+## 7.1.0-stage.3 (2026-02-11)
+
+* fix: update azion dependency to 3.1.0 (#584) ([6e1910d](https://github.com/aziontech/bundler/commit/6e1910d)), closes [#584](https://github.com/aziontech/bundler/issues/584)
+* chore: remove dependabot workflow (#583) ([23d020c](https://github.com/aziontech/bundler/commit/23d020c)), closes [#583](https://github.com/aziontech/bundler/issues/583)
+* test: add missing preset tests (#577) ([a511941](https://github.com/aziontech/bundler/commit/a511941)), closes [#577](https://github.com/aziontech/bundler/issues/577)
+* test: remove unused log and format files (#578) ([ad7a03e](https://github.com/aziontech/bundler/commit/ad7a03e)), closes [#578](https://github.com/aziontech/bundler/issues/578)
+
+## 7.1.0-stage.2 (2026-01-23)
+
+* feat: migrate build system from tsup to vite (#566) ([5fffcaa](https://github.com/aziontech/bundler/commit/5fffcaa)), closes [#566](https://github.com/aziontech/bundler/issues/566)
+
+## 7.1.0-stage.1 (2026-01-14)
+
+* feat: add KV storage polyfill for local development (#562) ([e345129](https://github.com/aziontech/bundler/commit/e345129)), closes [#562](https://github.com/aziontech/bundler/issues/562)
+* Merge branch 'main' into stage [skip ci] ([1cc9ba3](https://github.com/aziontech/bundler/commit/1cc9ba3))
+
 ## 7.0.0 (2026-01-12)
 
 * chore(release): 7.0.0-stage.1 ([24467d7](https://github.com/aziontech/bundler/commit/24467d7))

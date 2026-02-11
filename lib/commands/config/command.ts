@@ -39,7 +39,7 @@ import type { AzionConfig } from 'azion/config';
  * ef config create -k "functions[0]" -v '{"name": "auth", "path": "./functions/auth.js"}'
  *
  * # Create storage configuration
- * ef config create -k "storage[0]" -v '{"name": "assets", "dir": "./public", "edgeAccess": "read_only"}'
+ * ef config create -k "storage[0]" -v '{"name": "assets", "dir": "./public", "workloadsAccess": "read_only"}'
  *
  * === READING CONFIGURATIONS ===
  *
@@ -74,7 +74,7 @@ import type { AzionConfig } from 'azion/config';
  *
  * # Update array elements
  * ef config update -k "functions[0].path" -v "./functions/updated-auth.js"
- * ef config update -k "storage[0].edgeAccess" -v "read_write"
+ * ef config update -k "storage[0].workloadsAccess" -v "read_write"
  *
  * === DELETING CONFIGURATIONS ===
  *
