@@ -365,15 +365,20 @@ Table:
 | Next Node Pages 12 3 1               | ✅      |
 | Next 13 5 6 Config                   | ✅      |
 | Next 12 3 4 Config                   | ✅      |
+| Html                                 | ✅      |
 | Next Static                          | ✅      |
 | Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ✅      |
+| Sveltekit Static                     | ✅      |
 | Vue Vite Static                      | ✅      |
+| Sveltekit Ssr                        | ✅      |
 | Next 12 Static                       | ✅      |
+| Hugo                                 | ✅      |
 | Astro Static                         | ✅      |
 | Qwik Static                          | ✅      |
 | Simple Js Env Vars                   | ✅      |
 | Eleventy Static                      | ✅      |
+| Opennext Ssr                         | ✅      |
 | Simple Js Network List               | ✅      |
 | Angular Static                       | ✅      |
 | React Static                         | ✅      |
@@ -390,10 +395,10 @@ Table:
 | Jekyll Static                        | ⚠️     |
 | Simple Js Esm Worker                 | ✅      |
 | Simple Js Esm Node                   | ✅      |
-| Simple Ts Esm                        | ✅      |
-| Simple Js Esm                        | ✅      |
+| Simple Ts Esm                        | ⚠️     |
+| Simple Js Esm                        | ⚠️     |
 
-Last test run date: 02/11/26 04:04:00 AM
+Last test run date: 02/12/26 04:08:34 AM
 
 ## Contributing
 
