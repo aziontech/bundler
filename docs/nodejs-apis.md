@@ -46,12 +46,12 @@ Table:
 | Url            | ✅      |
 | Vm             | ✅      |
 | Crypto         | ✅      |
-| Events         | ✅      |
 | Buffer         | ✅      |
+| Events         | ✅      |
 | Fs             | ✅      |
 | Async Hooks    | ✅      |
 
-Last test run date: 02/26/26 04:22:46 AM
+Last test run date: 02/27/26 04:21:17 AM
 #### Docs support
 
 See support for the Node.js APIs in the [https://www.azion.com/en/documentation/products/azion-edge-runtime/compatibility/node/](https://www.azion.com/en/documentation/products/azion-edge-runtime/compatibility/node/)
