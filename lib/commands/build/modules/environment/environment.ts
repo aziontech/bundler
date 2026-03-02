@@ -34,6 +34,14 @@ export const setEnvironment = async ({
   try {
     const { config: presetConfig } = preset;
 
+    // Remove the default configuration when the firewall is enabled.
+    if (userConfig.firewall) {
+      delete presetConfig.applications;
+      delete presetConfig.workloads;
+      delete presetConfig.connectors;
+      delete presetConfig.functions;
+    }
+
     /**
      * Merge configurations with the following priority:
      * 1. User config (from azion.config.js)
