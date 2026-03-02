@@ -1,3 +1,8 @@
+## <small>7.1.1-stage.1 (2026-03-02)</small>
+
+* fix: remove default config when firewall is enabled (#590) ([ea2630c](https://github.com/aziontech/bundler/commit/ea2630c)), closes [#590](https://github.com/aziontech/bundler/issues/590)
+* Merge branch 'main' into stage [skip ci] ([38b1393](https://github.com/aziontech/bundler/commit/38b1393))
+
 ## 7.1.0 (2026-02-11)
 
 * chore(release): 7.1.0-stage.1 ([8e62deb](https://github.com/aziontech/bundler/commit/8e62deb))
