@@ -1,5 +1,5 @@
 import { feedback } from 'azion/utils/node';
-import { getBeautify, getKeys, getPresetConfig } from './presets';
+import { getKeys, getPresetConfig } from './presets';
 /*
  * @function
  * @description Manages presets for the application.
@@ -18,10 +18,10 @@ export async function presetsCommand(command: string, options: { preset?: string
   switch (command) {
     case 'ls':
       if (isCleanOutputEnabled) {
-        getKeys().forEach((preset: string) => console.log(preset));
+        getKeys().forEach((preset: string) => console.log(preset?.toLowerCase()));
       }
       if (!isCleanOutputEnabled) {
-        getBeautify().forEach((preset: string) => feedback.option(preset));
+        getKeys().forEach((preset: string) => feedback.option(preset));
       }
       break;
 
