@@ -1,3 +1,7 @@
+## <small>7.1.1-stage.2 (2026-03-03)</small>
+
+* fix: use metadata names for preset listing (#591) ([4db9d91](https://github.com/aziontech/bundler/commit/4db9d91)), closes [#591](https://github.com/aziontech/bundler/issues/591)
+
 ## <small>7.1.1-stage.1 (2026-03-02)</small>
 
 * fix: remove default config when firewall is enabled (#590) ([ea2630c](https://github.com/aziontech/bundler/commit/ea2630c)), closes [#590](https://github.com/aziontech/bundler/issues/590)
