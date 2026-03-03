@@ -1,4 +1,4 @@
-import { type AzionConfig, convertJsonConfigToObject } from 'azion/config';
+import { type AzionConfig, convertJsonConfigToObject, validateConfig } from 'azion/config';
 import { join, resolve, extname } from 'path';
 import * as utilsNode from 'azion/utils/node';
 import envBundler from '../../env/bundler';
@@ -40,6 +40,9 @@ export const generateManifest = async (
     }
     config = configResult;
   }
+
+  // validate config
+  validateConfig(config);
 
   // Process and transform config into manifest
   const manifest = util.processConfigWrapper(config);
