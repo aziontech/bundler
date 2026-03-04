@@ -1,3 +1,16 @@
+## <small>7.1.1-stage.3 (2026-03-03)</small>
+
+* fix: add configuration validation to generate manifest (#592) ([cfae413](https://github.com/aziontech/bundler/commit/cfae413)), closes [#592](https://github.com/aziontech/bundler/issues/592)
+
+## <small>7.1.1-stage.2 (2026-03-03)</small>
+
+* fix: use metadata names for preset listing (#591) ([4db9d91](https://github.com/aziontech/bundler/commit/4db9d91)), closes [#591](https://github.com/aziontech/bundler/issues/591)
+
+## <small>7.1.1-stage.1 (2026-03-02)</small>
+
+* fix: remove default config when firewall is enabled (#590) ([ea2630c](https://github.com/aziontech/bundler/commit/ea2630c)), closes [#590](https://github.com/aziontech/bundler/issues/590)
+* Merge branch 'main' into stage [skip ci] ([38b1393](https://github.com/aziontech/bundler/commit/38b1393))
+
 ## 7.1.0 (2026-02-11)
 
 * chore(release): 7.1.0-stage.1 ([8e62deb](https://github.com/aziontech/bundler/commit/8e62deb))

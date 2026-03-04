@@ -3315,10 +3315,10 @@ axios@^1.6.1:
     form-data "^4.0.4"
     proxy-from-env "^1.1.0"
 
-azion@~3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/azion/-/azion-3.1.0.tgz#6c8947c6f98f3577261750b3c96650047216f2be"
-  integrity sha512-/Wbn4upEJ6d9bvGSSrNpQiRniMsIN8SWvnoRL3hpZHL8Ha8Jz+9QsD4cF4gU3qBLI+sPwUgNlEQCVVD9a7fihQ==
+azion@~3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/azion/-/azion-3.1.2.tgz#e4d318ce57714b56993189bc4024ad67180a9380"
+  integrity sha512-Ngzxp7HO9p/odgyn79gdf67ONMelJuFJRZTTKHH7CP6CRI1Kz5vPhArv2Bxh6SPz++BC5WPiezehOLf9NwXA1g==
   dependencies:
     "@babel/plugin-proposal-optional-chaining-assign" "^7.27.1"
     "@babel/preset-env" "^7.28.3"
