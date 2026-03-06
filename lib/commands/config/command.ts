@@ -99,12 +99,17 @@ import type { AzionConfig } from 'azion/config';
  * === REPLACING PLACEHOLDERS ===
  *
  * # Replace all occurrences of a placeholder with a new value
- * ef config replace -r "$EDGE_FUNCTION_NAME" -v "my-func"
- * ef config replace --replace "$LOCAL_FUNCTION_PATH" --value "./dist/handler.js"
+ * ef config replace -k "$EDGE_FUNCTION_NAME" -v "my-func"
+ * ef config replace --key "$LOCAL_FUNCTION_PATH" --value "./dist/handler.js"
  *
- * # Replace multiple placeholders (requires multiple commands)
- * ef config replace -r "$EDGE_FUNCTION_NAME" -v "auth-function"
- * ef config replace -r "$EDGE_APPLICATION_NAME" -v "my-app"
+ * # Replace multiple placeholders at once using multiple -k/-v pairs
+ * ef config replace -k "$EDGE_FUNCTION_NAME" -v "auth-function" -k "$EDGE_APPLICATION_NAME" -v "my-app"
+ *
+ * # Replace multiple placeholders using JSON object
+ * ef config replace --replacements '{"$EDGE_FUNCTION_NAME": "auth-function", "$EDGE_APPLICATION_NAME": "my-app"}'
+ *
+ * # Replace with environment variables using JSON
+ * ef config replace --replacements '{"$FUNCTION_NAME": "$MY_FUNC_NAME", "$APP_NAME": "$MY_APP_NAME"}'
  *
  * === ADVANCED EXAMPLES ===
  *
@@ -237,17 +242,61 @@ export async function configCommand({ command, options }: ConfigCommandOptions) 
           config: userConfig,
         });
         break;
-      case 'replace':
-        if (!key) {
-          throw new Error('Placeholder is required for replace command (use -k or --key)');
+      case 'replace': {
+        // Handle replacements from JSON option or individual key-value pairs
+        const replacements: { placeholder: string; value: string }[] = [];
+
+        // Check if JSON replacements are provided
+        if (options.replacements) {
+          // Parse JSON string if needed (from CLI it comes as a string)
+          let replacementsObj: Record<string, string>;
+          if (typeof options.replacements === 'string') {
+            try {
+              // Try parsing directly first
+              replacementsObj = JSON.parse(options.replacements);
+            } catch {
+              // If that fails, try handling double-escaped JSON
+              // (e.g., when shell escapes the quotes)
+              try {
+                // Remove potential extra escaping
+                const unescaped = options.replacements.replace(/\\"/g, '"');
+                replacementsObj = JSON.parse(unescaped);
+              } catch (parseError) {
+                const errorMessage =
+                  parseError instanceof Error ? parseError.message : String(parseError);
+                throw new Error(
+                  `Invalid JSON format for --replacements option: ${errorMessage}. Received: ${options.replacements}`,
+                );
+              }
+            }
+          } else if (typeof options.replacements === 'object') {
+            replacementsObj = options.replacements as Record<string, string>;
+          } else {
+            throw new Error('Invalid format for --replacements option');
+          }
+
+          for (const [placeholder, val] of Object.entries(replacementsObj)) {
+            replacements.push({ placeholder, value: String(val) });
+          }
+        } else if (keys.length > 0 && values.length > 0) {
+          // Use individual key-value pairs
+          // Support multiple -k -v pairs
+          for (let i = 0; i < Math.min(keys.length, values.length); i++) {
+            replacements.push({ placeholder: keys[i], value: String(values[i]) });
+          }
         }
-        if (value === undefined) {
-          throw new Error('Value is required for replace command');
+
+        if (replacements.length === 0) {
+          throw new Error(
+            'Replacements are required for replace command. Use -k/-v pairs or --replacements JSON',
+          );
         }
+
         // Use direct file replacement instead of object manipulation
-        await replaceInConfigFile(key, value);
+        await replaceInConfigFile(replacements);
 
         return {};
+      }
 
       default:
         throw new Error(`Unknown command: ${command}`);

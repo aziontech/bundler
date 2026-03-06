@@ -212,6 +212,7 @@ Examples:
     .option('-k, --key <key...>', 'Property key (e.g., build.preset or applications[0].name)')
     .option('-v, --value <value...>', 'Value to be set')
     .option('-a, --all', 'Read or delete entire configuration (for read/delete commands)')
+    .option('-r, --replacements <replacements>', 'JSON string of key-value pairs for replacement')
     .addHelpText(
       'after',
       `

@@ -3,6 +3,8 @@ import path from 'path';
 import { feedback } from 'azion/utils/node';
 import utils from '../utils';
 import * as prettier from 'prettier';
+import type { ReplaceOptions } from '../types';
+
 /**
  * Finds the start and end of the configuration object in the file content
  * @param content - The file content
@@ -126,11 +128,33 @@ function findConfigObjectBounds(content: string): { start: number; end: number }
  * @param placeholder - The placeholder string to replace
  * @param value - The new value to replace the placeholder with
  */
-export async function replaceInConfigFile(placeholder: string, value: string): Promise<void> {
+export async function replaceInConfigFile(placeholder: string, value: string): Promise<void>;
+
+/**
+ * Finds and reads the azion config file, then performs multiple direct string replacements
+ * only within the configuration object (module.exports or export default)
+ * @param replacements - Array of placeholder-value pairs to replace
+ */
+export async function replaceInConfigFile(replacements: ReplaceOptions[]): Promise<void>;
+
+/**
+ * Implementation that handles both single and multiple replacements
+ */
+export async function replaceInConfigFile(
+  placeholderOrReplacements: string | ReplaceOptions[],
+  value?: string,
+): Promise<void> {
   try {
-    // Validate input parameters
-    if (typeof placeholder !== 'string' || typeof value !== 'string') {
-      throw new Error('Placeholder and value must be strings');
+    // Normalize input to always be an array of replacements
+    const replacements: ReplaceOptions[] = Array.isArray(placeholderOrReplacements)
+      ? placeholderOrReplacements
+      : [{ placeholder: placeholderOrReplacements, value: value! }];
+
+    // Validate all replacements
+    for (const { placeholder, value: val } of replacements) {
+      if (typeof placeholder !== 'string' || typeof val !== 'string') {
+        throw new Error('Placeholder and value must be strings');
+      }
     }
 
     const { configPath, fileContent } = await utils.findAndReadConfigFile();
@@ -140,57 +164,64 @@ export async function replaceInConfigFile(placeholder: string, value: string): P
 
     // Extract the configuration part
     const beforeConfig = fileContent.slice(0, start);
-    const configPart = fileContent.slice(start, end);
+    let configPart = fileContent.slice(start, end);
     const afterConfig = fileContent.slice(end);
 
-    // Perform exact string replacement with strict word boundaries
-    let updatedConfigPart = configPart;
-    // Find all occurrences of the placeholder
-    let searchIndex = 0;
-    while (searchIndex < updatedConfigPart.length) {
-      const index = updatedConfigPart.indexOf(placeholder, searchIndex);
-      if (index === -1) break;
+    // Track actual replacements made
+    const replacementCounts: Map<string, number> = new Map();
 
-      // Check if this is a complete word (not part of a larger identifier)
-      const beforeChar = index > 0 ? updatedConfigPart[index - 1] : '';
-      const afterChar =
-        index + placeholder.length < updatedConfigPart.length
-          ? updatedConfigPart[index + placeholder.length]
-          : '';
-      // Check if this is an exact match - avoid partial replacements
-      // For most cases, we want exact string matches within reasonable boundaries
-      let isExactMatch = true;
+    // Process each replacement
+    for (const { placeholder, value: val } of replacements) {
+      let count = 0;
+      // Perform exact string replacement with strict word boundaries
+      let searchIndex = 0;
+      while (searchIndex < configPart.length) {
+        const index = configPart.indexOf(placeholder, searchIndex);
+        if (index === -1) break;
 
-      // Special case: if placeholder looks like an identifier (contains letters/numbers/underscore/$)
-      // and we're in the middle of a larger identifier, skip it
-      if (typeof placeholder === 'string' && placeholder.match(/[A-Za-z0-9_$]/)) {
-        // Check if we're in the middle of a larger identifier
-        const beforeIsIdentifierChar = beforeChar && beforeChar.match(/[A-Za-z0-9_$]/);
-        const afterIsIdentifierChar = afterChar && afterChar.match(/[A-Za-z0-9_]/);
+        // Check if this is a complete word (not part of a larger identifier)
+        const beforeChar = index > 0 ? configPart[index - 1] : '';
+        const afterChar =
+          index + placeholder.length < configPart.length
+            ? configPart[index + placeholder.length]
+            : '';
+        // Check if this is an exact match - avoid partial replacements
+        // For most cases, we want exact string matches within reasonable boundaries
+        let isExactMatch = true;
 
-        // Skip if we're clearly in the middle of a larger identifier
-        if (beforeIsIdentifierChar || afterIsIdentifierChar) {
-          isExactMatch = false;
+        // Special case: if placeholder looks like an identifier (contains letters/numbers/underscore/$)
+        // and we're in the middle of a larger identifier, skip it
+        if (typeof placeholder === 'string' && placeholder.match(/[A-Za-z0-9_$]/)) {
+          // Check if we're in the middle of a larger identifier
+          const beforeIsIdentifierChar = beforeChar && beforeChar.match(/[A-Za-z0-9_$]/);
+          const afterIsIdentifierChar = afterChar && afterChar.match(/[A-Za-z0-9_]/);
+
+          // Skip if we're clearly in the middle of a larger identifier
+          if (beforeIsIdentifierChar || afterIsIdentifierChar) {
+            isExactMatch = false;
+          }
+        }
+
+        if (isExactMatch) {
+          // Replace this occurrence
+          configPart =
+            configPart.slice(0, index) + val + configPart.slice(index + placeholder.length);
+
+          // Update search index to continue after the replacement
+          searchIndex = index + val.length;
+          count++;
+        } else {
+          // Skip this occurrence and continue searching
+          searchIndex = index + 1;
         }
       }
-
-      if (isExactMatch) {
-        // Replace this occurrence
-        updatedConfigPart =
-          updatedConfigPart.slice(0, index) +
-          value +
-          updatedConfigPart.slice(index + placeholder.length);
-
-        // Update search index to continue after the replacement
-        searchIndex = index + value.length;
-      } else {
-        // Skip this occurrence and continue searching
-        searchIndex = index + 1;
+      if (count > 0) {
+        replacementCounts.set(placeholder, count);
       }
     }
 
     // Reconstruct the file
-    const updatedContent = beforeConfig + updatedConfigPart + afterConfig;
+    const updatedContent = beforeConfig + configPart + afterConfig;
     let finalContent: string;
     try {
       finalContent = await prettier.format(updatedContent, {
@@ -206,9 +237,28 @@ export async function replaceInConfigFile(placeholder: string, value: string): P
     // Write the file back
     await fs.writeFile(configPath, finalContent, 'utf8');
 
-    feedback.info(
-      `Successfully replaced "${placeholder}" with "${value}" in ${path.basename(configPath)}`,
-    );
+    // Provide feedback for all replacements
+    const totalReplacements = Array.from(replacementCounts.values()).reduce((sum, c) => sum + c, 0);
+
+    if (totalReplacements === 0) {
+      feedback.info(`No placeholders found to replace in ${path.basename(configPath)}`);
+    } else if (replacementCounts.size === 1) {
+      const [placeholder, count] = Array.from(replacementCounts.entries())[0];
+      const replacement = replacements.find((r) => r.placeholder === placeholder);
+      feedback.info(
+        `Successfully replaced "${placeholder}" with "${replacement?.value}" (${count} occurrence${count > 1 ? 's' : ''}) in ${path.basename(configPath)}`,
+      );
+    } else {
+      const summary = Array.from(replacementCounts.entries())
+        .map(([placeholder, count]) => {
+          const replacement = replacements.find((r) => r.placeholder === placeholder);
+          return `"${placeholder}" -> "${replacement?.value}" (${count})`;
+        })
+        .join(', ');
+      feedback.info(
+        `Successfully replaced ${totalReplacements} occurrences of ${replacementCounts.size} placeholders (${summary}) in ${path.basename(configPath)}`,
+      );
+    }
   } catch (error) {
     throw new Error(
       `Failed to replace in config file: ${error instanceof Error ? error.message : String(error)}`,
