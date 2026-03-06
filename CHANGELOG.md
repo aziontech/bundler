@@ -1,3 +1,8 @@
+## 7.2.0-stage.1 (2026-03-06)
+
+* feat: add support for multiple placeholder replacements (#596) ([8ab7d15](https://github.com/aziontech/bundler/commit/8ab7d15)), closes [#596](https://github.com/aziontech/bundler/issues/596)
+* Merge branch 'main' into stage [skip ci] ([d42ca88](https://github.com/aziontech/bundler/commit/d42ca88))
+
 ## <small>7.1.1 (2026-03-04)</small>
 
 * chore(release): 7.1.1-stage.1 ([991d1c5](https://github.com/aziontech/bundler/commit/991d1c5))
