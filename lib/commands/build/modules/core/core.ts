@@ -2,6 +2,9 @@ import { AzionPrebuildResult, BuildContext, BuildConfiguration } from 'azion/con
 import bundlers from './bundlers';
 import { moveImportsToTopLevel, injectHybridFsPolyfill } from './utils';
 import fsPromises from 'fs/promises';
+import os from 'os';
+import { feedback } from 'azion/utils/node';
+import { BUNDLER } from '#constants';
 
 interface CoreParams {
   buildConfig: BuildConfiguration;
@@ -81,8 +84,39 @@ export const executeBuild = async ({
 const executeBundler = async (bundlerConfig: BuildConfiguration, ctx: BuildContext) => {
   switch (bundlerConfig.bundler) {
     case 'esbuild': {
+      if (BUNDLER.IS_DEBUG) {
+        feedback.build.info('=== System Info ===');
+        feedback.build.info('CPUs:', os.cpus().length);
+        feedback.build.info('Total Memory:', os.totalmem() / 1024 / 1024, 'MB');
+        feedback.build.info('Free Memory:', os.freemem() / 1024 / 1024, 'MB');
+      }
+
       const config = bundlers.createAzionESBuildConfigWrapper(bundlerConfig, ctx);
-      return bundlers.executeESBuildBuildWrapper(config);
+
+      let start;
+      let memBefore;
+      if (BUNDLER.IS_DEBUG) {
+        feedback.build.info('=== Build Test ===');
+        start = Date.now();
+        memBefore = process.memoryUsage();
+      }
+
+      const result = await bundlers.executeESBuildBuildWrapper(config);
+
+      if (BUNDLER.IS_DEBUG) {
+        const duration = Date.now() - start!;
+        const memAfter = process.memoryUsage();
+
+        feedback.build.info('=== Results ===');
+        feedback.build.info('Duration:', duration, 'ms');
+        const delta = {
+          heapUsed: `${(memAfter.heapUsed - memBefore!.heapUsed) / 1024 / 1024} MB`,
+          rss: `${(memAfter.rss - memBefore!.rss) / 1024 / 1024} MB`,
+        };
+        feedback.build.info('Memory heapUsed:', delta.heapUsed);
+        feedback.build.info('Memory rss:', delta.rss);
+      }
+      return result;
     }
     case 'webpack': {
       const config = bundlers.createAzionWebpackConfigWrapper(bundlerConfig, ctx);
