@@ -1,3 +1,7 @@
+## 7.2.0-stage.2 (2026-03-12)
+
+* fix: add debug metrics for esbuild (#598) ([899c8da](https://github.com/aziontech/bundler/commit/899c8da)), closes [#598](https://github.com/aziontech/bundler/issues/598)
+
 ## 7.2.0-stage.1 (2026-03-06)
 
 * feat: add support for multiple placeholder replacements (#596) ([8ab7d15](https://github.com/aziontech/bundler/commit/8ab7d15)), closes [#596](https://github.com/aziontech/bundler/issues/596)
