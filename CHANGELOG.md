@@ -1,3 +1,16 @@
+## 7.2.0-stage.3 (2026-03-13)
+
+* fix: pin azion to exact version (#599) ([9a8bd08](https://github.com/aziontech/bundler/commit/9a8bd08)), closes [#599](https://github.com/aziontech/bundler/issues/599)
+
+## 7.2.0-stage.2 (2026-03-12)
+
+* fix: add debug metrics for esbuild (#598) ([899c8da](https://github.com/aziontech/bundler/commit/899c8da)), closes [#598](https://github.com/aziontech/bundler/issues/598)
+
+## 7.2.0-stage.1 (2026-03-06)
+
+* feat: add support for multiple placeholder replacements (#596) ([8ab7d15](https://github.com/aziontech/bundler/commit/8ab7d15)), closes [#596](https://github.com/aziontech/bundler/issues/596)
+* Merge branch 'main' into stage [skip ci] ([d42ca88](https://github.com/aziontech/bundler/commit/d42ca88))
+
 ## <small>7.1.1 (2026-03-04)</small>
 
 * chore(release): 7.1.1-stage.1 ([991d1c5](https://github.com/aziontech/bundler/commit/991d1c5))
