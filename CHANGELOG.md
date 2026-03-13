@@ -1,3 +1,7 @@
+## 7.2.0-stage.3 (2026-03-13)
+
+* fix: pin azion to exact version (#599) ([9a8bd08](https://github.com/aziontech/bundler/commit/9a8bd08)), closes [#599](https://github.com/aziontech/bundler/issues/599)
+
 ## 7.2.0-stage.2 (2026-03-12)
 
 * fix: add debug metrics for esbuild (#598) ([899c8da](https://github.com/aziontech/bundler/commit/899c8da)), closes [#598](https://github.com/aziontech/bundler/issues/598)
