@@ -369,7 +369,7 @@ Table:
 | Next Static                          | ✅      |
 | Gatsby Static                        | ✅      |
 | Next Node Pages 12 3 1 Fs            | ✅      |
-| Sveltekit Static                     | ✅      |
+| Sveltekit Static                     | ⚠️     |
 | Vue Vite Static                      | ✅      |
 | Sveltekit Ssr                        | ✅      |
 | Next 12 Static                       | ✅      |
@@ -398,7 +398,7 @@ Table:
 | Simple Ts Esm                        | ⚠️     |
 | Simple Js Esm                        | ⚠️     |
 
-Last test run date: 03/11/26 03:58:57 AM
+Last test run date: 03/14/26 03:57:10 AM
 
 ## Contributing
 
