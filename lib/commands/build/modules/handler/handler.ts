@@ -1,7 +1,7 @@
 import path from 'path';
 import fsPromises from 'fs/promises';
-import { AzionBuildPreset, BuildEntryPoint } from 'azion/config';
-import * as utilsNode from 'azion/utils/node';
+import { AzionBuildPreset, BuildEntryPoint } from '@aziontech/config';
+import * as utilsNode from '@aziontech/utils/node';
 import { debug } from '#utils';
 import { relative } from 'path';
 import { normalizeEntryPaths } from './utils';
@@ -55,7 +55,7 @@ export const resolveHandlers = async ({
 
     const handlerPath = path.resolve(
       presetPath,
-      'azion/packages/presets/dist/presets',
+      '@aziontech/packages/presets/dist/presets',
       preset.metadata.name,
       'handler.js',
     );

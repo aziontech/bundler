@@ -1,4 +1,4 @@
-import { AzionConfig } from 'azion/config';
+import { AzionConfig } from '@aziontech/config';
 
 export type ConfigCommandOptions = {
   command: 'create' | 'read' | 'update' | 'delete' | 'replace';

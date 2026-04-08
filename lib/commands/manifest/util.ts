@@ -1,4 +1,4 @@
-import { AzionConfig, processConfig } from 'azion/config';
+import { AzionConfig, processConfig } from '@aziontech/config';
 
 export function processConfigWrapper(config: AzionConfig) {
   return processConfig(config);

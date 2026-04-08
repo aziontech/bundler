@@ -1,6 +1,6 @@
-import { type AzionConfig, convertJsonConfigToObject, validateConfig } from 'azion/config';
+import { type AzionConfig, convertJsonConfigToObject, validateConfig } from '@aziontech/config';
 import { join, resolve, extname } from 'path';
-import * as utilsNode from 'azion/utils/node';
+import * as utilsNode from '@aziontech/utils/node';
 import envBundler from '../../env/bundler';
 import { promises as fsPromises } from 'fs';
 import util from './util';

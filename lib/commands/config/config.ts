@@ -1,4 +1,4 @@
-import { AzionConfig } from 'azion/config';
+import { AzionConfig } from '@aziontech/config';
 import { ConfigOptions } from './types';
 import { tryParseJSON } from './utils';
 

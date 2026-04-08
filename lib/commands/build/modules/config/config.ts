@@ -1,6 +1,6 @@
 import { SUPPORTED_BUNDLERS, BUNDLER } from '#constants';
-import { AzionConfig, AzionBuildPreset } from 'azion/config';
-import type { BuildConfiguration, BuildEntryPoint } from 'azion/config';
+import { AzionConfig, AzionBuildPreset } from '@aziontech/config';
+import type { BuildConfiguration, BuildEntryPoint } from '@aziontech/config';
 import { createPathEntriesMap } from './utils';
 
 export const setupBuildConfig = async (

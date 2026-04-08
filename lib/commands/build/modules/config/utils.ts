@@ -1,5 +1,5 @@
 import { join, basename, dirname, extname, resolve } from 'path';
-import { BuildEntryPoint } from 'azion/config';
+import { BuildEntryPoint } from '@aziontech/config';
 
 // Well-defined types
 export type GetTempEntryPathsOptions = {

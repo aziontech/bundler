@@ -1,5 +1,5 @@
 import { writeStore, BundlerStore } from '#env';
-import { feedback } from 'azion/utils/node';
+import { feedback } from '@aziontech/utils/node';
 import { rm } from 'fs/promises';
 import { DOCS_MESSAGE } from '#constants';
 import type { StoreCommandParams } from './types';

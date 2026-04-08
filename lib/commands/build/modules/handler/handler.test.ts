@@ -1,8 +1,8 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { resolveHandlers } from './handler';
-import type { FetchEvent } from 'azion/types';
-import type { AzionBuildPreset } from 'azion/config';
-import * as utilsNode from 'azion/utils/node';
+import type { FetchEvent } from '@aziontech/types';
+import type { AzionBuildPreset } from '@aziontech/config';
+import * as utilsNode from '@aziontech/utils/node';
 import fsPromises from 'fs/promises';
 import path from 'path';
 
@@ -69,7 +69,7 @@ describe('resolveHandlers', () => {
 
     expect(result).toEqual([
       path.resolve(
-        '/mock/root/node_modules/azion/packages/presets/dist/presets/test-preset/handler.js',
+        '/mock/root/node_modules/@aziontech/packages/presets/dist/presets/test-preset/handler.js',
       ),
     ]);
     expect(spyFeedbackBuildInfo).toHaveBeenCalledWith(

@@ -17,7 +17,7 @@ import {
   cryptoContext,
   promisesContext,
   KVContext,
-} from 'azion/bundler/polyfills';
+} from '@aziontech/builder/polyfills';
 import { EdgeContext, EdgeVM } from './edge-vm';
 
 /**

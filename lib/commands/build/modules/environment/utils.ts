@@ -1,5 +1,5 @@
 import lodash from 'lodash';
-import { AzionConfig } from 'azion/config';
+import { AzionConfig } from '@aziontech/config';
 
 /**
  * Merges base config with user config, prioritizing user settings

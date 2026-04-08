@@ -1,5 +1,5 @@
 import fsPromises from 'fs/promises';
-import type { BuildConfiguration, BuildContext } from 'azion/config';
+import type { BuildConfiguration, BuildContext } from '@aziontech/config';
 import {
   generateWorkerEventHandler,
   generateLegacyWrapper,
@@ -9,7 +9,7 @@ import {
   isLegacyPattern,
   getHandlerPatternFromModule,
 } from './utils';
-import { feedback } from 'azion/utils/node';
+import { feedback } from '@aziontech/utils/node';
 import { WORKER_MESSAGES } from './constants';
 
 /**

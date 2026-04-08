@@ -1,4 +1,4 @@
-import * as presets from 'azion/presets';
+import * as presets from '@aziontech/presets';
 import { join } from 'path';
 import fs from 'fs';
 import { extname } from 'path';

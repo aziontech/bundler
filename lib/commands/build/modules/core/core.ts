@@ -1,9 +1,9 @@
-import { AzionPrebuildResult, BuildContext, BuildConfiguration } from 'azion/config';
+import { AzionPrebuildResult, BuildContext, BuildConfiguration } from '@aziontech/config';
 import bundlers from './bundlers';
 import { moveImportsToTopLevel, injectHybridFsPolyfill } from './utils';
 import fsPromises from 'fs/promises';
 import os from 'os';
-import { feedback } from 'azion/utils/node';
+import { feedback } from '@aziontech/utils/node';
 import { BUNDLER } from '#constants';
 
 interface CoreParams {

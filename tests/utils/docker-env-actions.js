@@ -1,6 +1,6 @@
 import { exec as execCallback } from 'child_process';
 import { promisify } from 'util';
-import { exec } from 'azion/utils/node';
+import { exec } from '@aziontech/utils/node';
 
 const execOut = promisify(execCallback);
 

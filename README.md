@@ -227,7 +227,7 @@ Examples:
 
 The configuration file (`azion.config.js` or `azion.config.ts`) offers a robust configuration system for Bundler. With Azion Bundler, you can extend configurations and leverage pre-configured framework presets for immediate use. The tool empowers users to create their own automations and extensions, making it highly customizable for specific project needs.
 
-As the JavaScript engine powering the [Azion CLI](https://github.com/aziontech/azion), it seamlessly integrates with [Azion Libraries](https://github.com/aziontech/lib) to read presets and pre-configured bundler settings from `azion/bundler` and framework presets from `azion/presets`. The bundler follows a modular architecture with specialized modules like `@build`, `@prebuild`, and `@postbuild` through the `build` command.
+As the JavaScript engine powering the [Azion CLI](https://github.com/aziontech/azion), it seamlessly integrates with [Azion Libraries](https://github.com/aziontech/lib) to read presets and pre-configured bundler settings from `@aziontech/builder` and framework presets from `@aziontech/presets`. The bundler follows a modular architecture with specialized modules like `@build`, `@prebuild`, and `@postbuild` through the `build` command.
 
 The configuration is divided into two main areas:
 - The `build` property manages all bundler-related settings, including entry points, presets, and build configurations
@@ -237,8 +237,8 @@ While these hooks are pre-configured in framework presets, you can customize the
 
 ```typescript
 import { defineConfig } from 'azion';
-import type { AzionPrebuildResult, AzionConfig } from 'azion/config';
-import { emscripten } from 'azion/presets';
+import type { AzionPrebuildResult, AzionConfig } from '@aziontech/config';
+import { emscripten } from '@aziontech/presets';
 
 export default defineConfig({
   build: {
@@ -277,7 +277,7 @@ export default defineConfig({
 
 3. **Preset Resolution** (`@modules/preset`)
    - Resolves preset from string name or custom module
-   - Loads built-in presets from azion/presets
+   - Loads built-in presets from @aziontech/presets
    - Validates preset interface and metadata
 
 4. **Build Config Setup** (`@modules/config`)

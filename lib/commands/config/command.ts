@@ -1,11 +1,11 @@
 import { readAzionConfig, writeUserConfig } from '#env';
 import { debug } from '#utils';
-import { feedback } from 'azion/utils/node';
+import { feedback } from '@aziontech/utils/node';
 import { createConfig, readConfig, deleteConfig } from './config';
 import { replaceInConfigFile } from './replace';
 import { updateInConfigFile } from './update';
 import type { ConfigCommandOptions } from './types';
-import type { AzionConfig } from 'azion/config';
+import type { AzionConfig } from '@aziontech/config';
 
 /**
  * Config Command - Complete CRUD operations for Azion configuration management

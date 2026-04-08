@@ -4,6 +4,7 @@
     "module": "ESNext",
     "outDir": "./dist",
     "rootDir": "./",
+    "ignoreDeprecations": "6.0",
     "baseUrl": "./",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

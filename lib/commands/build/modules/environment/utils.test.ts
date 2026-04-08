@@ -1,6 +1,6 @@
 import { describe, it, expect } from '@jest/globals';
 import { mergeConfigWithUserOverrides } from './utils';
-import { AzionConfig } from 'azion/config';
+import { AzionConfig } from '@aziontech/config';
 
 describe('mergeConfigWithUserOverrides', () => {
   it('should merge base config with user config', () => {

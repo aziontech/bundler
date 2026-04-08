@@ -1,4 +1,4 @@
-import { AzionPrebuildResult, BuildContext, BuildConfiguration } from 'azion/config';
+import { AzionPrebuildResult, BuildContext, BuildConfiguration } from '@aziontech/config';
 import utils from './utils';
 import { DIRECTORIES, BUNDLER } from '#constants';
 

@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 
 import utils from '../utils';
 import { updateInConfigFile } from '.';
-import * as utilsNode from 'azion/utils/node';
+import * as utilsNode from '@aziontech/utils/node';
 
 describe('update.ts', () => {
   beforeEach(() => {

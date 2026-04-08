@@ -1,9 +1,9 @@
 import { dirname } from 'path';
 import { mkdir, writeFile } from 'fs/promises';
-import { validateConfig, type AzionPrebuildResult, type BuildContext } from 'azion/config';
+import { validateConfig, type AzionPrebuildResult, type BuildContext } from '@aziontech/config';
 import { debug, copyEnvVars, executeCleanup, markForCleanup } from '#utils';
 import { BUILD_CONFIG_DEFAULTS, DOCS_MESSAGE } from '#constants';
-import { feedback } from 'azion/utils/node';
+import { feedback } from '@aziontech/utils/node';
 
 import { checkDependencies } from './utils';
 

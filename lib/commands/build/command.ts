@@ -1,6 +1,6 @@
 import { readAzionConfig } from '#env';
 import { build } from './build';
-import { type AzionConfig } from 'azion/config';
+import { type AzionConfig } from '@aziontech/config';
 import type { BuildCommandOptions } from './types';
 import { cleanDirectory, resolveConfigPriority } from './utils';
 import { BUILD_CONFIG_DEFAULTS, DIRECTORIES, type BundlerType } from '#constants';

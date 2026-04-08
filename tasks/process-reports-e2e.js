@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { feedback } from 'azion/utils/node';
+import { feedback } from '@aziontech/utils/node';
 import { markdownTable } from 'markdown-table';
 
 /**

@@ -1,8 +1,8 @@
 import { join } from 'path';
 import { readFile, stat, rm, mkdir } from 'fs/promises';
-import { getPackageManager } from 'azion/utils/node';
+import { getPackageManager } from '@aziontech/utils/node';
 import type { ConfigValueOptions, PresetValueOptions, PackageJson } from './types';
-import type { PresetInput, BuildEntryPoint } from 'azion/config';
+import type { PresetInput, BuildEntryPoint } from '@aziontech/config';
 
 export class PackageJsonError extends Error {
   constructor(

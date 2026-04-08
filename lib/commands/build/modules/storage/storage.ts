@@ -1,9 +1,9 @@
 import { debug } from '#utils';
 import fsPromises from 'fs/promises';
 import path from 'path';
-import { AzionConfig, AzionBucket } from 'azion/config';
+import { AzionConfig, AzionBucket } from '@aziontech/config';
 import { DIRECTORIES } from '#constants';
-import { feedback } from 'azion/utils/node';
+import { feedback } from '@aziontech/utils/node';
 
 interface BucketMetadata {
   name: string;

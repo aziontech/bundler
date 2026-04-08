@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AzionConfig } from 'azion/config';
+import { AzionConfig } from '@aziontech/config';
 import { createConfig, readConfig, deleteConfig } from './config';
 
 describe('Config Functions', () => {

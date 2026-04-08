@@ -1,4 +1,4 @@
-import { BuildEntryPoint } from 'azion/config';
+import { BuildEntryPoint } from '@aziontech/config';
 
 /**
  * Normalizes entry points to a consistent array format

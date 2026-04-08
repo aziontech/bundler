@@ -42,9 +42,9 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@aziontech/builder": "https://pkg.pr.new/aziontech/lib/@aziontech/builder@412",
     "@edge-runtime/primitives": "4.0.5",
     "@netlify/framework-info": "^9.9.1",
-    "azion": "3.1.2",
     "chokidar": "^3.5.3",
     "commander": "^10.0.1",
     "cosmiconfig": "^9.0.0",

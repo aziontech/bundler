@@ -6,7 +6,7 @@
  */
 import net from 'net';
 import { debug } from '#utils';
-import { feedback } from 'azion/utils/node';
+import { feedback } from '@aziontech/utils/node';
 
 import chokidar from 'chokidar';
 import runtime from './runtime';
@@ -16,7 +16,7 @@ import { runServer } from 'edge-runtime';
 import fs from 'fs/promises';
 import { basename } from 'path';
 import { DOCS_MESSAGE } from '#constants';
-import { AzionBucket, AzionConfig, AzionFunction } from 'azion/config';
+import { AzionBucket, AzionConfig, AzionFunction } from '@aziontech/config';
 let currentServer: Awaited<ReturnType<typeof runServer>>;
 let isChangeHandlerRunning = false;
 

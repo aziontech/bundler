@@ -2,7 +2,7 @@
 import { Command } from 'commander';
 import { satisfies } from 'semver';
 import { executeCleanup, debug } from '#utils';
-import { feedback } from 'azion/utils/node';
+import { feedback } from '@aziontech/utils/node';
 import { BUNDLER } from '#constants';
 import { createHash } from 'crypto';
 import { mkdir } from 'fs/promises';

@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import * as utilsNode from 'azion/utils/node';
+import * as utilsNode from '@aziontech/utils/node';
 import utils from '../utils';
 import * as prettier from 'prettier';
 

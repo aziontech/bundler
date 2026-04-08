@@ -1,6 +1,6 @@
 import { join, resolve } from 'path';
 import { readFileSync } from 'fs';
-import { getAbsoluteDirPath } from 'azion/utils/node';
+import { getAbsoluteDirPath } from '@aziontech/utils/node';
 import { tmpdir } from 'os';
 
 /** Default directories */
@@ -51,7 +51,7 @@ export const BUNDLER = {
   DEFAULT_DEV_WORKER_FILENAME: 'handler.dev',
   DEFAULT_OUTPUT_EXTENSION: 'js',
   LIB_DIR: getAbsoluteDirPath(import.meta.url, 'bundler'),
-  ARGS_PATH: 'azion/args.json',
+  ARGS_PATH: '@aziontech/args.json',
   IS_DEBUG: process.env.DEBUG === 'true',
   TEMP_DIR: (projectID: string) => join(tmpdir(), '.azion', projectID),
   get ROOT_PATH() {

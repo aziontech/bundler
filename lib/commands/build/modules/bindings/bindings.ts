@@ -1,9 +1,9 @@
 import { debug } from '#utils';
 import fsPromises from 'fs/promises';
 import path from 'path';
-import { AzionConfig, AzionFunction } from 'azion/config';
+import { AzionConfig, AzionFunction } from '@aziontech/config';
 import { BucketSetup } from '../storage/storage';
-import { feedback } from 'azion/utils/node';
+import { feedback } from '@aziontech/utils/node';
 import { DIRECTORIES } from '#constants';
 
 /**

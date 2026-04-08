@@ -1,4 +1,4 @@
-import { BuildEntryPoint } from 'azion/config';
+import { BuildEntryPoint } from '@aziontech/config';
 import { WORKER_MESSAGES, WORKER_TEMPLATES } from './constants';
 
 // Re-export for backward compatibility

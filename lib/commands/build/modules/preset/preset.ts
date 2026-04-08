@@ -1,6 +1,6 @@
-import type { AzionBuildPreset, PresetInput } from 'azion/config';
-import * as presets from 'azion/presets';
-import * as utilsNode from 'azion/utils/node';
+import type { AzionBuildPreset, PresetInput } from '@aziontech/config';
+import * as presets from '@aziontech/presets';
+import * as utilsNode from '@aziontech/utils/node';
 import inferPreset from './infer/infer-preset';
 
 /**

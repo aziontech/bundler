@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { executePrebuild } from './prebuild';
-import { BuildConfiguration, BuildContext, AzionPrebuildResult } from 'azion/config';
+import { BuildConfiguration, BuildContext, AzionPrebuildResult } from '@aziontech/config';
 import utils from './utils';
 
 describe('executePrebuild', () => {

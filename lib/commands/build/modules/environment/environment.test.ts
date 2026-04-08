@@ -3,7 +3,7 @@ import envDefault from '#env';
 import utilsDefault from './utils';
 
 import { setEnvironment } from './environment';
-import { AzionConfig, AzionBuildPreset, BuildContext } from 'azion/config';
+import { AzionConfig, AzionBuildPreset, BuildContext } from '@aziontech/config';
 
 describe('setEnvironment', () => {
   let spyMergeConfigWithUserOverrides: jest.SpiedFunction<

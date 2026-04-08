@@ -3,8 +3,8 @@ import {
   executeESBuildBuild,
   createAzionWebpackConfig,
   executeWebpackBuild,
-} from 'azion/bundler';
-import { BuildConfiguration, BuildContext } from 'azion/config';
+} from '@aziontech/builder';
+import { BuildConfiguration, BuildContext } from '@aziontech/config';
 
 export const createAzionESBuildConfigWrapper = (
   buildConfig: BuildConfiguration,

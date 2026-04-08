@@ -1,11 +1,11 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { resolvePreset } from './preset';
 import inferPreset from './infer/infer-preset';
-import { AzionBuildPreset, PresetInput } from 'azion/config';
-import * as utilsNode from 'azion/utils/node';
+import { AzionBuildPreset, PresetInput } from '@aziontech/config';
+import * as utilsNode from '@aziontech/utils/node';
 
 // Mock dependencies
-jest.mock('azion/utils/node', () => ({
+jest.mock('@aziontech/utils/node', () => ({
   feedback: {
     build: {
       info: jest.fn(),
@@ -22,7 +22,7 @@ jest.mock('@netlify/framework-info', () => ({
   listFrameworks: jest.fn(),
 }));
 
-jest.mock('azion/presets', () => ({
+jest.mock('@aziontech/presets', () => ({
   javascript: {
     metadata: { name: 'javascript' },
     config: { build: {} },

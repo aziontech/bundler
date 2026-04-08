@@ -1,7 +1,7 @@
 import { describe, it, expect } from '@jest/globals';
 import { moveImportsToTopLevel, relocateImportsAndRequires } from './utils';
 import { injectHybridFsPolyfill } from './utils';
-import type { BuildConfiguration, BuildContext, AzionBuildPreset } from 'azion/config';
+import type { BuildConfiguration, BuildContext, AzionBuildPreset } from '@aziontech/config';
 
 describe('moveImportsToTopLevel', () => {
   it('should move import statements to the top of the file', () => {

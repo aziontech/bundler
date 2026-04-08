@@ -1,4 +1,4 @@
-import { BuildConfiguration, BuildContext } from 'azion/config';
+import { BuildConfiguration, BuildContext } from '@aziontech/config';
 
 export interface PostbuildParams {
   buildConfig: BuildConfiguration;

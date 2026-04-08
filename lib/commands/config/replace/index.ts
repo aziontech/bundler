@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { feedback } from 'azion/utils/node';
+import { feedback } from '@aziontech/utils/node';
 import utils from '../utils';
 import * as prettier from 'prettier';
 import type { ReplaceOptions } from '../types';

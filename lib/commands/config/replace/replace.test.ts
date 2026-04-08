@@ -2,7 +2,7 @@ import { jest } from '@jest/globals';
 import { replaceInConfigFile } from '.';
 import fs from 'fs/promises';
 import utils from '../utils';
-import * as utilsNode from 'azion/utils/node';
+import * as utilsNode from '@aziontech/utils/node';
 
 jest.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve());
 jest.spyOn(utilsNode.feedback, 'info').mockImplementation(() => {});

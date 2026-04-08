@@ -1,4 +1,4 @@
-import { feedback } from 'azion/utils/node';
+import { feedback } from '@aziontech/utils/node';
 import { waitForVulcanServer, execCommandInContainer } from './docker-env-actions.js';
 
 /**

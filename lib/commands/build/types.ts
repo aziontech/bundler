@@ -1,4 +1,4 @@
-import { AzionConfig, BuildConfiguration, BuildContext, PresetInput } from 'azion/config';
+import { AzionConfig, BuildConfiguration, BuildContext, PresetInput } from '@aziontech/config';
 /**
  * Build command options received from CLI
  */
@@ -10,7 +10,7 @@ export interface BuildCommandOptions {
   entry?: string | string[];
 
   /**
-   * Either a preset name from azion/presets or a custom module with edge-compatibility routines
+   * Either a preset name from @aziontech/presets or a custom module with edge-compatibility routines
    */
   preset?: string;
 

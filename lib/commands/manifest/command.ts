@@ -1,7 +1,7 @@
 import { debug } from '#utils';
-import { feedback } from 'azion/utils/node';
+import { feedback } from '@aziontech/utils/node';
 import { generateManifest, transformManifest } from './manifest';
-import { AzionConfig } from 'azion/config';
+import { AzionConfig } from '@aziontech/config';
 import { rm } from 'fs/promises';
 import { DIRECTORIES, DOCS_MESSAGE } from '#constants';
 

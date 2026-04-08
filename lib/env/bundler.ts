@@ -4,8 +4,8 @@
  * Should be restructured to improve configuration management and type safety.
  */
 import { debug } from '#utils';
-import { feedback } from 'azion/utils/node';
-import { convertJsonConfigToObject, type AzionConfig } from 'azion/config';
+import { feedback } from '@aziontech/utils/node';
+import { convertJsonConfigToObject, type AzionConfig } from '@aziontech/config';
 
 import fs from 'fs';
 import fsPromises from 'fs/promises';

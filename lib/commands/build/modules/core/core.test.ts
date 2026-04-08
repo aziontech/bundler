@@ -1,6 +1,6 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import { executeBuild } from './core';
-import { BuildConfiguration, BuildContext, AzionPrebuildResult } from 'azion/config';
+import { BuildConfiguration, BuildContext, AzionPrebuildResult } from '@aziontech/config';
 import fsPromises from 'fs/promises';
 import bundlers from './bundlers';
 

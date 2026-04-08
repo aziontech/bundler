@@ -1,4 +1,4 @@
-import type { BuildConfiguration, BuildContext } from 'azion/config';
+import type { BuildConfiguration, BuildContext } from '@aziontech/config';
 
 /**
  * Move requires and imports to file init while preserving comments.

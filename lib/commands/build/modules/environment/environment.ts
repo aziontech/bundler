@@ -1,4 +1,4 @@
-import { AzionConfig, AzionBuildPreset, BuildContext } from 'azion/config';
+import { AzionConfig, AzionBuildPreset, BuildContext } from '@aziontech/config';
 import utilsDefault from './utils';
 
 import envDefault from '#env';

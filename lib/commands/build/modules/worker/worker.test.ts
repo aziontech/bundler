@@ -1,6 +1,6 @@
 import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
 import { setupWorkerCode } from './worker';
-import { BuildConfiguration } from 'azion/config';
+import { BuildConfiguration } from '@aziontech/config';
 import fsPromises from 'fs/promises';
 
 jest.mock('./utils', () => {

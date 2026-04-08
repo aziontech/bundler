@@ -1,4 +1,4 @@
-import { BuildConfiguration, AzionConfig } from 'azion/config';
+import { BuildConfiguration, AzionConfig } from '@aziontech/config';
 
 export interface BindingsParams {
   buildConfig: BuildConfiguration;

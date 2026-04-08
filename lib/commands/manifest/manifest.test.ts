@@ -1,9 +1,9 @@
 import { jest } from '@jest/globals';
 import { promises as fs } from 'fs';
-import type { AzionConfig } from 'azion/config';
+import type { AzionConfig } from '@aziontech/config';
 import { generateManifest } from './manifest';
 import util from './util';
-import * as utilNode from 'azion/utils/node';
+import * as utilNode from '@aziontech/utils/node';
 
 jest.mock('fs/promises');
 
