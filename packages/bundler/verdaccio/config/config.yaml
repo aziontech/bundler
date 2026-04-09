@@ -20,7 +20,7 @@ packages:
     publish: $all
     proxy: npmjs
 
-  'edge-functions':
+  '@aziontech/bundler':
     access: $all
     publish: $all
     unpublish: $all

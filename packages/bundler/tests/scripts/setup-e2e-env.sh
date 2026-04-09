@@ -35,7 +35,7 @@ create_bundler_temp() {
 if test -f $SENTINEL_FILE; then
     log_with_color "Container already initialized!" $CYAN
     log_with_color "* Bundler version:" $GREEN
-    npx --yes --registry=http://verdaccio:4873 edge-functions@latest --version
+    npx --yes --registry=http://verdaccio:4873 @aziontech/bundler@latest --version
 else
     log_with_color "Container NOT initialized! Initializing container ..." $YELLOW
 
@@ -49,11 +49,11 @@ else
     # install bundler temp locally
     log_with_color "* Install Bundler" $GREEN
     cd /$BUNDLER_TEMP
-    yarn
+    pnpm install
 
     # compile bundler
     log_with_color "* Compile Bundler" $GREEN
-    yarn build
+    pnpm build
 
     # login in verdaccio registry
     log_with_color "* Login in verdaccio" $GREEN
@@ -62,9 +62,9 @@ else
     # publish bundler in verdaccio
     log_with_color "* Publish Bundler in verdaccio" $GREEN
     npm publish --registry http://verdaccio:4873
-    npm info edge-functions --json --registry http://verdaccio:4873
+    npm info @aziontech/bundler --json --registry http://verdaccio:4873
     log_with_color "* Bundler version:" $GREEN
-    npx --yes --registry=http://verdaccio:4873 edge-functions@latest --version
+    npx --yes --registry=http://verdaccio:4873 @aziontech/bundler@latest --version
 
     cd /
 

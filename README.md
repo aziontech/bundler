@@ -4,9 +4,9 @@
 
 # Azion Bundler - Built for Builders of the Edge
 
-[![Version](https://img.shields.io/npm/v/edge-functions.svg)](https://www.npmjs.com/package/edge-functions)
+[![Version](https://img.shields.io/npm/v/edge-functions.svg)](https://www.npmjs.com/package/@aziontech/bundler)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
-[![Downloads](https://img.shields.io/npm/dm/edge-functions.svg)](https://www.npmjs.com/package/edge-functions)
+[![Downloads](https://img.shields.io/npm/dm/edge-functions.svg)](https://www.npmjs.com/package/@aziontech/bundler)
 [![GitHub Stars](https://img.shields.io/github/stars/aziontech/bundler.svg)](https://github.com/aziontech/bundler/stargazers)
 [![Maintainers](https://img.shields.io/badge/maintainers-jotanarciso,%20jcbsfilho-blue.svg)](https://github.com/aziontech/bundler/graphs/contributors)
 
@@ -38,13 +38,13 @@ Azion Bundler is a powerful tool designed to build and adapt projects for edge c
 For those who just want to use Azion Bundler in their project without contributing to the development, you can install it directly from npm.
 
 ```shell
-npm install edge-functions
+npm install @aziontech/bundler
 ```
 
 or if you prefer yarn:
 
 ```shell
-yarn add edge-functions
+yarn add @aziontech/bundler
 ```
 
 ## Getting Started for Development

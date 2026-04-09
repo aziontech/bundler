@@ -21,11 +21,11 @@ async function projectInitializer(
   entryPoint = null,
 ) {
   const example = examplePath.replace('/examples/', '');
-  const bundlerCmd = 'npx --yes --registry=http://verdaccio:4873 edge-functions@latest';
+  const bundlerCmd = 'npx --yes --registry=http://verdaccio:4873 @aziontech/bundler@latest';
 
   if (installPkgs) {
     feedback.info(`[${example}] Installing project dependencies ...`);
-    await execCommandInContainer('yarn --ignore-engines', examplePath);
+    await execCommandInContainer('pnpm --ignore-engines', examplePath);
   }
 
   feedback.info(`[${example}] Building the project ...`);
