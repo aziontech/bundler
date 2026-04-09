@@ -31,7 +31,10 @@
   "author": "aziontech",
   "license": "MIT",
   "dependencies": {
-    "@aziontech/builder": "https://pkg.pr.new/aziontech/lib/@aziontech/builder@412",
+    "@aziontech/builder": "https://pkg.pr.new/aziontech/lib/@aziontech/builder@414",
+    "@aziontech/config": "https://pkg.pr.new/aziontech/lib/@aziontech/config@414",
+    "@aziontech/utils": "https://pkg.pr.new/aziontech/lib/@aziontech/utils@414",
+    "@aziontech/presets": "https://pkg.pr.new/aziontech/lib/@aziontech/presets@414",
     "@edge-runtime/primitives": "4.0.5",
     "@netlify/framework-info": "^9.9.1",
     "chokidar": "^3.5.3",
