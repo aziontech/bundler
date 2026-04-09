@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   verdaccio:
     image: verdaccio/verdaccio
@@ -23,5 +21,6 @@ services:
       - '3000-3040:3000-3040'
     volumes:
       - ./:/bundler/
+      - ../../examples:/bundler/examples/
     working_dir: /
     tty: true

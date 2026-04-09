@@ -50,12 +50,12 @@ export const resolveHandlers = async ({
   // Preset handler takes second priority
   if (preset.handler) {
     const presetPath = globalThis.bundler.root.includes('node_modules')
-      ? path.resolve(globalThis.bundler.root, '../')
+      ? path.resolve(globalThis.bundler.root, '../../')
       : path.resolve(globalThis.bundler.root, 'node_modules');
 
     const handlerPath = path.resolve(
       presetPath,
-      '@aziontech/packages/presets/dist/presets',
+      '@aziontech/presets/dist/presets',
       preset.metadata.name,
       'handler.js',
     );

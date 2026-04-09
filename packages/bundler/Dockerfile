@@ -10,4 +10,6 @@ RUN apk add ruby-dev
 
 RUN gem install jekyll bundler
 
+RUN apk add --no-cache pnpm
+
 COPY . /bundler

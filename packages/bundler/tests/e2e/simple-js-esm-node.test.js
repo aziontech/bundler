@@ -23,7 +23,7 @@ describe('E2E - simple-js-esm-node project', () => {
       EXAMPLE_PATH,
       'javascript',
       serverPort,
-      true,
+      false,
       'http://0.0.0.0',
       false,
       'index.js',

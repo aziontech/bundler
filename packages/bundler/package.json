@@ -24,8 +24,8 @@
     "e2e:start": "pnpm submodule:update && tests/scripts/start-e2e-env.sh",
     "e2e:stop": "tests/scripts/stop-e2e-env.sh",
     "e2e:destroy": "tests/scripts/destroy-e2e-env.sh",
-    "test:e2e": "pnpm e2e:start && NODE_OPTIONS='--experimental-vm-modules' jest --detectOpenHandles --runInBand --config=./jest-e2e.config.js tests/e2e/ --json --outputFile e2e_results.json && yarn e2e:stop; yarn task:reports",
-    "test:nodejs-apis": "pnpm e2e:start && NODE_OPTIONS='--experimental-vm-modules' jest --runInBand --config=./jest-e2e.config.js tests/nodejs-apis/ --json --outputFile nodejs_apis_results.json && yarn e2e:stop && yarn task:reports-nodejs-apis",
+    "test:e2e": "pnpm e2e:start && NODE_OPTIONS='--experimental-vm-modules' jest --detectOpenHandles --runInBand --config=./jest-e2e.config.js tests/e2e/ --json --outputFile e2e_results.json && pnpm e2e:stop; pnpm task:reports",
+    "test:nodejs-apis": "pnpm e2e:start && NODE_OPTIONS='--experimental-vm-modules' jest --runInBand --config=./jest-e2e.config.js tests/nodejs-apis/ --json --outputFile nodejs_apis_results.json && pnpm e2e:stop && pnpm task:reports-nodejs-apis",
     "submodule:update": "git submodule update --init --recursive && git submodule foreach git pull origin main"
   },
   "author": "aziontech",
@@ -34,7 +34,7 @@
     "@aziontech/builder": "https://pkg.pr.new/aziontech/lib/@aziontech/builder@414",
     "@aziontech/config": "https://pkg.pr.new/aziontech/lib/@aziontech/config@414",
     "@aziontech/utils": "https://pkg.pr.new/aziontech/lib/@aziontech/utils@414",
-    "@aziontech/presets": "https://pkg.pr.new/aziontech/lib/@aziontech/presets@414",
+    "@aziontech/presets": "https://pkg.pr.new/aziontech/lib/@aziontech/presets@3e91697",
     "@edge-runtime/primitives": "4.0.5",
     "@netlify/framework-info": "^9.9.1",
     "chokidar": "^3.5.3",
@@ -67,7 +67,8 @@
     "supertest": "^6.3.3",
     "tmp": "^0.2.1",
     "ts-jest": "^29.2.6",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "vite": "^7.3.1"
   },
   "repository": {
     "type": "git",

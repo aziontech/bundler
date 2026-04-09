@@ -69,7 +69,7 @@ describe('resolveHandlers', () => {
 
     expect(result).toEqual([
       path.resolve(
-        '/mock/root/node_modules/@aziontech/packages/presets/dist/presets/test-preset/handler.js',
+        '/mock/root/node_modules/@aziontech/presets/dist/presets/test-preset/handler.js',
       ),
     ]);
     expect(spyFeedbackBuildInfo).toHaveBeenCalledWith(
