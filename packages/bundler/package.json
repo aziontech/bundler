@@ -63,7 +63,7 @@
     "jest-puppeteer": "^9.0.1",
     "markdown-table": "^3.0.3",
     "mock-fs": "^5.2.0",
-    "puppeteer": "^23.3.0",
+    "puppeteer": "^24.15.0",
     "supertest": "^6.3.3",
     "tmp": "^0.2.1",
     "ts-jest": "^29.2.6",

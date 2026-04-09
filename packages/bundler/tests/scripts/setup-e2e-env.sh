@@ -51,6 +51,10 @@ else
     cd /$BUNDLER_TEMP
     pnpm install
 
+    # install puppeteer browsers
+    log_with_color "* Install Puppeteer browsers" $GREEN
+    npx --yes puppeteer browsers install chrome
+
     # compile bundler
     log_with_color "* Compile Bundler" $GREEN
     pnpm build

@@ -29,9 +29,6 @@ jobs:
           chmod +x /usr/local/bin/docker-compose
           docker-compose --version
 
-      - name: Install Chrome for Puppeteer
-        run: pnpm exec puppeteer browsers install chrome
-
       - name: Run E2E tests
         run: pnpm -F @aziontech/bundler test:nodejs-apis
 
