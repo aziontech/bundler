@@ -4,7 +4,7 @@
   "description": "Tool to launch and build JavaScript/Frameworks. This tool automates polyfills for Edge Computing and assists in creating Workers, notably for the Azion platform.",
   "private": true,
   "scripts": {
-    "prepare": "husky",
+    "prepare": "husky install",
     "build": "pnpm -r --if-present build",
     "lint": "pnpm -r --if-present lint",
     "lint:fix": "pnpm -r --if-present lint:fix",
