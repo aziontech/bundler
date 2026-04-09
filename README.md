@@ -388,7 +388,7 @@ Table:
 | Preact Static                        | ⚠️     |
 | Vuepress Static                      | ✅      |
 | Nuxt Static                          | ✅      |
-| Docusaurus Static                    | ✅      |
+| Docusaurus Static                    | ⚠️     |
 | Simple Js Firewall Event             | ✅      |
 | Nuxt Ssr                             | ✅      |
 | Simple Js Network List With Firewall | ✅      |
@@ -398,7 +398,7 @@ Table:
 | Simple Ts Esm                        | ⚠️     |
 | Simple Js Esm                        | ⚠️     |
 
-Last test run date: 04/08/26 04:08:05 AM
+Last test run date: 04/09/26 04:08:03 AM
 
 ## Contributing
 
