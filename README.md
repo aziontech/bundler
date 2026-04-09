@@ -81,31 +81,31 @@ See some examples below:
 - Build a JavaScript/Node project (back-end)
 
   ```shell
-  ef build
+  azbundler build
   ```
 
 - Build a TypeScript/Node (back-end)
 
   ```shell
-  ef build --preset typescript
+  azbundler build --preset typescript
   ```
 
 - Build a Next.js project
 
   ```shell
-  ef build --preset next
+  azbundler build --preset next
   ```
 
 - Build Astro.js project
 
   ```shell
-  ef build --preset astro
+  azbundler build --preset astro
   ```
 
 - Test your project locally (after build)
 
   ```shell
-  ef dev
+  azbundler dev
   ```
 
 ## Commands
@@ -119,7 +119,7 @@ The Azion Bundler CLI provides several commands to help you manage your edge app
 Builds your project for edge deployment.
 
 ```shell
-ef build [options]
+azbundler build [options]
 
 Options:
   -e, --entry <string>     Code entrypoint (default: ./handler.js or ./handler.ts)
@@ -134,7 +134,7 @@ Options:
 Starts a local development environment.
 
 ```shell
-ef dev [entry] [options]
+azbundler dev [entry] [options]
 
 Arguments:
   entry                    Specify the entry file (default: .edge/worker.dev.js)
@@ -148,7 +148,7 @@ Options:
 Manages Azion configuration settings with CRUD operations.
 
 ```shell
-ef config <command> [options]
+azbundler config <command> [options]
 
 Commands:
   create              Create a new configuration property
@@ -162,18 +162,18 @@ Options:
   -a, --all           Read or delete entire configuration (for read/delete commands)
 
 Examples:
-  $ ef config create -k "build.preset" -v "typescript"
-  $ ef config read -k "applications[0].name"
-  $ ef config update -k "build.bundler" -v "esbuild"
-  $ ef config delete -k "build.polyfills"
-  $ ef config read --all
+  $ azbundler config create -k "build.preset" -v "typescript"
+  $ azbundler config read -k "applications[0].name"
+  $ azbundler config update -k "build.bundler" -v "esbuild"
+  $ azbundler config delete -k "build.polyfills"
+  $ azbundler config read --all
 ```
 
 ### `presets`
 Manages presets for Azion projects.
 
 ```shell
-ef presets <command> [preset]
+azbundler presets <command> [preset]
 
 Commands:
   ls                  List all available presets
@@ -183,16 +183,16 @@ Arguments:
   preset              Preset name (required for config command)
 
 Examples:
-  $ ef presets ls
-  $ ef presets config react
-  $ ef presets config next
+  $ azbundler presets ls
+  $ azbundler presets config react
+  $ azbundler presets config next
 ```
 
 ### `store`
 Manages store configuration.
 
 ```shell
-ef store <command> [options]
+azbundler store <command> [options]
 
 Commands:
   init                Initialize store configuration
@@ -207,7 +207,7 @@ Options:
 Manages manifest files for Azion.
 
 ```shell
-ef manifest [action] [options]
+azbundler manifest [action] [options]
 
 Arguments:
   action             Action to perform: "transform" (JSON to JS) or "generate" (config to manifest)
@@ -218,9 +218,9 @@ Options:
   -o, --output <path> Output file/directory path
 
 Examples:
-  $ ef manifest transform -e manifest.json -o azion.config.js
-  $ ef manifest generate -e azion.config.js -o .edge
-  $ ef manifest -e azion.config.js -o .edge
+  $ azbundler manifest transform -e manifest.json -o azion.config.js
+  $ azbundler manifest generate -e azion.config.js -o .edge
+  $ azbundler manifest -e azion.config.js -o .edge
 ```
 
 ## Configuration
