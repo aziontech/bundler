@@ -31,4 +31,4 @@ jobs:
           docker-compose --version
 
       - name: Run E2E tests
-        run: pnpm -F bundler test:e2e
+        run: pnpm -F @aziontech/bundler test:e2e

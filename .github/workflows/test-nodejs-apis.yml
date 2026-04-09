@@ -11,7 +11,7 @@ jobs:
       contents: write
       pull-requests: write
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/stage'
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -30,7 +30,7 @@ jobs:
           docker-compose --version
 
       - name: Run E2E tests
-        run: pnpm -F bundler test:nodejs-apis
+        run: pnpm -F @aziontech/bundler test:nodejs-apis
 
       - name: Process README.md and Commit
         run: |

@@ -56,7 +56,7 @@ jobs:
 
           # Build all packages including their dependencies in correct order
           # The "..." syntax includes dependencies of the target packages
-          eval "pnpm run compile $FILTER_ARGS"
+          eval "pnpm run build $FILTER_ARGS"
 
       - name: Publish to pkg-pr-new
         if: steps.changeset.outputs.release_count != '0'
