@@ -7,6 +7,7 @@ CODEOWNERS
 README.md
 docs/*
 lib/build/bundlers/polyfills/node/fs.js
-**/dist
 dist
+**/dist/
+**/*.dist.js
 pnpm-lock.yaml

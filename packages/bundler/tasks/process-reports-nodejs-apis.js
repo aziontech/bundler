@@ -52,7 +52,7 @@ function processReports() {
     ];
 
     // Write the Markdown table to the README.md file
-    const readme = fs.readFileSync('./docs/nodejs-apis.md', 'utf8');
+    const readme = fs.readFileSync('../../docs/nodejs-apis.md', 'utf8');
     const newReadme = readme.replace(
       /(Table:\n)(.*?)(\n#### Docs support)/s,
       (match, p1, p2, p3) => {
@@ -73,7 +73,7 @@ function processReports() {
         return `${p1}${markdownTable(table)}\n\nLast test run date: ${newDate}${p3}`;
       },
     );
-    fs.writeFileSync('./docs/nodejs-apis.md', newReadme);
+    fs.writeFileSync('../../docs/nodejs-apis.md', newReadme);
 
     feedback.interactive.success('Report processed successfully.');
   } catch (error) {
