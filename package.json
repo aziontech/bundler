@@ -14,9 +14,6 @@
   },
   "author": "aziontech",
   "license": "MIT",
-  "dependencies": {
-    "typescript": "^5.5.3"
-  },
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.0",
     "@changesets/cli": "^2.29.2",
@@ -35,6 +32,7 @@
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
     "typescript-eslint": "^8.58.1",
+    "typescript": "^5.5.3",
     "vite": "^7.3.1"
   },
   "repository": {

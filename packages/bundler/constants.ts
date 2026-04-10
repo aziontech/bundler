@@ -1,7 +1,7 @@
-import { join, resolve } from 'path';
-import { readFileSync } from 'fs';
 import { getAbsoluteDirPath } from '@aziontech/utils/node';
+import { readFileSync } from 'fs';
 import { tmpdir } from 'os';
+import { join, resolve } from 'path';
 
 /** Default directories */
 export const DIRECTORIES = {
@@ -71,3 +71,16 @@ export const DOCS_MESSAGE = `
    - Azion CLI Documentation: https://www.azion.com/en/documentation/devtools/cli/build/
    - Azion Library on Github: https://github.com/aziontech/lib/tree/main/packages/config/
    - Azion Bundler on GitHub: https://github.com/aziontech/bundler\n`;
+
+/** Telemetry configuration constants */
+export const TELEMETRY = {
+  ENV_ENABLED: 'AZION_TELEMETRY',
+  ENV_FORMAT: 'AZION_TELEMETRY_FORMAT',
+  ENV_OUTPUT: 'AZION_TELEMETRY_OUTPUT',
+  ENV_PLUGIN_DETAILS: 'AZION_TELEMETRY_PLUGIN_DETAILS',
+  DEFAULT_ENABLED: false,
+  DEFAULT_FORMAT: 'both' as const,
+  DEFAULT_OUTPUT_PATH: '.edge/telemetry-report.json',
+  DEFAULT_HTML_OUTPUT_PATH: '.edge/telemetry-report.html',
+  OUTPUT_FORMATS: ['console', 'json', 'html', 'both'] as const,
+} as const;

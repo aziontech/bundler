@@ -43,6 +43,12 @@ export interface BuildCommandOptions {
    * @default false
    */
   onlyGenerateConfig?: boolean;
+
+  /**
+   * Enable telemetry output
+   * @default false
+   */
+  telemetry?: boolean;
 }
 
 export interface PackageJson {
@@ -68,6 +74,7 @@ export interface BuildOptions {
   production?: boolean;
   skipFrameworkBuild?: boolean;
   onlyGenerateConfig?: boolean;
+  telemetry?: boolean;
 }
 
 export interface BuildResult {

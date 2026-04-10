@@ -1,21 +1,58 @@
-import { AzionPrebuildResult, BuildContext, BuildConfiguration } from '@aziontech/config';
-import bundlers from './bundlers';
-import { moveImportsToTopLevel, injectHybridFsPolyfill } from './utils';
+import { BUNDLER } from '../../../../constants';
+import {
+  TelemetryCollector,
+  runPhaseWithTelemetry as originalRunPhaseWithTelemetry,
+  type TelemetryOutputFormat,
+} from '@aziontech/bundler-telemetry';
+import { AzionPrebuildResult, BuildConfiguration, BuildContext } from '@aziontech/config';
+import { feedback } from '@aziontech/utils/node';
 import fsPromises from 'fs/promises';
 import os from 'os';
-import { feedback } from '@aziontech/utils/node';
-import { BUNDLER } from '../../../../constants';
+import bundlers from './bundlers';
+import { injectHybridFsPolyfill, moveImportsToTopLevel } from './utils';
+
+/**
+ * Wrapper for runPhaseWithTelemetry that handles optional telemetry
+ */
+const runPhaseWithTelemetry = async <T>(
+  telemetry: TelemetryCollector | undefined,
+  telemetryEnabled: boolean | undefined,
+  outputFormat: TelemetryOutputFormat | undefined,
+  phaseName: string,
+  displayName: string,
+  fn: () => Promise<T>,
+): Promise<T> => {
+  // If telemetry is not enabled, just run the function
+  if (!telemetry || !telemetryEnabled) {
+    return fn();
+  }
+  // Otherwise use the original telemetry function
+  return originalRunPhaseWithTelemetry(
+    telemetry,
+    telemetryEnabled,
+    outputFormat as TelemetryOutputFormat,
+    phaseName,
+    displayName,
+    fn,
+  );
+};
 
 interface CoreParams {
   buildConfig: BuildConfiguration;
   prebuildResult: AzionPrebuildResult;
   ctx: BuildContext;
+  telemetry?: TelemetryCollector;
+  telemetryEnabled?: boolean;
+  telemetryOutputFormat?: TelemetryOutputFormat;
 }
 
 export const executeBuild = async ({
   buildConfig,
   prebuildResult,
   ctx,
+  telemetry,
+  telemetryEnabled,
+  telemetryOutputFormat,
 }: CoreParams): Promise<string[]> => {
   try {
     const entry =
@@ -55,7 +92,7 @@ export const executeBuild = async ({
       },
     };
 
-    await executeBundler(bundlerConfig, ctx);
+    await executeBundler(bundlerConfig, ctx, telemetry, telemetryEnabled, telemetryOutputFormat);
 
     // Process the final build output to inject Node.js polyfills for the Azion production runtime
     // This ensures compatibility with Node.js fs module in the Azion Edge environment
@@ -81,7 +118,13 @@ export const executeBuild = async ({
   }
 };
 
-const executeBundler = async (bundlerConfig: BuildConfiguration, ctx: BuildContext) => {
+const executeBundler = async (
+  bundlerConfig: BuildConfiguration,
+  ctx: BuildContext,
+  telemetry?: TelemetryCollector,
+  telemetryEnabled?: boolean,
+  telemetryOutputFormat?: TelemetryOutputFormat,
+) => {
   switch (bundlerConfig.bundler) {
     case 'esbuild': {
       if (BUNDLER.IS_DEBUG) {
@@ -91,7 +134,15 @@ const executeBundler = async (bundlerConfig: BuildConfiguration, ctx: BuildConte
         feedback.build.info('Free Memory:', os.freemem() / 1024 / 1024, 'MB');
       }
 
-      const config = bundlers.createAzionESBuildConfigWrapper(bundlerConfig, ctx);
+      // Measure config creation
+      const config = await runPhaseWithTelemetry(
+        telemetry,
+        telemetryEnabled,
+        telemetryOutputFormat,
+        'esbuild-config-create',
+        'ESBuild Config Create',
+        async () => bundlers.createAzionESBuildConfigWrapper(bundlerConfig, ctx),
+      );
 
       let start;
       let memBefore;
@@ -101,7 +152,15 @@ const executeBundler = async (bundlerConfig: BuildConfiguration, ctx: BuildConte
         memBefore = process.memoryUsage();
       }
 
-      const result = await bundlers.executeESBuildBuildWrapper(config);
+      // Measure esbuild execution
+      const result = await runPhaseWithTelemetry(
+        telemetry,
+        telemetryEnabled,
+        telemetryOutputFormat,
+        'esbuild-execution',
+        'ESBuild Execution',
+        async () => bundlers.executeESBuildBuildWrapper(config),
+      );
 
       if (BUNDLER.IS_DEBUG) {
         const duration = Date.now() - start!;
@@ -119,8 +178,25 @@ const executeBundler = async (bundlerConfig: BuildConfiguration, ctx: BuildConte
       return result;
     }
     case 'webpack': {
-      const config = bundlers.createAzionWebpackConfigWrapper(bundlerConfig, ctx);
-      return bundlers.executeWebpackBuildWrapper(config);
+      // Measure webpack config creation
+      const config = await runPhaseWithTelemetry(
+        telemetry,
+        telemetryEnabled,
+        telemetryOutputFormat,
+        'webpack-config-create',
+        'Webpack Config Create',
+        async () => bundlers.createAzionWebpackConfigWrapper(bundlerConfig, ctx),
+      );
+
+      // Measure webpack execution
+      return runPhaseWithTelemetry(
+        telemetry,
+        telemetryEnabled,
+        telemetryOutputFormat,
+        'webpack-execution',
+        'Webpack Execution',
+        async () => bundlers.executeWebpackBuildWrapper(config),
+      );
     }
     default:
       throw new Error(`Unsupported bundler: ${bundlerConfig.bundler}`);

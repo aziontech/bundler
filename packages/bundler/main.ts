@@ -130,21 +130,35 @@ function startBundler() {
     .option('-x, --experimental [boolean]', 'Enable experimental features', false)
     .option('--skip-framework-build', 'Skip framework build step', false)
     .option('--only-generate-config', 'Build only generate azion.config', false)
+    .option(
+      '--telemetry [format]',
+      'Enable telemetry output (console, json, html or both). Defaults to both if flag is present without value.',
+    )
     .addHelpText(
       'after',
       `
 Examples:
-  $ azbundler build -e ./src/index.js -p javascript
-  $ azbundler build --only-generate-config -e index.js -p javascript
-  $ azbundler build --preset opennextjs
-  $ azbundler build --preset opennextjs --skip-framework-build
+  $ ef build -e ./src/index.js -p javascript
+  $ ef build --only-generate-config -e index.js -p javascript
+  $ ef build --preset opennextjs
+  $ ef build --preset opennextjs --skip-framework-build
+  $ ef build --telemetry
+  $ ef build --telemetry json
     `,
     )
     .action(async (options) => {
       const { buildCommand, manifestCommand } = await import('./commands');
-      const { dev, experimental, ...buildOptions } = options;
+      const { dev, experimental, telemetry, ...buildOptions } = options;
 
       if (experimental) globalThis.bundler.experimental = true;
+
+      // Handle telemetry flag
+      if (telemetry !== undefined) {
+        // If --telemetry is passed without a value, default to 'both'
+        const format = typeof telemetry === 'string' ? telemetry : 'both';
+        process.env.AZION_TELEMETRY = 'true';
+        process.env.AZION_TELEMETRY_FORMAT = format;
+      }
 
       const { config } = await buildCommand({
         ...buildOptions,
@@ -232,6 +246,22 @@ Examples:
         command,
         options,
       });
+    });
+
+  AzionBundler.command('telemetry')
+    .description('Open the telemetry HTML report in the default browser')
+    .option('-p, --path <path>', 'Custom path to the telemetry HTML file')
+    .addHelpText(
+      'after',
+      `
+Examples:
+  $ ef telemetry
+  $ ef telemetry --path ./custom-report.html
+    `,
+    )
+    .action(async (options) => {
+      const { telemetryCommand } = await import('./commands');
+      await telemetryCommand(options);
     });
 
   AzionBundler.parse(process.argv);
