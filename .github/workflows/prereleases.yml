@@ -1,0 +1,74 @@
+name: Publish prereleases
+
+on:
+  push:
+    branches: [main, experimental]
+  pull_request:
+
+jobs:
+  release:
+    permissions:
+      contents: write
+      pull-requests: write
+    name: Publish builder package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install Dependencies
+        uses: ./.github/actions/install-dependencies
+        with:
+          node-version: 24
+
+      - name: Setup git for changeset
+        run: |
+          # Fetch all remote refs
+          git fetch origin --tags --force
+
+          # Create local main branch pointing to origin/main
+          # Changeset looks for local "main" branch, not origin/main
+          git branch -f main origin/main
+
+      - name: Detect changed packages
+        id: changeset
+        run: |
+          pnpm exec changeset status --output /tmp/status.json
+
+          RELEASE_COUNT=$(jq '.releases | length' /tmp/status.json)
+          echo "release_count=$RELEASE_COUNT" >> $GITHUB_OUTPUT
+          echo "Found $RELEASE_COUNT packages to release"
+
+      - name: Build changed packages
+        if: steps.changeset.outputs.release_count != '0'
+        run: |
+          # Parse packages from changeset status
+          PACKAGES=$(jq -r '.releases[].name' /tmp/status.json)
+
+          # Build filter arguments for pnpm
+          FILTER_ARGS=""
+          for PKG in $PACKAGES; do
+            FILTER_ARGS="$FILTER_ARGS --filter \"$PKG...\""
+          done
+
+          # Build all packages including their dependencies in correct order
+          # The "..." syntax includes dependencies of the target packages
+          eval "pnpm run build $FILTER_ARGS"
+
+      - name: Publish to pkg-pr-new
+        if: steps.changeset.outputs.release_count != '0'
+        run: |
+          # Parse packages and build paths
+          PACKAGES=$(jq -r '.releases[].name' /tmp/status.json | sed 's/@aziontech\///g')
+
+          # Build publish command (removed --compact since packages aren't on npm yet)
+          CMD="pnpm exec pkg-pr-new publish --pnpm"
+          for PKG in $PACKAGES; do
+            CMD="$CMD './packages/$PKG'"
+          done
+
+          echo "Running: $CMD"
+          eval $CMD

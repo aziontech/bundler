@@ -11,22 +11,17 @@ jobs:
       contents: write
       pull-requests: write
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/stage'
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
+      - name: Install Dependencies
+        uses: ./.github/actions/install-dependencies
         with:
-          node-version: 22
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn install
+          node-version: 24
 
       - name: Install Docker Compose
         run: |
@@ -35,7 +30,7 @@ jobs:
           docker-compose --version
 
       - name: Run E2E tests
-        run: yarn test:nodejs-apis
+        run: pnpm -F @aziontech/bundler test:nodejs-apis
 
       - name: Process README.md and Commit
         run: |
