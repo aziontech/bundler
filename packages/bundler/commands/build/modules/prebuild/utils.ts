@@ -27,23 +27,27 @@ export const injectWorkerMemoryFiles = async ({
   const result: Record<string, { content: string }> = {};
 
   const processDirectory = async (currentDirs: string[]) => {
-    for (const dir of currentDirs) {
-      const files = await fsPromises.readdir(dir);
+    await Promise.all(
+      currentDirs.map(async (dir) => {
+        const files = await fsPromises.readdir(dir);
 
-      for (const file of files) {
-        const filePath = join(dir, file);
-        const stats = await fsPromises.stat(filePath);
+        await Promise.all(
+          files.map(async (file) => {
+            const filePath = join(dir, file);
+            const stats = await fsPromises.stat(filePath);
 
-        if (stats.isDirectory()) {
-          await processDirectory([filePath]); // Chamada recursiva
-        } else if (stats.isFile()) {
-          const bufferContent = await fsPromises.readFile(filePath);
-          let key = filePath;
-          if (!filePath.startsWith('/')) key = `/${filePath}`;
-          result[key] = { content: bufferContent.toString('base64') };
-        }
-      }
-    }
+            if (stats.isDirectory()) {
+              await processDirectory([filePath]); // Chamada recursiva
+            } else if (stats.isFile()) {
+              const bufferContent = await fsPromises.readFile(filePath);
+              let key = filePath;
+              if (!filePath.startsWith('/')) key = `/${filePath}`;
+              result[key] = { content: bufferContent.toString('base64') };
+            }
+          }),
+        );
+      }),
+    );
   };
 
   await processDirectory(dirs);
