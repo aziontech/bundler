@@ -16,7 +16,7 @@ export default defineConfig({
     ssr: true,
     lib: {
       entry: {
-        index: resolve(__dirname, './main.ts'),
+        index: resolve(__dirname, './src/main.ts'),
       },
       formats: ['es'],
       fileName: (_, entryName) => {
@@ -30,7 +30,11 @@ export default defineConfig({
         const deps = [
           '@edge-runtime/primitives',
           '@netlify/framework-info',
-          'azion',
+          '@aziontech/builder',
+          '@aziontech/bundler-telemetry',
+          '@aziontech/config',
+          '@aziontech/utils',
+          '@aziontech/presets',
           'chokidar',
           'commander',
           'cosmiconfig',
