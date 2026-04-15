@@ -138,12 +138,12 @@ function startBundler() {
       'after',
       `
 Examples:
-  $ ef build -e ./src/index.js -p javascript
-  $ ef build --only-generate-config -e index.js -p javascript
-  $ ef build --preset opennextjs
-  $ ef build --preset opennextjs --skip-framework-build
-  $ ef build --telemetry
-  $ ef build --telemetry json
+  $ azbundler build -e ./src/index.js -p javascript
+  $ azbundler build --only-generate-config -e index.js -p javascript
+  $ azbundler build --preset opennextjs
+  $ azbundler build --preset opennextjs --skip-framework-build
+  $ azbundler build --telemetry
+  $ azbundler build --telemetry json
     `,
     )
     .action(async (options) => {
@@ -156,8 +156,8 @@ Examples:
       if (telemetry !== undefined) {
         // If --telemetry is passed without a value, default to 'both'
         const format = typeof telemetry === 'string' ? telemetry : 'both';
-        process.env.AZION_TELEMETRY = 'true';
-        process.env.AZION_TELEMETRY_FORMAT = format;
+        process.env.AZ_BUNDLER_TELEMETRY = 'true';
+        process.env.AZ_BUNDLER_TELEMETRY_FORMAT = format;
       }
 
       const { config } = await buildCommand({
@@ -255,8 +255,8 @@ Examples:
       'after',
       `
 Examples:
-  $ ef telemetry
-  $ ef telemetry --path ./custom-report.html
+  $ azbundler telemetry
+  $ azbundler telemetry --path ./custom-report.html
     `,
     )
     .action(async (options) => {
