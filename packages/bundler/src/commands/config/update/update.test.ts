@@ -314,7 +314,7 @@ module.exports = {
     });
 
     it('should handle defineConfig wrapper', async () => {
-      const config = `import { defineConfig } from 'azion';
+      const config = `import { defineConfig } from '@aziontech/config';
 
 export default defineConfig({
   build: {

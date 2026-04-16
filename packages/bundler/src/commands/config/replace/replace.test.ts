@@ -109,7 +109,7 @@ describe('replace.ts', () => {
   });
 
   it('should replace a placeholder with import and defineConfig', async () => {
-    const config = `import { defineConfig } from 'azion';
+    const config = `import { defineConfig } from '@aziontech/config';
     export default defineConfig({ applications: { name: '$APPLICATION_NAME' } })`;
 
     jest

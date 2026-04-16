@@ -240,7 +240,7 @@ The configuration is divided into two main areas:
 While these hooks are pre-configured in framework presets, you can customize them in your `azion.config.ts` to fit your specific needs. You can either create your own configuration from scratch or extend existing presets. Here's an example of extending the Next.js preset:
 
 ```typescript
-import { defineConfig } from 'azion';
+import { defineConfig } from '@aziontech/config';
 import type { AzionPrebuildResult, AzionConfig } from '@aziontech/config';
 import { emscripten } from '@aziontech/presets';
 
