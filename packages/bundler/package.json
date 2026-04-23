@@ -31,11 +31,11 @@
   "author": "aziontech",
   "license": "MIT",
   "dependencies": {
-    "@aziontech/builder": "https://pkg.pr.new/aziontech/lib/@aziontech/builder@416",
-    "@aziontech/bundler-telemetry": "https://pkg.pr.new/aziontech/lib/@aziontech/bundler-telemetry@416",
-    "@aziontech/config": "https://pkg.pr.new/aziontech/lib/@aziontech/config@416",
-    "@aziontech/utils": "https://pkg.pr.new/aziontech/lib/@aziontech/utils@416",
-    "@aziontech/presets": "https://pkg.pr.new/aziontech/lib/@aziontech/presets@416",
+    "@aziontech/builder": "1.0.1",
+    "@aziontech/bundler-telemetry": "1.0.0",
+    "@aziontech/config": "1.0.0",
+    "@aziontech/utils": "1.0.0",
+    "@aziontech/presets": "1.0.0",
     "@edge-runtime/primitives": "4.0.5",
     "@netlify/framework-info": "^9.9.1",
     "chokidar": "^3.5.3",
@@ -73,7 +73,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aziontech/bundler.git"
+    "url": "git+https://github.com/aziontech/bundler.git",
+    "directory": "packages/bundler"
   },
   "bugs": {
     "url": "https://github.com/aziontech/bundler/issues"
