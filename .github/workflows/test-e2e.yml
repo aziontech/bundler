@@ -15,19 +15,12 @@ jobs:
     if: ${{ !startsWith(github.head_ref, 'dependabot/') }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: 22
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn install
+      - name: Install Dependencies
+        uses: ./.github/actions/install-dependencies
 
       - name: Install Docker Compose
         run: |
@@ -36,4 +29,4 @@ jobs:
           docker-compose --version
 
       - name: Run E2E tests
-        run: yarn test:e2e
+        run: pnpm -F @aziontech/bundler test:e2e

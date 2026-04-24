@@ -4,63 +4,37 @@ on:
   push:
     branches:
       - main
-      - stage
 
-permissions: write-all
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
-      id-token: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
+      - name: Install Dependencies
+        uses: ./.github/actions/install-dependencies
         with:
-          node-version: 22
-          cache: 'yarn'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Install dependencies
-        run: yarn install
+          node-version: 24
 
       - name: Compile
-        run: yarn build
+        run: pnpm build
 
-      - name: Release
+      - name: Create Version PR or Publish to NPM
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: pnpm exec changeset publish
+          commit: 'chore: version packages'
         env:
           GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
-        run: npx semantic-release
-
-  sync-stage:
-    needs: release
-    if: github.ref == 'refs/heads/main' && github.event.commits[0].author.name != 'Azion Bundler Reports'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
-
-      - name: Set up Git
-        run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
-
-      - name: Merge main into stage
-        run: |
-          git fetch origin
-          git pull origin main
-          git checkout stage
-          git merge main --allow-unrelated-histories --no-edit -Xtheirs -m "Merge branch 'main' into stage [skip ci]"
-          git push origin stage
+          NODE_ENV: 'production'
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
