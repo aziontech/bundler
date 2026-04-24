@@ -12,6 +12,8 @@ jobs:
       pull-requests: write
     name: Publish builder package
     runs-on: ubuntu-latest
+    # Skip PRs created by changesets/action (pattern: changeset-release/{branch})
+    if: github.event_name != 'pull_request' || !startsWith(github.event.pull_request.head.ref, 'changeset-release/')
 
     steps:
       - name: Checkout Repo
@@ -21,8 +23,6 @@ jobs:
 
       - name: Install Dependencies
         uses: ./.github/actions/install-dependencies
-        with:
-          node-version: 24
 
       - name: Setup git for changeset
         run: |
@@ -31,7 +31,10 @@ jobs:
 
           # Create local main branch pointing to origin/main
           # Changeset looks for local "main" branch, not origin/main
-          git branch -f main origin/main
+          # Only force update if main is not the current branch (to avoid worktree error)
+          if [ "$(git branch --show-current)" != "main" ]; then
+            git branch -f main origin/main
+          fi
 
       - name: Detect changed packages
         id: changeset

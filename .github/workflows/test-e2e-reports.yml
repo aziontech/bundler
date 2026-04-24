@@ -19,8 +19,6 @@ jobs:
 
       - name: Install Dependencies
         uses: ./.github/actions/install-dependencies
-        with:
-          node-version: 24
 
       - name: Install Docker Compose
         run: |

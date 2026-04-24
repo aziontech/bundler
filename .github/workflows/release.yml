@@ -5,22 +5,20 @@ on:
     branches:
       - main
 
-permissions: write-all
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
-      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
 
       - name: Install Dependencies
         uses: ./.github/actions/install-dependencies
@@ -35,7 +33,8 @@ jobs:
         uses: changesets/action@v1
         with:
           publish: pnpm exec changeset publish
+          commit: 'chore: version packages'
         env:
           GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
           NODE_ENV: 'production'
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
