@@ -18,7 +18,16 @@ describe('E2E opennext-ssr project', () => {
     serverPort = getContainerPort();
     localhostBaseUrl = `http://0.0.0.0:${serverPort}`;
 
-    await projectInitializer(EXAMPLE_PATH, 'opennextjs', serverPort);
+    await projectInitializer(
+      EXAMPLE_PATH,
+      'opennextjs',
+      serverPort,
+      true,
+      'http://localhost',
+      false,
+      null,
+      { OPEN_NEXTJS_NO_INTERACTIVE_PROMPT: 'true' },
+    );
 
     browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -41,21 +50,29 @@ describe('E2E opennext-ssr project', () => {
     expect(pageContent).toContain('Playground');
   });
 
-  test('should navigate to "/loading" route', async () => {
-    await page.goto(`${localhostBaseUrl}/loading`);
+  test(
+    'should navigate to "/loading" route',
+    async () => {
+      await page.goto(`${localhostBaseUrl}/loading`);
 
-    const pageContent = await page.content();
+      const pageContent = await page.content();
 
-    expect(pageContent).toContain(
-      "is a file convention that lets you define fallback UI for a route segment when it's loading",
-    );
-  });
+      expect(pageContent).toContain(
+        "is a file convention that lets you define fallback UI for a route segment when it's loading",
+      );
+    },
+    TIMEOUT,
+  );
 
-  test('should navigate to "/cached-routes" route', async () => {
-    await page.goto(`${localhostBaseUrl}/cached-routes`);
+  test(
+    'should navigate to "/cached-routes" route',
+    async () => {
+      await page.goto(`${localhostBaseUrl}/cached-routes`);
 
-    const pageContent = await page.content();
+      const pageContent = await page.content();
 
-    expect(pageContent).toContain('Cached Route Segments');
-  });
+      expect(pageContent).toContain('Cached Route Segments');
+    },
+    TIMEOUT,
+  );
 });

@@ -66,6 +66,7 @@ function getContainerPort() {
  * @param {boolean} inBackground - is a command to run in background?
  * @param {string} container - containe to exec
  * @param {string} logPrefix - log prefix to use in vulcan logs
+ * @param {Object} env - environment variables to pass to the container
  */
 async function execCommandInContainer(
   command,
@@ -73,8 +74,13 @@ async function execCommandInContainer(
   inBackground = false,
   container = 'test',
   logPrefix = 'E2E test',
+  env = {},
 ) {
-  const dockerCmd = `docker exec -w ${path} ${container}`;
+  const envFlags = Object.entries(env)
+    .map(([key, value]) => `-e ${key}=${value}`)
+    .join(' ');
+
+  const dockerCmd = `docker exec ${envFlags} -w ${path} ${container}`;
   const dockerBkgCmd = dockerCmd.replace('-w', '-d -w');
 
   await exec(`${inBackground ? dockerBkgCmd : dockerCmd} ${command}`, logPrefix);
