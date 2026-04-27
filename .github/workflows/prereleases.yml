@@ -39,9 +39,19 @@ jobs:
       - name: Detect changed packages
         id: changeset
         run: |
-          pnpm exec changeset status --output /tmp/status.json
+          # Run changeset status, but don't fail if there are no changesets
+          # This allows the workflow to continue gracefully
+          pnpm exec changeset status --output /tmp/status.json || true
 
-          RELEASE_COUNT=$(jq '.releases | length' /tmp/status.json)
+          # Check if the status file was created
+          if [ -f /tmp/status.json ]; then
+            RELEASE_COUNT=$(jq '.releases | length' /tmp/status.json)
+          else
+            # If changeset failed (no changesets found), treat as 0 releases
+            RELEASE_COUNT=0
+            echo '{}' > /tmp/status.json
+          fi
+
           echo "release_count=$RELEASE_COUNT" >> $GITHUB_OUTPUT
           echo "Found $RELEASE_COUNT packages to release"
 
