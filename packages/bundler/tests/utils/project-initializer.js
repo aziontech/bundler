@@ -27,7 +27,7 @@ async function projectInitializer(
 
   if (installPkgs) {
     feedback.info(`[${example}] Installing project dependencies ...`);
-    await execCommandInContainer('pnpm install --no-engine-strict --ignore-scripts', examplePath);
+    await execCommandInContainer('pnpm install --no-engine-strict', examplePath);
   }
 
   feedback.info(`[${example}] Building the project ...`);
