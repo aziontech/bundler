@@ -37,4 +37,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
           NODE_ENV: 'production'
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # for when you create a new package
+          # NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

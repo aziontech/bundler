@@ -23,7 +23,7 @@ describe('Node.js APIs - async_hooks', () => {
       EXAMPLE_PATH,
       'javascript',
       serverPort,
-      true,
+      false,
       'http://0.0.0.0',
       false,
       'index.js',

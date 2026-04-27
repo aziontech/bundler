@@ -22,7 +22,7 @@ describe('E2E - html project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'html', serverPort);
+    await projectInitializer(EXAMPLE_PATH, 'html', serverPort, false);
 
     browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
