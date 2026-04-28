@@ -18,7 +18,7 @@ services:
     depends_on:
       - verdaccio
     ports:
-      - '3000-3040:3000-3040'
+      - '3000-3050:3000-3050'
     volumes:
       - ./:/bundler/
       - ../../examples:/bundler/examples/
