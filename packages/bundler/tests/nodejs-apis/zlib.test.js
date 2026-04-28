@@ -24,7 +24,7 @@ describe('Node.js APIs - zlib', () => {
       EXAMPLE_PATH,
       'javascript',
       serverPort,
-      true,
+      false,
       'http://0.0.0.0',
       false,
       'index.js',

@@ -10,6 +10,8 @@ import { waitForVulcanServer, execCommandInContainer } from './docker-env-action
  * @param {string} url - url test container
  * @param {boolean} isFirewall - is firewall project
  * @param {string} entryPoint - entry point file (optional)
+ * @param {Object} env - environment variables to pass to the build command
+ * @param {string} installArgs - additional arguments for pnpm install (optional)
  */
 async function projectInitializer(
   examplePath,
@@ -19,13 +21,18 @@ async function projectInitializer(
   url = 'http://localhost',
   isFirewall = false,
   entryPoint = null,
+  env = {},
+  installArgs = '',
 ) {
   const example = examplePath.replace('/examples/', '');
   const bundlerCmd = 'npx --yes --registry=http://verdaccio:4873 @aziontech/bundler@latest';
 
   if (installPkgs) {
     feedback.info(`[${example}] Installing project dependencies ...`);
-    await execCommandInContainer('pnpm install', examplePath);
+    await execCommandInContainer(
+      `pnpm install --no-engine-strict ${installArgs}`.trim(),
+      examplePath,
+    );
   }
 
   feedback.info(`[${example}] Building the project ...`);
@@ -34,6 +41,10 @@ async function projectInitializer(
       entryPoint ? `--entry ${entryPoint}` : ''
     }`,
     examplePath,
+    false,
+    'test',
+    'E2E test',
+    env,
   );
 
   feedback.info(`[${example}] Starting Bundler local server ...`);
