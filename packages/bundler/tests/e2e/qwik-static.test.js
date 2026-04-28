@@ -22,7 +22,17 @@ describe('E2E - qwik-static project', () => {
 
     request = supertest(localhostBaseUrl);
 
-    await projectInitializer(EXAMPLE_PATH, 'qwik', serverPort);
+    await projectInitializer(
+      EXAMPLE_PATH,
+      'qwik',
+      serverPort,
+      true,
+      'http://localhost',
+      false,
+      null,
+      {},
+      '--ignore-scripts',
+    );
 
     browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
