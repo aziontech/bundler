@@ -360,49 +360,49 @@ E2E tests run daily in the [Bundler Examples](https://github.com/aziontech/bundl
 Table:
 | Test                                 | Status |
 | ------------------------------------ | ------ |
-| Next 14 2 15 Middleware              | ⚠️     |
-| Next 13 5 6 I18n                     | ⚠️     |
-| Next 12 3 4 I18n                     | ⚠️     |
-| Hexo Static                          | ⚠️     |
-| Next 13 5 6 Middleware               | ⚠️     |
-| Next 12 3 4 Middleware               | ⚠️     |
-| Next Node Pages 12 3 1               | ⚠️     |
-| Next 13 5 6 Config                   | ⚠️     |
-| Next 12 3 4 Config                   | ⚠️     |
-| Html                                 | ⚠️     |
-| Next Static                          | ⚠️     |
-| Gatsby Static                        | ⚠️     |
-| Next Node Pages 12 3 1 Fs            | ⚠️     |
-| Sveltekit Static                     | ⚠️     |
-| Vue Vite Static                      | ⚠️     |
-| Sveltekit Ssr                        | ⚠️     |
-| Next 12 Static                       | ⚠️     |
-| Hugo                                 | ⚠️     |
-| Astro Static                         | ⚠️     |
-| Qwik Static                          | ⚠️     |
-| Simple Js Env Vars                   | ⚠️     |
-| Eleventy Static                      | ⚠️     |
-| Opennext Ssr                         | ⚠️     |
-| Simple Js Network List               | ⚠️     |
-| Angular Static                       | ⚠️     |
-| React Static                         | ⚠️     |
-| Svelte Static                        | ⚠️     |
-| Stencil Static                       | ⚠️     |
-| Vitepress Static                     | ⚠️     |
-| Preact Static                        | ⚠️     |
-| Vuepress Static                      | ⚠️     |
-| Nuxt Static                          | ⚠️     |
-| Docusaurus Static                    | ⚠️     |
-| Simple Js Firewall Event             | ⚠️     |
-| Nuxt Ssr                             | ⚠️     |
-| Simple Js Network List With Firewall | ⚠️     |
-| Jekyll Static                        | ⚠️     |
-| Simple Js Esm Worker                 | ⚠️     |
-| Simple Js Esm Node                   | ⚠️     |
-| Simple Ts Esm                        | ⚠️     |
-| Simple Js Esm                        | ⚠️     |
+| Next 14 2 15 Middleware              | ✅      |
+| Next 13 5 6 I18n                     | ✅      |
+| Next 12 3 4 I18n                     | ✅      |
+| Hexo Static                          | ✅      |
+| Next 13 5 6 Middleware               | ✅      |
+| Next 12 3 4 Middleware               | ✅      |
+| Next Node Pages 12 3 1               | ✅      |
+| Next 13 5 6 Config                   | ✅      |
+| Next 12 3 4 Config                   | ✅      |
+| Html                                 | ✅      |
+| Next Static                          | ✅      |
+| Gatsby Static                        | ✅      |
+| Next Node Pages 12 3 1 Fs            | ✅      |
+| Sveltekit Static                     | ✅      |
+| Vue Vite Static                      | ✅      |
+| Qwik Static                          | ✅      |
+| Opennext Ssr                         | ✅      |
+| Sveltekit Ssr                        | ✅      |
+| Next 12 Static                       | ✅      |
+| Hugo                                 | ✅      |
+| Astro Static                         | ✅      |
+| Simple Js Env Vars                   | ✅      |
+| Eleventy Static                      | ✅      |
+| Simple Js Network List               | ✅      |
+| Angular Static                       | ✅      |
+| React Static                         | ✅      |
+| Svelte Static                        | ✅      |
+| Stencil Static                       | ✅      |
+| Vitepress Static                     | ✅      |
+| Preact Static                        | ✅      |
+| Vuepress Static                      | ✅      |
+| Nuxt Static                          | ✅      |
+| Docusaurus Static                    | ✅      |
+| Simple Js Firewall Event             | ✅      |
+| Nuxt Ssr                             | ✅      |
+| Simple Js Network List With Firewall | ✅      |
+| Jekyll Static                        | ✅      |
+| Simple Js Esm Worker                 | ✅      |
+| Simple Js Esm Node                   | ✅      |
+| Simple Js Esm                        | ✅      |
+| Simple Ts Esm                        | ✅      |
 
-Last test run date: 04/09/26 01:48:55 PM
+Last test run date: 05/02/26 04:15:52 AM
 
 ## Contributing
 
