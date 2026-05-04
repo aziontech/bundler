@@ -13,7 +13,10 @@ jobs:
     name: Publish builder package
     runs-on: ubuntu-latest
     # Skip PRs created by changesets/action (pattern: changeset-release/{branch})
-    if: github.event_name != 'pull_request' || !startsWith(github.event.pull_request.head.ref, 'changeset-release/')
+    # Skip commits from automated bots (Azion Bundler Reports)
+    if: |
+      (github.event_name != 'pull_request' || !startsWith(github.event.pull_request.head.ref, 'changeset-release/')) &&
+      (github.event_name != 'push' || github.event.commits[0].author.name != 'Azion Bundler Reports')
 
     steps:
       - name: Checkout Repo
