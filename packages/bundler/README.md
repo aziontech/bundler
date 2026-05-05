@@ -376,7 +376,7 @@ Table:
 | Sveltekit Static                     | ✅      |
 | Vue Vite Static                      | ✅      |
 | Qwik Static                          | ✅      |
-| Opennext Ssr                         | ⚠️     |
+| Opennext Ssr                         | ✅      |
 | Sveltekit Ssr                        | ✅      |
 | Next 12 Static                       | ✅      |
 | Hugo                                 | ✅      |
@@ -402,7 +402,7 @@ Table:
 | Simple Js Esm                        | ✅      |
 | Simple Ts Esm                        | ✅      |
 
-Last test run date: 05/04/26 04:25:29 AM
+Last test run date: 05/05/26 04:18:21 AM
 
 ## Contributing
 
