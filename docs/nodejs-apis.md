@@ -34,14 +34,14 @@ Table:
 | Test           | Status |
 | -------------- | ------ |
 | Process        | ✅      |
-| Path           | ✅      |
 | Os             | ✅      |
+| Path           | ✅      |
 | String Decoder | ✅      |
 | Timers         | ✅      |
 | Stream         | ✅      |
 | Module         | ✅      |
-| Util           | ✅      |
 | Zlib           | ✅      |
+| Util           | ✅      |
 | Http           | ✅      |
 | Url            | ✅      |
 | Vm             | ✅      |
@@ -51,7 +51,7 @@ Table:
 | Fs             | ✅      |
 | Async Hooks    | ✅      |
 
-Last test run date: 05/05/26 04:39:10 AM
+Last test run date: 05/06/26 04:48:26 AM
 #### Docs support
 
 See support for the Node.js APIs in the [https://www.azion.com/en/documentation/products/azion-edge-runtime/compatibility/node/](https://www.azion.com/en/documentation/products/azion-edge-runtime/compatibility/node/)
