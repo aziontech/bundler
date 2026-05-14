@@ -1,3 +1,7 @@
+## <small>7.2.1 (2026-05-14)</small>
+
+* fix: set maintenance branch for deprecated package ([d3575f9](https://github.com/aziontech/bundler/commit/d3575f9))
+
 ## 7.2.0 (2026-03-13)
 
 * chore(release): 7.2.0-stage.1 ([1d65139](https://github.com/aziontech/bundler/commit/1d65139))
