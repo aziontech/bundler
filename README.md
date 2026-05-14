@@ -4,6 +4,16 @@
 
 # Azion Bundler - Built for Builders of the Edge
 
+> ⚠️ **Deprecation Notice - Package Migration**
+>
+> This package (`edge-functions`) has been **replaced/migrated** to [`@aziontech/bundler`](https://www.npmjs.com/package/@aziontech/bundler).
+>
+> - This package will only receive **bug fixes** — no new features will be added.
+> - Maintenance will be **discontinued at the end of December 2026**.
+> - **We strongly recommend migrating to `@aziontech/bundler`** to continue receiving updates and new features.
+>
+> For documentation and migration guide, visit: https://github.com/aziontech/bundler/blob/main/packages/bundler/README.md
+
 [![Version](https://img.shields.io/npm/v/edge-functions.svg)](https://www.npmjs.com/package/edge-functions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 [![Downloads](https://img.shields.io/npm/dm/edge-functions.svg)](https://www.npmjs.com/package/edge-functions)
