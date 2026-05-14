@@ -1,3 +1,7 @@
+## <small>7.2.2 (2026-05-14)</small>
+
+* fix: add deprecation notice for package migration ([d5dcccf](https://github.com/aziontech/bundler/commit/d5dcccf))
+
 ## <small>7.2.1 (2026-05-14)</small>
 
 * fix: set maintenance branch for deprecated package ([d3575f9](https://github.com/aziontech/bundler/commit/d3575f9))
