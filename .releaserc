@@ -1,10 +1,7 @@
 {
   "branches": [
-    "main",
     {
-      "name": "stage",
-      "prerelease": true,
-      "channel": "stage"
+      "name": "maintenance-v7"
     }
   ],
   "plugins": [
