@@ -51,6 +51,17 @@ import { EdgeContext, EdgeVM } from './edge-vm';
  * ```
  */
 function runtime(code: string, isFirewallEvent = false) {
+  // Fix: seroval's switch(a) { case Object: } uses strict === which fails across V8 realms.
+  // EdgeVM creates its own realm, so objects from the outer Node.js context have a
+  // different Object constructor identity. Normalise it to the local Object before the switch.
+  const crossRealmPattern = /switch \((\w+)\) \{\n(\s+)case Object:/g;
+  code = code.replace(crossRealmPattern, (full, switchVar, indent) => {
+    const normalizer =
+      `if (${switchVar} != null && ${switchVar} !== Object && ${switchVar}.name === "Object") ${switchVar} = Object;\n` +
+      `${indent}`;
+    return normalizer + full;
+  });
+
   const extend = (context: EdgeContext) => {
     context.RESERVED_FETCH = context.fetch.bind(context);
     context.fetch = async (resource, options) =>
