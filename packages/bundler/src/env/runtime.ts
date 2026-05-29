@@ -98,6 +98,7 @@ function runtime(code: string, isFirewallEvent = false) {
 
     // Async Hooks
     context.ASYNC_LOCAL_STORAGE = AsyncHooksContext;
+    context.AsyncLocalStorage = AsyncHooksContext.AsyncLocalStorage;
 
     // Storage Context
     context.STORAGE_CONTEXT = StorageContext;
