@@ -10,7 +10,7 @@ export const WORKER_MESSAGES = {
 // Templates for code generation
 const contextSetup = `
 const request = event.request;
-const env = {};
+const env = process.env; // or any other environment variables you want to pass
 const ctx = { waitUntil: event.waitUntil?.bind(event) };`;
 
 export const WORKER_TEMPLATES = {
