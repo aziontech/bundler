@@ -1,5 +1,13 @@
 # @aziontech/bundler
 
+## 1.1.0
+
+### Minor Changes
+
+- [#622](https://github.com/aziontech/bundler/pull/622) [`d571fcd`](https://github.com/aziontech/bundler/commit/d571fcdea4dbeeddbe40782ea36ed0683d3ec42b) Thanks [@jcbsfilho](https://github.com/jcbsfilho)! - feat: add runtime fixes required to support the Nitro preset.
+  - Handle cross-realm `Object` comparison in seroval: `switch (a) { case Object: }` uses strict `===` which fails across V8 realms. EdgeVM creates its own realm, so objects from the outer Node.js context carry a different `Object` constructor identity. The fix normalizes the reference before the switch statement by detecting cross-realm `Object` constructors.
+  - Expose `AsyncLocalStorage` directly on the runtime context so frameworks like Nitro can access it without additional polyfills.
+
 ## 1.0.0
 
 ### Major Changes
