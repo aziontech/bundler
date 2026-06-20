@@ -387,7 +387,7 @@ Table:
 | Angular Static                       | ✅      |
 | React Static                         | ✅      |
 | Svelte Static                        | ✅      |
-| Stencil Static                       | ✅      |
+| Stencil Static                       | ⚠️     |
 | Vitepress Static                     | ✅      |
 | Preact Static                        | ✅      |
 | Vuepress Static                      | ✅      |
@@ -402,7 +402,7 @@ Table:
 | Simple Js Esm                        | ✅      |
 | Simple Ts Esm                        | ✅      |
 
-Last test run date: 06/19/26 04:23:35 AM
+Last test run date: 06/20/26 04:24:42 AM
 
 ## Contributing
 
