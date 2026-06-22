@@ -51,7 +51,7 @@ Table:
 | Fs             | ✅      |
 | Async Hooks    | ✅      |
 
-Last test run date: 06/21/26 05:19:39 AM
+Last test run date: 06/22/26 05:21:17 AM
 #### Docs support
 
 See support for the Node.js APIs in the [https://www.azion.com/en/documentation/products/azion-edge-runtime/compatibility/node/](https://www.azion.com/en/documentation/products/azion-edge-runtime/compatibility/node/)
