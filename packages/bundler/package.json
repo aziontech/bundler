@@ -69,7 +69,7 @@
     "tmp": "^0.2.6",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
-    "vite": "^7.3.1"
+    "vite": "^8.0.16"
   },
   "repository": {
     "type": "git",
