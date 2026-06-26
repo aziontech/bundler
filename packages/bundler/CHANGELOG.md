@@ -1,5 +1,11 @@
 # @aziontech/bundler
 
+## 1.1.1
+
+### Patch Changes
+
+- [#624](https://github.com/aziontech/bundler/pull/624) [`97e9cc9`](https://github.com/aziontech/bundler/commit/97e9cc9333cdd5c416fa74ea6b722e2e795fd1a6) Thanks [@jcbsfilho](https://github.com/jcbsfilho)! - upgrade lib @aziontech/config to reorganize schemas and normalize firewall behavior shape
+
 ## 1.1.0
 
 ### Minor Changes
