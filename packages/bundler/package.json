@@ -31,7 +31,7 @@
   "author": "aziontech",
   "license": "MIT",
   "dependencies": {
-    "@aziontech/builder": "https://pkg.pr.new/aziontech/lib/@aziontech/builder@449",
+    "@aziontech/builder": "1.0.4",
     "@aziontech/bundler-telemetry": "1.0.0",
     "@aziontech/config": "1.0.1",
     "@aziontech/presets": "1.1.1",
