@@ -35,7 +35,10 @@ export const resolveHandlers = async ({
         } catch (error) {
           debug.error(error);
           throw new Error(
-            `Entry point "${entry}" was not found. Please verify the path and try again.`,
+            `Entry point "${relative(process.cwd(), entry)}" was not found.\n` +
+              `  - Fix the "build.entry" property in your azion.config, or\n` +
+              `  - Pass the correct file via the --entry flag.\n` +
+              `If not specified, the entry defaults to index.ts or index.js" in the project root.`,
           );
         }
       }),

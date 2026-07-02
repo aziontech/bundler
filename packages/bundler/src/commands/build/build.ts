@@ -14,7 +14,7 @@ import { feedback } from '@aziontech/utils/node';
 import { mkdir, writeFile } from 'fs/promises';
 import { dirname } from 'path';
 
-import { checkDependencies } from './utils';
+import { checkDependencies, verifyFunctionsOutputPath } from './utils';
 
 /* Modules */
 import { setupBindings } from './modules/bindings';
@@ -296,6 +296,9 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     feedback.build.success('Build completed successfully');
 
     await executeCleanup();
+
+    // Phase 7.1: Verify functions[].path matches the file(s) actually generated in Phase 7,
+    verifyFunctionsOutputPath(buildConfigSetup.entry, mergedConfig.functions);
 
     // Phase 8: Postbuild
     feedback.postbuild.info('Starting post-build...');

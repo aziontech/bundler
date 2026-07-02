@@ -64,7 +64,11 @@ export const createPathEntriesMap = async ({
   }
 
   if (Array.isArray(entry)) {
-    return entry.reduce((acc, e) => ({ ...acc, ...createEntryRecord(e) }), {});
+    return entry.reduce((acc, e) => {
+      const base = basename(e, extname(e));
+      const outputKey = `${base}${production ? '' : '.dev'}`;
+      return { ...acc, ...createEntryRecord(e, outputKey) };
+    }, {});
   }
 
   // Entry is an object
