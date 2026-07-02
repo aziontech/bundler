@@ -1,5 +1,11 @@
 # @aziontech/bundler
 
+## 1.1.2
+
+### Patch Changes
+
+- [#627](https://github.com/aziontech/bundler/pull/627) [`4e9ba9f`](https://github.com/aziontech/bundler/commit/4e9ba9fc3bf3732edd196a82e9c37b40578ba5e3) Thanks [@jcbsfilho](https://github.com/jcbsfilho)! - fix: verify functions[].path matches the generated build entry output
+
 ## 1.1.1
 
 ### Patch Changes
