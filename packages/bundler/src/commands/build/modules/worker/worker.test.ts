@@ -85,7 +85,7 @@ describe('setupWorkerCode', () => {
     expect(result['/tmp/api.js']).toContain(`addEventListener('fetch', (event) => {`);
   });
 
-  it('should return original code for ESM pattern in production', async () => {
+  it('should return minimal re-export wrapper for ESM pattern in production', async () => {
     // Mock ESM pattern
     spyReadFile.mockImplementation((path: unknown) =>
       Promise.resolve(
@@ -97,11 +97,13 @@ describe('setupWorkerCode', () => {
 
     const result = await setupWorkerCode(mockBuildConfig, mockContext);
 
-    // ESM in production should return original code
-    expect(result['/tmp/worker.js']).toContain(`export default { fetch: (request, env, ctx) =>`);
-    expect(result['/tmp/worker.js']).toContain(`new Response('worker esm')`);
-    expect(result['/tmp/api.js']).toContain(`export default { fetch: (request, env, ctx) =>`);
-    expect(result['/tmp/api.js']).toContain(`new Response('api esm')`);
+    // ESM in production is re-exported as-is via a minimal wrapper, not wrapped with addEventListener
+    expect(result['/tmp/worker.js']).toContain(`import module from '/tmp/worker.js'`);
+    expect(result['/tmp/worker.js']).toContain('export default module;');
+    expect(result['/tmp/worker.js']).not.toContain(`addEventListener('fetch'`);
+    expect(result['/tmp/api.js']).toContain(`import module from '/tmp/api.js'`);
+    expect(result['/tmp/api.js']).toContain('export default module;');
+    expect(result['/tmp/api.js']).not.toContain(`addEventListener('fetch'`);
   });
 
   it('should handle legacy pattern with wrapper generation', async () => {

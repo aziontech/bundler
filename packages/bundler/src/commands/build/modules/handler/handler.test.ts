@@ -1,6 +1,6 @@
-import { describe, it, expect, jest, beforeEach } from '@jest/globals';
+import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
 import { resolveHandlers } from './handler';
-import type { FetchEvent } from '@aziontech/types';
+import type { AzionRuntimeModule } from '@aziontech/types';
 import type { AzionBuildPreset } from '@aziontech/config';
 import * as utilsNode from '@aziontech/utils/node';
 import fsPromises from 'fs/promises';
@@ -55,7 +55,9 @@ describe('resolveHandlers', () => {
   it('should resolve entrypoint from preset when context entrypoint is not available', async () => {
     const presetWithHandler = {
       ...mockPreset,
-      handler: (() => Promise.resolve(new Response())) as (event: FetchEvent) => Promise<Response>,
+      handler: {
+        fetch: () => Promise.resolve(new Response()),
+      } as AzionRuntimeModule,
       metadata: {
         name: 'test-preset',
         ext: 'js',

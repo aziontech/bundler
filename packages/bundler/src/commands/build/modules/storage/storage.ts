@@ -106,7 +106,7 @@ const createStorageSymlink = async (
               if (stats.isSymbolicLink()) {
                 await fsPromises.unlink(folderPath);
               } else if (stats.isDirectory()) {
-                await fsPromises.rmdir(folderPath, { recursive: true });
+                await fsPromises.rm(folderPath, { recursive: true, force: true });
               } else {
                 await fsPromises.unlink(folderPath);
               }
@@ -127,7 +127,7 @@ const createStorageSymlink = async (
         await fsPromises.unlink(targetPath);
         debug.info(`Removed existing symlink: ${targetPath}`);
       } else if (stats.isDirectory()) {
-        await fsPromises.rmdir(targetPath, { recursive: true });
+        await fsPromises.rm(targetPath, { recursive: true, force: true });
         debug.info(`Removed existing directory: ${targetPath}`);
       }
     } catch {

@@ -111,6 +111,9 @@ importers:
         specifier: ^5.5.3
         version: 5.9.3
     devDependencies:
+      '@aziontech/types':
+        specifier: 1.0.0
+        version: 1.0.0
       '@jest/globals':
         specifier: ^29.7.0
         version: 29.7.0

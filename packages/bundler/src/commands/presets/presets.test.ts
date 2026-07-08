@@ -20,6 +20,7 @@ describe('getPresetsList utils', () => {
       'javascript',
       'jekyll',
       'next',
+      'nitro',
       'nuxt',
       'opennextjs',
       'preact',

@@ -61,7 +61,7 @@ describe('detectObjectExport', () => {
 describe('generateWorkerEventHandler', () => {
   it('should generate addEventListener wrapper for object exports', async () => {
     const entrypoint = 'src/index.js';
-    const result = await generateWorkerEventHandler(entrypoint);
+    const result = await generateWorkerEventHandler(entrypoint, false);
 
     expect(result).toContain(`import module from '${entrypoint}'`);
     expect(result).toContain('Object export pattern');
@@ -69,7 +69,7 @@ describe('generateWorkerEventHandler', () => {
   });
 
   it('should handle fetch handler', async () => {
-    const result = await generateWorkerEventHandler('app.js');
+    const result = await generateWorkerEventHandler('app.js', false);
 
     expect(result).toContain('const fetchHandler = handlers.fetch');
     expect(result).toContain("addEventListener('fetch', (event) => {");
@@ -77,20 +77,28 @@ describe('generateWorkerEventHandler', () => {
   });
 
   it('should create proper ESM signature', async () => {
-    const result = await generateWorkerEventHandler('app.js');
+    const result = await generateWorkerEventHandler('app.js', false);
 
     expect(result).toContain('const request = event.request');
-    expect(result).toContain('const env = {}');
+    expect(result).toContain('const env = process.env');
     expect(result).toContain('const ctx = { waitUntil: event.waitUntil?.bind(event) }');
   });
 
   it('should generate fallback fetch handler when import fails', async () => {
-    const result = await generateWorkerEventHandler('non-existent.js');
+    const result = await generateWorkerEventHandler('non-existent.js', false);
 
     // When import fails, fallback assumes fetch handler exists
     expect(result).toContain('const fetchHandler = handlers.fetch');
     expect(result).toContain("addEventListener('fetch', (event) => {");
     expect(result).toContain('event.respondWith');
+  });
+
+  it('should generate minimal re-export wrapper in production', async () => {
+    const result = await generateWorkerEventHandler('app.js', true);
+
+    expect(result).toContain(`import module from 'app.js'`);
+    expect(result).toContain('export default module;');
+    expect(result).not.toContain("addEventListener('fetch'");
   });
 });
 
