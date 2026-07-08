@@ -24,8 +24,8 @@
     "e2e:start": "pnpm submodule:update && tests/scripts/start-e2e-env.sh",
     "e2e:stop": "tests/scripts/stop-e2e-env.sh",
     "e2e:destroy": "tests/scripts/destroy-e2e-env.sh",
-    "test:e2e": "pnpm e2e:start && NODE_OPTIONS='--experimental-vm-modules' jest --detectOpenHandles --runInBand --config=./jest-e2e.config.js tests/e2e/ --json --outputFile e2e_results.json && pnpm e2e:stop; pnpm task:reports",
-    "test:nodejs-apis": "pnpm e2e:start && NODE_OPTIONS='--experimental-vm-modules' jest --runInBand --config=./jest-e2e.config.js tests/nodejs-apis/ --json --outputFile nodejs_apis_results.json && pnpm e2e:stop && pnpm task:reports-nodejs-apis",
+    "test:e2e": "pnpm e2e:start && NODE_OPTIONS='--experimental-vm-modules' jest --detectOpenHandles --forceExit --runInBand --config=./jest-e2e.config.js tests/e2e/ --json --outputFile e2e_results.json && pnpm e2e:stop; pnpm task:reports",
+    "test:nodejs-apis": "pnpm e2e:start && NODE_OPTIONS='--experimental-vm-modules' jest --forceExit --runInBand --config=./jest-e2e.config.js tests/nodejs-apis/ --json --outputFile nodejs_apis_results.json && pnpm e2e:stop && pnpm task:reports-nodejs-apis",
     "submodule:update": "git submodule update --init --recursive && git submodule foreach git pull origin main"
   },
   "author": "aziontech",
