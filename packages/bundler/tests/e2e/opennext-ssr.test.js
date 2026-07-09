@@ -42,13 +42,17 @@ describe('E2E opennext-ssr project', () => {
     await browser.close();
   }, TIMEOUT);
 
-  test('should render home page in "/" route', async () => {
-    await page.goto(`${localhostBaseUrl}/`);
+  test(
+    'should render home page in "/" route',
+    async () => {
+      await page.goto(`${localhostBaseUrl}/`);
 
-    const pageContent = await page.content();
+      const pageContent = await page.content();
 
-    expect(pageContent).toContain('Playground');
-  });
+      expect(pageContent).toContain('Playground');
+    },
+    TIMEOUT,
+  );
 
   test(
     'should navigate to "/loading" route',
