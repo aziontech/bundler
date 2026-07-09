@@ -1,5 +1,5 @@
 import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
-import envDefault from '#env';
+import envDefault from '../../../../env';
 import utilsDefault from './utils';
 
 import { setEnvironment } from './environment';
