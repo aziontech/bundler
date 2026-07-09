@@ -1,5 +1,11 @@
 # @aziontech/bundler
 
+## 1.1.3
+
+### Patch Changes
+
+- [#631](https://github.com/aziontech/bundler/pull/631) [`01fb687`](https://github.com/aziontech/bundler/commit/01fb68799b12fcd9ecf6893c0621d8c021604c5c) Thanks [@jcbsfilho](https://github.com/jcbsfilho)! - chore: update preview @aziontech/\* pcks to fix security vulnerabilities
+
 ## 1.1.2
 
 ### Patch Changes
