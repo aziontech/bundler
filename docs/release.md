@@ -1,6 +1,8 @@
-# PR to Release / Deploy Workflow
+# PR to Release Workflow
 
 Below is a mermaid diagram and textual description derived from the workflows in `.github/workflows` of this repo.
+
+We use [Changesets](https://github.com/changesets/changesets) to manage versioning and releases — everything flows through PRs into `main`.
 
 ---
 
@@ -10,45 +12,30 @@ Below is a mermaid diagram and textual description derived from the workflows in
 flowchart TD
     Dev[Developer]
 
-    %% PR creation
-    Dev --> PR[Open or update PR to main or stage]
+    Dev --> Changeset[Add a changeset file to the PR]
+    Changeset --> PR[Open or update PR to main]
 
-    %% PR checks
     PR --> OSV[OSV scanner PR scan]
     PR --> E2E[E2E tests]
+    PR --> Prerelease[Publish prerelease to pkg-pr-new]
 
-    OSV --> PRStatus[PR checks status]
-    E2E --> Verdaccio[E2E uses Verdaccio registry]
-    Verdaccio --> PRStatus
+    OSV --> Merge[Merge PR into main]
+    E2E --> Merge
+    Prerelease --> Merge
 
-    PRStatus --> Merge[Merge PR into main or stage]
-
-    %% Push to branches
     Merge --> PushMain[Push to main]
-    Merge --> PushStage[Push to stage]
+    PushMain --> Release[Release job]
 
-    %% Release jobs
-    PushMain --> ReleaseMain[Release job on main]
-    PushStage --> ReleaseStage[Release job on stage]
+    Release --> VersionPR[Open or update Version Packages PR]
+    Release --> Publish[changeset publish to NPM]
 
-    ReleaseMain --> SemRelMain[semantic release main]
-    ReleaseStage --> SemRelStage[semantic release stage]
+    VersionPR --> MergeVersionPR[Merge Version Packages PR - triggers Release again]
 
-    SemRelMain --> NpmPublishMain[NPM publish main]
-    SemRelStage --> NpmPublishStage[NPM publish stage]
+    PushMain --> SchedE2E[Scheduled E2E reports]
+    PushMain --> SchedNode[Scheduled Node.js API tests]
+    SchedE2E --> Slack[Notify Slack on failure]
+    SchedNode --> Slack
 
-    %% Main to stage sync
-    SemRelMain --> SyncStage[Sync main to stage]
-
-    %% Extra checks on main
-    PushMain --> AzionCli[Azion CLI tests]
-
-    %% Scheduled jobs
-    SemRelMain --> SchedE2E[Scheduled E2E reports]
-    SchedE2E --> SchedVerdaccio[Scheduled E2E uses Verdaccio]
-    SemRelMain --> SchedNode[Scheduled Node.js API tests]
-
-    %% Utility workflow
     Dev --> ManualCleanup[Manual disk cleanup workflow]
 ```
 
@@ -58,111 +45,53 @@ flowchart TD
 
 ### 1. From code change to PR
 
-- **Developer creates branch**
-  - Create a feature branch from `main` or `stage`.
-  - Commit and push changes.
+- **Developer creates a branch** off `main`, commits changes.
+- **Add a changeset**: run `pnpm changeset` and describe the change (patch/minor/major) for each affected package. This creates a markdown file under `.changeset/`.
+- **Open a PR targeting `main`**. The changeset file(s) are part of the PR diff.
 
-- **Open / update PR**
-  - Open a PR targeting `main` or `stage` (or the PR enters a merge queue as a `merge_group` event).
+### 2. PR checks
 
-### 2. PR validation
-
-Triggered by `pull_request` (and `merge_group`) to `main` or `stage`:
+Triggered by `pull_request` to `main`:
 
 - **OSV-Scanner PR Scan (`osv-scanner-pr.yml`)**
-  - Runs `google/osv-scanner-action` reusable workflow.
-  - Scans dependencies for known vulnerabilities.
-  - Reports results as security events / SARIF in the Security tab.
-
-Triggered by `pull_request` to `main` or `stage` (opened, synchronized, reopened):
+  - Runs the `google/osv-scanner-action` reusable workflow.
+  - Scans dependencies for known vulnerabilities and reports as SARIF in the Security tab.
 
 - **E2E Tests (`test-e2e.yml`)**
-  - Skips if the branch is a `dependabot/*` branch.
-  - Steps:
-    - Checkout repo.
-    - `yarn install`.
-    - Install Docker Compose.
-    - Start local infrastructure (including Verdaccio registry) via Docker Compose.
-    - Run `yarn test:e2e` against the Verdaccio-backed environment.
-  - Results appear as a status check on the PR.
+  - Skips `dependabot/*` branches.
+  - `pnpm install`, install Puppeteer/Chrome and Docker Compose, run `pnpm -F @aziontech/bundler test:e2e`.
 
-**Outcome:** The PR should only be merged once both OSV scan and E2E tests (plus any other required checks / reviews) pass.
+- **Publish prereleases (`prereleases.yml`)**
+  - Skips PRs opened by `changesets/action` (branch `changeset-release/*`).
+  - Detects changed packages via `changeset status`, builds them, and publishes a prerelease build of each to [pkg-pr-new](https://github.com/stackblitz-labs/pkg.pr.new) so reviewers can install and test the PR's exact build.
 
-### 3. Merge to main or stage
+**Outcome:** merge only once required checks and reviews pass.
 
-- **Merge PR**
-  - When reviews and checks pass, merge the PR into `main` or `stage`.
-  - This causes a `push` event on the target branch.
+### 3. Merge to main
 
-### 4. Push-triggered release pipeline (deploy)
+Merging the PR triggers a `push` to `main`.
 
-Triggered by `push` to `main` or `stage`:
+### 4. Release pipeline (`release.yml`)
 
-- **Release (`release.yml` – `release` job)**
-  - Runs on both `main` and `stage`.
-  - Steps:
-    - Checkout with full history (and `CUSTOM_GITHUB_TOKEN`).
-    - Setup Node.js (LTS).
-    - `yarn install`.
-    - `yarn build`.
-    - `npx semantic-release` with:
-      - `GITHUB_TOKEN = CUSTOM_GITHUB_TOKEN`.
-      - `NPM_TOKEN / NODE_AUTH_TOKEN` for publishing.
-  - **Effect:**
-    - Creates GitHub releases / tags according to commit messages.
-    - Publishes new package versions to the NPM registry (using the configured tokens), including publishing into Verdaccio when used in the CI environment.
-    - This is effectively the “deploy/release” step for this library.
+Triggered by `push` to `main`. Uses `changesets/action`, which behaves differently depending on whether there are unreleased changesets:
 
-Triggered by `push` to `main` only:
+- **If there are unreleased changeset files:**
+  - Opens (or updates) a PR named "Version Packages" that bumps versions, updates `CHANGELOG.md`s, and removes the consumed changeset files.
+  - This PR is reviewed and merged like any other PR — merging it triggers `release.yml` again.
 
-- **AzionCli tests (`azioncli-test.yml`)**
-  - Runs additional CLI tests using `tests/azion_cli/test.sh`.
-  - Uses `AZION_USERNAME`, `AZION_PASSWORD`, and `WEBHOOK_SLACK_URL` secrets.
-  - Validates integration with Azion CLI after merging into `main`.
+- **If there are no unreleased changesets (i.e. a Version Packages PR was just merged):**
+  - Runs `pnpm exec changeset publish`, which publishes the new package versions to NPM and creates the corresponding GitHub tags/releases.
 
-### 5. Automatic main → stage sync
+So a real release always takes two merges to `main`: the feature PR (with its changeset) and the auto-generated Version Packages PR.
 
-Within `release.yml`:
+### 5. Scheduled post-merge quality jobs
 
-- **`sync-stage` job**
-  - Runs only when:
-    - `github.ref == 'refs/heads/main'`, and
-    - First commit author is **not** `Azion Bundler Reports` (avoids loops from bot commits).
-  - Steps:
-    - Check out the repo.
-    - Configure git user.
-    - `git fetch origin`.
-    - `git pull origin main`.
-    - `git checkout stage`.
-    - `git merge main --allow-unrelated-histories --no-edit -Xtheirs -m "Merge branch 'main' into stage [skip ci]"`.
-    - `git push origin stage`.
-  - **Effect:** Keeps `stage` branch aligned with `main` automatically after a release.
+These run on a schedule from `main` (not on every merge), and post to Slack on failure via `.github/actions/notify-slack`:
 
----
+- **Report Generation (`test-e2e-reports.yml`)** — daily at 02:30 UTC. Runs `test:e2e` and notifies Slack via `SLACK_WEBHOOK_URL` on failure.
+- **Test Node.js APIs (`test-nodejs-apis.yml`)** — daily at 03:30 UTC. Runs `test:nodejs-apis` and notifies Slack on failure.
 
-## Scheduled post-merge quality jobs (not directly on PR)
-
-These run from `main` / `stage`, but are scheduled, not on each merge:
-
-- **Report Generation (`test-e2e-reports.yml`)**
-  - Trigger: `schedule` at `30 2 * * *` (02:30 UTC daily).
-  - Requires `github.ref` to be `refs/heads/main` or `refs/heads/stage`.
-  - Steps:
-    - Checkout, install dependencies.
-    - Install Docker Compose.
-    - Run `yarn test:e2e`.
-    - Update `README.md` with reports and push as `Azion Bundler Reports`.
-
-- **Test Node.js APIs (`test-nodejs-apis.yml`)**
-  - Trigger: `schedule` at `30 3 * * *` (03:30 UTC daily).
-  - Requires `github.ref` to be `refs/heads/main` or `refs/heads/stage`.
-  - Steps:
-    - Checkout, install dependencies.
-    - Install Docker Compose.
-    - Run `yarn test:nodejs-apis`.
-    - Update `docs/nodejs-apis.md` and push as `Azion Bundler Reports`.
-
-These jobs keep documentation and reports up-to-date, but are not part of the synchronous PR → deploy path.
+These keep quality signal fresh but are decoupled from the PR → release path.
 
 ---
 
@@ -170,9 +99,5 @@ These jobs keep documentation and reports up-to-date, but are not part of the sy
 
 - **Manual Disk Cleanup (`manual-cleanup.yml`)**
   - Trigger: `workflow_dispatch` with inputs `clean_docker`, `clean_packages`, `clean_system`, `clean_build`.
-  - Cleans:
-    - Docker resources.
-    - npm/yarn/pnpm caches.
-    - System tool directories, apt cache.
-    - Optional build artifacts (`dist`, `node_modules/.cache`, test result JSONs).
-  - Helps recover disk space in CI; not part of the release flow itself.
+  - Cleans Docker resources, npm/yarn/pnpm caches, system tool directories/apt cache, and optionally build artifacts (`dist`, `node_modules/.cache`, test result JSONs).
+  - Helps recover CI disk space; not part of the release flow itself.
