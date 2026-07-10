@@ -28,30 +28,8 @@ export default main;
 
 #### Support report
 
-Tests run daily in the [Bundler Examples](https://github.com/aziontech/bundler-examples/tree/main/examples/runtime-apis/nodejs).
+Tests run daily in the [Bundler Examples](https://github.com/aziontech/bundler-examples/tree/main/examples/runtime-apis/nodejs). Failures are reported to the team on Slack instead of being tracked here.
 
-Table:
-| Test           | Status |
-| -------------- | ------ |
-| Process        | ✅      |
-| Path           | ✅      |
-| Os             | ✅      |
-| String Decoder | ✅      |
-| Timers         | ✅      |
-| Stream         | ✅      |
-| Module         | ✅      |
-| Zlib           | ✅      |
-| Util           | ✅      |
-| Http           | ✅      |
-| Url            | ✅      |
-| Vm             | ✅      |
-| Crypto         | ✅      |
-| Events         | ✅      |
-| Buffer         | ✅      |
-| Fs             | ✅      |
-| Async Hooks    | ✅      |
-
-Last test run date: 07/05/26 04:54:44 AM
 #### Docs support
 
 See support for the Node.js APIs in the [https://www.azion.com/en/documentation/products/azion-edge-runtime/compatibility/node/](https://www.azion.com/en/documentation/products/azion-edge-runtime/compatibility/node/)

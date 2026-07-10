@@ -1,6 +1,5 @@
 import fs from 'fs';
 import { feedback } from '@aziontech/utils/node';
-import { markdownTable } from 'markdown-table';
 
 /**
  *
@@ -65,56 +64,6 @@ function processE2EReports() {
 
     // Write the new object back to the JSON file
     fs.writeFileSync('e2e_results.json', JSON.stringify(newResults, null, 2));
-
-    // Create the Markdown table
-    const table = [
-      ['Test', 'Status'],
-      ...newResults.testResults.map((test) => [test.name, test.passed ? '✅' : '⚠️']),
-    ];
-
-    // Write the Markdown table to the README.md file
-    const readme = fs.readFileSync('README.md', 'utf8');
-    console.log('Reading README.md...');
-
-    // Simplified regular expression
-    const pattern = /(## Supported Features[\s\S]*?)(## Contributing)/;
-    const hasMatch = pattern.test(readme);
-    console.log('Pattern found in README:', hasMatch);
-
-    if (!hasMatch) {
-      console.error('Could not find the correct section in README.');
-      return;
-    }
-
-    const newReadme = readme.replace(
-      pattern,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      (match, supportedFeatures, contributing) => {
-        const dateOptions = {
-          day: '2-digit',
-          month: '2-digit',
-          year: '2-digit',
-        };
-        const timeOptions = {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-        };
-        const newDate = `${new Date().toLocaleDateString(
-          'en-US',
-          dateOptions,
-        )} ${new Date().toLocaleTimeString('en-US', timeOptions)}`;
-
-        return `## Supported Features\n\nE2E tests run daily in the [Bundler Examples](https://github.com/aziontech/bundler-examples/tree/main/examples) to ensure that the presets and frameworks continue to work correctly.\n\nTable:\n${markdownTable(table)}\n\nLast test run date: ${newDate}\n\n## Contributing`;
-      },
-    );
-
-    if (readme === newReadme) {
-      console.error('No changes were made to the content.');
-      return;
-    }
-
-    fs.writeFileSync('README.md', newReadme);
 
     feedback.interactive.success('Report processed successfully.');
   } catch (error) {

@@ -1,0 +1,162 @@
+# =============================================================================
+# notify-slack – Send Slack notifications for workflow status
+# =============================================================================
+name: "Notify Slack"
+description: "Send Slack notification when a scheduled test workflow fails"
+
+inputs:
+  slack-webhook-url:
+    description: "Slack webhook URL"
+    required: true
+  status:
+    description: "Workflow status (success, failure, cancelled)"
+    required: true
+  workflow-name:
+    description: "Name of the workflow"
+    required: true
+  run-id:
+    description: "GitHub Actions run ID"
+    required: true
+  run-url:
+    description: "URL to the workflow run"
+    required: false
+    default: ""
+  branch:
+    description: "Branch name"
+    required: false
+    default: "main"
+  trigger:
+    description: "What triggered the workflow (schedule, manual, etc.)"
+    required: false
+    default: "unknown"
+  test-results-path:
+    description: "Path to the test results JSON file (shape: { passes, testResults: [{ name, passed }] })"
+    required: false
+    default: ""
+  notify-on-success:
+    description: "Send notification on success"
+    required: false
+    default: "false"
+  working-directory:
+    description: "Working directory for reading test results"
+    required: false
+    default: "."
+
+runs:
+  using: "composite"
+  steps:
+    - name: Send Slack notification
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook-url }}
+        STATUS: ${{ inputs.status }}
+        WORKFLOW_NAME: ${{ inputs.workflow-name }}
+        RUN_ID: ${{ inputs.run-id }}
+        RUN_URL: ${{ inputs.run-url }}
+        BRANCH: ${{ inputs.branch }}
+        TRIGGER: ${{ inputs.trigger }}
+        TEST_RESULTS_PATH: ${{ inputs.test-results-path }}
+        NOTIFY_ON_SUCCESS: ${{ inputs.notify-on-success }}
+        GITHUB_REPO: ${{ github.repository }}
+      run: |
+        # Skip notification on success unless explicitly enabled
+        if [[ "$STATUS" == "success" && "$NOTIFY_ON_SUCCESS" != "true" ]]; then
+          echo "Skipping notification for successful run"
+          exit 0
+        fi
+
+        # Determine status emoji and color
+        case "$STATUS" in
+          success)
+            EMOJI="✅"
+            COLOR="#36a64f"
+            STATUS_TEXT="Succeeded"
+            ;;
+          failure)
+            EMOJI="❌"
+            COLOR="#dc3545"
+            STATUS_TEXT="Failed"
+            ;;
+          cancelled)
+            EMOJI="🚫"
+            COLOR="#ffc107"
+            STATUS_TEXT="Cancelled"
+            ;;
+          *)
+            EMOJI="⚠️"
+            COLOR="#ffc107"
+            STATUS_TEXT="Unknown"
+            ;;
+        esac
+
+        # Build run URL if not provided
+        if [[ -z "$RUN_URL" ]]; then
+          RUN_URL="https://github.com/${GITHUB_REPO}/actions/runs/${RUN_ID}"
+        fi
+
+        # Build message text
+        MESSAGE_TEXT="${EMOJI} *${WORKFLOW_NAME} - ${STATUS_TEXT}*\n"
+        MESSAGE_TEXT="${MESSAGE_TEXT}• *Branch:* ${BRANCH}\n"
+        MESSAGE_TEXT="${MESSAGE_TEXT}• *Trigger:* ${TRIGGER}\n"
+        MESSAGE_TEXT="${MESSAGE_TEXT}• *Run ID:* <${RUN_URL}|${RUN_ID}>\n"
+
+        # Extract test results if available
+        if [[ -n "$TEST_RESULTS_PATH" && -f "$TEST_RESULTS_PATH" ]]; then
+          PASSED=$(jq '[.testResults[] | select(.passed == true)] | length' "$TEST_RESULTS_PATH" 2>/dev/null || echo "0")
+          FAILED=$(jq '[.testResults[] | select(.passed == false)] | length' "$TEST_RESULTS_PATH" 2>/dev/null || echo "0")
+          TOTAL=$(jq '.testResults | length' "$TEST_RESULTS_PATH" 2>/dev/null || echo "0")
+          FAILED_SUITES=$(jq -r '.testResults[] | select(.passed == false) | .name' "$TEST_RESULTS_PATH" 2>/dev/null || true)
+
+          MESSAGE_TEXT="${MESSAGE_TEXT}\n*Test Results:*\n"
+          MESSAGE_TEXT="${MESSAGE_TEXT}• Total suites: ${TOTAL}\n"
+          MESSAGE_TEXT="${MESSAGE_TEXT}• ✅ Passed: ${PASSED}\n"
+          MESSAGE_TEXT="${MESSAGE_TEXT}• ❌ Failed: ${FAILED}\n"
+
+          if [[ -n "$FAILED_SUITES" ]]; then
+            MESSAGE_TEXT="${MESSAGE_TEXT}\n*Failed Suites:*\n"
+            while IFS= read -r suite; do
+              if [[ -n "$suite" ]]; then
+                MESSAGE_TEXT="${MESSAGE_TEXT}• ${suite}\n"
+              fi
+            done <<< "$FAILED_SUITES"
+          fi
+        fi
+
+        # Build Slack payload using blocks format
+        PAYLOAD=$(cat <<EOF
+        {
+          "attachments": [
+            {
+              "color": "${COLOR}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${MESSAGE_TEXT}"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+        EOF
+        )
+
+        # Send to Slack
+        echo "Sending Slack notification..."
+        RESPONSE=$(curl -s -w "%{http_code}" -X POST \
+          -H 'Content-Type: application/json' \
+          -d "$PAYLOAD" \
+          "$SLACK_WEBHOOK_URL")
+
+        HTTP_CODE="${RESPONSE: -3}"
+        BODY="${RESPONSE%???}"
+
+        if [[ "$HTTP_CODE" -eq 200 ]]; then
+          echo "✅ Slack notification sent successfully"
+        else
+          echo "⚠️ Failed to send Slack notification (HTTP $HTTP_CODE)"
+          echo "Response: $BODY"
+        fi

@@ -8,8 +8,7 @@ on:
 jobs:
   test-nodejs-apis:
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
@@ -22,6 +21,9 @@ jobs:
       - name: Install Dependencies
         uses: ./.github/actions/install-dependencies
 
+      - name: Install Puppeteer Chrome (host runner)
+        run: pnpm -F @aziontech/bundler exec puppeteer browsers install chrome
+
       - name: Install Docker Compose
         run: |
           curl -L "https://github.com/docker/compose/releases/download/v2.29.7/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -31,12 +33,15 @@ jobs:
       - name: Run E2E tests
         run: pnpm -F @aziontech/bundler test:nodejs-apis
 
-      - name: Process README.md and Commit
-        run: |
-          git config --global user.email "bundler@azion.com"
-          git config --global user.name "Azion Bundler Reports"
-          git add ./docs/nodejs-apis.md
-          git commit -m "chore: update reports node.js apis" --no-verify || echo "No changes to commit."
-          git push --force
-        env:
-          GH_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+      - name: Notify Slack
+        if: always()
+        uses: ./.github/actions/notify-slack
+        with:
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          status: ${{ job.status }}
+          workflow-name: "Node.js APIs Tests"
+          run-id: ${{ github.run_id }}
+          branch: ${{ github.ref_name }}
+          trigger: schedule
+          test-results-path: packages/bundler/nodejs_apis_results.json
+          notify-on-success: "false"
