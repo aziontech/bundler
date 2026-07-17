@@ -20,6 +20,9 @@ on:
         type: boolean
         default: false
 
+permissions:
+  contents: read
+
 jobs:
   cleanup:
     permissions:
@@ -65,7 +68,7 @@ jobs:
 
       - name: Checkout code for build artifact cleanup
         if: ${{ inputs.clean_build }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 1
 
