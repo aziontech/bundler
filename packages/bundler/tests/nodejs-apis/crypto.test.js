@@ -2,7 +2,7 @@ import supertest from 'supertest';
 import { expect } from '@jest/globals';
 import projectInitializer from '../utils/project-initializer.js';
 import projectStop from '../utils/project-stop.js';
-import { getContainerPort } from '../utils/docker-env-actions.js';
+import { execCommandInContainer, getContainerPort } from '../utils/docker-env-actions.js';
 
 // timeout in minutes
 const TIMEOUT = 1 * 60 * 3000;
@@ -19,6 +19,8 @@ describe('Node.js APIs - crypto', () => {
     localhostBaseUrl = `http://0.0.0.0:${serverPort}`;
 
     request = supertest(localhostBaseUrl);
+
+    await execCommandInContainer(`sh -c 'echo "HMAC_SECRET=test-secret-key" > .env'`, EXAMPLE_PATH);
 
     await projectInitializer(
       EXAMPLE_PATH,
