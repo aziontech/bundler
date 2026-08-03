@@ -15,6 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      # read-only scopes Scorecard needs to evaluate individual checks;
+      # without them the checks below silently score 0 / inconclusive
+      actions: read # Dangerous-Workflow, Token-Permissions
+      checks: read # CI-Tests
+      issues: read # Maintained
+      pull-requests: read # Code-Review, Maintained
     env:
       THRESHOLD: '8'
       MODE: 'enforce'
