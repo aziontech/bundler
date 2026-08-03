@@ -8,8 +8,7 @@ import inferPreset from './infer/infer-preset';
  */
 const loadPresetByMetadata = (name: string): AzionBuildPreset | undefined => {
   return Object.values(presets).find((preset) => preset.metadata?.name === name) as
-    | AzionBuildPreset
-    | undefined;
+    AzionBuildPreset | undefined;
 };
 
 /**
