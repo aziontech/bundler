@@ -191,6 +191,7 @@ export const cleanDirectory = async (dirs: string[]): Promise<void> => {
       }),
     );
   } catch (error) {
+    // eslint-disable-next-line preserve-caught-error -- message already embeds the original error
     throw new Error(`Failed to clean directories: ${error}`);
   }
 };

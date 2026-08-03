@@ -100,6 +100,7 @@ export const setupWorkerCode = async (
 
     return Object.fromEntries(entries);
   } catch (error: unknown) {
+    // eslint-disable-next-line preserve-caught-error -- message already embeds the original error
     throw new Error(
       `Failed to setup worker code: ${error instanceof Error ? error.message : String(error)}`,
     );

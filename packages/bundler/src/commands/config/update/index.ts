@@ -36,6 +36,7 @@ export async function updateInConfigFile(
       `Successfully updated "${key}" to "${value}" in ${path.basename(configPath)}`,
     );
   } catch (error) {
+    // eslint-disable-next-line preserve-caught-error -- message already embeds the original error
     throw new Error(
       `Failed to update config file: ${error instanceof Error ? error.message : String(error)}`,
     );

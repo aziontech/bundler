@@ -86,10 +86,12 @@ async function readWorkerFile(filePath: string): Promise<string> {
   } catch (error) {
     if ((error as Error).message.includes('ENOENT')) {
       const defaultWorkerName = basename(filePath);
+      // eslint-disable-next-line preserve-caught-error -- message is a more actionable diagnostic than the original ENOENT
       throw new Error(
         `Server entry file "${defaultWorkerName}" not found. Please specify your entry point using "azion dev <path>" or create the default handler file.${DOCS_MESSAGE}`,
       );
     }
+    // eslint-disable-next-line preserve-caught-error -- message already embeds the original error
     throw new Error(`Error reading file ${filePath}: ${(error as Error).message}${DOCS_MESSAGE}`);
   }
 }
