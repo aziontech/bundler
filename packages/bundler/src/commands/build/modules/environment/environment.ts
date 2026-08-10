@@ -75,6 +75,7 @@ export const setEnvironment = async ({
 
     return mergedConfig;
   } catch (error) {
+    // eslint-disable-next-line preserve-caught-error -- message already embeds the original error
     throw new Error(`Failed to set environment: ${(error as Error).message}`);
   }
 };

@@ -5,12 +5,7 @@ export type ConfigCommandOptions = {
   options: {
     key?: string;
     value?:
-      | string
-      | number
-      | boolean
-      | object
-      | null
-      | (string | number | boolean | object | null)[];
+      string | number | boolean | object | null | (string | number | boolean | object | null)[];
     all?: boolean;
     replacements?: string | Record<string, string>;
   };

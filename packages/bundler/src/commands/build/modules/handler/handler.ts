@@ -34,6 +34,7 @@ export const resolveHandlers = async ({
           await fsPromises.access(entry);
         } catch (error) {
           debug.error(error);
+          // eslint-disable-next-line preserve-caught-error -- original error is logged above; message is a more actionable diagnostic
           throw new Error(
             `Entry point "${relative(process.cwd(), entry)}" was not found.\n` +
               `  - Fix the "build.entry" property in your azion.config, or\n` +
@@ -67,6 +68,7 @@ export const resolveHandlers = async ({
       await fsPromises.access(handlerPath);
     } catch (error) {
       debug.error(error);
+      // eslint-disable-next-line preserve-caught-error -- original error is logged above; message is a more actionable diagnostic
       throw new Error(
         `Missing handler "${handlerPath}" (default for "${preset.metadata.name}" preset). Either create this file or specify a custom entry point using --entry.`,
       );
@@ -88,6 +90,7 @@ export const resolveHandlers = async ({
           await fsPromises.access(entry);
         } catch (error) {
           debug.error(error);
+          // eslint-disable-next-line preserve-caught-error -- original error is logged above; message is a more actionable diagnostic
           throw new Error(
             `Missing default entry point "${entry}" for "${preset.metadata.name}" preset. Either create this file or specify a custom entry point using --entry.`,
           );

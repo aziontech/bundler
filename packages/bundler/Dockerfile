@@ -1,4 +1,4 @@
-FROM node:22.21.1-alpine3.23 AS node
+FROM node:22.21.1-alpine3.23@sha256:0340fa682d72068edf603c305bfbc10e23219fb0e40df58d9ea4d6f33a9798bf AS node
 
 WORKDIR /
 

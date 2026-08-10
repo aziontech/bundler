@@ -264,6 +264,7 @@ export async function configCommand({ command, options }: ConfigCommandOptions) 
               } catch (parseError) {
                 const errorMessage =
                   parseError instanceof Error ? parseError.message : String(parseError);
+                // eslint-disable-next-line preserve-caught-error -- message already embeds the original error
                 throw new Error(
                   `Invalid JSON format for --replacements option: ${errorMessage}. Received: ${options.replacements}`,
                 );

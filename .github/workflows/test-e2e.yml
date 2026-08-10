@@ -11,8 +11,7 @@ permissions:
 jobs:
   tests-e2e:
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
     runs-on: ubuntu-latest
     timeout-minutes: 80
     if: ${{ !startsWith(github.head_ref, 'dependabot/') }}

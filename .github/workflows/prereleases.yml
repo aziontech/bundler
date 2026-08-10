@@ -11,7 +11,7 @@ permissions:
 jobs:
   release:
     permissions:
-      contents: write
+      contents: read
       pull-requests: write
     name: Publish builder package
     runs-on: ubuntu-latest
