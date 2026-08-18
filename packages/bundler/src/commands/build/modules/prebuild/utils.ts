@@ -1,7 +1,7 @@
-import fs from 'fs';
 import fsPromises from 'fs/promises';
 import { join } from 'path';
-import { parseEnvFileEntries, resolveEnvAliasPrefix } from '../../../../env/alias';
+import { resolveEnvAliasPrefix } from '../../../../env/alias';
+import { resolveMergedEnvEntries } from '../../../../env/dotenv';
 
 interface WorkerGlobalsConfig {
   namespace: string;
@@ -105,21 +105,18 @@ export const injectWorkerGlobals = ({ namespace, property, vars }: WorkerGlobals
  * (`process.env.KEY` or `process.env['KEY']` with a literal key). Code that reads env vars via a
  * computed key (`process.env[someVariable]`) won't be caught by this.
  */
-export const buildEnvAliasDefineVars = (
+export const buildEnvAliasDefineVars = async (
   cwd: string,
   applicationName?: string,
-): Record<string, string> => {
+): Promise<Record<string, string>> => {
   const prefix = resolveEnvAliasPrefix(applicationName);
   if (!prefix) return {};
 
-  const envFilePath = join(cwd, '.env');
-  if (!fs.existsSync(envFilePath)) return {};
-
-  const envFileContent = fs.readFileSync(envFilePath, 'utf8');
-  const keys = parseEnvFileEntries(envFileContent).map((entry) => entry.key);
+  const entries = await resolveMergedEnvEntries(cwd, true);
+  if (entries.length === 0) return {};
 
   return Object.fromEntries(
-    keys.map((key) => [`process.env.${key}`, `process.env.${prefix}${key}`]),
+    entries.map(({ key }) => [`process.env.${key}`, `process.env.${prefix}${key}`]),
   );
 };
 

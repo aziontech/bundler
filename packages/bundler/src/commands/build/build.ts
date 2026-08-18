@@ -353,11 +353,11 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       'env-vars-copy',
       'Copy Env Vars',
       async () => {
-        await copyEnvVars();
+        await copyEnvVars(context.production);
         /**
          * Temporary workaround for Azion's global environment variables
          */
-        await writePrefixedEnvVars(mergedConfig.applications?.[0]?.name);
+        await writePrefixedEnvVars(mergedConfig.applications?.[0]?.name, context.production);
       },
     );
 

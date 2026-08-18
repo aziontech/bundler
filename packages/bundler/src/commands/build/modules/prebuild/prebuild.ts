@@ -71,7 +71,7 @@ export const executePrebuild = async ({
    * on the platform, breaking local dev.
    */
   const envAliasDefineVars = ctx.production
-    ? utils.buildEnvAliasDefineVars(process.cwd(), applicationName)
+    ? await utils.buildEnvAliasDefineVars(process.cwd(), applicationName)
     : {};
 
   return {

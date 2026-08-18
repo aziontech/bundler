@@ -1,10 +1,9 @@
 import { unlinkSync } from 'fs';
-import { join } from 'path';
-import { readFile, writeFile, access } from 'fs/promises';
-import { constants } from 'fs';
+import { writeFile } from 'fs/promises';
 import { DIRECTORIES } from './constants';
 import { readStore, writeStore } from './env';
-import { parseEnvFileEntries, resolveEnvAliasPrefix } from './env/alias';
+import { resolveEnvAliasPrefix } from './env/alias';
+import { resolveMergedEnvEntries } from './env/dotenv';
 
 /**
  * @function markForCleanup
@@ -165,29 +164,26 @@ Object.keys(console).forEach((method: string) => {
 
 /**
  * @function
- * @description Copies the .env file from the project root to the .edge directory.
- * Following Node.js native .env support pattern.
+ * @description Copies the project's .env* files to the .edge directory as a single merged file.
+ * Follows the same .env precedence order as Next.js (see env/dotenv.ts): `.env.<mode>.local`,
+ * `.env.local`, `.env.<mode>`, `.env`, where files earlier in that list win on key conflicts.
  * @example
  *
  * // Example usage:
- * await copyEnvToEdge();
- * // Copies .env to .edge/.env if it exists
+ * await copyEnvVars(true);
+ * // Merges .env, .env.production, .env.local, .env.production.local into .edge/.env
  */
-async function copyEnvVars(): Promise<void> {
+async function copyEnvVars(production = true): Promise<void> {
   const cwd = process.cwd();
-  const envPath = join(cwd, '.env');
   const edgeEnvPath = DIRECTORIES.OUTPUT_ENV_VARS_PATH;
 
   try {
-    const exists = await access(envPath, constants.F_OK)
-      .then(() => true)
-      .catch(() => false);
+    const entries = await resolveMergedEnvEntries(cwd, production);
+    if (entries.length === 0) return;
 
-    if (exists) {
-      const envContent = await readFile(envPath, 'utf-8');
-      await writeFile(edgeEnvPath, envContent, 'utf-8');
-      debug.info(`Environment file copied to ${edgeEnvPath}`);
-    }
+    const envContent = entries.map(({ key, value }) => `${key}=${value}`).join('\n');
+    await writeFile(edgeEnvPath, `${envContent}\n`, 'utf-8');
+    debug.info(`Environment file copied to ${edgeEnvPath}`);
   } catch {
     debug.warn('No .env file found or error copying environment file');
   }
@@ -196,29 +192,20 @@ async function copyEnvVars(): Promise<void> {
 /**
  * @function
  * @description Temporary workaround for Azion's global environment variables (see ENV_ALIAS in
- * constants.ts). Writes the project's .env entries to .edge/.env.azion under a prefixed name
- * (AZ_BUNDLER_ENV_ALIAS_PREFIX, or derived from the application name), so the CLI can create/sync
- * those as uniquely-named global env vars instead of the plain, collision-prone names.
+ * constants.ts). Writes the project's merged .env* entries to .edge/.env.azion under a prefixed
+ * name (AZ_BUNDLER_ENV_ALIAS_PREFIX, or derived from the application name), so the CLI can
+ * create/sync those as uniquely-named global env vars instead of the plain, collision-prone names.
  * Remove once Azion supports project-scoped environment variables.
  */
-async function writePrefixedEnvVars(applicationName?: string): Promise<void> {
+async function writePrefixedEnvVars(applicationName?: string, production = true): Promise<void> {
   const prefix = resolveEnvAliasPrefix(applicationName);
   if (!prefix) return;
 
   const cwd = process.cwd();
-  const envPath = join(cwd, '.env');
   const prefixedEnvPath = DIRECTORIES.OUTPUT_ENV_VARS_LOCAL_PATH;
 
   try {
-    const exists = await access(envPath, constants.F_OK)
-      .then(() => true)
-      .catch(() => false);
-
-    if (!exists) return;
-
-    const envContent = await readFile(envPath, 'utf-8');
-    const entries = parseEnvFileEntries(envContent);
-
+    const entries = await resolveMergedEnvEntries(cwd, production);
     if (entries.length === 0) return;
 
     const prefixedContent = entries.map(({ key, value }) => `${prefix}${key}=${value}`).join('\n');

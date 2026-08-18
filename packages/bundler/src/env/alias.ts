@@ -4,11 +4,6 @@
  */
 import { ENV_ALIAS } from '../constants';
 
-export interface EnvFileEntry {
-  key: string;
-  value: string;
-}
-
 /**
  * Turns an application name into a safe env var prefix, e.g. "My Cool App" -> "MY_COOL_APP_".
  * Returns '' if the name has no alphanumeric characters to build a prefix from.
@@ -30,14 +25,3 @@ export const resolveEnvAliasPrefix = (applicationName?: string): string => {
   if (process.env[ENV_ALIAS.ENABLE_VAR] !== 'true') return '';
   return process.env[ENV_ALIAS.ENV_PREFIX_VAR] || sanitizeEnvPrefix(applicationName || '');
 };
-
-/**
- * Parses KEY=VALUE lines from a .env file's content, skipping comments and blank lines.
- * Values are returned raw (no quote stripping or expansion).
- */
-export const parseEnvFileEntries = (content: string): EnvFileEntry[] =>
-  content
-    .split('\n')
-    .map((line) => line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/))
-    .filter((match): match is RegExpMatchArray => Boolean(match))
-    .map((match) => ({ key: match[1], value: match[2] }));
