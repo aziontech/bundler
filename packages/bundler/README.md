@@ -23,6 +23,7 @@ Azion Bundler is a powerful tool designed to build and adapt projects for edge c
     - [`presets`](#presets)
     - [`store`](#store)
     - [`manifest`](#manifest)
+    - [`telemetry`](#telemetry)
   - [Configuration](#configuration)
   - [Build Process Flow](#build-process-flow)
   - [Documentation](#documentation)
@@ -120,12 +121,16 @@ Builds your project for edge deployment.
 azbundler build [options]
 
 Options:
-  -e, --entry <string>     Code entrypoint (default: ./handler.js or ./handler.ts)
-  -p, --preset <type>      Preset of build target (e.g., vue, next, javascript)
-  --polyfills              Use node polyfills in build (default: true)
-  -w, --worker             Enable worker mode with addEventListener signature (default: false)
-  -d, --dev                Build in development mode (default: false)
-  -x, --experimental       Enable experimental features (default: false)
+  -e, --entry <entries...>  Code entrypoint (default: ./main.js or ./main.ts)
+  -p, --preset <type>       Preset of build target (e.g., vue, next, javascript)
+  --polyfills [boolean]     Use node polyfills in build (default: true)
+  -w, --worker [boolean]    Indicates that the constructed code inserts its own worker expression (default: false)
+  -d, --dev                 Build in development mode (default: false)
+  -x, --experimental        Enable experimental features (default: false)
+  --skip-framework-build    Skip framework build step (default: false)
+  --only-generate-config    Build only generate azion.config (default: false)
+  --telemetry [format]      Enable telemetry output (console, json, html or both; defaults to both)
+  --alias-env               Rewrite env var names to a per-project prefix to avoid cross-project naming collisions (default: false)
 ```
 
 ### `dev`
@@ -141,6 +146,8 @@ Arguments:
 Options:
   -p, --port <port>        Specify the port (default: "3333")
   -x, --experimental       Enable experimental features (default: false)
+  --skip-framework-build   Skip framework build step (default: false)
+  --function-name <name>   Specify the function name
 ```
 
 ### `config`
@@ -151,22 +158,26 @@ Manages Azion configuration settings with CRUD operations.
 azbundler config <command> [options]
 
 Commands:
-  create              Create a new configuration property
-  read                Read configuration properties
-  update              Update existing configuration properties
-  delete              Delete configuration properties
+  create                        Create a new configuration property
+  read                          Read configuration properties
+  update                        Update existing configuration properties
+  delete                        Delete configuration properties
+  replace                       Replace a placeholder value across the configuration
 
 Options:
-  -k, --key <key>     Property key (e.g., build.preset or applications[0].name)
-  -v, --value <value> Value to be set (for create/update commands)
-  -a, --all           Read or delete entire configuration (for read/delete commands)
+  -k, --key <key...>            Property key (e.g., build.preset or applications[0].name)
+  -v, --value <value...>        Value to be set (for create/update/replace commands)
+  -a, --all                     Read or delete entire configuration (for read/delete commands)
+  -r, --replacements <replacements>  JSON string of key-value pairs for replacement
 
 Examples:
   $ azbundler config create -k "build.preset" -v "typescript"
-  $ azbundler config read -k "applications[0].name"
-  $ azbundler config update -k "build.bundler" -v "esbuild"
-  $ azbundler config delete -k "build.polyfills"
-  $ azbundler config read --all
+  $ azbundler config read -a
+  $ azbundler config read -k "build.preset"
+  $ azbundler config update -k "build.preset" -v "vue"
+  $ azbundler config delete -a
+  $ azbundler config delete -k "build.preset"
+  $ azbundler config replace -k '$EDGE_FUNCTION_NAME' -v "my-func"
 ```
 
 ### `presets`
@@ -224,6 +235,21 @@ Examples:
   $ azbundler manifest transform -e manifest.json -o azion.config.js
   $ azbundler manifest generate -e azion.config.js -o .edge
   $ azbundler manifest -e azion.config.js -o .edge
+```
+
+### `telemetry`
+
+Opens the telemetry HTML report in the default browser.
+
+```shell
+azbundler telemetry [options]
+
+Options:
+  -p, --path <path>  Custom path to the telemetry HTML file
+
+Examples:
+  $ azbundler telemetry
+  $ azbundler telemetry --path ./custom-report.html
 ```
 
 ## Configuration
@@ -344,9 +370,10 @@ export default defineConfig({
 
 ## Documentation
 
-- [Handler Patterns](docs/handler-patterns.md)
-- [Node.js APIs](docs/nodejs-apis.md)
-- [Nextjs](docs/nextjs.md)
+- [Handler Patterns](https://github.com/aziontech/bundler/blob/main/packages/bundler/docs/handler-patterns.md)
+- [Node.js APIs](https://github.com/aziontech/bundler/blob/main/packages/bundler/docs/nodejs-apis.md)
+- [Nextjs](https://github.com/aziontech/bundler/blob/main/packages/bundler/docs/nextjs.md)
+- [Environment Variable Prefixing](https://github.com/aziontech/bundler/blob/main/packages/bundler/docs/env-var-prefixing.md)
 - [Rust/Wasm example](https://github.com/aziontech/bundler-examples/tree/main/examples/rust-wasm-yew-ssr/)
 - [Emscripten/Wasm example](https://github.com/aziontech/bundler-examples/tree/main/examples/emscripten-wasm/)
 - [Env vars example](https://github.com/aziontech/bundler-examples/tree/main/examples/javascript/simple-js-env-vars)

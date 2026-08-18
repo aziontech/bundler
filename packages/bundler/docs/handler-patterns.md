@@ -16,11 +16,12 @@ export default {
   firewall: (request, env, ctx) => {
     // Firewall logic
     ctx.deny();
-  }
+  },
 };
 ```
 
 **Advantages:**
+
 - Modern and clean syntax
 - Native support in production
 - Better performance
@@ -79,15 +80,15 @@ async function handleRequest(request) {
 export default {
   fetch: async (request, env, ctx) => {
     const url = new URL(request.url);
-    
+
     if (url.pathname === '/api/hello') {
       return new Response(JSON.stringify({ message: 'Hello World' }), {
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
     }
-    
+
     return new Response('Not Found', { status: 404 });
-  }
+  },
 };
 ```
 
@@ -98,19 +99,19 @@ export default {
   fetch: async (request, env, ctx) => {
     return new Response('Access granted');
   },
-  
+
   firewall: async (request, env, ctx) => {
     const clientIP = request.headers.get('CF-Connecting-IP');
-    
+
     // Block specific IPs
     if (clientIP === '192.168.1.100') {
       ctx.deny();
       return;
     }
-    
+
     // Continue to fetch handler
     return;
-  }
+  },
 };
 ```
 
@@ -121,9 +122,9 @@ export default {
   fetch: async (request, env, ctx) => {
     // Use waitUntil for async tasks
     ctx.waitUntil(logRequest(request));
-    
+
     return new Response('Hello World');
-  }
+  },
 };
 
 async function logRequest(request) {
@@ -139,18 +140,18 @@ export default {
   fetch: async (request, env, ctx) => {
     return new Response('Access granted');
   },
-  
+
   firewall: async (request, env, ctx) => {
     const url = new URL(request.url);
     const userAgent = request.headers.get('User-Agent');
     const clientIP = request.headers.get('CF-Connecting-IP');
-    
+
     // Block bot requests
     if (userAgent && userAgent.includes('bot')) {
       ctx.deny();
       return;
     }
-    
+
     // Block specific paths
     if (url.pathname.startsWith('/admin')) {
       // Allow only from specific IP range
@@ -159,10 +160,10 @@ export default {
         return;
       }
     }
-    
+
     // Allow request to continue to fetch handler
     return;
-  }
+  },
 };
 ```
 
@@ -176,19 +177,19 @@ addEventListener('fetch', (event) => {
 addEventListener('firewall', (event) => {
   const clientIP = event.request.headers.get('CF-Connecting-IP');
   const userAgent = event.request.headers.get('User-Agent');
-  
+
   // Block bot requests
   if (userAgent && userAgent.includes('bot')) {
     event.deny();
     return;
   }
-  
+
   // Block specific IPs
   if (clientIP === '192.168.1.100') {
     event.deny();
     return;
   }
-  
+
   // Allow request to continue to fetch handler
 });
 
@@ -217,7 +218,7 @@ async function handleRequest(request) {
 export default {
   fetch: async (request, env, ctx) => {
     return new Response('Hello World');
-  }
+  },
 };
 ```
 
@@ -227,7 +228,7 @@ Some common patterns from other platforms are not directly supported:
 
 ```javascript
 // ❌ Direct function export
-export default function(request) {
+export default function (request) {
   return new Response('Hello');
 }
 
@@ -251,6 +252,7 @@ For these cases, use the recommended **ES Modules Pattern**.
 This message appears when your code doesn't follow any of the supported patterns. To resolve:
 
 1. **Migrate to ES Modules** (recommended):
+
    ```javascript
    export default { fetch };
    ```
@@ -274,4 +276,4 @@ If you're having problems with "export" syntax, check:
 
 - [Azion Edge Functions Documentation](https://www.azion.com/en/documentation/products/edge-functions/)
 - [Web API Request](https://developer.mozilla.org/en-US/docs/Web/API/Request)
-- [Web API Response](https://developer.mozilla.org/en-US/docs/Web/API/Response) 
+- [Web API Response](https://developer.mozilla.org/en-US/docs/Web/API/Response)
