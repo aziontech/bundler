@@ -4,6 +4,7 @@ import { readFile, writeFile, access } from 'fs/promises';
 import { constants } from 'fs';
 import { DIRECTORIES } from './constants';
 import { readStore, writeStore } from './env';
+import { parseEnvFileEntries, resolveEnvAliasPrefix } from './env/alias';
 
 /**
  * @function markForCleanup
@@ -192,4 +193,47 @@ async function copyEnvVars(): Promise<void> {
   }
 }
 
-export { executeCleanup, generateTimestamp, debug, copyEnvVars, markForCleanup };
+/**
+ * @function
+ * @description Temporary workaround for Azion's global environment variables (see ENV_ALIAS in
+ * constants.ts). Writes the project's .env entries to .edge/.env.azion under a prefixed name
+ * (AZ_BUNDLER_ENV_ALIAS_PREFIX, or derived from the application name), so the CLI can create/sync
+ * those as uniquely-named global env vars instead of the plain, collision-prone names.
+ * Remove once Azion supports project-scoped environment variables.
+ */
+async function writePrefixedEnvVars(applicationName?: string): Promise<void> {
+  const prefix = resolveEnvAliasPrefix(applicationName);
+  if (!prefix) return;
+
+  const cwd = process.cwd();
+  const envPath = join(cwd, '.env');
+  const prefixedEnvPath = DIRECTORIES.OUTPUT_ENV_VARS_LOCAL_PATH;
+
+  try {
+    const exists = await access(envPath, constants.F_OK)
+      .then(() => true)
+      .catch(() => false);
+
+    if (!exists) return;
+
+    const envContent = await readFile(envPath, 'utf-8');
+    const entries = parseEnvFileEntries(envContent);
+
+    if (entries.length === 0) return;
+
+    const prefixedContent = entries.map(({ key, value }) => `${prefix}${key}=${value}`).join('\n');
+    await writeFile(prefixedEnvPath, `${prefixedContent}\n`, 'utf-8');
+    debug.info(`Prefixed environment file written to ${prefixedEnvPath}`);
+  } catch {
+    debug.warn('No .env file found or error writing prefixed environment file');
+  }
+}
+
+export {
+  executeCleanup,
+  generateTimestamp,
+  debug,
+  copyEnvVars,
+  writePrefixedEnvVars,
+  markForCleanup,
+};

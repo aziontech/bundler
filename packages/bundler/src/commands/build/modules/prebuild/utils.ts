@@ -1,5 +1,7 @@
+import fs from 'fs';
 import fsPromises from 'fs/promises';
 import { join } from 'path';
+import { parseEnvFileEntries, resolveEnvAliasPrefix } from '../../../../env/alias';
 
 interface WorkerGlobalsConfig {
   namespace: string;
@@ -84,6 +86,43 @@ export const injectWorkerGlobals = ({ namespace, property, vars }: WorkerGlobals
     property ? `globalThis.${namespace}.${property}={};` : `globalThis.${namespace}={};`,
   );
 
+/**
+ * Temporary workaround for Azion's global environment variables (see ENV_ALIAS in constants.ts).
+ * Reads the key names declared in the project's .env file and, if a prefix is available, returns
+ * esbuild `define` entries that rewrite `process.env.${KEY}` to `process.env.${prefix}${KEY}`
+ * directly in the compiled code — a build-time text substitution, not a runtime assignment.
+ *
+ * On Azion's production runtime, `process`/`process.env` are fully read-only (both mutating
+ * individual keys and swapping the whole `env`/`process` reference throw "Cannot set on
+ * process.env"), so there is no way to remap env names from injected runtime code. Rewriting the
+ * property name at build time sidesteps that entirely, since it only changes what the compiled
+ * code reads — it never writes to `process.env`.
+ *
+ * The prefix comes from AZ_BUNDLER_ENV_ALIAS_PREFIX when set (explicit override), otherwise it's
+ * derived from the first application's name in azion.config.
+ *
+ * Limitation: esbuild's `define` only rewrites statically-analyzable references
+ * (`process.env.KEY` or `process.env['KEY']` with a literal key). Code that reads env vars via a
+ * computed key (`process.env[someVariable]`) won't be caught by this.
+ */
+export const buildEnvAliasDefineVars = (
+  cwd: string,
+  applicationName?: string,
+): Record<string, string> => {
+  const prefix = resolveEnvAliasPrefix(applicationName);
+  if (!prefix) return {};
+
+  const envFilePath = join(cwd, '.env');
+  if (!fs.existsSync(envFilePath)) return {};
+
+  const envFileContent = fs.readFileSync(envFilePath, 'utf8');
+  const keys = parseEnvFileEntries(envFileContent).map((entry) => entry.key);
+
+  return Object.fromEntries(
+    keys.map((key) => [`process.env.${key}`, `process.env.${prefix}${key}`]),
+  );
+};
+
 export const injectWorkerPathPrefix = async ({
   namespace,
   property,
@@ -102,4 +141,5 @@ export default {
   copyFilesToLocalEdgeStorage,
   injectWorkerGlobals,
   injectWorkerPathPrefix,
+  buildEnvAliasDefineVars,
 };

@@ -5,6 +5,7 @@ import { DIRECTORIES, BUNDLER } from '../../../../constants';
 export interface PrebuildParams {
   buildConfig: BuildConfiguration;
   ctx: BuildContext;
+  applicationName?: string;
 }
 
 const DEFAULT_PREBUILD_RESULT: AzionPrebuildResult = {
@@ -23,6 +24,7 @@ const DEFAULT_PREBUILD_RESULT: AzionPrebuildResult = {
 export const executePrebuild = async ({
   buildConfig,
   ctx,
+  applicationName,
 }: PrebuildParams): Promise<AzionPrebuildResult> => {
   const result = (await buildConfig.preset.prebuild?.(buildConfig, ctx)) || DEFAULT_PREBUILD_RESULT;
 
@@ -62,6 +64,16 @@ export const executePrebuild = async ({
 
   const globalThisWithInjections = `${globalThisWithVars}${pathPrefix}\n${memoryFiles}`;
 
+  /**
+   * Temporary workaround for Azion's global environment variables.
+   * Only applies to production builds: in `bundler dev` the local .env already has the plain
+   * (unprefixed) names, so rewriting them would make the app look for a var that only exists
+   * on the platform, breaking local dev.
+   */
+  const envAliasDefineVars = ctx.production
+    ? utils.buildEnvAliasDefineVars(process.cwd(), applicationName)
+    : {};
+
   return {
     filesToInject: result.filesToInject || [],
     injection: {
@@ -70,7 +82,7 @@ export const executePrebuild = async ({
       banner: globalThisWithInjections,
     },
     bundler: {
-      defineVars: result.bundler?.defineVars || {},
+      defineVars: { ...result.bundler?.defineVars, ...envAliasDefineVars },
       plugins: result.bundler?.plugins || [],
     },
   };

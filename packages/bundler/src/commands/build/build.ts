@@ -1,5 +1,11 @@
 import { BUILD_CONFIG_DEFAULTS, BUNDLER, DOCS_MESSAGE, TELEMETRY } from '../../constants';
-import { copyEnvVars, debug, executeCleanup, markForCleanup } from '../../utils';
+import {
+  copyEnvVars,
+  debug,
+  executeCleanup,
+  markForCleanup,
+  writePrefixedEnvVars,
+} from '../../utils';
 import {
   formatBuildConfig,
   formatHeader,
@@ -221,6 +227,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
         return executePrebuild({
           buildConfig: buildConfigSetup,
           ctx: context,
+          applicationName: mergedConfig.applications?.[0]?.name,
         });
       },
     );
@@ -347,6 +354,10 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       'Copy Env Vars',
       async () => {
         await copyEnvVars();
+        /**
+         * Temporary workaround for Azion's global environment variables
+         */
+        await writePrefixedEnvVars(mergedConfig.applications?.[0]?.name);
       },
     );
 
