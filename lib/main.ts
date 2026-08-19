@@ -3,7 +3,7 @@ import { Command } from 'commander';
 import { satisfies } from 'semver';
 import { executeCleanup, debug } from '#utils';
 import { feedback } from 'azion/utils/node';
-import { BUNDLER } from '#constants';
+import { BUNDLER, ENV_ALIAS } from '#constants';
 import { createHash } from 'crypto';
 import { mkdir } from 'fs/promises';
 import type { BundlerGlobals } from '#types';
@@ -129,11 +129,21 @@ function startBundler() {
     .option('-d, --dev', 'Build in development mode', false)
     .option('-x, --experimental [boolean]', 'Enable experimental features', false)
     .option('--skip-framework-build', 'Skip framework build step', false)
+    .option(
+      '--alias-env',
+      'Temporary: rewrite env var names to a per-project prefix to avoid cross-project naming collisions',
+      false,
+    )
     .action(async (options) => {
       const { buildCommand, manifestCommand } = await import('#commands');
-      const { dev, experimental, ...buildOptions } = options;
+      const { dev, experimental, aliasEnv, ...buildOptions } = options;
 
       if (experimental) globalThis.bundler.experimental = true;
+
+      // Handle alias-env flag (temporary env var name aliasing, see ENV_ALIAS in constants.ts)
+      if (aliasEnv) {
+        process.env[ENV_ALIAS.ENABLE_VAR] = 'true';
+      }
 
       const { config } = await buildCommand({
         ...buildOptions,

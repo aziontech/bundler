@@ -10,6 +10,10 @@ export const DIRECTORIES = {
   OUTPUT_STORAGE_PATH: join('.edge', 'storage'),
   OUTPUT_MANIFEST_PATH: join('.edge', 'manifest.json'),
   OUTPUT_ENV_VARS_PATH: join('.edge', '.env'),
+  /**
+   * Temporary workaround for Azion's global environment variables
+   */
+  OUTPUT_ENV_VARS_LOCAL_PATH: join('.edge', '.env.azion'),
 } as const;
 
 /** Default build configuration values */
@@ -61,6 +65,23 @@ export const BUNDLER = {
   get VERSION() {
     return BUNDLER.PACKAGE_JSON.version;
   },
+} as const;
+
+/**
+ * Temporary workaround for Azion's global (non-project-scoped) environment variables.
+ * Opt-in via `azbundler build --alias-env` (which sets AZ_BUNDLER_ENV_ALIAS_ENABLED). Off by
+ * default so existing deploys built with plain env var names keep working unchanged.
+ *
+ * When enabled, on production builds the bundler reads the keys declared in the project's .env
+ * file and rewrites `process.env.${KEY}` to `process.env.${PREFIX}${KEY}` in the compiled bundle
+ * (via esbuild `define`). This lets a project store its values under a unique global name
+ * (avoiding cross-project name collisions) while libraries keep reading the plain expected name.
+ *
+ * Remove once Azion supports project-scoped environment variables.
+ */
+export const ENV_ALIAS = {
+  ENV_PREFIX_VAR: 'AZ_BUNDLER_ENV_ALIAS_PREFIX',
+  ENABLE_VAR: 'AZ_BUNDLER_ENV_ALIAS_ENABLED',
 } as const;
 
 export const DOCS_MESSAGE = `

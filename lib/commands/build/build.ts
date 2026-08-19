@@ -1,11 +1,12 @@
 import { dirname } from 'path';
 import { mkdir, writeFile } from 'fs/promises';
 import { validateConfig, type AzionPrebuildResult, type BuildContext } from 'azion/config';
-import { debug, copyEnvVars, executeCleanup, markForCleanup } from '#utils';
+import { debug, copyEnvVars, executeCleanup, markForCleanup, writePrefixedEnvVars } from '#utils';
 import { BUILD_CONFIG_DEFAULTS, DOCS_MESSAGE } from '#constants';
 import { feedback } from 'azion/utils/node';
 
 import { checkDependencies } from './utils';
+import { resolveApplicationName } from '../../env/alias';
 
 /* Modules */
 import { setupBuildConfig } from './modules/config';
@@ -29,6 +30,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
 
     const resolvedPreset = await resolvePreset(config.build?.preset);
     const buildConfigSetup = await setupBuildConfig(config, resolvedPreset, isProduction);
+    const applicationName = resolveApplicationName(process.cwd());
 
     /* Execute build phases */
     // Phase 1: Prebuild
@@ -41,6 +43,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
         skipFrameworkBuild: Boolean(options.skipFrameworkBuild),
         handler: '', // Placeholder, will be set later
       },
+      applicationName,
     });
 
     feedback.prebuild.info('Pre-build completed successfully');
@@ -97,7 +100,11 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       ctx,
     });
 
-    await copyEnvVars();
+    await copyEnvVars(ctx.production);
+    /**
+     * Temporary workaround for Azion's global environment variables
+     */
+    await writePrefixedEnvVars(applicationName, ctx.production);
 
     return {
       config: mergedConfig,
