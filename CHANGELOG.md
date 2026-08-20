@@ -1,3 +1,8 @@
+## <small>5.3.2 (2026-08-20)</small>
+
+* fix: merge .env files with proper precedence and add temporary env var name aliasing (#642) ([29af750](https://github.com/aziontech/bundler/commit/29af750)), closes [#642](https://github.com/aziontech/bundler/issues/642)
+* chore: migrate npm authentication from token to OIDC (#557) ([edbfee6](https://github.com/aziontech/bundler/commit/edbfee6)), closes [#557](https://github.com/aziontech/bundler/issues/557)
+
 ### [5.3.1](https://github.com/aziontech/bundler/compare/v5.3.0...v5.3.1) (2025-12-05)
 
 
