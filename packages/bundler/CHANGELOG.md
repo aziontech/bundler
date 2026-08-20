@@ -1,5 +1,11 @@
 # @aziontech/bundler
 
+## 1.1.4
+
+### Patch Changes
+
+- [#641](https://github.com/aziontech/bundler/pull/641) [`6fb86be`](https://github.com/aziontech/bundler/commit/6fb86befb8e93051b0e27e36af2153b4357cd903) Thanks [@jose-filho-azion](https://github.com/jose-filho-azion)! - fix: merge .env files with proper precedence and add temporary env var name aliasing
+
 ## 1.1.3
 
 ### Patch Changes
