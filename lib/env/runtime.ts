@@ -17,7 +17,31 @@ import {
   cryptoContext,
   promisesContext,
 } from 'azion/bundler/polyfills';
+import { existsSync, readFileSync } from 'fs';
+import { join } from 'path';
 import { EdgeContext, EdgeVM } from './edge-vm';
+import { DIRECTORIES } from '#constants';
+import { parseEnvFileEntries, unwrapEnvValue } from './dotenv';
+
+/**
+ * Loads the env vars the build already merged into .edge/.env (see copyEnvVars in utils.ts),
+ * so the dev sandbox sees the same values a deployed function would (respecting .env.local,
+ * .env.development, etc. precedence) instead of just the CLI process's own environment.
+ * Falls back to process.env if .edge/.env doesn't exist yet (e.g. no .env files in the project).
+ *
+ * Values are unwrapped from surrounding quotes here (not in the shared parser), since this is
+ * the only place a value becomes a literal string handed to a live JS context — .edge/.env and
+ * .edge/.env.azion stay byte-faithful to what the user wrote.
+ */
+function loadSandboxEnv(): Record<string, string | undefined> {
+  const edgeEnvPath = join(process.cwd(), DIRECTORIES.OUTPUT_ENV_VARS_PATH);
+  if (!existsSync(edgeEnvPath)) return { ...process.env };
+
+  const content = readFileSync(edgeEnvPath, 'utf-8');
+  return Object.fromEntries(
+    parseEnvFileEntries(content).map(({ key, value }) => [key, unwrapEnvValue(value)]),
+  );
+}
 
 /**
  * Executes the specified JavaScript code within a sandbox environment,
@@ -67,7 +91,7 @@ function runtime(code: string, isFirewallEvent = false) {
     // eslint-disable-next-line no-eval
     context.eval = eval;
     /* ==== Cells Runtime/Azion have this interface ==== */
-    context.process = { env: process.env };
+    context.process = { env: loadSandboxEnv() };
 
     /* ==== Cells Runtime/Azion does not have this interface ==== */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
