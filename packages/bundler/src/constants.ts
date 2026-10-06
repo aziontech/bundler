@@ -51,7 +51,7 @@ export const BUNDLER = {
   EXPERIMENTAL: false,
   MIN_NODE_VERSION: '18.0.0',
   CONFIG_FILENAME: 'azion.config',
-  DEFAULT_HANDLER_FILENAME: 'handler',
+  DEFAULT_HANDLER_FILENAME: 'index',
   DEFAULT_DEV_WORKER_FILENAME: 'handler.dev',
   DEFAULT_OUTPUT_EXTENSION: 'js',
   LIB_DIR: getAbsoluteDirPath(import.meta.url, 'bundler'),

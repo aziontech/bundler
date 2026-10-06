@@ -1,4 +1,11 @@
-import { AzionConfig, AzionBuildPreset, BuildContext } from '@aziontech/config';
+import {
+  getFirewallReplacedKeys,
+  resolveApiVersion,
+  resolvePresetConfig,
+  type AzionConfig,
+  type AzionBuildPreset,
+  type BuildContext,
+} from '@aziontech/config';
 import utilsDefault from './utils';
 
 import envDefault from '../../../../env';
@@ -32,14 +39,17 @@ export const setEnvironment = async ({
   preset,
 }: EnvironmentParams): Promise<AzionConfig> => {
   try {
-    const { config: presetConfig } = preset;
+    const version = resolveApiVersion(userConfig);
+
+    // A copy of the preset config for the project's version: it can be changed without affecting the preset.
+    // The pipeline is typed with the default (v4) config; v3 specific fields are read through @aziontech/config accessors.
+    const presetConfig = resolvePresetConfig(preset, version) as AzionConfig;
 
     // Remove the default configuration when the firewall is enabled.
     if (userConfig.firewall) {
-      delete presetConfig.applications;
-      delete presetConfig.workloads;
-      delete presetConfig.connectors;
-      delete presetConfig.functions;
+      getFirewallReplacedKeys(version).forEach((key) => {
+        delete (presetConfig as Record<string, unknown>)[key];
+      });
     }
 
     /**
@@ -47,10 +57,16 @@ export const setEnvironment = async ({
      * 1. User config (from azion.config.js)
      * 2. Preset config (from preset module)
      */
-    const mergedConfig: AzionConfig = utilsDefault.mergeConfigWithUserOverrides(
+    let mergedConfig: AzionConfig = utilsDefault.mergeConfigWithUserOverrides(
       presetConfig,
       userConfig,
     );
+
+    // Keep the version explicit, so that what is validated, processed and written to azion.config targets it
+    // (declared first, so the generated azion.config reads naturally)
+    const mergedWithoutVersion = { ...mergedConfig };
+    delete mergedWithoutVersion.version;
+    mergedConfig = { version: version as AzionConfig['version'], ...mergedWithoutVersion };
 
     /**
      * Include preset name in the config file for user reference.

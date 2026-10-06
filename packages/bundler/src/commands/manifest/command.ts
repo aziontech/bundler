@@ -15,6 +15,7 @@ export interface ManifestCommandOptions {
   entry?: string;
   config?: AzionConfig;
   output?: string;
+  configVersion?: string | number;
 }
 
 /**
@@ -36,11 +37,13 @@ export async function manifestCommand(options: ManifestCommandOptions): Promise<
     const actionHandlers = {
       [ManifestAction.GENERATE]: async () => {
         const input = options.entry || options.config;
-        await generateManifest(input, options.output);
+        await generateManifest(input, options.output, { configVersion: options.configVersion });
       },
 
       [ManifestAction.TRANSFORM]: async () => {
-        await transformManifest(options.entry, options.output);
+        await transformManifest(options.entry, options.output, {
+          configVersion: options.configVersion,
+        });
       },
     };
 

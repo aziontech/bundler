@@ -1,4 +1,5 @@
 import { type AzionConfig, convertJsonConfigToObject, validateConfig } from '@aziontech/config';
+import { parseConfigVersion, resolveConfigVersion } from '../../env/config-version';
 import { join, resolve, extname } from 'path';
 import * as utilsNode from '@aziontech/utils/node';
 import envBundler from '../../env/bundler';
@@ -14,10 +15,12 @@ export const DEFAULT_TRANSFORM_OUTPUT_PATH = 'azion.config';
  *
  * @param input - Build configuration object or path to config file (optional)
  * @param outputPath - Optional output path for the manifest file
+ * @param options.configVersion - Config version, when the config does not declare one (defaults to the package default)
  */
 export const generateManifest = async (
   input?: AzionConfig | string,
   outputPath = join(process.cwd(), '.edge'),
+  options: { configVersion?: string | number } = {},
 ): Promise<void> => {
   try {
     await fsPromises.access(outputPath);
@@ -30,7 +33,7 @@ export const generateManifest = async (
   if (typeof input === 'object') {
     config = input;
   } else {
-    const configResult = await envBundler.readAzionConfig(input);
+    const configResult = await envBundler.readAzionConfig(input, options);
     if (!configResult) {
       throw new Error(
         input
@@ -40,6 +43,15 @@ export const generateManifest = async (
     }
     config = configResult;
   }
+
+  // the version decides the schema and the strategies used below
+  config = {
+    ...config,
+    version: resolveConfigVersion({
+      flag: options.configVersion,
+      config,
+    }) as AzionConfig['version'],
+  };
 
   // validate config
   validateConfig(config);
@@ -59,10 +71,12 @@ export const generateManifest = async (
  *
  * @param input - Path to manifest file
  * @param outputPath - Path for the output JS file
+ * @param options.configVersion - Config version of the generated file (defaults to the package default)
  */
 export const transformManifest = async (
   input?: string,
   outputPath = DEFAULT_TRANSFORM_OUTPUT_PATH,
+  options: { configVersion?: string | number } = {},
 ): Promise<void> => {
   const readConfigFromPath = async (filePath: string): Promise<AzionConfig> => {
     const resolvedPath = resolve(process.cwd(), filePath);
@@ -73,11 +87,14 @@ export const transformManifest = async (
 
     const jsonString = await fsPromises.readFile(resolvedPath, 'utf8');
 
-    return convertJsonConfigToObject(jsonString);
+    return convertJsonConfigToObject(jsonString, {
+      version: parseConfigVersion(options.configVersion),
+    });
   };
 
   const config = await readConfigFromPath(input || DEFAULT_TRANSFORM_INPUT_PATH);
-  await envBundler.writeUserConfig(config, outputPath);
+  const version = resolveConfigVersion({ flag: options.configVersion }) as AzionConfig['version'];
+  await envBundler.writeUserConfig({ ...config, version }, outputPath);
 
   utilsNode.feedback.manifest.success(`Config file generated successfully at ${outputPath}`);
 };

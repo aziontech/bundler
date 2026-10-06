@@ -49,6 +49,12 @@ export interface BuildCommandOptions {
    * @default false
    */
   telemetry?: boolean;
+
+  /**
+   * Config (Azion API) version the project targets. Takes precedence over the `version` of azion.config.
+   * @default 4
+   */
+  configVersion?: string | number;
 }
 
 export interface PackageJson {

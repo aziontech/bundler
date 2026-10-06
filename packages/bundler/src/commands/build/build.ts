@@ -15,7 +15,12 @@ import {
   type TelemetryBuildMetadata,
   type TelemetryConfig,
 } from '@aziontech/bundler-telemetry';
-import { validateConfig, type AzionPrebuildResult, type BuildContext } from '@aziontech/config';
+import {
+  getApplicationName,
+  validateConfig,
+  type AzionPrebuildResult,
+  type BuildContext,
+} from '@aziontech/config';
 import { feedback } from '@aziontech/utils/node';
 import { mkdir, writeFile } from 'fs/promises';
 import { dirname } from 'path';
@@ -227,7 +232,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
         return executePrebuild({
           buildConfig: buildConfigSetup,
           ctx: context,
-          applicationName: mergedConfig.applications?.[0]?.name,
+          applicationName: getApplicationName(mergedConfig),
         });
       },
     );
@@ -329,7 +334,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       'storage-setup',
       'Storage Setup',
       async () => {
-        return setupStorage({ config: mergedConfig });
+        return setupStorage({ config: mergedConfig, preset: resolvedPreset });
       },
     );
 

@@ -1,9 +1,16 @@
 import { debug } from '../../../../utils';
 import fsPromises from 'fs/promises';
 import path from 'path';
-import { AzionConfig, AzionBucket } from '@aziontech/config';
+import {
+  DEFAULT_API_VERSION,
+  resolveApiVersion,
+  resolvePresetConfig,
+  type AzionBucket,
+  type AzionBuildPreset,
+  type AzionConfig,
+} from '@aziontech/config';
 import { DIRECTORIES } from '../../../../constants';
-import { feedback } from '@aziontech/utils/node';
+import { copyDirectory, feedback } from '@aziontech/utils/node';
 
 interface BucketMetadata {
   name: string;
@@ -162,9 +169,45 @@ const validateStorageConfig = (storage: AzionBucket): boolean => {
 };
 
 /**
+ * v3 keeps the static files directly in `.edge/storage` (no bucket/prefix folders) and its config has no `storage`
+ * section: the v3 prebuilds wrote straight there. The presets now write to the directory their default config
+ * declares in `storage[].dir`, so for v3 that directory is copied to `.edge/storage`, as the v3 prebuilds did.
+ */
+const setupStorageV3 = async (preset?: AzionBuildPreset): Promise<BucketSetup[]> => {
+  const defaultConfig = preset && (resolvePresetConfig(preset, DEFAULT_API_VERSION) as AzionConfig);
+  const storageDir = defaultConfig?.storage?.[0]?.dir;
+
+  if (!storageDir) {
+    debug.info('The preset has no static files directory to copy to the v3 storage');
+    return [];
+  }
+
+  const sourceDir = path.resolve(process.cwd(), storageDir);
+  if (!(await directoryExists(sourceDir))) {
+    throw new Error(
+      `Storage directory not found: ${sourceDir}. \n- Please check the output directory of the "${preset?.metadata.name}" preset`,
+    );
+  }
+
+  // merged into what is already there, as the v3 prebuilds did (some presets also write to .edge/storage themselves)
+  copyDirectory(sourceDir, DIRECTORIES.OUTPUT_STORAGE_PATH);
+  feedback.storage.info(`Static files copied to ${DIRECTORIES.OUTPUT_STORAGE_PATH}`);
+
+  return [];
+};
+
+/**
  * Sets up virtual local storages based on Azion configuration
  */
-export const setupStorage = async ({ config }: { config: AzionConfig }): Promise<BucketSetup[]> => {
+export const setupStorage = async ({
+  config,
+  preset,
+}: {
+  config: AzionConfig;
+  preset?: AzionBuildPreset;
+}): Promise<BucketSetup[]> => {
+  if (resolveApiVersion(config) === 3) return setupStorageV3(preset);
+
   try {
     const storages = config.storage || [];
     const processedStorages: BucketSetup[] = [];

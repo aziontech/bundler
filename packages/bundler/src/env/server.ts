@@ -16,9 +16,11 @@ import { runServer } from 'edge-runtime';
 import fs from 'fs/promises';
 import { basename } from 'path';
 import { DOCS_MESSAGE } from '../constants';
-import { AzionBucket, AzionConfig, AzionFunction } from '@aziontech/config';
+import { getStorage, type AzionConfig, type AzionFunction } from '@aziontech/config';
 let currentServer: Awaited<ReturnType<typeof runServer>>;
 let isChangeHandlerRunning = false;
+// kept for the rebuilds triggered by file changes, which do not receive the CLI options again
+let serverConfigVersion: string | number | undefined;
 
 /**
  * Check and change AddEventListener event
@@ -119,8 +121,9 @@ function setCurrentBucketName(
   config?: AzionConfig,
 ): { bucketName: string; prefix: string } {
   // TODO: change to multiple storage support
-  const bucketName = runtimeFunction?.bindings?.storage?.bucket || config?.storage?.[0].name || '';
-  const prefix = runtimeFunction?.bindings?.storage?.prefix || config?.storage?.[0].prefix || '';
+  const storage = config && getStorage(config);
+  const bucketName = runtimeFunction?.bindings?.storage?.bucket || storage?.bucket || '';
+  const prefix = runtimeFunction?.bindings?.storage?.prefix || storage?.prefix || '';
 
   return { bucketName, prefix };
 }
@@ -158,10 +161,7 @@ interface CurrentFunctionResult {
 
 function defineCurrentFunction(
   entries: Record<string, string>,
-  config: {
-    functions: AzionFunction[] | undefined;
-    storage: AzionBucket[] | undefined;
-  },
+  config: AzionConfig,
   functionName?: string,
 ): CurrentFunctionResult {
   // Validate inputs
@@ -217,8 +217,12 @@ async function manageServer(
 
     const {
       setup: { entry },
-      config: { functions, storage },
-    } = await buildCommand({ production: false, skipFrameworkBuild });
+      config,
+    } = await buildCommand({
+      production: false,
+      skipFrameworkBuild,
+      configVersion: serverConfigVersion,
+    });
 
     let workerCode;
     try {
@@ -226,7 +230,7 @@ async function manageServer(
         path: finalPath,
         bucket,
         prefix,
-      } = defineCurrentFunction(entry, { functions, storage }, functionName);
+      } = defineCurrentFunction(entry, config, functionName);
 
       // TODO: temp set globalThis
       // this is a temporary solution to pass the storage name and prefix to the runtime
@@ -304,7 +308,9 @@ async function startServer(
   port: number,
   skipFrameworkBuild = false,
   functionName?: string,
+  configVersion?: string | number,
 ) {
+  serverConfigVersion = configVersion;
   const IsPortInUse = await checkPortAvailability(port);
   if (IsPortInUse) {
     feedback.server.error(`Port ${port} is in use. Please choose another port.`);
