@@ -38,7 +38,7 @@
     "@aziontech/utils": "~1.0.0",
     "@edge-runtime/primitives": "4.0.5",
     "@netlify/framework-info": "^9.9.1",
-    "chokidar": "^3.5.3",
+    "chokidar": "^4.0.3",
     "commander": "^10.0.1",
     "cosmiconfig": "^9.0.0",
     "cosmiconfig-typescript-loader": "^6.1.0",
