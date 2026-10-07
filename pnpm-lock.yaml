@@ -64,17 +64,17 @@ importers:
   packages/bundler:
     dependencies:
       '@aziontech/builder':
-        specifier: https://pkg.pr.new/@aziontech/builder@556c77a
-        version: https://pkg.pr.new/@aziontech/builder@556c77a(@babel/core@7.29.7)(@swc/core@1.15.47)(typescript@5.9.3)
+        specifier: https://pkg.pr.new/@aziontech/builder@2f393b0
+        version: https://pkg.pr.new/@aziontech/builder@2f393b0(@babel/core@7.29.7)(@swc/core@1.15.47)(typescript@5.9.3)
       '@aziontech/bundler-telemetry':
         specifier: ~1.0.0
         version: 1.0.0
       '@aziontech/config':
-        specifier: https://pkg.pr.new/@aziontech/config@556c77a
-        version: https://pkg.pr.new/@aziontech/config@556c77a
+        specifier: https://pkg.pr.new/@aziontech/config@2f393b0
+        version: https://pkg.pr.new/@aziontech/config@2f393b0
       '@aziontech/presets':
-        specifier: https://pkg.pr.new/@aziontech/presets@556c77a
-        version: https://pkg.pr.new/@aziontech/presets@556c77a(@swc/core@1.15.47)
+        specifier: https://pkg.pr.new/@aziontech/presets@2f393b0
+        version: https://pkg.pr.new/@aziontech/presets@2f393b0(@swc/core@1.15.47)
       '@aziontech/utils':
         specifier: ~1.0.0
         version: 1.0.0
@@ -172,27 +172,27 @@ importers:
 
 packages:
 
-  '@aziontech/builder@https://pkg.pr.new/@aziontech/builder@556c77a':
-    resolution: {tarball: https://pkg.pr.new/@aziontech/builder@556c77a}
+  '@aziontech/builder@https://pkg.pr.new/@aziontech/builder@2f393b0':
+    resolution: {tarball: https://pkg.pr.new/@aziontech/builder@2f393b0}
     version: 1.0.5
 
   '@aziontech/bundler-telemetry@1.0.0':
     resolution: {integrity: sha512-o4Aa9DSMc2DSTLgU/y4LKMUov4IdFL+gt1bsmfR65DaAogULImOmMWVKAbrL67aVgs1J9jQBCq6gaV2XN0Q6RQ==}
 
-  '@aziontech/config@https://pkg.pr.new/@aziontech/config@556c77a':
-    resolution: {tarball: https://pkg.pr.new/@aziontech/config@556c77a}
+  '@aziontech/config@https://pkg.pr.new/@aziontech/config@2f393b0':
+    resolution: {tarball: https://pkg.pr.new/@aziontech/config@2f393b0}
     version: 1.0.2
 
-  '@aziontech/config@https://pkg.pr.new/aziontech/lib/@aziontech/config@556c77a':
-    resolution: {tarball: https://pkg.pr.new/aziontech/lib/@aziontech/config@556c77a}
+  '@aziontech/config@https://pkg.pr.new/aziontech/lib/@aziontech/config@2f393b0':
+    resolution: {tarball: https://pkg.pr.new/aziontech/lib/@aziontech/config@2f393b0}
     version: 1.0.2
 
-  '@aziontech/presets@https://pkg.pr.new/@aziontech/presets@556c77a':
-    resolution: {tarball: https://pkg.pr.new/@aziontech/presets@556c77a}
+  '@aziontech/presets@https://pkg.pr.new/@aziontech/presets@2f393b0':
+    resolution: {tarball: https://pkg.pr.new/@aziontech/presets@2f393b0}
     version: 1.1.2
 
-  '@aziontech/presets@https://pkg.pr.new/aziontech/lib/@aziontech/presets@556c77a':
-    resolution: {tarball: https://pkg.pr.new/aziontech/lib/@aziontech/presets@556c77a}
+  '@aziontech/presets@https://pkg.pr.new/aziontech/lib/@aziontech/presets@2f393b0':
+    resolution: {tarball: https://pkg.pr.new/aziontech/lib/@aziontech/presets@2f393b0}
     version: 1.1.2
 
   '@aziontech/types@1.0.0':
@@ -4332,10 +4332,10 @@ packages:
 
 snapshots:
 
-  '@aziontech/builder@https://pkg.pr.new/@aziontech/builder@556c77a(@babel/core@7.29.7)(@swc/core@1.15.47)(typescript@5.9.3)':
+  '@aziontech/builder@https://pkg.pr.new/@aziontech/builder@2f393b0(@babel/core@7.29.7)(@swc/core@1.15.47)(typescript@5.9.3)':
     dependencies:
-      '@aziontech/config': https://pkg.pr.new/aziontech/lib/@aziontech/config@556c77a
-      '@aziontech/presets': https://pkg.pr.new/aziontech/lib/@aziontech/presets@556c77a(@swc/core@1.15.47)(esbuild@0.25.12)
+      '@aziontech/config': https://pkg.pr.new/aziontech/lib/@aziontech/config@2f393b0
+      '@aziontech/presets': https://pkg.pr.new/aziontech/lib/@aziontech/presets@2f393b0(@swc/core@1.15.47)(esbuild@0.25.12)
       '@aziontech/types': 1.0.0
       '@aziontech/unenv-preset': 1.0.2
       '@aziontech/utils': 1.0.0
@@ -4390,7 +4390,7 @@ snapshots:
 
   '@aziontech/bundler-telemetry@1.0.0': {}
 
-  '@aziontech/config@https://pkg.pr.new/@aziontech/config@556c77a':
+  '@aziontech/config@https://pkg.pr.new/@aziontech/config@2f393b0':
     dependencies:
       '@aziontech/types': 1.0.0
       ajv: 8.20.0
@@ -4398,7 +4398,7 @@ snapshots:
       ajv-keywords: 5.1.0(ajv@8.20.0)
       mathjs: 15.2.0
 
-  '@aziontech/config@https://pkg.pr.new/aziontech/lib/@aziontech/config@556c77a':
+  '@aziontech/config@https://pkg.pr.new/aziontech/lib/@aziontech/config@2f393b0':
     dependencies:
       '@aziontech/types': 1.0.0
       ajv: 8.20.0
@@ -4406,9 +4406,9 @@ snapshots:
       ajv-keywords: 5.1.0(ajv@8.20.0)
       mathjs: 15.2.0
 
-  '@aziontech/presets@https://pkg.pr.new/@aziontech/presets@556c77a(@swc/core@1.15.47)':
+  '@aziontech/presets@https://pkg.pr.new/@aziontech/presets@2f393b0(@swc/core@1.15.47)':
     dependencies:
-      '@aziontech/config': https://pkg.pr.new/aziontech/lib/@aziontech/config@556c77a
+      '@aziontech/config': https://pkg.pr.new/aziontech/lib/@aziontech/config@2f393b0
       '@aziontech/types': 1.0.0
       '@aziontech/unenv-preset': 1.0.2
       '@aziontech/utils': 1.0.0
@@ -4437,9 +4437,9 @@ snapshots:
       - uglify-js
       - webpack-cli
 
-  '@aziontech/presets@https://pkg.pr.new/aziontech/lib/@aziontech/presets@556c77a(@swc/core@1.15.47)(esbuild@0.25.12)':
+  '@aziontech/presets@https://pkg.pr.new/aziontech/lib/@aziontech/presets@2f393b0(@swc/core@1.15.47)(esbuild@0.25.12)':
     dependencies:
-      '@aziontech/config': https://pkg.pr.new/aziontech/lib/@aziontech/config@556c77a
+      '@aziontech/config': https://pkg.pr.new/aziontech/lib/@aziontech/config@2f393b0
       '@aziontech/types': 1.0.0
       '@aziontech/unenv-preset': 1.0.2
       '@aziontech/utils': 1.0.0
@@ -8601,7 +8601,7 @@ snapshots:
   ts-loader@9.6.2(typescript@5.9.3)(webpack@5.111.1(@swc/core@1.15.47)(esbuild@0.25.12)):
     dependencies:
       chalk: 4.1.2
-      picomatch: 4.0.5
+      picomatch: 4.0.7
       source-map: 0.7.6
       typescript: 5.9.3
       webpack: 5.111.1(@swc/core@1.15.47)(esbuild@0.25.12)
