@@ -29,6 +29,18 @@ describe('E2E - gatsby-static project', () => {
       headless: 'new',
     });
     page = await browser.newPage();
+
+    // The example embeds an external image (https://via.placeholder.com in the hello-world post) and the page `load`
+    // event waits for it, so the test depended on the network of the machine: where that host does not answer the
+    // navigation times out. Only the local server is reached.
+    await page.setRequestInterception(true);
+    page.on('request', (request) => {
+      const url = request.url();
+      const isLocal = url.startsWith(localhostBaseUrl) || /^(data|blob|about):/.test(url);
+
+      if (isLocal) request.continue();
+      else request.abort();
+    });
   }, TIMEOUT);
 
   afterAll(async () => {
