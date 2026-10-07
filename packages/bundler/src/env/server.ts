@@ -16,6 +16,7 @@ import { runServer } from 'edge-runtime';
 import fs from 'fs/promises';
 import { basename } from 'path';
 import { DOCS_MESSAGE } from '../constants';
+import { isIgnoredByWatcher } from './watch-ignore';
 import { getStorage, type AzionConfig, type AzionFunction } from '@aziontech/config';
 let currentServer: Awaited<ReturnType<typeof runServer>>;
 let isChangeHandlerRunning = false;
@@ -277,15 +278,7 @@ async function manageServer(
 async function handleFileChange(path: string, workerPath: string | null, port: number) {
   if (isChangeHandlerRunning) return;
 
-  if (
-    path.startsWith('.azion-bundler') ||
-    (path.startsWith('azion') && path.includes('.temp')) ||
-    path.startsWith('.edge') ||
-    path.startsWith('node_modules') ||
-    path.startsWith('.vercel')
-  ) {
-    return;
-  }
+  if (isIgnoredByWatcher(path)) return;
 
   isChangeHandlerRunning = true;
 
@@ -322,7 +315,8 @@ async function startServer(
     persistent: true,
     ignoreInitial: true, // Ignore the initial add events
     depth: 99,
-    ignored: ['.git', '.vscode', '.idea', '.sublime-text', '.history'], // Added common IDE-related folders
+    // never open watchers in node_modules and the folders the bundler writes: see isIgnoredByWatcher
+    ignored: isIgnoredByWatcher,
   });
 
   const handleUserFileChange = async (path: string) => {
