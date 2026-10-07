@@ -8,14 +8,14 @@ const outputOf = async (config: AzionConfig, preset: AzionBuildPreset) =>
   Object.keys((await setupBuildConfig(config, preset, true)).entry);
 
 describe('setupBuildConfig output name', () => {
-  it('generates index.js for a preset with a built-in handler and no entry', async () => {
+  it('generates handler.js for a preset with a built-in handler and no entry', async () => {
     const withHandler = asPreset({
       metadata: { name: 'with-handler' },
       config: { build: {} },
       handler: { fetch: async () => new Response('ok') },
     });
 
-    expect(await outputOf({}, withHandler)).toEqual(['.edge/functions/index']);
+    expect(await outputOf({}, withHandler)).toEqual(['.edge/functions/handler']);
   });
 
   it('keeps the source file but names the output after the key of an object entry', async () => {
