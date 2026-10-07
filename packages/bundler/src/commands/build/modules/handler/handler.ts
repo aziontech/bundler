@@ -1,27 +1,31 @@
 import path from 'path';
 import fsPromises from 'fs/promises';
-import { AzionBuildPreset, BuildEntryPoint } from '@aziontech/config';
+import type { ApiVersion, AzionBuildPreset, BuildEntryPoint } from '@aziontech/config';
 import * as utilsNode from '@aziontech/utils/node';
 import { debug } from '../../../../utils';
 import { relative } from 'path';
+import { resolvePresetBuild } from '../preset/preset-build';
 import { normalizeEntryPaths } from './utils';
 
 interface EntrypointOptions {
   entrypoint: BuildEntryPoint | undefined;
   preset: AzionBuildPreset;
+  /** Config version of the project; selects the default entry of the preset. */
+  version?: ApiVersion;
 }
 
 /**
  * Resolves the entrypoint based on priority:
  * 1. Command line entrypoint (ctx.handler)
  * 2. Preset handler (if preset.handler is true)
- * 3. Preset default entry config (preset.config.build.entry)
+ * 3. Preset default entry (build.entry of the preset config of the project's version, or of preset.config)
  *
  * @throws Error if no valid entrypoint is found or if provided entrypoint doesn't exist
  */
 export const resolveHandlers = async ({
   entrypoint,
   preset,
+  version,
 }: EntrypointOptions): Promise<string[]> => {
   // Normalize entrypoint first
   if (entrypoint && !preset.handler) {
@@ -79,8 +83,9 @@ export const resolveHandlers = async ({
   }
 
   // Preset's default entry is last priority
-  if (preset.config.build?.entry) {
-    const entries = normalizeEntryPaths(preset.config.build.entry);
+  const presetEntry = resolvePresetBuild(preset, version).entry;
+  if (presetEntry) {
+    const entries = normalizeEntryPaths(presetEntry);
     const resolvedEntries = entries.map((e) => path.resolve(e));
 
     // Validar a existência dos arquivos

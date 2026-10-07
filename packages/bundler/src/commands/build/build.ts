@@ -17,6 +17,7 @@ import {
 } from '@aziontech/bundler-telemetry';
 import {
   getApplicationName,
+  resolveApiVersion,
   validateConfig,
   type AzionPrebuildResult,
   type BuildContext,
@@ -250,6 +251,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
         return resolveHandlers({
           entrypoint: config.build?.entry,
           preset: resolvedPreset,
+          version: resolveApiVersion(config),
         });
       },
     );
