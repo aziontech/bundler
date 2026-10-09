@@ -1,4 +1,5 @@
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect, jest } from '@jest/globals';
+import { WORKER_TEMPLATES } from './constants';
 import {
   generateWorkerEventHandler,
   normalizeEntryPointPaths,
@@ -118,5 +119,51 @@ describe('normalizeEntryPointPaths', () => {
     const input = { main: 'src/index.js', api: 'src/api.js' };
     const result = normalizeEntryPointPaths(input);
     expect(result).toEqual(['src/index.js', 'src/api.js']);
+  });
+});
+
+describe('WORKER_TEMPLATES.firewallHandler', () => {
+  const run = async (firewall: (...args: unknown[]) => unknown) => {
+    const event = {
+      request: new Request('http://localhost'),
+      deny: jest.fn(),
+      drop: jest.fn(),
+      continue: jest.fn(),
+      respondWith: jest.fn(),
+      addRequestHeader: jest.fn(),
+      addResponseHeader: jest.fn(),
+    };
+    let listener: ((event: unknown) => void) | undefined;
+    const addEventListener = (_type: string, cb: (event: unknown) => void) => {
+      listener = cb;
+    };
+    new Function(
+      'handlers',
+      'addEventListener',
+      'process',
+      'console',
+      WORKER_TEMPLATES.firewallHandler,
+    )({ firewall }, addEventListener, { env: {} }, console);
+    listener?.(event);
+    await new Promise((resolve) => setImmediate(resolve));
+    return event;
+  };
+
+  it('should expose the firewall event actions on ctx', async () => {
+    const event = await run(async (_req, _env, ctx) => (ctx as { deny: () => void }).deny());
+    expect(event.deny).toHaveBeenCalledTimes(1);
+  });
+
+  it('should bind ctx actions to the event', async () => {
+    const event = await run(async (_req, _env, ctx) => {
+      const { drop, addResponseHeader } = ctx as {
+        drop: () => void;
+        addResponseHeader: (k: string, v: string) => void;
+      };
+      addResponseHeader('x-test', '1');
+      drop();
+    });
+    expect(event.addResponseHeader).toHaveBeenCalledWith('x-test', '1');
+    expect(event.drop).toHaveBeenCalledTimes(1);
   });
 });

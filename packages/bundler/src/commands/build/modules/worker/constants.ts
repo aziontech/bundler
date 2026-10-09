@@ -22,11 +22,25 @@ const handlers = module.default || module;`,
 
   contextSetup,
 
+  // The firewall ctx also exposes the event actions, so that
+  // export default { firewall: (request, env, ctx) => ctx.deny() } behaves like
+  // addEventListener('firewall', (event) => event.deny())
   firewallHandler: `
 const firewallHandler = handlers.firewall;
 addEventListener('firewall', (event) => {
-  (async () => {${contextSetup}
-    
+  (async () => {
+    const request = event.request;
+    const env = process.env; // or any other environment variables you want to pass
+    const ctx = {
+      waitUntil: event.waitUntil?.bind(event),
+      deny: event.deny?.bind(event),
+      drop: event.drop?.bind(event),
+      continue: event.continue?.bind(event),
+      respondWith: event.respondWith?.bind(event),
+      addRequestHeader: event.addRequestHeader?.bind(event),
+      addResponseHeader: event.addResponseHeader?.bind(event),
+    };
+
     await firewallHandler(request, env, ctx);
   })().catch(console.error);
 });`,
