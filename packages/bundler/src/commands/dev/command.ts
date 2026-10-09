@@ -13,15 +13,17 @@ export async function devCommand({
   port,
   skipFrameworkBuild = false,
   functionName,
+  configVersion,
 }: {
   entry?: string;
   port: string;
   skipFrameworkBuild?: boolean;
   functionName?: string;
+  configVersion?: string | number;
 }) {
   const parsedPort = parseInt(port, 10);
 
   const entryPoint = entry || null;
 
-  server(entryPoint, parsedPort, skipFrameworkBuild, functionName);
+  server(entryPoint, parsedPort, skipFrameworkBuild, functionName, configVersion);
 }

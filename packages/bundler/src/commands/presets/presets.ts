@@ -1,4 +1,6 @@
+import { resolvePresetConfig } from '@aziontech/config';
 import * as azionPresets from '@aziontech/presets';
+import { resolveConfigVersion } from '../../env/config-version';
 
 /**
  * @function
@@ -21,17 +23,18 @@ export function getKeys() {
  * @function
  * @description Retrieves the configuration for a specific preset.
  * @param presetName - The name of the preset to get config for
- * @returns The AzionConfig for the specified preset
+ * @param configVersion - Config version to get (defaults to the package default)
+ * @returns The config of the preset for that version
  * @example
  * const config = getPresetConfig('react');
  * console.log(JSON.stringify(config, null, 2));
  */
-export function getPresetConfig(presetName: string) {
+export function getPresetConfig(presetName: string, configVersion?: string | number) {
   const preset = azionPresets[presetName as keyof typeof azionPresets];
   if (!preset) {
     throw new Error(
       `Preset '${presetName}' not found. Run 'ef presets ls' to see available presets.`,
     );
   }
-  return preset.config;
+  return resolvePresetConfig(preset, resolveConfigVersion({ flag: configVersion }));
 }

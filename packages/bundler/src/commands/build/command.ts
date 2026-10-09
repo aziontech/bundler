@@ -1,9 +1,16 @@
 import { readAzionConfig } from '../../env';
+import { resolveConfigVersion } from '../../env/config-version';
 import { build } from './build';
 import { type AzionConfig } from '@aziontech/config';
 import type { BuildCommandOptions } from './types';
 import { cleanDirectory, resolveConfigPriority } from './utils';
-import { BUILD_CONFIG_DEFAULTS, DIRECTORIES, type BundlerType } from '../../constants';
+import { feedback } from '@aziontech/utils/node';
+import {
+  BUILD_CONFIG_DEFAULTS,
+  DIRECTORIES,
+  DOCS_MESSAGE,
+  type BundlerType,
+} from '../../constants';
 
 /**
  * @function buildCommand
@@ -20,6 +27,17 @@ import { BUILD_CONFIG_DEFAULTS, DIRECTORIES, type BundlerType } from '../../cons
  */
 export async function buildCommand(options: BuildCommandOptions) {
   const userConfig = (await readAzionConfig()) || {};
+
+  // --config-version > azion.config `version` > default
+  let version: ReturnType<typeof resolveConfigVersion>;
+  try {
+    version = resolveConfigVersion({ flag: options.configVersion, config: userConfig });
+  } catch (error) {
+    feedback.build.error(
+      `${error instanceof Error ? error.message : String(error)}${DOCS_MESSAGE}`,
+    );
+    process.exit(1);
+  }
 
   const { build: userBuildConfig } = userConfig;
 
@@ -48,6 +66,8 @@ export async function buildCommand(options: BuildCommandOptions) {
 
   const config: AzionConfig = {
     ...userConfig,
+    // the pipeline is typed with the default (v4) config; v3 specific fields are read through @aziontech/config accessors
+    version: version as AzionConfig['version'],
     build: {
       ...resolvedBuildConfig,
       memoryFS: userConfig?.build?.memoryFS,

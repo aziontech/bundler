@@ -128,9 +128,25 @@ Options:
   -d, --dev                 Build in development mode (default: false)
   -x, --experimental        Enable experimental features (default: false)
   --skip-framework-build    Skip framework build step (default: false)
+  --config-version <version>  Config (Azion API) version: 3 or 4. Overrides the `version` field of azion.config (default: 4)
   --only-generate-config    Build only generate azion.config (default: false)
   --telemetry [format]      Enable telemetry output (console, json, html or both; defaults to both)
   --alias-env               Rewrite env var names to a per-project prefix to avoid cross-project naming collisions (default: false)
+```
+
+#### Config version
+
+The bundler can target the Azion API v3 or v4 config. The version is resolved in this order:
+
+1. `--config-version` (also available on `dev`, `manifest` and `presets config`)
+2. the `version` field of your `azion.config`
+3. the default, `4`
+
+If you already use the v3 config, add `version: 3` to your `azion.config` (or pass `--config-version 3`). When there is no `azion.config`, the generated one is created from the preset for the resolved version and declares `version` explicitly. Using the flag and a different `version` in `azion.config` is an error.
+
+```bash
+azbundler build --preset react --config-version 3
+azbundler presets config react --config-version 3
 ```
 
 ### `dev`
@@ -148,6 +164,7 @@ Options:
   -x, --experimental       Enable experimental features (default: false)
   --skip-framework-build   Skip framework build step (default: false)
   --function-name <name>   Specify the function name
+  --config-version <version>  Config (Azion API) version: 3 or 4. Overrides the `version` field of azion.config (default: 4)
 ```
 
 ### `config`

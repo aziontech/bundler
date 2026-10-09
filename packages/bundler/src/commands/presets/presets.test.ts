@@ -65,4 +65,27 @@ describe('getPresetsList utils', () => {
     expect(typeof reactConfig).toBe('object');
     expect(typeof vueConfig).toBe('object');
   });
+
+  describe('config version', () => {
+    test('Should default to the v4 config', () => {
+      expect(getPresetConfig('react')).toHaveProperty('applications');
+      expect(getPresetConfig('react')).toEqual(getPresetConfig('react', 4));
+    });
+
+    test.each(['3', 3, 'v3'])('Should get the v3 config with version %p', (version) => {
+      const result = getPresetConfig('react', version);
+
+      expect(result).toMatchObject({ version: 3, build: { preset: 'react' } });
+      expect(result).toHaveProperty('origin');
+      expect(result).not.toHaveProperty('applications');
+    });
+
+    test('Should throw for a version the preset does not support', () => {
+      expect(() => getPresetConfig('nitro', 3)).toThrow('does not support config version 3');
+    });
+
+    test('Should throw for an invalid version', () => {
+      expect(() => getPresetConfig('react', '5')).toThrow('Invalid config version "5"');
+    });
+  });
 });

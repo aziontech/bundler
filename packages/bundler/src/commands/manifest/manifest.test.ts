@@ -80,4 +80,37 @@ describe('generateManifest', () => {
       JSON.stringify(mockManifest, null, 2),
     );
   });
+
+  describe('config version', () => {
+    const v3Config = {
+      version: 3,
+      origin: [{ name: 'origin-storage-default', type: 'object_storage' }],
+    } as unknown as AzionConfig;
+
+    it('should process a v3 config with the v3 strategies', async () => {
+      const spyWriteFile = jest.spyOn(fs, 'writeFile');
+
+      await generateManifest(v3Config);
+
+      const manifest = JSON.parse(String(spyWriteFile.mock.calls[0][1]));
+      expect(manifest.origin).toHaveLength(1);
+      expect(manifest).not.toHaveProperty('applications');
+    });
+
+    it('should use the config version given by option when the config does not declare one', async () => {
+      const spyWriteFile = jest.spyOn(fs, 'writeFile');
+      const { version, ...withoutVersion } = v3Config as AzionConfig & { version: number };
+      expect(version).toBe(3);
+
+      await generateManifest(withoutVersion as AzionConfig, undefined, { configVersion: '3' });
+
+      expect(JSON.parse(String(spyWriteFile.mock.calls[0][1]))).toHaveProperty('origin');
+    });
+
+    it('should fail when the option and the config declare different versions', async () => {
+      await expect(generateManifest(v3Config, undefined, { configVersion: 4 })).rejects.toThrow(
+        'Conflicting config versions',
+      );
+    });
+  });
 });

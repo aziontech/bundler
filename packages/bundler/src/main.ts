@@ -129,6 +129,10 @@ function startBundler() {
     .option('-d, --dev', 'Build in development mode', false)
     .option('-x, --experimental [boolean]', 'Enable experimental features', false)
     .option('--skip-framework-build', 'Skip framework build step', false)
+    .option(
+      '--config-version <version>',
+      'Config (Azion API) version of the project: 3 or 4. Overrides the "version" field of azion.config (default: 4)',
+    )
     .option('--only-generate-config', 'Build only generate azion.config', false)
     .option(
       '--telemetry [format]',
@@ -147,6 +151,7 @@ Examples:
   $ azbundler build --only-generate-config -e index.js -p javascript
   $ azbundler build --preset opennextjs
   $ azbundler build --preset opennextjs --skip-framework-build
+  $ azbundler build --preset react --config-version 3
   $ azbundler build --telemetry
   $ azbundler build --telemetry json
     `,
@@ -185,6 +190,10 @@ Examples:
     .option('-x, --experimental [boolean]', 'Enable experimental features', false)
     .option('--skip-framework-build', 'Skip framework build step', false)
     .option('--function-name <name>', 'Specify the function name')
+    .option(
+      '--config-version <version>',
+      'Config (Azion API) version of the project: 3 or 4. Overrides the "version" field of azion.config (default: 4)',
+    )
     .action(async (entry, options) => {
       const { devCommand } = await import('./commands');
 
@@ -198,9 +207,13 @@ Examples:
   AzionBundler.command('presets <command>')
     .description('Manage presets for Azion projects')
     .argument('[preset]', 'Preset name (required for config command)')
-    .action(async (command, preset) => {
+    .option(
+      '--config-version <version>',
+      'Config (Azion API) version of the preset config to show: 3 or 4 (default: 4)',
+    )
+    .action(async (command, preset, options) => {
       const { presetsCommand } = await import('./commands');
-      await presetsCommand(command, { preset });
+      await presetsCommand(command, { preset, configVersion: options?.configVersion });
     });
 
   AzionBundler.command('manifest [action]')
@@ -211,6 +224,10 @@ Examples:
     )
     .option('-e, --entry <path>', 'Path to the input file or configuration file')
     .option('-o, --output <path>', 'Output file/directory path')
+    .option(
+      '--config-version <version>',
+      'Config (Azion API) version of the project: 3 or 4. Used when azion.config does not declare "version" (default: 4)',
+    )
     .addHelpText(
       'after',
       `

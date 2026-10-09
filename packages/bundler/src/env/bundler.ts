@@ -6,6 +6,7 @@
 import { debug } from '../utils';
 import { feedback } from '@aziontech/utils/node';
 import { convertJsonConfigToObject, type AzionConfig } from '@aziontech/config';
+import { parseConfigVersion } from './config-version';
 
 import fs from 'fs';
 import fsPromises from 'fs/promises';
@@ -132,8 +133,12 @@ function handleDependencyError(error: Error, configPath: string) {
  * Loads the azion.config file and returns the entire configuration object.
  * @async
  * @param configPath - Optional specific config file path to read
+ * @param options.configVersion - Version used to read an azion.config.json (a manifest, which does not carry one)
  */
-export async function readAzionConfig(configPath?: string): Promise<AzionConfig | null> {
+export async function readAzionConfig(
+  configPath?: string,
+  options: { configVersion?: string | number } = {},
+): Promise<AzionConfig | null> {
   const explorer = cosmiconfig('azion', {
     searchPlaces: [
       'azion.config.ts',
@@ -161,7 +166,11 @@ export async function readAzionConfig(configPath?: string): Promise<AzionConfig 
     const azionConfigPath = result.filepath;
     const azionConfigExt = path.extname(azionConfigPath);
 
-    if (azionConfigExt === '.json') return convertJsonConfigToObject(JSON.stringify(azionConfig));
+    if (azionConfigExt === '.json') {
+      return convertJsonConfigToObject(JSON.stringify(azionConfig), {
+        version: parseConfigVersion(options.configVersion),
+      });
+    }
 
     return azionConfig;
   } catch (error) {

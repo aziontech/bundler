@@ -12,7 +12,10 @@ import { getKeys, getPresetConfig } from './presets';
  * // To get config of a specific preset
  * presetsCommand('config', { preset: 'react' });
  */
-export async function presetsCommand(command: string, options: { preset?: string } = {}) {
+export async function presetsCommand(
+  command: string,
+  options: { preset?: string; configVersion?: string | number } = {},
+) {
   const isCleanOutputEnabled = process.env.CLEAN_OUTPUT_MODE === 'true';
 
   switch (command) {
@@ -32,7 +35,7 @@ export async function presetsCommand(command: string, options: { preset?: string
       }
 
       try {
-        const config = getPresetConfig(options.preset);
+        const config = getPresetConfig(options.preset, options.configVersion);
         console.log(JSON.stringify(config, null, 2));
       } catch (error) {
         feedback.error(error instanceof Error ? error.message : 'Unknown error occurred');
