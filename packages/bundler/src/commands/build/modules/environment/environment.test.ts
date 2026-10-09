@@ -86,6 +86,22 @@ describe('setEnvironment', () => {
     expect(spywriteUserConfig).not.toHaveBeenCalled();
   });
 
+  it('should read the given config file and never write a generated one', async () => {
+    const spyReadAzionConfig = jest
+      .spyOn(envDefault, 'readAzionConfig')
+      .mockResolvedValueOnce(null);
+
+    await setEnvironment({
+      config: mockConfig,
+      preset: mockPreset,
+      ctx: mockContext,
+      configFile: '/project/azion.staging.ts',
+    });
+
+    expect(spyReadAzionConfig).toHaveBeenCalledWith('/project/azion.staging.ts');
+    expect(spywriteUserConfig).not.toHaveBeenCalled();
+  });
+
   it('should add preset name to configuration when not defined', async () => {
     jest.spyOn(envDefault, 'readAzionConfig').mockResolvedValueOnce(null);
     spyMergeConfigWithUserOverrides.mockReturnValue({

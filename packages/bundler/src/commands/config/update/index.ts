@@ -8,13 +8,15 @@ import * as prettier from 'prettier';
  * Updates a property in the azion config file by directly manipulating the file content as text
  * @param key - The property key to update (e.g., 'build.preset', 'applications[0].name')
  * @param value - The new value to set
+ * @param configFile - Path of the config file to update, instead of searching for azion.config.*
  */
 export async function updateInConfigFile(
   key: string,
   value: string | number | boolean,
+  configFile?: string,
 ): Promise<void> {
   try {
-    const { configPath, fileContent } = await utils.findAndReadConfigFile();
+    const { configPath, fileContent } = await utils.findAndReadConfigFile(configFile);
     // Parse the key to understand the structure
     const updatedContent = updatePropertyInContent(fileContent, key, value);
     let finalContent: string;

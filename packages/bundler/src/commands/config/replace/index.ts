@@ -134,16 +134,24 @@ export async function replaceInConfigFile(placeholder: string, value: string): P
  * Finds and reads the azion config file, then performs multiple direct string replacements
  * only within the configuration object (module.exports or export default)
  * @param replacements - Array of placeholder-value pairs to replace
+ * @param configFile - Path of the config file to change, instead of searching for azion.config.*
  */
-export async function replaceInConfigFile(replacements: ReplaceOptions[]): Promise<void>;
+export async function replaceInConfigFile(
+  replacements: ReplaceOptions[],
+  configFile?: string,
+): Promise<void>;
 
 /**
  * Implementation that handles both single and multiple replacements
  */
 export async function replaceInConfigFile(
   placeholderOrReplacements: string | ReplaceOptions[],
-  value?: string,
+  valueOrConfigFile?: string,
 ): Promise<void> {
+  // the second argument is the value of the (placeholder, value) form, and the config file of the array form
+  const value = Array.isArray(placeholderOrReplacements) ? undefined : valueOrConfigFile;
+  const configFile = Array.isArray(placeholderOrReplacements) ? valueOrConfigFile : undefined;
+
   try {
     // Normalize input to always be an array of replacements
     const replacements: ReplaceOptions[] = Array.isArray(placeholderOrReplacements)
@@ -157,7 +165,7 @@ export async function replaceInConfigFile(
       }
     }
 
-    const { configPath, fileContent } = await utils.findAndReadConfigFile();
+    const { configPath, fileContent } = await utils.findAndReadConfigFile(configFile);
 
     // Find the bounds of the configuration object
     const { start, end } = findConfigObjectBounds(fileContent);

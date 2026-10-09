@@ -129,6 +129,7 @@ Options:
   -x, --experimental        Enable experimental features (default: false)
   --skip-framework-build    Skip framework build step (default: false)
   --config-version <version>  Config (Azion API) version: 3 or 4. Overrides the `version` field of azion.config (default: 4)
+  --config-file <path>      Path to the azion.config file to use (default: azion.config.* found in the current directory)
   --only-generate-config    Build only generate azion.config (default: false)
   --telemetry [format]      Enable telemetry output (console, json, html or both; defaults to both)
   --alias-env               Rewrite env var names to a per-project prefix to avoid cross-project naming collisions (default: false)
@@ -149,6 +150,18 @@ azbundler build --preset react --config-version 3
 azbundler presets config react --config-version 3
 ```
 
+#### Config file
+
+By default the bundler looks for `azion.config.*` in the current directory. Use `--config-file` to point to another file, for example one per environment. It is available on `build`, `dev`, `manifest`, `config` and `presets config`.
+
+```bash
+azbundler build --config-file ./azion.staging.config.ts
+azbundler dev --config-file ./azion.staging.config.ts
+azbundler config read -a --config-file ./azion.staging.config.ts
+```
+
+Relative paths are resolved from the current directory. If the file does not exist the command fails, it does not fall back to the default `azion.config`. The bundler never generates an `azion.config` when `--config-file` is used. In `dev`, changes to the given file rebuild the project, even when it is outside the project directory. On `manifest`, `-e/--entry` takes precedence over `--config-file`, and the `transform` action ignores it. On `config`, `create` and `delete` need a `.js`, `.mjs`, `.cjs` or `.ts` file.
+
 ### `dev`
 
 Starts a local development environment.
@@ -165,6 +178,7 @@ Options:
   --skip-framework-build   Skip framework build step (default: false)
   --function-name <name>   Specify the function name
   --config-version <version>  Config (Azion API) version: 3 or 4. Overrides the `version` field of azion.config (default: 4)
+  --config-file <path>     Path to the azion.config file to use (default: azion.config.* found in the current directory)
 ```
 
 ### `config`

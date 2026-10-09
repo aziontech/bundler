@@ -1,4 +1,5 @@
 import { readAzionConfig } from '../../env';
+import { resolveConfigFile } from '../../env/config-file';
 import { resolveConfigVersion } from '../../env/config-version';
 import { build } from './build';
 import { type AzionConfig } from '@aziontech/config';
@@ -26,7 +27,18 @@ import {
  * });
  */
 export async function buildCommand(options: BuildCommandOptions) {
-  const userConfig = (await readAzionConfig()) || {};
+  let configFile: string | undefined;
+  try {
+    configFile = resolveConfigFile(options.configFile);
+  } catch (error) {
+    feedback.build.error(
+      `${error instanceof Error ? error.message : String(error)}${DOCS_MESSAGE}`,
+    );
+    process.exit(1);
+  }
+
+  const userConfig =
+    (await readAzionConfig(configFile, { configVersion: options.configVersion })) || {};
 
   // --config-version > azion.config `version` > default
   let version: ReturnType<typeof resolveConfigVersion>;
@@ -83,6 +95,7 @@ export async function buildCommand(options: BuildCommandOptions) {
       skipFrameworkBuild: options.skipFrameworkBuild,
       onlyGenerateConfig: options.onlyGenerateConfig,
       telemetry: options.telemetry,
+      configFile,
     },
   });
 }

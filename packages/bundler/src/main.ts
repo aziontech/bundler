@@ -133,6 +133,10 @@ function startBundler() {
       '--config-version <version>',
       'Config (Azion API) version of the project: 3 or 4. Overrides the "version" field of azion.config (default: 4)',
     )
+    .option(
+      '--config-file <path>',
+      'Path to the azion.config file to use (default: azion.config.* found in the current directory)',
+    )
     .option('--only-generate-config', 'Build only generate azion.config', false)
     .option(
       '--telemetry [format]',
@@ -152,6 +156,7 @@ Examples:
   $ azbundler build --preset opennextjs
   $ azbundler build --preset opennextjs --skip-framework-build
   $ azbundler build --preset react --config-version 3
+  $ azbundler build --config-file ./azion.config.ts
   $ azbundler build --telemetry
   $ azbundler build --telemetry json
     `,
@@ -191,6 +196,10 @@ Examples:
     .option('--skip-framework-build', 'Skip framework build step', false)
     .option('--function-name <name>', 'Specify the function name')
     .option(
+      '--config-file <path>',
+      'Path to the azion.config file to use (default: azion.config.* found in the current directory)',
+    )
+    .option(
       '--config-version <version>',
       'Config (Azion API) version of the project: 3 or 4. Overrides the "version" field of azion.config (default: 4)',
     )
@@ -211,9 +220,17 @@ Examples:
       '--config-version <version>',
       'Config (Azion API) version of the preset config to show: 3 or 4 (default: 4)',
     )
+    .option(
+      '--config-file <path>',
+      'Path to the azion.config file whose "version" is used when --config-version is not given',
+    )
     .action(async (command, preset, options) => {
       const { presetsCommand } = await import('./commands');
-      await presetsCommand(command, { preset, configVersion: options?.configVersion });
+      await presetsCommand(command, {
+        preset,
+        configVersion: options?.configVersion,
+        configFile: options?.configFile,
+      });
     });
 
   AzionBundler.command('manifest [action]')
@@ -225,6 +242,10 @@ Examples:
     .option('-e, --entry <path>', 'Path to the input file or configuration file')
     .option('-o, --output <path>', 'Output file/directory path')
     .option(
+      '--config-file <path>',
+      'Path to the azion.config file (generate action). Same as --entry, which takes precedence',
+    )
+    .option(
       '--config-version <version>',
       'Config (Azion API) version of the project: 3 or 4. Used when azion.config does not declare "version" (default: 4)',
     )
@@ -235,6 +256,7 @@ Examples:
   $ azbundler manifest transform -e manifest.json -o azion.config.js
   $ azbundler manifest generate -e azion.config.js -o .edge
   $ azbundler manifest -e azion.config.js -o .edge
+  $ azbundler manifest generate --config-file ./azion.config.ts
     `,
     )
     .action(async (action, options, command) => {
@@ -254,6 +276,10 @@ Examples:
     .option('-v, --value <value...>', 'Value to be set')
     .option('-a, --all', 'Read or delete entire configuration (for read/delete commands)')
     .option('-r, --replacements <replacements>', 'JSON string of key-value pairs for replacement')
+    .option(
+      '--config-file <path>',
+      'Path to the azion.config file to use (default: azion.config.* found in the current directory)',
+    )
     .addHelpText(
       'after',
       `
@@ -265,6 +291,7 @@ Examples:
   $ azbundler config delete -a
   $ azbundler config delete -k "build.preset"
   $ azbundler config replace -k '$EDGE_FUNCTION_NAME' -v "my-func"
+  $ azbundler config read -a --config-file ./azion.config.ts
     `,
     )
     .action(async (command, options) => {

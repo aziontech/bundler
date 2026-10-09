@@ -55,6 +55,11 @@ export interface BuildCommandOptions {
    * @default 4
    */
   configVersion?: string | number;
+
+  /**
+   * Path to the azion.config file to use. When not given, azion.config.* is searched from the cwd.
+   */
+  configFile?: string;
 }
 
 export interface PackageJson {
@@ -81,6 +86,8 @@ export interface BuildOptions {
   skipFrameworkBuild?: boolean;
   onlyGenerateConfig?: boolean;
   telemetry?: boolean;
+  /** Absolute path of the azion.config in use, when given by the user */
+  configFile?: string;
 }
 
 export interface BuildResult {

@@ -167,6 +167,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       const mergedConfig = await setEnvironment({
         config,
         preset: resolvedPreset,
+        configFile: options.configFile,
         ctx: {
           production: isProduction ?? BUILD_CONFIG_DEFAULTS.PRODUCTION,
           skipFrameworkBuild: Boolean(options.skipFrameworkBuild),
@@ -211,6 +212,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
         const result = await setEnvironment({
           config,
           preset: resolvedPreset,
+          configFile: options.configFile,
           ctx: context,
         });
         // validate config after merge
