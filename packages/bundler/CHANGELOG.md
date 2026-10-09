@@ -1,5 +1,21 @@
 # @aziontech/bundler
 
+## 1.2.0
+
+### Minor Changes
+
+- [#655](https://github.com/aziontech/bundler/pull/655) [`61cd890`](https://github.com/aziontech/bundler/commit/61cd8900a5332eb7ccbac9953ef3a1e20353bf92) Thanks [@jose-filho-azion](https://github.com/jose-filho-azion)! - Add `--config-file <path>` to the build, dev, manifest, config and presets commands, to choose which `azion.config` is used (for example `azbundler build --config-file azion.staging.config.ts`). Without the flag, `azion.config.*` is searched in the current directory as before. A missing file is an error, and the dev watcher rebuilds when the given file changes. The dev rebuilds triggered by the watcher now keep `--skip-framework-build` and `--function-name`, which they used to lose.
+
+- [#652](https://github.com/aziontech/bundler/pull/652) [`3b12348`](https://github.com/aziontech/bundler/commit/3b1234853f0b25fe7e03f0d64376e6996cbf921b) Thanks [@jose-filho-azion](https://github.com/jose-filho-azion)! - Support the Azion config (API) versions 3 and 4. The version comes from `--config-version` (build, dev, manifest and presets commands) or from the `version` field of `azion.config`, and defaults to 4, so existing projects are not affected. The preset config, the manifest and the generated `azion.config` follow the resolved version, and the generated file now declares `version` explicitly. Declaring different versions in the flag and in `azion.config` is an error.
+
+- [#656](https://github.com/aziontech/bundler/pull/656) [`6859648`](https://github.com/aziontech/bundler/commit/68596487079e9dfdb4490c91386a26ff8cfd3b0c) Thanks [@jose-filho-azion](https://github.com/jose-filho-azion)! - The `ctx` of the `firewall` handler in `export default { firewall: (request, env, ctx) => {...} }` now exposes the firewall event actions (`deny`, `drop`, `continue`, `respondWith`, `addRequestHeader` and `addResponseHeader`), so `ctx.deny()` behaves like `event.deny()` in `addEventListener('firewall', (event) => {...})`.
+
+### Patch Changes
+
+- [#652](https://github.com/aziontech/bundler/pull/652) [`3b12348`](https://github.com/aziontech/bundler/commit/3b1234853f0b25fe7e03f0d64376e6996cbf921b) Thanks [@jose-filho-azion](https://github.com/jose-filho-azion)! - Update `chokidar` to 4 (the file watcher of `dev`), which no longer depends on `braces`, an affected package with no patched release.
+
+- [#652](https://github.com/aziontech/bundler/pull/652) [`3b12348`](https://github.com/aziontech/bundler/commit/3b1234853f0b25fe7e03f0d64376e6996cbf921b) Thanks [@jose-filho-azion](https://github.com/jose-filho-azion)! - `dev` no longer watches `node_modules` (nor the folders the bundler writes). With `chokidar` 4 every watched file keeps a watcher, so the `node_modules` of a real project made the watcher fail with `EMFILE: too many open files`.
+
 ## 1.1.4
 
 ### Patch Changes
