@@ -1,4 +1,6 @@
+import path from 'path';
 import { readAzionConfig, writeUserConfig } from '../../env';
+import { resolveConfigFile } from '../../env/config-file';
 import { debug } from '../../utils';
 import { feedback } from '@aziontech/utils/node';
 import { createConfig, readConfig, deleteConfig } from './config';
@@ -164,7 +166,18 @@ import type { AzionConfig } from '@aziontech/config';
 
 export async function configCommand({ command, options }: ConfigCommandOptions) {
   try {
-    const userConfig: AzionConfig | null = await readAzionConfig();
+    const configFile = resolveConfigFile(options.configFile);
+
+    // writeUserConfig can only write these (a .json is a manifest, not a config module)
+    const isWritableConfigFile =
+      !configFile || ['.js', '.mjs', '.cjs', '.ts'].includes(path.extname(configFile));
+    if (!isWritableConfigFile && (command === 'create' || command === 'delete')) {
+      throw new Error(
+        `The ${command} command cannot write ${configFile}: use a .js, .mjs, .cjs or .ts config file`,
+      );
+    }
+
+    const userConfig: AzionConfig | null = await readAzionConfig(configFile);
 
     if (options.all) {
       let allConfig: AzionConfig;
@@ -174,7 +187,7 @@ export async function configCommand({ command, options }: ConfigCommandOptions) 
           console.log(JSON.stringify(allConfig, null, 2));
           return allConfig;
         case 'delete':
-          await writeUserConfig({});
+          await writeUserConfig({}, configFile);
           return {};
         default:
           throw new Error('--all flag is only supported for read and delete commands');
@@ -221,7 +234,7 @@ export async function configCommand({ command, options }: ConfigCommandOptions) 
           throw new Error('Value is required for update command');
         }
         // Use direct file update instead of object manipulation
-        await updateInConfigFile(key, value);
+        await updateInConfigFile(key, value, configFile);
 
         return {};
       case 'read':
@@ -294,7 +307,7 @@ export async function configCommand({ command, options }: ConfigCommandOptions) 
         }
 
         // Use direct file replacement instead of object manipulation
-        await replaceInConfigFile(replacements);
+        await replaceInConfigFile(replacements, configFile);
 
         return {};
       }
@@ -303,7 +316,7 @@ export async function configCommand({ command, options }: ConfigCommandOptions) 
         throw new Error(`Unknown command: ${command}`);
     }
 
-    await writeUserConfig(result);
+    await writeUserConfig(result, configFile);
     return result;
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

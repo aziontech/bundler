@@ -14,6 +14,8 @@ interface EnvironmentParams {
   config: AzionConfig;
   preset: AzionBuildPreset;
   ctx: BuildContext;
+  /** Absolute path of the azion.config in use, when given by the user */
+  configFile?: string;
 }
 
 /**
@@ -37,6 +39,7 @@ interface EnvironmentParams {
 export const setEnvironment = async ({
   config: userConfig,
   preset,
+  configFile,
 }: EnvironmentParams): Promise<AzionConfig> => {
   try {
     const version = resolveApiVersion(userConfig);
@@ -84,10 +87,10 @@ export const setEnvironment = async ({
       };
     }
 
-    const hasUserConfig = await envDefault.readAzionConfig();
+    const hasUserConfig = await envDefault.readAzionConfig(configFile);
 
-    // Create initial config file if none exists
-    if (!hasUserConfig) await envDefault.writeUserConfig(mergedConfig);
+    // Create initial config file if none exists (an explicit config file is never written by the build)
+    if (!hasUserConfig && !configFile) await envDefault.writeUserConfig(mergedConfig);
 
     return mergedConfig;
   } catch (error) {

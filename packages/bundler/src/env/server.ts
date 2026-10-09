@@ -14,14 +14,21 @@ import runtime from './runtime';
 import { buildCommand } from '../commands/build';
 import { runServer } from 'edge-runtime';
 import fs from 'fs/promises';
-import { basename } from 'path';
+import { basename, relative } from 'path';
 import { DOCS_MESSAGE } from '../constants';
 import { isIgnoredByWatcher } from './watch-ignore';
 import { getStorage, type AzionConfig, type AzionFunction } from '@aziontech/config';
 let currentServer: Awaited<ReturnType<typeof runServer>>;
 let isChangeHandlerRunning = false;
+
+interface ServerOptions {
+  skipFrameworkBuild: boolean;
+  functionName?: string;
+  configVersion?: string | number;
+  configFile?: string;
+}
 // kept for the rebuilds triggered by file changes, which do not receive the CLI options again
-let serverConfigVersion: string | number | undefined;
+let serverOptions: ServerOptions = { skipFrameworkBuild: false };
 
 /**
  * Check and change AddEventListener event
@@ -205,12 +212,8 @@ function defineCurrentFunction(
 /**
  * Handle server operations: start, restart.
  */
-async function manageServer(
-  workerPath: string | null,
-  port: number,
-  skipFrameworkBuild = false,
-  functionName?: string,
-) {
+async function manageServer(workerPath: string | null, port: number) {
+  const { skipFrameworkBuild, functionName, configVersion, configFile } = serverOptions;
   try {
     if (currentServer) {
       await currentServer.close();
@@ -222,7 +225,8 @@ async function manageServer(
     } = await buildCommand({
       production: false,
       skipFrameworkBuild,
-      configVersion: serverConfigVersion,
+      configVersion,
+      configFile,
     });
 
     let workerCode;
@@ -302,16 +306,19 @@ async function startServer(
   skipFrameworkBuild = false,
   functionName?: string,
   configVersion?: string | number,
+  configFile?: string,
 ) {
-  serverConfigVersion = configVersion;
+  serverOptions = { skipFrameworkBuild, functionName, configVersion, configFile };
   const IsPortInUse = await checkPortAvailability(port);
   if (IsPortInUse) {
     feedback.server.error(`Port ${port} is in use. Please choose another port.`);
     process.exit(1);
   }
-  await manageServer(workerPath, port, skipFrameworkBuild, functionName);
+  await manageServer(workerPath, port);
 
-  const watcher = chokidar.watch('./', {
+  // a config file outside the project directory is not covered by the './' watch
+  const isConfigFileOutsideCwd = configFile && relative(process.cwd(), configFile).startsWith('..');
+  const watcher = chokidar.watch(isConfigFileOutsideCwd ? ['./', configFile] : './', {
     persistent: true,
     ignoreInitial: true, // Ignore the initial add events
     depth: 99,

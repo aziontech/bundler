@@ -8,6 +8,7 @@ export type ConfigCommandOptions = {
       string | number | boolean | object | null | (string | number | boolean | object | null)[];
     all?: boolean;
     replacements?: string | Record<string, string>;
+    configFile?: string;
   };
 };
 

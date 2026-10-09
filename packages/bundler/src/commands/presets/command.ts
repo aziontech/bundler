@@ -1,4 +1,6 @@
 import { feedback } from '@aziontech/utils/node';
+import { readAzionConfig } from '../../env';
+import { resolveConfigFile } from '../../env/config-file';
 import { getKeys, getPresetConfig } from './presets';
 /*
  * @function
@@ -14,7 +16,7 @@ import { getKeys, getPresetConfig } from './presets';
  */
 export async function presetsCommand(
   command: string,
-  options: { preset?: string; configVersion?: string | number } = {},
+  options: { preset?: string; configVersion?: string | number; configFile?: string } = {},
 ) {
   const isCleanOutputEnabled = process.env.CLEAN_OUTPUT_MODE === 'true';
 
@@ -35,7 +37,12 @@ export async function presetsCommand(
       }
 
       try {
-        const config = getPresetConfig(options.preset, options.configVersion);
+        const configFile = resolveConfigFile(options.configFile);
+        // the version of the project config, when a config file is given
+        const userConfig = configFile
+          ? await readAzionConfig(configFile, { configVersion: options.configVersion })
+          : null;
+        const config = getPresetConfig(options.preset, options.configVersion, userConfig);
         console.log(JSON.stringify(config, null, 2));
       } catch (error) {
         feedback.error(error instanceof Error ? error.message : 'Unknown error occurred');

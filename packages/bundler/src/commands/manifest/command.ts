@@ -1,4 +1,5 @@
 import { debug } from '../../utils';
+import { resolveConfigFile } from '../../env/config-file';
 import { feedback } from '@aziontech/utils/node';
 import { generateManifest, transformManifest } from './manifest';
 import { AzionConfig } from '@aziontech/config';
@@ -16,6 +17,7 @@ export interface ManifestCommandOptions {
   config?: AzionConfig;
   output?: string;
   configVersion?: string | number;
+  configFile?: string;
 }
 
 /**
@@ -36,7 +38,7 @@ export async function manifestCommand(options: ManifestCommandOptions): Promise<
 
     const actionHandlers = {
       [ManifestAction.GENERATE]: async () => {
-        const input = options.entry || options.config;
+        const input = options.entry || options.config || resolveConfigFile(options.configFile);
         await generateManifest(input, options.output, { configVersion: options.configVersion });
       },
 

@@ -28,12 +28,17 @@ export function tryParseJSON(
 
 /**
  * Finds and reads the azion config file, returning the file path and content
+ * @param configFile - Path of the config file to read, instead of searching for azion.config.*
  * @returns Object with configPath and fileContent
  */
-export async function findAndReadConfigFile(): Promise<{
+export async function findAndReadConfigFile(configFile?: string): Promise<{
   configPath: string;
   fileContent: string;
 }> {
+  if (configFile) {
+    return { configPath: configFile, fileContent: await fs.readFile(configFile, 'utf8') };
+  }
+
   const explorer = cosmiconfig('azion', {
     searchPlaces: [
       'azion.config.ts',
