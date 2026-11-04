@@ -128,7 +128,7 @@ Options:
   -d, --dev                 Build in development mode (default: false)
   -x, --experimental        Enable experimental features (default: false)
   --skip-framework-build    Skip framework build step (default: false)
-  --config-version <version>  Config (Azion API) version: 3 or 4. Overrides the `version` field of azion.config (default: 4)
+  --config-version <version>  Config (Azion API) version: 3, 4 or 6. Overrides the `version` field of azion.config (default: 4)
   --config-file <path>      Path to the azion.config file to use (default: azion.config.* found in the current directory)
   --only-generate-config    Build only generate azion.config (default: false)
   --telemetry [format]      Enable telemetry output (console, json, html or both; defaults to both)
@@ -177,7 +177,7 @@ Options:
   -x, --experimental       Enable experimental features (default: false)
   --skip-framework-build   Skip framework build step (default: false)
   --function-name <name>   Specify the function name
-  --config-version <version>  Config (Azion API) version: 3 or 4. Overrides the `version` field of azion.config (default: 4)
+  --config-version <version>  Config (Azion API) version: 3, 4 or 6. Overrides the `version` field of azion.config (default: 4)
   --config-file <path>     Path to the azion.config file to use (default: azion.config.* found in the current directory)
 ```
 
