@@ -62,12 +62,12 @@
     "globals": "^16.0.0",
     "jest": "^30.4.2",
     "mock-fs": "^5.2.0",
-    "puppeteer": "^25.3.0",
+    "puppeteer": "^25.16.0",
     "supertest": "^7.2.2",
     "tmp": "^0.2.6",
     "ts-jest": "^29.4.11",
     "ts-node": "^10.9.2",
-    "vite": "^7.3.6"
+    "vite": "^7.3.7"
   },
   "repository": {
     "type": "git",
