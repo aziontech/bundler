@@ -31,10 +31,10 @@
   "author": "aziontech",
   "license": "MIT",
   "dependencies": {
-    "@aziontech/builder": "https://pkg.pr.new/@aziontech/builder@490",
+    "@aziontech/builder": "~1.0.7",
     "@aziontech/bundler-telemetry": "~1.0.0",
-    "@aziontech/config": "https://pkg.pr.new/@aziontech/config@490",
-    "@aziontech/presets": "https://pkg.pr.new/@aziontech/presets@490",
+    "@aziontech/config": "~1.2.0",
+    "@aziontech/presets": "~1.3.0",
     "@aziontech/utils": "~1.0.0",
     "@edge-runtime/primitives": "4.0.5",
     "@netlify/framework-info": "^9.9.1",
