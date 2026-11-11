@@ -131,7 +131,7 @@ function startBundler() {
     .option('--skip-framework-build', 'Skip framework build step', false)
     .option(
       '--config-version <version>',
-      'Config (Azion API) version of the project: 3 or 4. Overrides the "version" field of azion.config (default: 4)',
+      'Config (Azion API) version of the project: 3, 4 or 6. Overrides the "version" field of azion.config (default: 4)',
     )
     .option(
       '--config-file <path>',
@@ -201,7 +201,7 @@ Examples:
     )
     .option(
       '--config-version <version>',
-      'Config (Azion API) version of the project: 3 or 4. Overrides the "version" field of azion.config (default: 4)',
+      'Config (Azion API) version of the project: 3, 4 or 6. Overrides the "version" field of azion.config (default: 4)',
     )
     .action(async (entry, options) => {
       const { devCommand } = await import('./commands');
@@ -218,7 +218,7 @@ Examples:
     .argument('[preset]', 'Preset name (required for config command)')
     .option(
       '--config-version <version>',
-      'Config (Azion API) version of the preset config to show: 3 or 4 (default: 4)',
+      'Config (Azion API) version of the preset config to show: 3, 4 or 6 (default: 4)',
     )
     .option(
       '--config-file <path>',
@@ -247,7 +247,7 @@ Examples:
     )
     .option(
       '--config-version <version>',
-      'Config (Azion API) version of the project: 3 or 4. Used when azion.config does not declare "version" (default: 4)',
+      'Config (Azion API) version of the project: 3, 4 or 6. Used when azion.config does not declare "version" (default: 4)',
     )
     .addHelpText(
       'after',
