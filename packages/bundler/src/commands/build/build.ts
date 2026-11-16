@@ -26,7 +26,12 @@ import { feedback } from '@aziontech/utils/node';
 import { mkdir, writeFile } from 'fs/promises';
 import { dirname } from 'path';
 
-import { checkDependencies, verifyFunctionsOutputPath } from './utils';
+import {
+  checkDependencies,
+  formatBuildBanner,
+  getInstalledPackageVersion,
+  verifyFunctionsOutputPath,
+} from './utils';
 
 /* Modules */
 import { setupBindings } from './modules/bindings';
@@ -126,6 +131,15 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
       console.log(formatHeader(BUNDLER.VERSION));
       console.log(formatBuildConfig(telemetryMetadata));
       console.log('\n⚙️  Starting build pipeline...\n');
+    }
+
+    if (!telemetryEnabled || telemetryConfig.outputFormat === 'json') {
+      console.log(
+        formatBuildBanner({
+          bundlerVersion: BUNDLER.VERSION,
+          builderVersion: getInstalledPackageVersion('@aziontech/builder'),
+        }),
+      );
     }
 
     if (options.skipFrameworkBuild) {

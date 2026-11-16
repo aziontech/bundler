@@ -1,4 +1,6 @@
-import { join, relative } from 'path';
+import { createRequire } from 'module';
+import { dirname, join, relative } from 'path';
+import { readFileSync } from 'fs';
 import { readFile, stat, rm, mkdir } from 'fs/promises';
 import { getPackageManager } from '@aziontech/utils/node';
 import { DIRECTORIES } from '../../constants';
@@ -21,6 +23,50 @@ export class DependenciesError extends Error {
     this.name = 'DependenciesError';
   }
 }
+
+/**
+ * Resolves the installed version of a dependency. The package.json is not exposed
+ * through the package `exports`, so we resolve the entry point and walk up to it.
+ */
+export const getInstalledPackageVersion = (packageName: string): string | undefined => {
+  try {
+    let dir = dirname(createRequire(import.meta.url).resolve(packageName));
+    while (dir !== dirname(dir)) {
+      try {
+        const pkg = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8'));
+        if (pkg.name === packageName) return pkg.version;
+      } catch {
+        // no package.json in this directory, keep walking up
+      }
+      dir = dirname(dir);
+    }
+  } catch {
+    // package not resolvable
+  }
+  return undefined;
+};
+
+export const formatBuildBanner = ({
+  bundlerVersion,
+  builderVersion,
+}: {
+  bundlerVersion: string;
+  builderVersion?: string;
+}): string => {
+  const title = 'Azion Bundler — build';
+  const bar = '─'.repeat(title.length + 2);
+  return [
+    '',
+    `┌${bar}┐`,
+    `│ ${title} │`,
+    `└${bar}┘`,
+    '',
+    `App directory: ${process.cwd()}`,
+    `Bundler version: ${bundlerVersion}`,
+    `@aziontech/builder version: ${builderVersion ?? 'unknown'}`,
+    '',
+  ].join('\n');
+};
 
 export const readPackageJson = async (): Promise<PackageJson> => {
   const packageJsonPath = join(process.cwd(), 'package.json');
