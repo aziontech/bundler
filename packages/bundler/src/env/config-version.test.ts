@@ -18,7 +18,7 @@ describe('parseConfigVersion', () => {
 
   it.each(['5', 'abc', 99, '3.5', true])('rejects %p listing the supported versions', (input) => {
     expect(() => parseConfigVersion(input)).toThrow(
-      /Invalid config version .*Supported versions: 3, 4\./,
+      /Invalid config version .*Supported versions: 3, 4, 6\./,
     );
   });
 });
