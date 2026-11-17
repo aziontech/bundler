@@ -49,9 +49,11 @@ export const getInstalledPackageVersion = (packageName: string): string | undefi
 export const formatBuildBanner = ({
   bundlerVersion,
   builderVersion,
+  presetsVersion,
 }: {
   bundlerVersion: string;
   builderVersion?: string;
+  presetsVersion?: string;
 }): string => {
   const title = 'Azion Bundler — build';
   const bar = '─'.repeat(title.length + 2);
@@ -64,6 +66,7 @@ export const formatBuildBanner = ({
     `App directory: ${process.cwd()}`,
     `Bundler version: ${bundlerVersion}`,
     `@aziontech/builder version: ${builderVersion ?? 'unknown'}`,
+    `@aziontech/presets version: ${presetsVersion ?? 'unknown'}`,
     '',
   ].join('\n');
 };

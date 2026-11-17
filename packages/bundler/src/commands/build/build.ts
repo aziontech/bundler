@@ -138,6 +138,7 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
         formatBuildBanner({
           bundlerVersion: BUNDLER.VERSION,
           builderVersion: getInstalledPackageVersion('@aziontech/builder'),
+          presetsVersion: getInstalledPackageVersion('@aziontech/presets'),
         }),
       );
     }
