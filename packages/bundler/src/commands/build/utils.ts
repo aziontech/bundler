@@ -4,6 +4,7 @@ import { readFileSync } from 'fs';
 import { readFile, stat, rm, mkdir } from 'fs/promises';
 import { getPackageManager } from '@aziontech/utils/node';
 import { DIRECTORIES } from '../../constants';
+import { createPathEntriesMap } from './modules/config/utils';
 import type { ConfigValueOptions, PresetValueOptions, PackageJson } from './types';
 import type { AzionFunction, PresetInput, BuildEntryPoint } from '@aziontech/config';
 
@@ -176,6 +177,27 @@ export const normalizeEntryPaths = (entry: BuildEntryPoint): string[] => {
 };
 
 /**
+ * Converts the output path of a built entry (e.g. ".edge/functions/index") into the `path`
+ * of a function in azion.config (e.g. "./functions/index.js").
+ */
+const toFunctionPath = (outputPath: string): string => {
+  const finalOutputPath = outputPath.endsWith('.js') ? outputPath : `${outputPath}.js`;
+  // Dev builds append a ".dev" suffix to the output filename, which never matches the
+  // production path declared in azion.config — strip it before comparing.
+  const withoutDevSuffix = finalOutputPath.replace(/\.dev\.js$/, '.js');
+  return `./${relative(DIRECTORIES.OUTPUT_BASE_PATH, withoutDevSuffix)}`;
+};
+
+/**
+ * The `functions[].path` values of azion.config that the build of an entry generates, in the order of
+ * the entries. The output name comes from the entry (e.g. "index.js" generates "./functions/index.js").
+ */
+export const getFunctionPathsFromEntry = async (entry: BuildEntryPoint): Promise<string[]> => {
+  const entryPathsMap = await createPathEntriesMap({ entry });
+  return Object.keys(entryPathsMap).map(toFunctionPath);
+};
+
+/**
  * Verifies that each function's declared `path` matches the file actually generated
  * by the build entry, since the real output name comes from the build entry, not from
  * the preset/user config. Throws if a mismatch is found.
@@ -184,13 +206,7 @@ export const verifyFunctionsOutputPath = (
   entry: Record<string, string>,
   functions?: AzionFunction[],
 ): void => {
-  const generatedPaths = Object.keys(entry).map((outputPath) => {
-    const finalOutputPath = outputPath.endsWith('.js') ? outputPath : `${outputPath}.js`;
-    // Dev builds append a ".dev" suffix to the output filename, which never matches the
-    // production path declared in azion.config — strip it before comparing.
-    const withoutDevSuffix = finalOutputPath.replace(/\.dev\.js$/, '.js');
-    return `./${relative(DIRECTORIES.OUTPUT_BASE_PATH, withoutDevSuffix)}`;
-  });
+  const generatedPaths = Object.keys(entry).map(toFunctionPath);
 
   const mismatchedFunctions = (functions ?? [])
     .map((func, index) => ({ func, index }))

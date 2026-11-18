@@ -6,6 +6,7 @@ import {
   type AzionBuildPreset,
   type BuildContext,
 } from '@aziontech/config';
+import { getFunctionPathsFromEntry } from '../../utils';
 import utilsDefault from './utils';
 
 import envDefault from '../../../../env';
@@ -90,7 +91,27 @@ export const setEnvironment = async ({
     const hasUserConfig = await envDefault.readAzionConfig(configFile);
 
     // Create initial config file if none exists (an explicit config file is never written by the build)
-    if (!hasUserConfig && !configFile) await envDefault.writeUserConfig(mergedConfig);
+    const createsConfigFile = !hasUserConfig && !configFile;
+
+    /**
+     * The generated file name of a function comes from the entry, but the preset config declares the path of its
+     * own default entry. When there is no azion.config and the entry was given (--entry), the config that is
+     * created must point the functions to the files the build of that entry generates. An existing azion.config is
+     * not changed: a path that does not match its entry is reported by the build.
+     */
+    if (
+      createsConfigFile &&
+      !preset.handler &&
+      userConfig.build?.entry &&
+      mergedConfig.functions?.length
+    ) {
+      const paths = await getFunctionPathsFromEntry(userConfig.build.entry);
+      mergedConfig.functions = mergedConfig.functions.map((func, index) =>
+        paths[index] ? { ...func, path: paths[index] } : func,
+      );
+    }
+
+    if (createsConfigFile) await envDefault.writeUserConfig(mergedConfig);
 
     return mergedConfig;
   } catch (error) {
