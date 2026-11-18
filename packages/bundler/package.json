@@ -33,7 +33,7 @@
   "dependencies": {
     "@aziontech/builder": "https://pkg.pr.new/@aziontech/builder@500",
     "@aziontech/bundler-telemetry": "~1.0.0",
-    "@aziontech/config": "~1.2.0",
+    "@aziontech/config": "https://pkg.pr.new/@aziontech/config@500",
     "@aziontech/presets": "https://pkg.pr.new/@aziontech/presets@500",
     "@aziontech/utils": "~1.0.0",
     "@edge-runtime/primitives": "4.0.5",
