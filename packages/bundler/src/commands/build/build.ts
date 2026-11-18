@@ -329,7 +329,11 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
     await executeCleanup();
 
     // Phase 7.1: Verify functions[].path matches the file(s) actually generated in Phase 7,
-    verifyFunctionsOutputPath(buildConfigSetup.entry, mergedConfig.functions);
+    verifyFunctionsOutputPath(
+      buildConfigSetup.entry,
+      mergedConfig.functions,
+      config.build?.entry ?? mergedConfig.build?.entry,
+    );
 
     // Phase 8: Postbuild
     feedback.postbuild.info('Starting post-build...');
