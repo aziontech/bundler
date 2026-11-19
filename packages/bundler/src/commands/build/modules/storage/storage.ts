@@ -2,7 +2,7 @@ import { debug } from '../../../../utils';
 import fsPromises from 'fs/promises';
 import path from 'path';
 import {
-  DEFAULT_API_VERSION,
+  getPresetApiVersions,
   resolveApiVersion,
   resolvePresetConfig,
   type AzionBucket,
@@ -168,24 +168,39 @@ const validateStorageConfig = (storage: AzionBucket): boolean => {
   return true;
 };
 
+type V3Origins = { origin?: { type: string; dir?: string }[] };
+
+/** The `dir` of the first `object_storage` origin that has one (the v3 config has no `storage` section) */
+const findV3StorageDir = (config?: unknown): string | undefined =>
+  (config as V3Origins | undefined)?.origin?.find(
+    (origin) => origin.type === 'object_storage' && origin.dir,
+  )?.dir;
+
 /**
  * v3 keeps the static files directly in `.edge/storage` (no bucket/prefix folders) and its config has no `storage`
- * section: the v3 prebuilds wrote straight there. The presets now write to the directory their default config
- * declares in `storage[].dir`, so for v3 that directory is copied to `.edge/storage`, as the v3 prebuilds did.
+ * section: the v3 prebuilds wrote straight there. The directory with the static files is the `dir` of the
+ * `object_storage` origin of the azion.config. A azion.config that does not declare it (e.g. one generated before the
+ * `dir` existed, whose `origin` replaces the one of the preset) uses the one of the v3 config of the preset.
+ * That directory is copied to `.edge/storage`, as the v3 prebuilds did.
  */
-const setupStorageV3 = async (preset?: AzionBuildPreset): Promise<BucketSetup[]> => {
-  const defaultConfig = preset && (resolvePresetConfig(preset, DEFAULT_API_VERSION) as AzionConfig);
-  const storageDir = defaultConfig?.storage?.[0]?.dir;
+const setupStorageV3 = async (
+  config: AzionConfig,
+  preset?: AzionBuildPreset,
+): Promise<BucketSetup[]> => {
+  const presetHasV3 = preset && getPresetApiVersions(preset).includes(3);
+  const storageDir =
+    findV3StorageDir(config) ??
+    (presetHasV3 ? findV3StorageDir(resolvePresetConfig(preset, 3)) : undefined);
 
   if (!storageDir) {
-    debug.info('The preset has no static files directory to copy to the v3 storage');
+    debug.info('No object_storage origin with a "dir" to copy to the v3 storage');
     return [];
   }
 
   const sourceDir = path.resolve(process.cwd(), storageDir);
   if (!(await directoryExists(sourceDir))) {
     throw new Error(
-      `Storage directory not found: ${sourceDir}. \n- Please check the output directory of the "${preset?.metadata.name}" preset`,
+      `Storage directory not found: ${sourceDir}. \n- Please check the "dir" of the object_storage origin in your azion.config (or the output directory of the "${preset?.metadata.name}" preset)`,
     );
   }
 
@@ -206,7 +221,7 @@ export const setupStorage = async ({
   config: AzionConfig;
   preset?: AzionBuildPreset;
 }): Promise<BucketSetup[]> => {
-  if (resolveApiVersion(config) === 3) return setupStorageV3(preset);
+  if (resolveApiVersion(config) === 3) return setupStorageV3(config, preset);
 
   try {
     const storages = config.storage || [];
