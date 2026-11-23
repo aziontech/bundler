@@ -67,17 +67,17 @@ importers:
   packages/bundler:
     dependencies:
       '@aziontech/builder':
-        specifier: https://pkg.pr.new/@aziontech/builder@b6dd4bd
-        version: https://pkg.pr.new/@aziontech/builder@b6dd4bd(@babel/core@7.29.7)(@swc/core@1.15.47)(typescript@5.9.3)
+        specifier: ~1.0.9
+        version: 1.0.9(@babel/core@7.29.7)(@swc/core@1.15.47)(typescript@5.9.3)
       '@aziontech/bundler-telemetry':
         specifier: ~1.0.0
         version: 1.0.0
       '@aziontech/config':
-        specifier: https://pkg.pr.new/@aziontech/config@b6dd4bd
-        version: https://pkg.pr.new/@aziontech/config@b6dd4bd
+        specifier: ~1.2.1
+        version: 1.2.1
       '@aziontech/presets':
-        specifier: https://pkg.pr.new/@aziontech/presets@b6dd4bd
-        version: https://pkg.pr.new/@aziontech/presets@b6dd4bd(@swc/core@1.15.47)
+        specifier: ~1.4.0
+        version: 1.4.0(@swc/core@1.15.47)(esbuild@0.25.12)
       '@aziontech/utils':
         specifier: ~1.0.0
         version: 1.0.0
@@ -175,35 +175,23 @@ importers:
 
 packages:
 
-  '@aziontech/builder@https://pkg.pr.new/@aziontech/builder@b6dd4bd':
-    resolution: {tarball: https://pkg.pr.new/@aziontech/builder@b6dd4bd}
-    version: 1.0.8
+  '@aziontech/builder@1.0.9':
+    resolution: {integrity: sha512-c7FQiCouzOpQ96UYR0cY9gadBQ3CUppfBFPe84XqwFDu+wo2Ye4qXZp6IKc+8Z0vOeP4XY+LQAO9vaJnEIH5Kg==}
 
   '@aziontech/bundler-telemetry@1.0.0':
     resolution: {integrity: sha512-o4Aa9DSMc2DSTLgU/y4LKMUov4IdFL+gt1bsmfR65DaAogULImOmMWVKAbrL67aVgs1J9jQBCq6gaV2XN0Q6RQ==}
 
-  '@aziontech/config@https://pkg.pr.new/@aziontech/config@b6dd4bd':
-    resolution: {tarball: https://pkg.pr.new/@aziontech/config@b6dd4bd}
-    version: 1.2.0
+  '@aziontech/config@1.2.1':
+    resolution: {integrity: sha512-SOzRyFZDJpSv0YQfobcSdzG5E7we4dUIdOiYD+aS3vrwR7h/++02UWXhZU0ZLEcvPr8DvtPDKiyjVp7akd1yug==}
 
-  '@aziontech/config@https://pkg.pr.new/aziontech/lib/@aziontech/config@b6dd4bd':
-    resolution: {tarball: https://pkg.pr.new/aziontech/lib/@aziontech/config@b6dd4bd}
-    version: 1.2.0
-
-  '@aziontech/presets@https://pkg.pr.new/@aziontech/presets@b6dd4bd':
-    resolution: {tarball: https://pkg.pr.new/@aziontech/presets@b6dd4bd}
-    version: 1.3.1
-
-  '@aziontech/presets@https://pkg.pr.new/aziontech/lib/@aziontech/presets@b6dd4bd':
-    resolution: {tarball: https://pkg.pr.new/aziontech/lib/@aziontech/presets@b6dd4bd}
-    version: 1.3.1
+  '@aziontech/presets@1.4.0':
+    resolution: {integrity: sha512-xc3eCYqhE5nmRmZUR8nTNNOLdwqwWRJ/Xd3j6GqVjrcDcVPeqWULzglC4970Q+eSTX72VUmjJF0luy40nA0o4A==}
 
   '@aziontech/types@1.0.0':
     resolution: {integrity: sha512-WwLlUu8Ox8mcHaK92QqlXGYRICchY/SyfM+zyAf2QLd4JH/T8ioMXTvc9PWLqVQd5cIWsyYWHaesmoJLybUsSw==}
 
-  '@aziontech/unenv-preset@https://pkg.pr.new/aziontech/lib/@aziontech/unenv-preset@b6dd4bd':
-    resolution: {tarball: https://pkg.pr.new/aziontech/lib/@aziontech/unenv-preset@b6dd4bd}
-    version: 1.0.2
+  '@aziontech/unenv-preset@1.1.0':
+    resolution: {integrity: sha512-I9lIuhEpVwjxHW81kpNYyZyE07e0lUC+t3XkMmUDVGc8ECx7gAaVOJWnFp+3oi+NKGaNgLbgqaUaalQBSD1TAA==}
 
   '@aziontech/utils@1.0.0':
     resolution: {integrity: sha512-ZMyWm6iIaPszoazCcSprytyy7XSdAfmLyoS1/A2spDlbl/HSdkWj8bGVkdUAK1C3JOTI0UlCj5ClxYdxQx520Q==}
@@ -4356,12 +4344,12 @@ packages:
 
 snapshots:
 
-  '@aziontech/builder@https://pkg.pr.new/@aziontech/builder@b6dd4bd(@babel/core@7.29.7)(@swc/core@1.15.47)(typescript@5.9.3)':
+  '@aziontech/builder@1.0.9(@babel/core@7.29.7)(@swc/core@1.15.47)(typescript@5.9.3)':
     dependencies:
-      '@aziontech/config': https://pkg.pr.new/aziontech/lib/@aziontech/config@b6dd4bd
-      '@aziontech/presets': https://pkg.pr.new/aziontech/lib/@aziontech/presets@b6dd4bd(@swc/core@1.15.47)(esbuild@0.25.12)
+      '@aziontech/config': 1.2.1
+      '@aziontech/presets': 1.4.0(@swc/core@1.15.47)(esbuild@0.25.12)
       '@aziontech/types': 1.0.0
-      '@aziontech/unenv-preset': https://pkg.pr.new/aziontech/lib/@aziontech/unenv-preset@b6dd4bd
+      '@aziontech/unenv-preset': 1.1.0
       '@aziontech/utils': 1.0.0
       '@babel/plugin-proposal-optional-chaining-assign': 7.29.7(@babel/core@7.29.7)
       '@babel/preset-env': 7.29.14(@babel/core@7.29.7)
@@ -4414,7 +4402,7 @@ snapshots:
 
   '@aziontech/bundler-telemetry@1.0.0': {}
 
-  '@aziontech/config@https://pkg.pr.new/@aziontech/config@b6dd4bd':
+  '@aziontech/config@1.2.1':
     dependencies:
       '@aziontech/types': 1.0.0
       ajv: 8.20.0
@@ -4422,50 +4410,11 @@ snapshots:
       ajv-keywords: 5.1.0(ajv@8.20.0)
       mathjs: 15.2.0
 
-  '@aziontech/config@https://pkg.pr.new/aziontech/lib/@aziontech/config@b6dd4bd':
+  '@aziontech/presets@1.4.0(@swc/core@1.15.47)(esbuild@0.25.12)':
     dependencies:
+      '@aziontech/config': 1.2.1
       '@aziontech/types': 1.0.0
-      ajv: 8.20.0
-      ajv-errors: 3.0.0(ajv@8.20.0)
-      ajv-keywords: 5.1.0(ajv@8.20.0)
-      mathjs: 15.2.0
-
-  '@aziontech/presets@https://pkg.pr.new/@aziontech/presets@b6dd4bd(@swc/core@1.15.47)':
-    dependencies:
-      '@aziontech/config': https://pkg.pr.new/aziontech/lib/@aziontech/config@b6dd4bd
-      '@aziontech/types': 1.0.0
-      '@aziontech/unenv-preset': https://pkg.pr.new/aziontech/lib/@aziontech/unenv-preset@b6dd4bd
-      '@aziontech/utils': 1.0.0
-      cookie: 1.1.1
-      mime-types: 3.0.2
-      pcre-to-regexp: 1.1.0
-      semver: 7.8.5
-      tinyglobby: 0.2.17
-      webpack: 5.112.2(@swc/core@1.15.47)(esbuild@0.25.12)
-    transitivePeerDependencies:
-      - '@minify-html/node'
-      - '@napi-rs/image'
-      - '@swc/core'
-      - '@swc/css'
-      - '@swc/html'
-      - clean-css
-      - cssnano
-      - csso
-      - esbuild
-      - html-minifier-terser
-      - imagemin
-      - lightningcss
-      - postcss
-      - sharp
-      - svgo
-      - uglify-js
-      - webpack-cli
-
-  '@aziontech/presets@https://pkg.pr.new/aziontech/lib/@aziontech/presets@b6dd4bd(@swc/core@1.15.47)(esbuild@0.25.12)':
-    dependencies:
-      '@aziontech/config': https://pkg.pr.new/aziontech/lib/@aziontech/config@b6dd4bd
-      '@aziontech/types': 1.0.0
-      '@aziontech/unenv-preset': https://pkg.pr.new/aziontech/lib/@aziontech/unenv-preset@b6dd4bd
+      '@aziontech/unenv-preset': 1.1.0
       '@aziontech/utils': 1.0.0
       cookie: 1.1.1
       mime-types: 3.0.2
@@ -4494,7 +4443,7 @@ snapshots:
 
   '@aziontech/types@1.0.0': {}
 
-  '@aziontech/unenv-preset@https://pkg.pr.new/aziontech/lib/@aziontech/unenv-preset@b6dd4bd':
+  '@aziontech/unenv-preset@1.1.0':
     dependencies:
       accepts: 1.3.8
       assert-browserify: 2.0.0
