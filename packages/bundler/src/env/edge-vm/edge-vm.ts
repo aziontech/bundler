@@ -430,6 +430,7 @@ function defineProperties(
     }
 
     defineProperty(context, property, {
+      configurable: true,
       value: options.exports[property],
     });
   }

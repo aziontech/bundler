@@ -25,7 +25,13 @@ async function projectInitializer(
   installArgs = '',
 ) {
   const example = examplePath.replace('/examples/', '');
-  const bundlerCmd = 'npx --yes --registry=http://verdaccio:4873 @aziontech/bundler@latest';
+  // Some examples have a .npmrc with "min-release-age", which makes npm (11+) skip versions published in
+  // the last days. The bundler under test was just published in verdaccio, and a new @aziontech/* release
+  // is also recent, so npx fails with ENOVERSIONS or ETARGET. min-release-age-exclude does not apply to the
+  // package npx runs, so the wait is turned off for this command. The project dependencies are not affected,
+  // they are installed by pnpm.
+  const bundlerCmd =
+    'npx --yes --min-release-age=0 --registry=http://verdaccio:4873 @aziontech/bundler@latest';
 
   if (installPkgs) {
     feedback.info(`[${example}] Installing project dependencies ...`);
