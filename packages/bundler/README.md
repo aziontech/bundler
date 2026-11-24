@@ -179,7 +179,18 @@ Options:
   --function-name <name>   Specify the function name
   --config-version <version>  Config (Azion API) version: 3, 4 or 6. Overrides the `version` field of azion.config (default: 4)
   --config-file <path>     Path to the azion.config file to use (default: azion.config.* found in the current directory)
+  --args-path <path>       Path to the args JSON file bound to ctx.args (event.args) of the function (default: azion/args.json)
 ```
+
+#### Function args
+
+The local runtime gives the function the same args a deployed one receives: `ctx.args` in `fetch(request, env, ctx)` and `firewall(request, env, ctx)`, and `event.args` in `addEventListener`. They come from `azion/args.json`, or from the file given to `--args-path` (relative to the current directory).
+
+```bash
+azbundler dev --args-path ./config/args.staging.json
+```
+
+The file is read on every request, so editing it needs no restart. When the file does not exist the args are `{}`, as on a deploy of a project without args. When it is not a JSON object the args are `{}` too, and a warning is shown. A change to the args file does not rebuild the project.
 
 ### `config`
 

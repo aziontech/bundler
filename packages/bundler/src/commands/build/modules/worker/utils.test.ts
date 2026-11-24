@@ -82,7 +82,9 @@ describe('generateWorkerEventHandler', () => {
 
     expect(result).toContain('const request = event.request');
     expect(result).toContain('const env = process.env');
-    expect(result).toContain('const ctx = { waitUntil: event.waitUntil?.bind(event) }');
+    expect(result).toContain(
+      'const ctx = { waitUntil: event.waitUntil?.bind(event), args: event.args ?? {} }',
+    );
   });
 
   it('should generate fallback fetch handler when import fails', async () => {
@@ -123,9 +125,10 @@ describe('normalizeEntryPointPaths', () => {
 });
 
 describe('WORKER_TEMPLATES.firewallHandler', () => {
-  const run = async (firewall: (...args: unknown[]) => unknown) => {
+  const run = async (firewall: (...args: unknown[]) => unknown, args?: unknown) => {
     const event = {
       request: new Request('http://localhost'),
+      args,
       deny: jest.fn(),
       drop: jest.fn(),
       continue: jest.fn(),
@@ -152,6 +155,25 @@ describe('WORKER_TEMPLATES.firewallHandler', () => {
   it('should expose the firewall event actions on ctx', async () => {
     const event = await run(async (_req, _env, ctx) => (ctx as { deny: () => void }).deny());
     expect(event.deny).toHaveBeenCalledTimes(1);
+  });
+
+  it('should expose the event args on ctx', async () => {
+    let received: unknown;
+    await run(
+      async (_req, _env, ctx) => {
+        received = (ctx as { args: unknown }).args;
+      },
+      { key: 'value' },
+    );
+    expect(received).toEqual({ key: 'value' });
+  });
+
+  it('should default ctx.args to an empty object when the event has no args', async () => {
+    let received: unknown;
+    await run(async (_req, _env, ctx) => {
+      received = (ctx as { args: unknown }).args;
+    });
+    expect(received).toEqual({});
   });
 
   it('should bind ctx actions to the event', async () => {

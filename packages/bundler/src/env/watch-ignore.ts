@@ -1,4 +1,5 @@
 import path from 'path';
+import { resolveArgsPath } from './args';
 
 /**
  * Directories of the project root the dev watcher does not watch: version control and IDE folders, and what the
@@ -33,6 +34,8 @@ export const isIgnoredByWatcher = (watchedPath: string): boolean => {
   if (IGNORED_ROOT_DIRECTORIES.includes(root)) return true;
   // temporary files that the build writes in the project root
   if (root.startsWith('.azion-bundler')) return true;
+  // the args are read on every request, so a change in them needs no rebuild
+  if (path.resolve(process.cwd(), relativePath) === resolveArgsPath()) return true;
   if (segments.length === 1 && root.startsWith('azion') && root.includes('.temp')) return true;
 
   return false;
