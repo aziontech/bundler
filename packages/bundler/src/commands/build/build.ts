@@ -31,6 +31,7 @@ import {
   formatBuildBanner,
   getInstalledPackageVersion,
   verifyFunctionsOutputPath,
+  verifySkippedFrameworkBuildOutput,
 } from './utils';
 
 /* Modules */
@@ -254,6 +255,10 @@ export const build = async (buildParams: BuildParams): Promise<BuildResult> => {
         });
       },
     );
+
+    if (options.skipFrameworkBuild) {
+      await verifySkippedFrameworkBuildOutput(mergedConfig, resolvedPreset);
+    }
 
     feedback.prebuild.info('Pre-build completed successfully');
 

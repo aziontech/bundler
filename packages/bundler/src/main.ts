@@ -3,7 +3,7 @@ import { Command } from 'commander';
 import { satisfies } from 'semver';
 import { executeCleanup, debug } from './utils';
 import { feedback } from '@aziontech/utils/node';
-import { BUNDLER, ENV_ALIAS } from './constants';
+import { BUNDLER, ENV_ALIAS, SKIP_FRAMEWORK_BUILD_DESCRIPTION } from './constants';
 import { createHash } from 'crypto';
 import { mkdir } from 'fs/promises';
 import type { BundlerGlobals } from './types';
@@ -128,7 +128,7 @@ function startBundler() {
     )
     .option('-d, --dev', 'Build in development mode', false)
     .option('-x, --experimental [boolean]', 'Enable experimental features', false)
-    .option('--skip-framework-build', 'Skip framework build step', false)
+    .option('--skip-framework-build', SKIP_FRAMEWORK_BUILD_DESCRIPTION, false)
     .option(
       '--config-version <version>',
       'Config (Azion API) version of the project: 3, 4 or 6. Overrides the "version" field of azion.config (default: 4)',
@@ -193,7 +193,7 @@ Examples:
     .argument('[entry]', 'Specify the entry file (default: .edge/worker.dev.js)')
     .option('-p, --port <port>', 'Specify the port', '3333')
     .option('-x, --experimental [boolean]', 'Enable experimental features', false)
-    .option('--skip-framework-build', 'Skip framework build step', false)
+    .option('--skip-framework-build', SKIP_FRAMEWORK_BUILD_DESCRIPTION, false)
     .option('--function-name <name>', 'Specify the function name')
     .option(
       '--config-file <path>',

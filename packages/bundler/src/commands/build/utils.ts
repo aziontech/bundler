@@ -1,12 +1,20 @@
 import { createRequire } from 'module';
-import { dirname, join, relative } from 'path';
+import { dirname, join, relative, resolve } from 'path';
 import { readFileSync } from 'fs';
-import { readFile, stat, rm, mkdir } from 'fs/promises';
-import { getPackageManager } from '@aziontech/utils/node';
+import { readFile, readdir, stat, rm, mkdir } from 'fs/promises';
+import { feedback, getPackageManager } from '@aziontech/utils/node';
 import { DIRECTORIES } from '../../constants';
 import { createPathEntriesMap } from './modules/config/utils';
+import { hasV3ObjectStorageOrigin, resolveV3StorageDir } from './modules/storage';
 import type { ConfigValueOptions, PresetValueOptions, PackageJson } from './types';
-import type { AzionFunction, PresetInput, BuildEntryPoint } from '@aziontech/config';
+import { resolveApiVersion } from '@aziontech/config';
+import type {
+  AzionBuildPreset,
+  AzionConfig,
+  AzionFunction,
+  PresetInput,
+  BuildEntryPoint,
+} from '@aziontech/config';
 
 export class PackageJsonError extends Error {
   constructor(
@@ -286,4 +294,62 @@ export const cleanDirectory = async (dirs: string[]): Promise<void> => {
     // eslint-disable-next-line preserve-caught-error -- message already embeds the original error
     throw new Error(`Failed to clean directories: ${error}`);
   }
+};
+
+/**
+ * v3 has no `storage` section: its static files directory is the `dir` of the `object_storage` origin (or, without
+ * it, the one of the v3 config of the preset, as the storage setup resolves it). When neither declares a `dir`, the
+ * v3 prebuilds write straight to `.edge/storage`, which is checked instead. Without an `object_storage` origin there
+ * are no static files to check.
+ */
+const getV3StaticFilesDirs = (config: AzionConfig, preset?: AzionBuildPreset): string[] => {
+  const dir = resolveV3StorageDir(config, preset);
+  if (dir) return [dir];
+  return hasV3ObjectStorageOrigin(config, preset) ? [DIRECTORIES.OUTPUT_STORAGE_PATH] : [];
+};
+
+/**
+ * With `--skip-framework-build` the preset does not run the framework build: it reuses the output of a previous one
+ * (e.g. `dist`) and copies it to the static files directory. When that output does not exist the preset still goes on
+ * (some even create the destination), so the build would end "successfully" with nothing to publish.
+ * Warns, naming the flag, for each static files directory of the azion.config (`storage[].dir`, or in v3 the `dir` of the
+ * `object_storage` origin, the one of the preset or `.edge/storage`) that is missing or empty after the prebuild.
+ *
+ * @param config - The merged azion.config of the build
+ * @param preset - The preset of the build (its v3 config is the fallback of the v3 static files directory)
+ * @returns The directories that were reported, relative to the project
+ */
+export const verifySkippedFrameworkBuildOutput = async (
+  config: AzionConfig,
+  preset?: AzionBuildPreset,
+): Promise<string[]> => {
+  const dirs =
+    resolveApiVersion(config) === 3
+      ? getV3StaticFilesDirs(config, preset)
+      : [...new Set((config.storage ?? []).map((storage) => storage.dir).filter(Boolean))];
+  const reported: string[] = [];
+  const presetName = preset?.metadata?.name;
+
+  for (const dir of dirs) {
+    let problem: 'missing' | 'empty' | undefined;
+    try {
+      const entries = await readdir(resolve(process.cwd(), dir));
+      if (entries.length === 0) problem = 'empty';
+    } catch {
+      problem = 'missing';
+    }
+    if (!problem) continue;
+
+    reported.push(dir);
+    feedback.build.warn(
+      `--skip-framework-build: "${dir}" is ${problem}. The preset copies the output of the framework build ` +
+        `(e.g. dist) into it, and that output was not found.\n` +
+        `  - Run the build of your framework first (e.g. "npm run build") and run this command again, or remove ` +
+        `--skip-framework-build.\n` +
+        `  - Check that the preset${presetName ? ` ("${presetName}")` : ''} matches your project: a preset that does not ` +
+        `fill "${dir}" leaves it ${problem}.`,
+    );
+  }
+
+  return reported;
 };
