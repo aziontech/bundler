@@ -1,5 +1,6 @@
 import { readAzionConfig } from '../../env';
 import { resolveConfigFile } from '../../env/config-file';
+import { assertPresetMatchesConfig } from '../../env/config-preset';
 import { resolveConfigVersion } from '../../env/config-version';
 import { build } from './build';
 import { type AzionConfig } from '@aziontech/config';
@@ -44,6 +45,16 @@ export async function buildCommand(options: BuildCommandOptions) {
   let version: ReturnType<typeof resolveConfigVersion>;
   try {
     version = resolveConfigVersion({ flag: options.configVersion, config: userConfig });
+  } catch (error) {
+    feedback.build.error(
+      `${error instanceof Error ? error.message : String(error)}${DOCS_MESSAGE}`,
+    );
+    process.exit(1);
+  }
+
+  // --preset vs azion.config `build.preset`: stop before the build when they point to different presets
+  try {
+    assertPresetMatchesConfig({ flag: options.preset, config: userConfig });
   } catch (error) {
     feedback.build.error(
       `${error instanceof Error ? error.message : String(error)}${DOCS_MESSAGE}`,
