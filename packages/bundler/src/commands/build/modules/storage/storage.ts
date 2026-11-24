@@ -171,10 +171,31 @@ const validateStorageConfig = (storage: AzionBucket): boolean => {
 type V3Origins = { origin?: { type: string; dir?: string }[] };
 
 /** The `dir` of the first `object_storage` origin that has one (the v3 config has no `storage` section) */
-const findV3StorageDir = (config?: unknown): string | undefined =>
+export const findV3StorageDir = (config?: unknown): string | undefined =>
   (config as V3Origins | undefined)?.origin?.find(
     (origin) => origin.type === 'object_storage' && origin.dir,
   )?.dir;
+
+/**
+ * The v3 config of the preset, when it has one
+ */
+const getPresetV3Config = (preset?: AzionBuildPreset): unknown =>
+  preset && getPresetApiVersions(preset).includes(3) ? resolvePresetConfig(preset, 3) : undefined;
+
+/**
+ * The directory with the static files of a v3 build: the `dir` of the `object_storage` origin of the azion.config or,
+ * when it does not declare one, the `dir` of the origin of the v3 config of the preset
+ */
+export const resolveV3StorageDir = (
+  config?: unknown,
+  preset?: AzionBuildPreset,
+): string | undefined => findV3StorageDir(config) ?? findV3StorageDir(getPresetV3Config(preset));
+
+/** Whether the azion.config (or the v3 config of the preset) has an `object_storage` origin, with or without `dir` */
+export const hasV3ObjectStorageOrigin = (config?: unknown, preset?: AzionBuildPreset): boolean =>
+  [config, getPresetV3Config(preset)].some((cfg) =>
+    (cfg as V3Origins | undefined)?.origin?.some((origin) => origin.type === 'object_storage'),
+  );
 
 /**
  * v3 keeps the static files directly in `.edge/storage` (no bucket/prefix folders) and its config has no `storage`
@@ -187,10 +208,7 @@ const setupStorageV3 = async (
   config: AzionConfig,
   preset?: AzionBuildPreset,
 ): Promise<BucketSetup[]> => {
-  const presetHasV3 = preset && getPresetApiVersions(preset).includes(3);
-  const storageDir =
-    findV3StorageDir(config) ??
-    (presetHasV3 ? findV3StorageDir(resolvePresetConfig(preset, 3)) : undefined);
+  const storageDir = resolveV3StorageDir(config, preset);
 
   if (!storageDir) {
     debug.info('No object_storage origin with a "dir" to copy to the v3 storage');

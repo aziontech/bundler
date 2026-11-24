@@ -105,3 +105,8 @@ export const TELEMETRY = {
   DEFAULT_HTML_OUTPUT_PATH: '.edge/telemetry-report.html',
   OUTPUT_FORMATS: ['console', 'json', 'html', 'both'] as const,
 } as const;
+
+/** Help text of the `--skip-framework-build` flag (build and dev commands) */
+export const SKIP_FRAMEWORK_BUILD_DESCRIPTION =
+  'Do not run the framework build (e.g. "npm run build"); reuse the output of a previous one (e.g. dist). ' +
+  'Run the framework build first: a warning is shown if its output is missing or empty';

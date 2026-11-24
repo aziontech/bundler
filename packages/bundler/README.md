@@ -127,7 +127,7 @@ Options:
   -w, --worker [boolean]    Indicates that the constructed code inserts its own worker expression (default: false)
   -d, --dev                 Build in development mode (default: false)
   -x, --experimental        Enable experimental features (default: false)
-  --skip-framework-build    Skip framework build step (default: false)
+  --skip-framework-build    Do not run the framework build; reuse the output of a previous one, e.g. dist (default: false)
   --config-version <version>  Config (Azion API) version: 3, 4 or 6. Overrides the `version` field of azion.config (default: 4)
   --config-file <path>      Path to the azion.config file to use (default: azion.config.* found in the current directory)
   --only-generate-config    Build only generate azion.config (default: false)
@@ -175,7 +175,7 @@ Arguments:
 Options:
   -p, --port <port>        Specify the port (default: "3333")
   -x, --experimental       Enable experimental features (default: false)
-  --skip-framework-build   Skip framework build step (default: false)
+  --skip-framework-build   Do not run the framework build; reuse the output of a previous one, e.g. dist (default: false)
   --function-name <name>   Specify the function name
   --config-version <version>  Config (Azion API) version: 3, 4 or 6. Overrides the `version` field of azion.config (default: 4)
   --config-file <path>     Path to the azion.config file to use (default: azion.config.* found in the current directory)
