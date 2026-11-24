@@ -55,7 +55,8 @@ export const BUNDLER = {
   DEFAULT_DEV_WORKER_FILENAME: 'handler.dev',
   DEFAULT_OUTPUT_EXTENSION: 'js',
   LIB_DIR: getAbsoluteDirPath(import.meta.url, 'bundler'),
-  ARGS_PATH: '@aziontech/args.json',
+  // where the Azion CLI keeps the args it uploads with the function, relative to the project root
+  ARGS_PATH: 'azion/args.json',
   IS_DEBUG: process.env.DEBUG === 'true',
   TEMP_DIR: (projectID: string) => join(tmpdir(), '.azion', projectID),
   get ROOT_PATH() {

@@ -23,6 +23,7 @@ describe('isIgnoredByWatcher', () => {
     '.azion-bundler.json',
     'azion-handler-20260101.temp.js',
     './node_modules/x',
+    'azion/args.json',
   ])('ignores %s', (watchedPath) => {
     expect(isIgnoredByWatcher(watchedPath)).toBe(true);
   });
@@ -37,8 +38,23 @@ describe('isIgnoredByWatcher', () => {
     'azion.config.mjs',
     'src/azion-handler.temp.js',
     'packages/app/src/main.ts',
+    'azion',
+    'azion/azion.config.mjs',
+    'azion/other/args.json',
   ])('does not ignore %s', (watchedPath) => {
     expect(isIgnoredByWatcher(watchedPath)).toBe(false);
+  });
+
+  it('ignores the file given to --args-path instead of azion/args.json', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (globalThis as any).bundler = { argsPath: 'config/args.staging.json' };
+    try {
+      expect(isIgnoredByWatcher('config/args.staging.json')).toBe(true);
+      expect(isIgnoredByWatcher('azion/args.json')).toBe(false);
+    } finally {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (globalThis as any).bundler;
+    }
   });
 
   it('works with an absolute path inside the project', () => {

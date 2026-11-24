@@ -23,6 +23,7 @@ import { join } from 'path';
 import { EdgeContext, EdgeVM } from './edge-vm';
 import { DIRECTORIES } from '../constants';
 import { parseEnvFileEntries, unwrapEnvValue } from './dotenv';
+import { loadSandboxArgs } from './args';
 
 /**
  * Loads the env vars the build already merged into .edge/.env (see copyEnvVars in utils.ts),
@@ -99,8 +100,23 @@ function runtime(code: string, isFirewallEvent = false) {
         (globalThis as any)?.AZION_BUCKET_PREFIX,
       );
 
-    // Set the context for the FetchEvent if it's a Firewall event or a Fetch event
-    context.FetchEvent = isFirewallEvent ? FirewallEventContext : FetchEventContext;
+    // Set the context for the FetchEvent if it's a Firewall event or a Fetch event.
+    // Both expose `args` (azion/args.json), like the deployed runtime does: FetchEventWithArgs reads the file when
+    // the event is created, that is, on every request. The dev wrapper of `export default { fetch, firewall }`
+    // handlers passes it on as `ctx.args`.
+    const BaseEvent = (
+      isFirewallEvent ? FirewallEventContext : FetchEventContext
+    ) as typeof FetchEventContext;
+    class FetchEventWithArgs extends BaseEvent {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      args: Record<string, any>;
+
+      constructor(...params: ConstructorParameters<typeof BaseEvent>) {
+        super(...params);
+        this.args = loadSandboxArgs();
+      }
+    }
+    context.FetchEvent = FetchEventWithArgs as unknown as typeof context.FetchEvent;
     context.Response = isFirewallEvent ? Response : context.Response;
 
     /*

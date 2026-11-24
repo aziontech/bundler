@@ -1,6 +1,7 @@
 import { feedback } from '@aziontech/utils/node';
 import { server } from '../../env';
 import { resolveConfigFile } from '../../env/config-file';
+import { setArgsPath } from '../../env/args';
 import { DOCS_MESSAGE } from '../../constants';
 
 /*
@@ -18,6 +19,7 @@ export async function devCommand({
   functionName,
   configVersion,
   configFile,
+  argsPath,
 }: {
   entry?: string;
   port: string;
@@ -25,6 +27,7 @@ export async function devCommand({
   functionName?: string;
   configVersion?: string | number;
   configFile?: string;
+  argsPath?: string;
 }) {
   const parsedPort = parseInt(port, 10);
 
@@ -39,6 +42,8 @@ export async function devCommand({
     );
     process.exit(1);
   }
+
+  if (argsPath) setArgsPath(argsPath);
 
   server(
     entryPoint,

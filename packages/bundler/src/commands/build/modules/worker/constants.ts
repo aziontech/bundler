@@ -11,7 +11,7 @@ export const WORKER_MESSAGES = {
 const contextSetup = `
 const request = event.request;
 const env = process.env; // or any other environment variables you want to pass
-const ctx = { waitUntil: event.waitUntil?.bind(event) };`;
+const ctx = { waitUntil: event.waitUntil?.bind(event), args: event.args ?? {} };`;
 
 export const WORKER_TEMPLATES = {
   baseImport: (entrypointPath: string) => `
@@ -33,6 +33,7 @@ addEventListener('firewall', (event) => {
     const env = process.env; // or any other environment variables you want to pass
     const ctx = {
       waitUntil: event.waitUntil?.bind(event),
+      args: event.args ?? {},
       deny: event.deny?.bind(event),
       drop: event.drop?.bind(event),
       continue: event.continue?.bind(event),

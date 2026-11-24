@@ -203,6 +203,10 @@ Examples:
       '--config-version <version>',
       'Config (Azion API) version of the project: 3, 4 or 6. Overrides the "version" field of azion.config (default: 4)',
     )
+    .option(
+      '--args-path <path>',
+      'Path to the args JSON file bound to ctx.args (event.args) of the function (default: azion/args.json)',
+    )
     .action(async (entry, options) => {
       const { devCommand } = await import('./commands');
 
