@@ -1,5 +1,15 @@
 # @aziontech/bundler
 
+## 1.3.2
+
+### Patch Changes
+
+- [#674](https://github.com/aziontech/bundler/pull/674) [`18de7ff`](https://github.com/aziontech/bundler/commit/18de7ff4a4830f1ee32e4723afbfec273a45dff4) Thanks [@jose-filho-azion](https://github.com/jose-filho-azion)! - feat: bind `azion/args.json` to `ctx.args` in `azbundler dev`. The `export default { fetch, firewall }` handlers now receive the same args the deployed runtime provides (`fetch(request, env, ctx)` → `ctx.args`, and `event.args` for `addEventListener`). The file is read on every request, so editing it needs no restart or rebuild. A missing file, or one that is not a JSON object, results in `{}`. The new `--args-path <path>` option of `dev` points to another args file (for example the one the Azion CLI is configured to use).
+
+- [#672](https://github.com/aziontech/bundler/pull/672) [`af54a97`](https://github.com/aziontech/bundler/commit/af54a97e393491725d51288cdf03c95e4aee75e5) Thanks [@jose-filho-azion](https://github.com/jose-filho-azion)! - `azbundler build --preset <name>` now stops right away when the `azion.config` declares a different `build.preset` (for example `--preset astro` in a project configured for `vue`), the same way `--config-version` does when it conflicts with the `version` of the `azion.config`. Before, the flag silently won and the build failed later, far from the cause. Remove the flag or update `build.preset` to continue.
+
+- [#672](https://github.com/aziontech/bundler/pull/672) [`af54a97`](https://github.com/aziontech/bundler/commit/af54a97e393491725d51288cdf03c95e4aee75e5) Thanks [@jose-filho-azion](https://github.com/jose-filho-azion)! - `--skip-framework-build` now warns when the output of the framework build it is supposed to reuse is missing or empty (for example, no `dist` folder), instead of ending the build "successfully" with nothing to publish. The help of the flag also explains what it does: it does not run the framework build and reuses the output of a previous one, so that build must run first.
+
 ## 1.3.1
 
 ### Patch Changes
