@@ -1,5 +1,11 @@
 # @aziontech/bundler
 
+## 1.4.0
+
+### Minor Changes
+
+- [#675](https://github.com/aziontech/bundler/pull/675) [`1cf4e60`](https://github.com/aziontech/bundler/commit/1cf4e60161f8c895311cd84ba451f6958d66f635) Thanks [@jose-filho-azion](https://github.com/jose-filho-azion)! - feat: upgrade `@aziontech/builder` and `@aziontech/presets` to the releases that ship the runtime polyfills of `@aziontech/unenv-preset` (`Buffer.prototype.indexOf` with `Uint8Array`, `setImmediate` returning an `Immediate`, microtask-based `process.nextTick`, static `AsyncLocalStorage.snapshot()`/`bind()`, global `reportError`, and a `performance.timeOrigin` that follows `Date.now()`). The OpenNext Azion adapter no longer carries these polyfills, so projects built with it need this bundler version or newer (`azbundler --version`); Azion CLI versions that embed an older bundler return a 500 on on-demand pages.
+
 ## 1.3.2
 
 ### Patch Changes
