@@ -67,8 +67,8 @@ importers:
   packages/bundler:
     dependencies:
       '@aziontech/builder':
-        specifier: ~1.0.9
-        version: 1.0.9(@babel/core@7.29.7)(@swc/core@1.15.47)(typescript@5.9.3)
+        specifier: ~1.1.0
+        version: 1.1.0(@babel/core@7.29.7)(@swc/core@1.15.47)(typescript@5.9.3)
       '@aziontech/bundler-telemetry':
         specifier: ~1.0.0
         version: 1.0.0
@@ -76,8 +76,8 @@ importers:
         specifier: ~1.2.1
         version: 1.2.1
       '@aziontech/presets':
-        specifier: ~1.4.0
-        version: 1.4.0(@swc/core@1.15.47)(esbuild@0.25.12)
+        specifier: ~1.5.0
+        version: 1.5.0(@swc/core@1.15.47)(esbuild@0.25.12)
       '@aziontech/utils':
         specifier: ~1.0.0
         version: 1.0.0
@@ -175,8 +175,8 @@ importers:
 
 packages:
 
-  '@aziontech/builder@1.0.9':
-    resolution: {integrity: sha512-c7FQiCouzOpQ96UYR0cY9gadBQ3CUppfBFPe84XqwFDu+wo2Ye4qXZp6IKc+8Z0vOeP4XY+LQAO9vaJnEIH5Kg==}
+  '@aziontech/builder@1.1.0':
+    resolution: {integrity: sha512-XF7iKYtjdp6xyFOwiAbfOzoxpHn4tlnF/q0e5Jru2RNaWFJ/yXgcDFBkOrm6PNZnwgTAwSLN+blDhe9nY/ldBg==}
 
   '@aziontech/bundler-telemetry@1.0.0':
     resolution: {integrity: sha512-o4Aa9DSMc2DSTLgU/y4LKMUov4IdFL+gt1bsmfR65DaAogULImOmMWVKAbrL67aVgs1J9jQBCq6gaV2XN0Q6RQ==}
@@ -184,14 +184,14 @@ packages:
   '@aziontech/config@1.2.1':
     resolution: {integrity: sha512-SOzRyFZDJpSv0YQfobcSdzG5E7we4dUIdOiYD+aS3vrwR7h/++02UWXhZU0ZLEcvPr8DvtPDKiyjVp7akd1yug==}
 
-  '@aziontech/presets@1.4.0':
-    resolution: {integrity: sha512-xc3eCYqhE5nmRmZUR8nTNNOLdwqwWRJ/Xd3j6GqVjrcDcVPeqWULzglC4970Q+eSTX72VUmjJF0luy40nA0o4A==}
+  '@aziontech/presets@1.5.0':
+    resolution: {integrity: sha512-QWoldRdnS2qegGLNDXlAbVF3z/ZxvxqwvdncN2ccdP/3iMxVaOc8Y6uMZbRGadxYc47msZRssaLvNBZRNbjcKQ==}
 
   '@aziontech/types@1.0.0':
     resolution: {integrity: sha512-WwLlUu8Ox8mcHaK92QqlXGYRICchY/SyfM+zyAf2QLd4JH/T8ioMXTvc9PWLqVQd5cIWsyYWHaesmoJLybUsSw==}
 
-  '@aziontech/unenv-preset@1.1.0':
-    resolution: {integrity: sha512-I9lIuhEpVwjxHW81kpNYyZyE07e0lUC+t3XkMmUDVGc8ECx7gAaVOJWnFp+3oi+NKGaNgLbgqaUaalQBSD1TAA==}
+  '@aziontech/unenv-preset@1.2.0':
+    resolution: {integrity: sha512-kENNZl9lvEUFXj+tTFac5cR0lp2h8NOyAKFkPgu5q+mkRp0soHFPF4MZTDoqisdt3x3B2algkvMGRvqBNtS+nA==}
 
   '@aziontech/utils@1.0.0':
     resolution: {integrity: sha512-ZMyWm6iIaPszoazCcSprytyy7XSdAfmLyoS1/A2spDlbl/HSdkWj8bGVkdUAK1C3JOTI0UlCj5ClxYdxQx520Q==}
@@ -4344,12 +4344,12 @@ packages:
 
 snapshots:
 
-  '@aziontech/builder@1.0.9(@babel/core@7.29.7)(@swc/core@1.15.47)(typescript@5.9.3)':
+  '@aziontech/builder@1.1.0(@babel/core@7.29.7)(@swc/core@1.15.47)(typescript@5.9.3)':
     dependencies:
       '@aziontech/config': 1.2.1
-      '@aziontech/presets': 1.4.0(@swc/core@1.15.47)(esbuild@0.25.12)
+      '@aziontech/presets': 1.5.0(@swc/core@1.15.47)(esbuild@0.25.12)
       '@aziontech/types': 1.0.0
-      '@aziontech/unenv-preset': 1.1.0
+      '@aziontech/unenv-preset': 1.2.0
       '@aziontech/utils': 1.0.0
       '@babel/plugin-proposal-optional-chaining-assign': 7.29.7(@babel/core@7.29.7)
       '@babel/preset-env': 7.29.14(@babel/core@7.29.7)
@@ -4410,11 +4410,11 @@ snapshots:
       ajv-keywords: 5.1.0(ajv@8.20.0)
       mathjs: 15.2.0
 
-  '@aziontech/presets@1.4.0(@swc/core@1.15.47)(esbuild@0.25.12)':
+  '@aziontech/presets@1.5.0(@swc/core@1.15.47)(esbuild@0.25.12)':
     dependencies:
       '@aziontech/config': 1.2.1
       '@aziontech/types': 1.0.0
-      '@aziontech/unenv-preset': 1.1.0
+      '@aziontech/unenv-preset': 1.2.0
       '@aziontech/utils': 1.0.0
       cookie: 1.1.1
       mime-types: 3.0.2
@@ -4443,7 +4443,7 @@ snapshots:
 
   '@aziontech/types@1.0.0': {}
 
-  '@aziontech/unenv-preset@1.1.0':
+  '@aziontech/unenv-preset@1.2.0':
     dependencies:
       accepts: 1.3.8
       assert-browserify: 2.0.0
