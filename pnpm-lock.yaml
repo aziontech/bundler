@@ -19,9 +19,9 @@ overrides:
   js-yaml@4: '>=4.3.2 <5'
   js-yaml@3>argparse: '>=2.0.1 <3'
   source-map-js: '>=1.2.2 <2'
-  '@aziontech/unenv-preset': https://pkg.pr.new/@aziontech/unenv-preset@507
-  '@aziontech/builder': https://pkg.pr.new/@aziontech/builder@507
-  '@aziontech/presets': https://pkg.pr.new/@aziontech/presets@507
+  '@aziontech/unenv-preset': https://pkg.pr.new/@aziontech/unenv-preset@1d6e3f1
+  '@aziontech/builder': https://pkg.pr.new/@aziontech/builder@1d6e3f1
+  '@aziontech/presets': https://pkg.pr.new/@aziontech/presets@1d6e3f1
 
 importers:
 
@@ -70,8 +70,8 @@ importers:
   packages/bundler:
     dependencies:
       '@aziontech/builder':
-        specifier: https://pkg.pr.new/@aziontech/builder@507
-        version: https://pkg.pr.new/@aziontech/builder@507(@babel/core@7.29.7)(@swc/core@1.15.47)(typescript@5.9.3)
+        specifier: https://pkg.pr.new/@aziontech/builder@1d6e3f1
+        version: https://pkg.pr.new/@aziontech/builder@1d6e3f1(@babel/core@7.29.7)(@swc/core@1.15.47)(typescript@5.9.3)
       '@aziontech/bundler-telemetry':
         specifier: ~1.0.0
         version: 1.0.0
@@ -79,8 +79,8 @@ importers:
         specifier: ~1.2.1
         version: 1.2.1
       '@aziontech/presets':
-        specifier: https://pkg.pr.new/@aziontech/presets@507
-        version: https://pkg.pr.new/@aziontech/presets@507(@swc/core@1.15.47)(esbuild@0.25.12)
+        specifier: https://pkg.pr.new/@aziontech/presets@1d6e3f1
+        version: https://pkg.pr.new/@aziontech/presets@1d6e3f1(@swc/core@1.15.47)(esbuild@0.25.12)
       '@aziontech/utils':
         specifier: ~1.0.0
         version: 1.0.0
@@ -178,8 +178,8 @@ importers:
 
 packages:
 
-  '@aziontech/builder@https://pkg.pr.new/@aziontech/builder@507':
-    resolution: {tarball: https://pkg.pr.new/@aziontech/builder@507}
+  '@aziontech/builder@https://pkg.pr.new/@aziontech/builder@1d6e3f1':
+    resolution: {tarball: https://pkg.pr.new/@aziontech/builder@1d6e3f1}
     version: 1.0.9
 
   '@aziontech/bundler-telemetry@1.0.0':
@@ -188,15 +188,15 @@ packages:
   '@aziontech/config@1.2.1':
     resolution: {integrity: sha512-SOzRyFZDJpSv0YQfobcSdzG5E7we4dUIdOiYD+aS3vrwR7h/++02UWXhZU0ZLEcvPr8DvtPDKiyjVp7akd1yug==}
 
-  '@aziontech/presets@https://pkg.pr.new/@aziontech/presets@507':
-    resolution: {tarball: https://pkg.pr.new/@aziontech/presets@507}
+  '@aziontech/presets@https://pkg.pr.new/@aziontech/presets@1d6e3f1':
+    resolution: {tarball: https://pkg.pr.new/@aziontech/presets@1d6e3f1}
     version: 1.4.0
 
   '@aziontech/types@1.0.0':
     resolution: {integrity: sha512-WwLlUu8Ox8mcHaK92QqlXGYRICchY/SyfM+zyAf2QLd4JH/T8ioMXTvc9PWLqVQd5cIWsyYWHaesmoJLybUsSw==}
 
-  '@aziontech/unenv-preset@https://pkg.pr.new/@aziontech/unenv-preset@507':
-    resolution: {tarball: https://pkg.pr.new/@aziontech/unenv-preset@507}
+  '@aziontech/unenv-preset@https://pkg.pr.new/@aziontech/unenv-preset@1d6e3f1':
+    resolution: {tarball: https://pkg.pr.new/@aziontech/unenv-preset@1d6e3f1}
     version: 1.1.0
 
   '@aziontech/utils@1.0.0':
@@ -4350,12 +4350,12 @@ packages:
 
 snapshots:
 
-  '@aziontech/builder@https://pkg.pr.new/@aziontech/builder@507(@babel/core@7.29.7)(@swc/core@1.15.47)(typescript@5.9.3)':
+  '@aziontech/builder@https://pkg.pr.new/@aziontech/builder@1d6e3f1(@babel/core@7.29.7)(@swc/core@1.15.47)(typescript@5.9.3)':
     dependencies:
       '@aziontech/config': 1.2.1
-      '@aziontech/presets': https://pkg.pr.new/@aziontech/presets@507(@swc/core@1.15.47)(esbuild@0.25.12)
+      '@aziontech/presets': https://pkg.pr.new/@aziontech/presets@1d6e3f1(@swc/core@1.15.47)(esbuild@0.25.12)
       '@aziontech/types': 1.0.0
-      '@aziontech/unenv-preset': https://pkg.pr.new/@aziontech/unenv-preset@507
+      '@aziontech/unenv-preset': https://pkg.pr.new/@aziontech/unenv-preset@1d6e3f1
       '@aziontech/utils': 1.0.0
       '@babel/plugin-proposal-optional-chaining-assign': 7.29.7(@babel/core@7.29.7)
       '@babel/preset-env': 7.29.14(@babel/core@7.29.7)
@@ -4416,11 +4416,11 @@ snapshots:
       ajv-keywords: 5.1.0(ajv@8.20.0)
       mathjs: 15.2.0
 
-  '@aziontech/presets@https://pkg.pr.new/@aziontech/presets@507(@swc/core@1.15.47)(esbuild@0.25.12)':
+  '@aziontech/presets@https://pkg.pr.new/@aziontech/presets@1d6e3f1(@swc/core@1.15.47)(esbuild@0.25.12)':
     dependencies:
       '@aziontech/config': 1.2.1
       '@aziontech/types': 1.0.0
-      '@aziontech/unenv-preset': https://pkg.pr.new/@aziontech/unenv-preset@507
+      '@aziontech/unenv-preset': https://pkg.pr.new/@aziontech/unenv-preset@1d6e3f1
       '@aziontech/utils': 1.0.0
       cookie: 1.1.1
       mime-types: 3.0.2
@@ -4449,7 +4449,7 @@ snapshots:
 
   '@aziontech/types@1.0.0': {}
 
-  '@aziontech/unenv-preset@https://pkg.pr.new/@aziontech/unenv-preset@507':
+  '@aziontech/unenv-preset@https://pkg.pr.new/@aziontech/unenv-preset@1d6e3f1':
     dependencies:
       accepts: 1.3.8
       assert-browserify: 2.0.0

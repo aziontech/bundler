@@ -45,9 +45,9 @@
       "js-yaml@4": ">=4.3.2 <5",
       "js-yaml@3>argparse": ">=2.0.1 <3",
       "source-map-js": ">=1.2.2 <2",
-      "@aziontech/unenv-preset": "https://pkg.pr.new/@aziontech/unenv-preset@507",
-      "@aziontech/builder": "https://pkg.pr.new/@aziontech/builder@507",
-      "@aziontech/presets": "https://pkg.pr.new/@aziontech/presets@507"
+      "@aziontech/unenv-preset": "https://pkg.pr.new/@aziontech/unenv-preset@1d6e3f1",
+      "@aziontech/builder": "https://pkg.pr.new/@aziontech/builder@1d6e3f1",
+      "@aziontech/presets": "https://pkg.pr.new/@aziontech/presets@1d6e3f1"
     }
   },
   "repository": {
